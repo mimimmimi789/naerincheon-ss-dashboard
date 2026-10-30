@@ -37,9 +37,9 @@ def collect(today, key, status):
             status[name] = '정상' + (f' ({len(r)}행)' if hasattr(r, '__len__') and not isinstance(r, dict) else '')
             return r
         except Exception as e:  # 한 자료원이 실패해도 나머지는 계속
-            msg = f'실패: {type(e).__name__} {str(e)[:150]}'
-            status[name] = msg.replace(key, '***') if key else msg
-            traceback.print_exc()
+            hide = lambda s: s.replace(key, '***') if key else s     # 오류 메시지의 URL에 키가 들어 있으므로 가림
+            status[name] = hide(f'실패: {type(e).__name__} {str(e)[:150]}')
+            print(hide(traceback.format_exc()), file=sys.stderr)
 
     run('WAMIS 원대교 유량', src.wamis_flow, sorted({2026, yday.year}))
     st = csv(src.LIVE / 'wamis_stage_daily.csv')
@@ -48,7 +48,7 @@ def collect(today, key, status):
     if key:
         aw = csv(src.LIVE / 'kma_aws_rain.csv')
         a0 = LOCK.date() + dt.timedelta(days=1) if aw is None else (aw.index.max() - pd.Timedelta(days=7)).date()
-        run('기상청 AWS 일강수', src.kma_aws_day, list(pd.date_range(a0, yday).date))
+        run('기상청 AWS 일강수', src.kma_aws_day, list(pd.date_range(a0, yday).date), key)
         run('기상청 단기예보', src.kma_fcst, yday, key)
         run('기상청 특보', src.kma_warnings, key, today)
     else:
