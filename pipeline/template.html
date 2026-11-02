@@ -76,6 +76,7 @@ h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .sw-band{width:18px;height:10px;background:var(--band);border-radius:2px}
 .sw-dot{width:8px;height:8px;border-radius:50%;background:var(--obs)}
 .sw-ly{width:18px;height:2px;background:var(--ly)}
+.sw-ring{width:8px;height:8px;border-radius:50%;border:2px solid var(--obs);background:var(--panel);box-sizing:border-box}
 .sw-wf{width:9px;height:9px;border:2px solid var(--ly);transform:rotate(45deg)}
 .sw-fix{width:9px;height:9px;background:var(--warn);border-radius:2px}
 .sw-fc{width:9px;height:9px;background:var(--ink)}
@@ -129,6 +130,7 @@ h3.mini{font-size:13px;margin:14px 0 4px}.wl{margin:0;padding-left:18px;font-siz
 .shbar .tr i{position:absolute;top:0;bottom:0;border-radius:3px}.shbar .tr .mid{left:50%;width:1px;background:var(--line)}
 .shbar .n{font-family:var(--f-mono);font-size:12px;text-align:right}
 .shtxt{font-size:13px;margin:0;background:var(--bg);border-radius:8px;padding:8px 10px;color:var(--ink-2)}
+.grade{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:12.5px;margin-bottom:8px}.grade b.g{font-size:15px}.grade table{font-size:12px;margin-top:4px}.grade td,.grade th{padding:3px 6px}
 .lvhead{font-size:13px;margin:4px 0 2px;color:var(--ink-2)}
 .ck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .ck label{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer}.ck input{margin-top:2px;accent-color:var(--est)}
@@ -139,6 +141,8 @@ footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:
 .gloss dt{font-weight:600;font-size:13.5px}
 .gloss dd{margin:2px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
 .mob-nav{display:none}
+.tab{display:flex;flex-direction:column;gap:inherit}.tab[hidden]{display:none}
+.mob-nav a.on{background:var(--est);color:#fff;border-color:var(--est)}
 .tag.warnTag{background:var(--warn-bg);color:var(--warn);font-weight:600}
 .wx{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(132px,1fr);gap:8px;overflow-x:auto;padding-bottom:2px}
 .wxd{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
@@ -180,17 +184,12 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 22 L11 11 L16 17 L21 9 L31 22 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 26 q4 -3 8 0 t8 0 t8 0 t5 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     <div><b>내린천 SS<br>모니터링</b><small>캡스톤디자인2 · 초안</small></div>
   </div>
-  <nav aria-label="섹션">
-    <a href="#overview" class="on">종합 대시보드</a>
-    <a href="#weather">기상 예보</a>
-    <a href="#ss">SS 추정</a>
-    <a href="#hydro">강우 · 유량</a>
-    <a href="#forecast">1·3·7일 예측</a>
-    <a href="#explain">원인 · 유사사례 · 점검</a>
-    <a href="#compare">작년 동기 비교</a>
-    <a href="#perf">모델 성능</a>
-    <a href="#basin">유역 · 자료</a>
-    <a href="#glossary">용어 설명</a>
+  <nav aria-label="탭">
+    <a href="#home" data-tab="home" class="on">종합 대시보드</a>
+    <a href="#fc" data-tab="fc">1·3·7일 예측 · 원인</a>
+    <a href="#cmp" data-tab="cmp">작년 비교 · 강우 상관</a>
+    <a href="#perf" data-tab="perf">모델 성능</a>
+    <a href="#info" data-tab="info">유역 · 자료 · 용어</a>
   </nav>
   <div class="side-foot">
     <span>지점 <code>1012A20</code></span>
@@ -201,7 +200,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 </aside>
 
 <main>
-  <nav class="mob-nav" aria-label="섹션"><a href="#overview">종합</a><a href="#weather">날씨</a><a href="#ss">SS 추정</a><a href="#hydro">강우·유량</a><a href="#forecast">예측</a><a href="#explain">원인·점검</a><a href="#compare">작년 비교</a><a href="#perf">모델 성능</a><a href="#basin">유역·자료</a><a href="#glossary">용어</a></nav>
+  <nav class="mob-nav" aria-label="탭"><a href="#home" data-tab="home" class="on">종합</a><a href="#fc" data-tab="fc">예측·원인</a><a href="#cmp" data-tab="cmp">작년 비교</a><a href="#perf" data-tab="perf">모델 성능</a><a href="#info" data-tab="info">유역·자료</a></nav>
   <header class="top" id="overview">
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
@@ -216,8 +215,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     </div>
   </header>
 
-  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·7일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
-
+  <div class="tab" id="tab-home" data-tab="home">
   <section class="kpis" aria-label="요약">
     <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
     <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
@@ -230,6 +228,22 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <h2>기상 예보 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
     <div class="wx" id="wx"></div>
     <p class="hint" id="wxNote">–</p>
+  </section>
+
+  <section class="grid g-2">
+    <div class="card">
+      <h2>수질 알림 · 기상특보</h2>
+      <div id="alert"></div>
+      <p class="hint" id="alertRule">–</p>
+      <div id="wrn"></div>
+    </div>
+    <div class="card" id="manage">
+      <h2>취수원 관리 점검표 <span class="tag">임시 기준</span></h2>
+      <div id="grade"></div>
+      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
+      <div id="lvBox"></div>
+      <p class="hint">단계 경계 25·100 mg/L는 환경정책기본법 시행령 별표1 하천 생활환경기준의 부유물질량(Ia–III 25 이하, IV 100 이하), 10.2 mg/L는 이 지점 2014–23 실측 상위 10% 경계입니다. 정수장 운영기준은 SS가 아니라 탁도(NTU)로 정해져 있고, 이 취수원의 고탁도 대응 기준은 확인하지 못했습니다. 점검 항목은 정수처리기준 해설서(국립환경과학원, 2013)와 고탁도 취수중단 사례를 참고한 예시이며 취수 중단 판단을 대신하지 않습니다.</p>
+    </div>
   </section>
 
   <section class="grid g-main">
@@ -249,24 +263,20 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     </div>
   </section>
 
-  <section class="grid g-2" id="forecast">
+  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·7일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
+  </div>
+
+  <div class="tab" id="tab-fc" data-tab="fc" hidden>
+  <section id="forecast">
     <div class="card">
       <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
       <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>7일 후</span></div>
       <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·7일 후 SS 예측"></div>
       <p class="hint">마지막 기준일에서 향후 강우 합계만 바꿔 넣은 결과입니다. 강우가 하루에 몰려 온다고 가정했습니다. 운영 때는 기상청 단기예보 강수량을 넣습니다.</p>
     </div>
-    <div class="card">
-      <h2>예측 성능 <span class="tag real">전진검증 2019–26</span></h2>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
-        <tbody id="fcTbl"></tbody>
-      </table></div>
-      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 7일 관측만은 모델이 월별 기준값보다 낫지 않아 기준값을 씁니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
-    </div>
   </section>
 
-  <section class="grid g-3" id="explain">
+  <section class="grid g-2" id="explain">
     <div class="card">
       <h2>예측 원인 분석 <span class="tag real">SHAP</span></h2>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
@@ -284,35 +294,38 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       </table></div>
       <p class="hint" id="evNote">–</p>
     </div>
-    <div class="card" id="manage">
-      <h2>취수원 관리 점검표 <span class="tag">임시 기준</span></h2>
-      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
-      <div id="lvBox"></div>
-      <p class="hint">단계 경계 25·100 mg/L는 환경정책기본법 시행령 별표1 하천 생활환경기준의 부유물질량(Ia–III 25 이하, IV 100 이하), 10.2 mg/L는 이 지점 2014–23 실측 상위 10% 경계입니다. 정수장 운영기준은 SS가 아니라 탁도(NTU)로 정해져 있고, 이 취수원의 고탁도 대응 기준은 확인하지 못했습니다. 점검 항목은 정수처리기준 해설서(국립환경과학원, 2013)와 고탁도 취수중단 사례를 참고한 예시이며 취수 중단 판단을 대신하지 않습니다.</p>
-    </div>
   </section>
+  </div>
 
+  <div class="tab" id="tab-cmp" data-tab="cmp" hidden>
   <section class="card" id="compare">
     <h2>작년 동기 비교</h2>
-    <div class="legend"><span><i class="sw-line"></i><span id="lyA">올해</span> 추정</span><span><i class="sw-ly"></i><span id="lyB">작년</span> 추정</span><span><i class="sw-dot"></i>실측 (원: 올해, 테두리: 작년)</span></div>
+    <div class="legend"><span><i class="sw-line"></i><span id="lyA">올해</span> 추정</span><span><i class="sw-ly"></i><span id="lyB">작년</span> 추정</span><span><i class="sw-dot"></i><span id="lyOA">올해</span> 실측</span><span><i class="sw-ring"></i><span id="lyOB">작년</span> 실측</span></div>
     <div class="grid g-2" style="align-items:start">
       <div id="pLY" class="plot" style="height:240px" role="img" aria-label="올해와 작년 같은 기간의 SS 추정 비교"></div>
       <div class="cmp" id="cmp"></div>
     </div>
   </section>
 
-  <section class="grid g-3">
+  <section class="grid g-2">
     <div class="card">
       <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
       <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
       <div class="bars" id="bars"></div>
-      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 아래 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
+      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 「1·3·7일 예측 · 원인」 탭의 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
     </div>
+  </section>
+  </div>
+
+  <div class="tab" id="tab-perf" data-tab="perf" hidden>
+  <section class="grid g-2">
     <div class="card">
-      <h2>수질 알림</h2>
-      <div id="alert"></div>
-      <p class="hint" id="alertRule">–</p>
-      <div id="wrn"></div>
+      <h2>예측 성능 <span class="tag real">전진검증 2019–26</span></h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
+        <tbody id="fcTbl"></tbody>
+      </table></div>
+      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 7일 관측만은 모델이 월별 기준값보다 낫지 않아 기준값을 씁니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
     </div>
     <div class="card" id="perf">
       <h2>모델 성능 <span class="tag real">팀 분석값</span></h2>
@@ -336,8 +349,9 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <p class="hint">연도별 전진검증, MAE mg/L. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 15건, 이전 22건). 25 mg/L 이상은 13건 중 7건으로 같습니다. 탐색적 결과이며 새 실측으로 잠금 평가 예정. 1·3일 독립 시험은 연구용 별도 틀(SS 60일 지연 반영)로, 월평균 기준 대비 MAE가 1일 −34%(예보 포함 −40%), 3일 −9%(−10%)입니다. 2025년은 고농도가 없는 해라 고농도 예측력은 검증되지 않았습니다.</p>
     </div>
   </section>
+  </div>
 
-
+  <div class="tab" id="tab-info" data-tab="info" hidden>
   <section class="grid g-2" id="basin">
     <div class="card">
       <h2>내린천2 유역도</h2>
@@ -385,6 +399,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023년 실측 SS 상위 10% 경계. 법정 기준이 아니라 이 대시보드의 임시 알림 기준입니다.</dd></div>
     </dl>
   </section>
+  </div>
 
   <footer>
     <span>자료: 물환경정보시스템 총량측정망(소양A), 기상청 AWS 321·557·559, WAMIS 원대교. 티센 가중치는 현재 좌표 기준 잠정값.</span>
@@ -447,6 +462,15 @@ function renderWx() {
   if (W.example) { $('wxNote').textContent = '칸 모양을 보여주기 위한 예시 값입니다. 실제 기상청 예보는 다음 자동 갱신(매일 07:30)부터 채워집니다.'; return; }
   $('wxNote').textContent = W.base + ' 발표 단기예보 · 날씨·기온·강수확률은 ' + (W.point || '기린면') + ' 격자, 유역 강수는 원통·기린·내면 티센 가중 합계입니다. 예측 카드의 "기상청 예보" 강우와 같은 자료입니다.';
 }
+function renderGrade() {
+  const gr = v => v <= 25 ? 'Ia–III' : v <= 100 ? 'IV' : 'V 이하';
+  const last = obs[obs.length - 1], cut = last.i - 365, yr = obs.filter(o => o.i > cut);
+  const cnt = k => yr.filter(o => gr(o.v) === k).length, mx = Math.max(...yr.map(o => o.v)), mean = yr.reduce((a, o) => a + o.v, 0) / yr.length;
+  $('grade').innerHTML = '<div class="grade"><div>하천 등급 (SS 기준) · 최근 실측 <b class="g">' + gr(last.v) + '</b> (' + last.d + ' ' + fmt(last.v) + ' mg/L)</div>'
+    + '<table><thead><tr><th>최근 1년 실측 ' + yr.length + '건</th><th>Ia–III (≤25)</th><th>IV (≤100)</th><th>V 이하 (>100)</th></tr></thead><tbody><tr><td>건수</td><td>' + cnt('Ia–III') + '</td><td>' + cnt('IV') + '</td><td>' + cnt('V 이하') + '</td></tr></tbody></table>'
+    + '<div style="color:var(--ink-3);font-size:11.5px;margin-top:4px">평균 ' + fmt(mean) + ', 최대 ' + fmt(mx) + ' mg/L. 하천 생활환경기준의 SS 항목만으로 본 범위이고, 공식 등급은 BOD·TOC·총인 등을 함께 봅니다. 이 구간의 공식 목표등급(물환경 목표기준)은 아직 확인하지 못했습니다.</div></div>';
+}
+renderGrade();
 renderWx();
 renderStatus();
 $('fObs').textContent = obs[0].d + ' – ' + obs[obs.length - 1].d + ', ' + obs.length + '건';
@@ -540,7 +564,7 @@ function render() {
   const shift = ref - idx((yr - 1) + md);
   const la = a - shift, lb = b - shift;
   const lyEst = series(la, lb, D.est);
-  $('lyA').textContent = yr + '년'; $('lyB').textContent = (yr - 1) + '년';
+  $('lyA').textContent = yr + '년'; $('lyB').textContent = (yr - 1) + '년'; $('lyOA').textContent = yr + '년'; $('lyOB').textContent = (yr - 1) + '년';
   const lyOb = obs.filter(o => o.i >= la && o.i <= lb && o.v != null);
   Plotly.react('pLY', [
     { x: est.x, y: lyEst.y, mode: 'lines', name: (yr - 1) + '년 추정', line: { color: css('--ly'), width: 2 }, hovertemplate: '%{y:.1f}' },
@@ -723,8 +747,18 @@ logEl.addEventListener('change', render);
 fcEl.addEventListener('change', render);
 $('latest').addEventListener('click', () => { state.ref = lastI; render(); });
 document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { state.h = +b.dataset.h; renderBars(); save(); }));
-const navs = document.querySelectorAll('aside nav a');
-navs.forEach(a => a.addEventListener('click', () => { navs.forEach(x => x.classList.remove('on')); a.classList.add('on'); }));
+const TABS = ['home', 'fc', 'cmp', 'perf', 'info'];
+function showTab(t, push) {
+  if (!TABS.includes(t)) t = 'home';
+  document.querySelectorAll('.tab').forEach(el => { el.hidden = el.dataset.tab !== t; });
+  document.querySelectorAll('nav a[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === t));
+  if (push) history.replaceState(null, '', '#' + t);
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => document.querySelectorAll('#tab-' + t + ' .plot').forEach(p => { if (window.Plotly && p.data) Plotly.Plots.resize(p); }));
+}
+document.querySelectorAll('nav a[data-tab]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.tab, true); }));
+window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+showTab(location.hash.slice(1) || 'home');
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
 new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
