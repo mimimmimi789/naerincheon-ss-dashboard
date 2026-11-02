@@ -131,7 +131,13 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp):
     html = (t.replace('/*DATA*/', json.dumps(D, separators=(',', ':'), ensure_ascii=False))
              .replace('/*GEO*/', (Path(__file__).parent / 'geo.json').read_text(encoding='utf-8')).replace('/*PLOTLY*/', pl))
     DOCS.mkdir(exist_ok=True)
-    (DOCS / 'index.html').write_text(html, encoding='utf-8')
+    head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+            '<meta name="theme-color" content="#0e3b4a"><meta name="apple-mobile-web-app-capable" content="yes">'
+            '<meta name="apple-mobile-web-app-title" content="내린천 SS"></head><body>\n')
+    (DOCS / 'index.html').write_text(head + html + '\n</body></html>', encoding='utf-8')
+    (DOCS.parent / 'build').mkdir(exist_ok=True)
+    (DOCS.parent / 'build' / 'artifact.html').write_text(html, encoding='utf-8')   # Claude 아티팩트용(문서 틀은 아티팩트가 씌움)
     out = r.rename(columns={'P0': 'p0_mm', 'SS': 'ss_obs_mgL', 'Q_meas': 'q_meas_m3s', 'est': 'ss_est_mgL', 'lo': 'ss_lo80',
                             'hi': 'ss_hi80', 'q_corr': 'q_corr_m3s', 'q_fix': 'q_corrected', 'partial': 'input_partial', 'qpk': 'q_peak_m3s'})
     out.round(3).to_csv(DOCS / 'ss_daily.csv', encoding='utf-8-sig')
