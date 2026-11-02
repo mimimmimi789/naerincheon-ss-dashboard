@@ -166,6 +166,8 @@ WRN_NAME = {'W': '강풍', 'R': '호우', 'C': '한파', 'D': '건조', 'O': '�
 LVL_NAME = {'1': '예비특보', '2': '주의보', '3': '경보', '4': '중대경보'}
 # 유역이 걸친 특보구역: 인제산지(서화·북면·기린·상남면), 인제평지, 홍천산지(내면)
 WRN_AREAS = ['인제산지', '인제평지', '인제', '홍천산지']
+# 2026-11-02 wrn_reg.php에서 확인한 코드 (2026-05-31 13:30부터 유효). API가 안 될 때 이 값을 쓴다.
+WRN_CODES = {'L1022900': '인제', 'L1022910': '인제평지', 'L1022920': '인제산지', 'L1022720': '홍천산지'}
 
 
 def kma_wrn_regions(key):
@@ -189,7 +191,10 @@ def kma_wrn_regions(key):
 def kma_warnings(key, today):
     """올해 특보 이력(wrn_met_data)에서 유역 특보구역만 골라 이력과 현재 발효 중인 특보를 만든다.
     현재 발효 여부는 구역·종류별 마지막 명령이 해제(3·4·7)가 아니면 발효 중으로 본다."""
-    regs = kma_wrn_regions(key)
+    try:
+        regs = kma_wrn_regions(key) or WRN_CODES
+    except Exception:
+        regs = WRN_CODES
     if not regs: raise RuntimeError('특보구역 코드에서 인제·홍천산지를 찾지 못함 (wrn_reg 응답 확인 필요)')
     t = get(f'{KMA}/api/typ01/url/wrn_met_data.php?wrn=A&reg=0&tmfc1={today:%Y}01010000'
             f'&tmfc2={today:%Y%m%d}2300&disp=0&help=0&authKey={key}').content.decode('euc-kr', 'replace')
