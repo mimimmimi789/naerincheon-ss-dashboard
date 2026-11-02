@@ -97,7 +97,7 @@ def locked_eval(df):
             'rows': [[str(d.date()), float(a), round(float(b), 2)] for d, a, b in zip(newo, y, p)]}
 
 
-def build(df, est, hc, live, static, status, warnings, locked, updated, shp):
+def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None):
     r = est.join(df[['P0', 'SS', 'Q_meas']])
     wf = csv(BASE / 'ss_wf_blend_20261102.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
@@ -107,7 +107,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp):
          'wf': f(wf), 'qfix': [i for i, x in enumerate(r.q_fix) if x == 1], 'part': [i for i, x in enumerate(r.partial) if x == 1],
          'obs': [[str(a.date()), float(b), None if pd.isna(c) else round(float(c), 1)] for a, b, c in zip(o.index, o.SS, o.Q_meas)],
          'meta': {'p90': round(p90, 1), 'n_est': int(r.SS.isna().sum()), 'updated': updated, 'sources': status,
-                  'warnings': warnings, 'locked': locked}}
+                  'warnings': warnings, 'locked': locked, 'wx': wx}}
     F = {'off': (hc.index[0] - r.index.min()).days}
     for h in fcm.H:
         for t in ('obs', 'rain'):
@@ -159,16 +159,17 @@ def main():
     fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static)
     hc = fr.hindcast()
     fj = src.LIVE / 'kma_fcst.json'
-    rain = None
+    rain = wx = None
     if fj.exists():
         j = json.loads(fj.read_text(encoding='utf-8'))
         if j['issue'] == str(df.index.max().date()): rain = j['rain_mm']
+        if j.get('weather'): wx = {'base': j['base'], 'point': j.get('weather_point', ''), 'days': j['weather']}
     live = fr.live(rain)
     wj = src.LIVE / 'kma_warnings.json'
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
     locked = locked_eval(df)
     updated = now.strftime('%Y-%m-%d %H:%M KST')
-    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()})
+    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()}, wx)
     print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', locked.get('n'), '|', status)
     if '--push' in args:
         g = lambda *c: subprocess.run(['git', '-C', str(ROOT), *c], check=False)

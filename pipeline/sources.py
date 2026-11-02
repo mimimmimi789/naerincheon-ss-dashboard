@@ -139,6 +139,42 @@ def env_key(name):
     return ''
 
 
+WX_STN, WX_NAME = 557, '기린면'                 # 날씨 칸 대표 격자: 유역 면적 51%를 차지하는 기린 AWS 격자
+SKY = {'1': '맑음', '3': '구름많음', '4': '흐림'}
+PTY = {'1': '비', '2': '비/눈', '3': '눈', '4': '소나기', '5': '빗방울', '6': '빗방울눈날림', '7': '눈날림'}
+PTY_RANK = {'3': 7, '2': 6, '1': 5, '4': 4, '6': 3, '7': 2, '5': 1}
+
+
+def _period(rows):
+    """시간별 예보 몇 개 -> 대표 날씨 이름. 강수형태가 있으면 그중 가장 강한 것, 없으면 가장 흐린 하늘."""
+    pty = [r.get('PTY', '0') for r in rows if r.get('PTY', '0') not in ('0', None)]
+    if pty: return PTY[max(pty, key=lambda x: PTY_RANK.get(x, 0))]
+    sky = [r['SKY'] for r in rows if r.get('SKY') in SKY]
+    if not sky: return None
+    cnt = {k: sky.count(k) for k in set(sky)}
+    return SKY[max(cnt, key=lambda k: (cnt[k], k))]
+
+
+def weather_days(items, rain):
+    """단기예보 항목(한 격자) -> 날짜별 오전·오후 날씨, 최저·최고기온, 최고 강수확률, 유역 예보강수."""
+    by = {}
+    for it in items:
+        by.setdefault(it['fcstDate'], {}).setdefault(it['fcstTime'], {})[it['category']] = it['fcstValue']
+    out = []
+    for d in sorted(by):
+        hrs = by[d]
+        if len(hrs) < 12: continue                  # 앞뒤로 몇 시간만 남은 날은 뺀다
+        num = lambda c: [float(v[c]) for v in hrs.values() if c in v and str(v[c]).replace('.', '', 1).lstrip('-').isdigit()]
+        tmn = num('TMN') or num('TMP'); tmx = num('TMX') or num('TMP')
+        pop = num('POP')
+        am = _period([hrs[t] for t in sorted(hrs) if '0600' <= t < '1200'])
+        pm = _period([hrs[t] for t in sorted(hrs) if '1200' <= t < '1800'])
+        iso = f'{d[:4]}-{d[4:6]}-{d[6:]}'
+        out.append({'date': iso, 'am': am, 'pm': pm, 'tmin': round(min(tmn)) if tmn else None, 'tmax': round(max(tmx)) if tmx else None,
+                    'pop': int(max(pop)) if pop else None, 'rain_mm': rain.get(iso)})
+    return out
+
+
 def kma_fcst(issue, key):
     """기준일 D 23시 발표 단기예보로 D+1.. 일강수 예보(Thiessen 가중).
     기상청 API허브 키를 먼저 쓰고, 공공데이터포털 키(DATA_GO_KR_KEY)가 있으면 그쪽으로도 받을 수 있다."""
@@ -154,9 +190,15 @@ def kma_fcst(issue, key):
             if it['category'] == 'PCP':
                 day[it['fcstDate']] = day.get(it['fcstDate'], 0) + pcp_mm(it['fcstValue'])
         out[stn] = day
+        if stn == WX_STN: wx_items = items
     dates = sorted(set().union(*[d.keys() for d in out.values()]))
     rain = {f'{x[:4]}-{x[4:6]}-{x[6:]}': round(sum(AWS[s] * out[s].get(x, 0) for s in AWS), 1) for x in dates}
     res = {'issue': str(issue), 'base': f'{issue:%Y-%m-%d} 23:00', 'rain_mm': rain}
+    try:
+        res['weather'] = weather_days(wx_items, rain)
+        res['weather_point'] = WX_NAME
+    except Exception as e:                       # 날씨 칸은 부가 정보라 실패해도 강우 예보는 저장
+        res['weather_error'] = repr(e)
     (LIVE / 'kma_fcst.json').write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding='utf-8')
     return res
 
