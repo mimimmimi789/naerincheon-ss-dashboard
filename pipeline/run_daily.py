@@ -90,7 +90,7 @@ def locked_eval(df):
     if not len(newo): return {'n': 0}
     F, _, _, _ = model.features(df)
     tr = (df.index <= LOCK) & df.SS.notna() & (df.SS > 0)
-    m, sm = model.fit_log(model.XG, F[tr], df.SS[tr].values)
+    m, sm = model.fit_log(model.Blend, F[tr], df.SS[tr].values)
     p = np.exp(m.predict(F.loc[newo]) + sm); y = df.SS[newo].values
     r2 = 1 - np.sum((y - p) ** 2) / np.sum((y - y.mean()) ** 2) if len(y) > 1 else None
     return {'n': int(len(y)), 'mae': round(float(np.mean(np.abs(y - p))), 2), 'r2': None if r2 is None else round(float(r2), 3),
@@ -99,7 +99,7 @@ def locked_eval(df):
 
 def build(df, est, hc, live, static, status, warnings, locked, updated, shp):
     r = est.join(df[['P0', 'SS', 'Q_meas']])
-    wf = csv(BASE / 'daily_xgblog_final_20261030.csv').ss_wf_mgL.reindex(r.index)
+    wf = csv(BASE / 'ss_wf_blend_20261102.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
     o = r[r.SS.notna()]
     p90 = float(o[o.index < '2024-01-01'].SS.quantile(.9))
