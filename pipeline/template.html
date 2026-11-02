@@ -8,7 +8,7 @@
   --bg:#f3f6f7; --panel:#ffffff; --line:#dfe6e8; --ink:#0f1c22; --ink-2:#4b5b62; --ink-3:#7c8a90;
   --side:#0e3b4a; --side-2:#15506a; --side-ink:#e6f1f4; --side-ink-2:#9fc0cb;
   --est:#2a78d6; --band:rgba(42,120,214,.14); --obs:#0f1c22; --ly:#eb6834; --rain:#1baf7a; --flow:#6250d6;
-  --warn-bg:#fff4e0; --warn:#a65d00; --ok-bg:#e5f5ec; --ok:#17673f; --note-bg:#eef4fb; --note:#1c4f8a;
+  --water:#2f7fc1; --warn-bg:#fff4e0; --warn:#a65d00; --ok-bg:#e5f5ec; --ok:#17673f; --note-bg:#eef4fb; --note:#1c4f8a;
   --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   --r:10px;
@@ -17,13 +17,13 @@
   --bg:#0f1517; --panel:#172024; --line:#26343a; --ink:#e8eef0; --ink-2:#b2c0c5; --ink-3:#83949a;
   --side:#0a2832; --side-2:#123f52; --side-ink:#e6f1f4; --side-ink-2:#8fb2bd;
   --est:#3987e5; --band:rgba(57,135,229,.20); --obs:#e8eef0; --ly:#d95926; --rain:#199e70; --flow:#9085e9;
-  --warn-bg:#3a2a10; --warn:#f2b44f; --ok-bg:#12301f; --ok:#6fd39b; --note-bg:#152a40; --note:#9cc4f0;
+  --water:#6fb2ea; --warn-bg:#3a2a10; --warn:#f2b44f; --ok-bg:#12301f; --ok:#6fd39b; --note-bg:#152a40; --note:#9cc4f0;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f1517; --panel:#172024; --line:#26343a; --ink:#e8eef0; --ink-2:#b2c0c5; --ink-3:#83949a;
   --side:#0a2832; --side-2:#123f52; --side-ink:#e6f1f4; --side-ink-2:#8fb2bd;
   --est:#3987e5; --band:rgba(57,135,229,.20); --obs:#e8eef0; --ly:#d95926; --rain:#199e70; --flow:#9085e9;
-  --warn-bg:#3a2a10; --warn:#f2b44f; --ok-bg:#12301f; --ok:#6fd39b; --note-bg:#152a40; --note:#9cc4f0;
+  --water:#6fb2ea; --warn-bg:#3a2a10; --warn:#f2b44f; --ok-bg:#12301f; --ok:#6fd39b; --note-bg:#152a40; --note:#9cc4f0;
   color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55}
@@ -288,10 +288,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card">
       <h2>예측 원인 분석 <span class="tag real">SHAP</span></h2>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
-      <div class="kv2"><div><span>기준값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
+      <div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
       <div class="bars" id="shBars"></div>
       <p class="shtxt" id="shTxt"></p>
-      <p class="hint">혼합 모델의 기여(XGB TreeSHAP 평균과 Ridge 선형 기여의 평균)를 변수 묶음별로 더했습니다. 로그 척도라 기여는 곱(×배)으로 쌓여 기준값 × 모든 배수 = 예측값이 됩니다. 전체 자료로 학습한 모델 기준이라 과거 날짜의 1일 예측은 위 카드(그해 이전 자료로 학습)와 조금 다를 수 있습니다. 3·7일 예측은 화면에서 기여를 따로 보여주지 않습니다.</p>
+      <p class="hint">"평소 예측값"에서 출발해 항목마다 오늘 상황을 보고 예측을 몇 배 올리거나(주황) 내립니다(파랑). 모든 배수를 곱하면 최종 예측이 됩니다. 문장에는 ×1.1 이상 올리거나 ×0.9 이하로 내린 항목만 적었습니다. (계산: XGB와 Ridge의 SHAP 기여 평균. 전체 자료로 학습한 모델이라 과거 날짜는 위 예측 카드와 조금 다를 수 있습니다.)</p>
     </div>
     <div class="card">
       <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
@@ -705,7 +705,19 @@ function renderExplain(ref, FCS, e) {
     vals.sort((p, q) => Math.abs(q[1]) - Math.abs(p[1]));
     $('shBars').innerHTML = vals.map(([g, v]) => { const w = Math.abs(v) / mx * 50; return `<div class="shbar"><span>${g}</span><div class="tr"><i class="mid"></i><i style="${v >= 0 ? 'left:50%' : 'right:50%'};width:${w.toFixed(1)}%;background:var(${v >= 0 ? '--warn' : '--note'})"></i></div><span class="n" style="color:var(${v >= 0 ? '--warn' : '--note'})">×${Math.exp(v).toFixed(2)}</span></div>`; }).join('');
     const up = vals.filter(([, v]) => v >= 0.1).map(([g]) => g), dn = vals.filter(([, v]) => v <= -0.1).map(([g]) => g);
-    $('shTxt').textContent = (up.length ? up.join(', ') + '이(가) 예측을 높였고' : '크게 높인 변수는 없고') + (dn.length ? ', ' + dn.join(', ') + '이(가) 낮췄습니다.' : ', 크게 낮춘 변수는 없습니다.') + ' (×1.1 이상 또는 ×0.9 이하만 언급)';
+    // [올림: 이어쓰기, 끝맺기], [내림: 이어쓰기, 끝맺기]
+    const WHY = { '유량': [['물이 평소보다 많고', '물이 평소보다 많아서'], ['물이 평소보다 적고', '물이 평소보다 적어서']],
+      '당일·전일 강우': [['오늘·어제 비가 왔고', '오늘·어제 비가 와서'], ['오늘·어제 비가 거의 없었고', '오늘·어제 비가 거의 없어서']],
+      '선행강우 (3–30일)': [['최근 몇 주 동안 비가 많았고', '최근 몇 주 동안 비가 많아서'], ['최근 몇 주 동안 비가 적었고', '최근 몇 주 동안 비가 적어서']],
+      '무강우일수': [['비가 그친 지 얼마 안 됐고', '비가 그친 지 얼마 안 돼서'], ['비가 그친 지 오래됐고', '비가 그친 지 오래돼서']],
+      '수위·첨두유량': [['최근 물이 갑자기 불어났고', '최근 물이 갑자기 불어나서'], ['최근 물이 갑자기 불어난 적이 없고', '최근 물이 갑자기 불어난 적이 없어서']],
+      '계절': [['SS가 높은 계절이고', 'SS가 높은 계절이라서'], ['SS가 높은 계절(여름 장마철)이 아니고', 'SS가 높은 계절(여름 장마철)이 아니라서']] };
+    const say = (gs, j) => gs.map((g, n) => (WHY[g] || [[g + ' 영향이 크고', g + ' 영향으로'], [g + ' 영향이 작고', g + ' 영향으로']])[j][n === gs.length - 1 ? 1 : 0]).join(', ');
+    const pv = fmt(Math.exp(tot)) + ' mg/L';
+    $('shTxt').textContent = up.length && dn.length ? say(up, 0) + ' SS가 오를 수 있지만, ' + say(dn, 1) + ' ' + pv + '로 낮게 예측했어요.'
+      : up.length ? say(up, 0) + ' 평소보다 높은 ' + pv + '로 예측했어요.'
+      : dn.length ? say(dn, 1) + ' 평소보다 낮은 ' + pv + '로 예측했어요.'
+      : '평소와 크게 다른 조건이 없어 평소 수준인 ' + pv + '로 예측했어요.';
   }
   // 유사 강우사상
   let R0, src;
@@ -793,6 +805,8 @@ function renderMap() {
   svg.setAttribute('viewBox', `0 0 ${g.W} ${g.H}`);
   const op = w => (0.10 + w * 0.5).toFixed(2);
   let h = g.cells.map(c => `<path class="cell" d="${c.d}" fill="var(--rain)" fill-opacity="${op(c.w)}"><title>${c.nm} ${c.id}: 티센 ${c.a} km², 가중치 ${c.w.toFixed(3)}</title></path>`).join('');
+  h += (g.riv || []).map(r => `<path d="${r.d}" fill="none" stroke="var(--water)" stroke-width="${r.t === 'r' ? 1.8 : 0.7}" stroke-opacity="${r.t === 'r' ? 0.95 : 0.6}" stroke-linecap="round" stroke-linejoin="round">${r.n ? '<title>' + r.n + '</title>' : ''}</path>`).join('');
+  h += (g.rlab || []).map(l => `<text class="sub" x="${l.x + 4}" y="${l.y - 4}" style="fill:var(--water);font-weight:600">${l.n}</text>`).join('');
   h += `<path class="ws" d="${g.ws}"/>`;
   h += g.cells.map(c => `<g><circle cx="${c.sx}" cy="${c.sy}" r="6" fill="var(--rain)" stroke="var(--panel)" stroke-width="2"><title>AWS ${c.id} ${c.nm}</title></circle><text x="${c.sx + 10}" y="${c.sy + 4}" font-size="12" font-weight="600">${c.nm} ${c.id}</text><text class="sub" x="${c.sx + 10}" y="${c.sy + 18}">티센 ${(c.w * 100).toFixed(1)}%</text></g>`).join('');
   const [nx, ny] = g.nr;
@@ -803,7 +817,7 @@ function renderMap() {
   svg.innerHTML = h;
 }
 function renderWt() {
-  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km².</p>';
+  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km². 하천망(파란 선, 굵은 선은 본류)은 © OpenStreetMap 기여자(ODbL) 자료입니다.</p>';
 }
 
 refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
