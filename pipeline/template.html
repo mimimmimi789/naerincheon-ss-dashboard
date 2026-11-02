@@ -189,6 +189,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <a href="#explain">원인 · 유사사례 · 점검</a>
     <a href="#compare">작년 동기 비교</a>
     <a href="#perf">모델 성능</a>
+    <a href="#study">예측 시험 결과</a>
     <a href="#basin">유역 · 자료</a>
     <a href="#glossary">용어 설명</a>
   </nav>
@@ -201,7 +202,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 </aside>
 
 <main>
-  <nav class="mob-nav" aria-label="섹션"><a href="#overview">종합</a><a href="#weather">날씨</a><a href="#ss">SS 추정</a><a href="#hydro">강우·유량</a><a href="#forecast">예측</a><a href="#explain">원인·점검</a><a href="#compare">작년 비교</a><a href="#perf">모델 성능</a><a href="#basin">유역·자료</a><a href="#glossary">용어</a></nav>
+  <nav class="mob-nav" aria-label="섹션"><a href="#overview">종합</a><a href="#weather">날씨</a><a href="#ss">SS 추정</a><a href="#hydro">강우·유량</a><a href="#forecast">예측</a><a href="#explain">원인·점검</a><a href="#compare">작년 비교</a><a href="#perf">모델 성능</a><a href="#study">시험 결과</a><a href="#basin">유역·자료</a><a href="#glossary">용어</a></nav>
   <header class="top" id="overview">
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
@@ -326,10 +327,43 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
           <tr><td>이전 XGB(log) · 2023–26</td><td>0.510</td><td>0.657</td><td>3.92</td></tr>
           <tr><td>기존 RF · 2023–26</td><td>0.193</td><td>0.62</td><td>4.3</td></tr>
           <tr><td>기존 RF · 2026</td><td>0.617</td><td>–</td><td>–</td></tr>
-          <tr><td>RF+SVR 보정 · 2024–25</td><td>0.936</td><td>–</td><td>–</td></tr>
                   </tbody>
       </table></div>
-      <p class="hint">연도별 전진검증, MAE mg/L. 2024–25의 0.936은 90 mg/L 한 점에 크게 좌우됩니다. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 15건, 이전 22건). 25 mg/L 이상은 13건 중 7건으로 같습니다. 탐색적 결과이며 새 실측으로 잠금 평가 예정.</p>
+      <p class="hint">연도별 전진검증, MAE mg/L. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 15건, 이전 22건). 25 mg/L 이상은 13건 중 7건으로 같습니다. 탐색적 결과이며 새 실측으로 잠금 평가 예정.</p>
+    </div>
+  </section>
+
+  <section class="card" id="study">
+    <h2>1·3일 예측 독립 시험 <span class="tag real">연구 결과</span></h2>
+    <div class="grid g-2" style="gap:16px">
+      <div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>예측 · 시험기간</th><th>MAE</th><th>월평균 대비</th><th>로그 R²</th></tr></thead>
+          <tbody>
+            <tr><td colspan="4" style="color:var(--ink-3);font-size:11.5px">공식: 2014–22 학습 → 2023–24 시험</td></tr>
+            <tr><td>1일 · 관측만</td><td>6.57</td><td>−18%</td><td>0.49</td></tr>
+            <tr class="mine"><td>1일 · 실제 예보</td><td>6.67</td><td>−14%</td><td>0.56</td></tr>
+            <tr><td>3일 · 관측만</td><td>7.87</td><td>−2%</td><td>0.22</td></tr>
+            <tr class="mine"><td>3일 · 실제 예보</td><td>4.22</td><td>−3%</td><td>0.44</td></tr>
+            <tr><td colspan="4" style="color:var(--ink-3);font-size:11.5px">보조: 2014–23 학습 → 2024–25 시험</td></tr>
+            <tr><td>1일 · 관측만</td><td>2.78</td><td>−34%</td><td>0.59</td></tr>
+            <tr class="mine"><td>1일 · 실제 예보</td><td>2.50</td><td>−40%</td><td>0.70</td></tr>
+            <tr><td>3일 · 관측만</td><td>3.85</td><td>−9%</td><td>0.28</td></tr>
+            <tr class="mine"><td>3일 · 실제 예보</td><td>3.38</td><td>−10%</td><td>0.54</td></tr>
+          </tbody>
+        </table></div>
+        <p class="hint">MAE mg/L. 모델 구성은 개발기간(2014–22) 성적으로만 골랐고 시험기간 결과로 다시 고르지 않았습니다. 실제 예보 = 기상청 과거 단기예보(기준일 23시 발표). 실제 예보 행은 예보가 있는 날만이라 표본이 조금 적습니다. 공식 시험의 RMSE(약 30)는 2023-06-27 홍수일(276 mg/L) 한 점이 85% 이상을 차지합니다.</p>
+      </div>
+      <div>
+        <h3 class="mini" style="margin-top:0">같은 날짜에서 예보를 넣으면 (로그 R²)</h3>
+        <div class="bars" id="studyBars"></div>
+        <ul class="wl" style="margin-top:10px">
+          <li><b>1일 예측</b>은 두 시험기간 모두 월평균 기준보다 확실히 낫습니다.</li>
+          <li><b>3일 예측</b>은 관측만으로는 기준과 비슷하고, <b>기상청 예보를 넣으면 로그 R²가 약 2배</b>가 됩니다. 시험기간을 바꿔도 같습니다.</li>
+          <li>2025년은 최대 19 mg/L인 조용한 해라 고농도 예측력은 검증되지 않았습니다.</li>
+          <li>이 연구 모델은 위 대시보드 모델과 별도 틀(SS 60일 지연 반영)로 평가한 값입니다.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -442,6 +476,11 @@ function renderWx() {
   if (W.example) { $('wxNote').textContent = '칸 모양을 보여주기 위한 예시 값입니다. 실제 기상청 예보는 다음 자동 갱신(매일 07:30)부터 채워집니다.'; return; }
   $('wxNote').textContent = W.base + ' 발표 단기예보 · 날씨·기온·강수확률은 ' + (W.point || '기린면') + ' 격자, 유역 강수는 원통·기린·내면 티센 가중 합계입니다. 예측 카드의 "기상청 예보" 강우와 같은 자료입니다.';
 }
+(() => {
+  const rows = [['1일 · 2023–24', 0.47, 0.56], ['1일 · 2024–25', 0.60, 0.70], ['3일 · 2023–24', 0.21, 0.44], ['3일 · 2024–25', 0.28, 0.54]];
+  $('studyBars').innerHTML = rows.map(([k, a, b]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div style="display:flex;flex-direction:column;gap:3px"><div class="tr" style="height:9px;background:var(--bg);border-radius:4px;position:relative"><i style="position:absolute;left:0;top:0;bottom:0;width:${a * 100}%;background:var(--ink-3);border-radius:3px"></i></div><div class="tr" style="height:9px;background:var(--bg);border-radius:4px;position:relative"><i style="position:absolute;left:0;top:0;bottom:0;width:${b * 100}%;background:var(--est);border-radius:3px"></i></div></div><span class="n" style="font-size:12px;text-align:right;white-space:nowrap">${a.toFixed(2)}→<b>${b.toFixed(2)}</b></span></div>`).join('')
+    + '<div class="legend" style="margin-top:6px"><span><i class="sw-line" style="background:var(--ink-3)"></i>관측만</span><span><i class="sw-line"></i>+ 기상청 예보</span></div>';
+})();
 renderWx();
 renderStatus();
 $('fObs').textContent = obs[0].d + ' – ' + obs[obs.length - 1].d + ', ' + obs.length + '건';
@@ -691,7 +730,7 @@ function renderTbl() {
 }
 function renderBars() {
   const c = CORR[state.h];
-  $('bars').innerHTML = Object.entries(c).map(([k, v]) => `<div class="bar-row"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v / .6 * 100).toFixed(1)}%"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('');
+  $('bars').innerHTML = Object.entries(c).map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v / .6 * 100).toFixed(1)}%"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('');
   document.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.h === state.h)));
 }
 function renderMap() {
@@ -709,7 +748,7 @@ function renderMap() {
   svg.innerHTML = h;
 }
 function renderWt() {
-  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km².</p>';
+  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km².</p>';
 }
 
 refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
