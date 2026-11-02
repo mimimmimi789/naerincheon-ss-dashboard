@@ -161,15 +161,50 @@ def kma_fcst(issue, key):
     return res
 
 
+WRN_NAME = {'W': '강풍', 'R': '호우', 'C': '한파', 'D': '건조', 'O': '해일', 'N': '지진해일', 'V': '풍랑', 'T': '태풍',
+            'S': '대설', 'Y': '황사', 'H': '폭염', 'F': '안개'}
+LVL_NAME = {'1': '예비특보', '2': '주의보', '3': '경보', '4': '중대경보'}
+# 유역이 걸친 특보구역: 인제산지(서화·북면·기린·상남면), 인제평지, 홍천산지(내면)
+WRN_AREAS = ['인제산지', '인제평지', '인제', '홍천산지']
+
+
+def kma_wrn_regions(key):
+    """특보구역 코드 → 이름 (wrn_reg.php). 한 번 받으면 data/live/wrn_regions.json에 보관."""
+    path = LIVE / 'wrn_regions.json'
+    if path.exists():
+        m = json.loads(path.read_text(encoding='utf-8'))
+        if m: return m
+    t = get(f'{KMA}/api/typ01/url/wrn_reg.php?tmfc=0&disp=0&help=0&authKey={key}').content.decode('euc-kr', 'replace')
+    m = {}
+    for line in t.splitlines():
+        if line.startswith('#'): continue
+        toks = [x.strip() for x in re.split(r'[,\s]+', line) if x.strip()]
+        code = next((x for x in toks if re.fullmatch(r'[A-Z]\d{7}', x)), None)
+        name = next((x for x in toks if x in WRN_AREAS), None)
+        if code and name: m[code] = name
+    path.write_text(json.dumps(m, ensure_ascii=False, indent=1), encoding='utf-8')
+    return m
+
+
 def kma_warnings(key, today):
-    """특보 현황·올해 이력 중 인제 관련 줄만 원문으로 보관."""
-    res = {'fetched': str(today)}
-    for nm, url in {'now': f'{KMA}/api/typ01/url/wrn_now_data.php?fe=f&disp=0&help=1&authKey={key}',
-                    'hist': f'{KMA}/api/typ01/url/wrn_met_data.php?wrn=A&reg=0&tmfc1={today:%Y}01010000'
-                            f'&tmfc2={today:%Y%m%d}2300&disp=0&help=1&authKey={key}'}.items():
-        t = get(url).content.decode('euc-kr', 'replace')
-        head = [l for l in t.splitlines() if l.startswith('#')][-3:]
-        res[nm] = {'header': head, 'rows': [l for l in t.splitlines() if not l.startswith('#') and '인제' in l]}
+    """올해 특보 이력(wrn_met_data)에서 유역 특보구역만 골라 이력과 현재 발효 중인 특보를 만든다.
+    현재 발효 여부는 구역·종류별 마지막 명령이 해제(3·4·7)가 아니면 발효 중으로 본다."""
+    regs = kma_wrn_regions(key)
+    if not regs: raise RuntimeError('특보구역 코드에서 인제·홍천산지를 찾지 못함 (wrn_reg 응답 확인 필요)')
+    t = get(f'{KMA}/api/typ01/url/wrn_met_data.php?wrn=A&reg=0&tmfc1={today:%Y}01010000'
+            f'&tmfc2={today:%Y%m%d}2300&disp=0&help=0&authKey={key}').content.decode('euc-kr', 'replace')
+    hist = []
+    for line in t.splitlines():
+        if line.startswith('#'): continue
+        p = [x.strip() for x in line.split(',')]
+        if len(p) < 8 or p[4] not in regs: continue
+        f = lambda s: f'{s[:4]}-{s[4:6]}-{s[6:8]} {s[8:10]}:{s[10:12]}'
+        hist.append({'tm': f(p[0]), 'ef': f(p[1]), 'reg': regs[p[4]], 'wrn': WRN_NAME.get(p[5], p[5]), 'lvl': LVL_NAME.get(p[6], p[6]),
+                     'cmd': {'1': '발표', '2': '대치', '3': '해제', '4': '대치해제', '5': '연장', '6': '변경', '7': '변경해제'}.get(p[7], p[7])})
+    last = {}
+    for h in hist: last[(h['reg'], h['wrn'])] = h
+    now = [h for h in last.values() if h['cmd'] in ('발표', '대치', '연장', '변경')]
+    res = {'fetched': str(today), 'areas': sorted(set(regs.values())), 'now': now, 'hist': hist}
     (LIVE / 'kma_warnings.json').write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding='utf-8')
     return res
 

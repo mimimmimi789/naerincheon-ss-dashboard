@@ -604,10 +604,12 @@ function renderStatus() {
   const M = D.meta, W = M.warnings, L = M.locked, st = M.sources || {};
   const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
   let h = '<h3 class="mini">기상특보 (인제)</h3>';
-  if (!W) h += '<p class="hint">기상청 특보 API 승인 전이라 아직 표시하지 않습니다.</p>';
+  if (!W) h += '<p class="hint">기상청 특보 자료를 아직 받지 못했습니다.</p>';
   else {
-    h += W.now.rows.length ? '<ul class="wl">' + W.now.rows.map(r => '<li><b>발효 중</b> ' + esc(r) + '</li>').join('') + '</ul>' : '<p class="hint">현재 인제에 발효 중인 특보 없음 (' + esc(W.fetched) + ' 기준)</p>';
-    if (W.hist.rows.length) h += '<details><summary>올해 특보 이력 ' + W.hist.rows.length + '건</summary><ul class="wl">' + W.hist.rows.slice(-30).reverse().map(r => '<li>' + esc(r) + '</li>').join('') + '</ul></details>';
+    const fw = r => r.reg + ' ' + r.wrn + r.lvl;
+    h += W.now.length ? '<ul class="wl">' + W.now.map(r => '<li><b>발효 중</b> ' + esc(fw(r)) + ' (' + esc(r.tm) + ' ' + esc(r.cmd) + ')</li>').join('') + '</ul>' : '<p class="hint">현재 유역(' + esc(W.areas.join('·')) + ')에 발효 중인 특보 없음 (' + esc(W.fetched) + ' 기준)</p>';
+    const hh = W.hist.filter(r => r.cmd === '발표');
+    if (hh.length) h += '<details><summary>올해 발표 이력 ' + hh.length + '건 (호우 ' + hh.filter(r => r.wrn === '호우').length + '건)</summary><ul class="wl">' + hh.slice(-40).reverse().map(r => '<li>' + esc(r.tm.slice(0, 10)) + ' ' + esc(fw(r)) + '</li>').join('') + '</ul></details>';
   }
   if (L && L.n) h += '<h3 class="mini">잠금 평가 (2026-08-27 이후 새 실측)</h3><p class="hint">8/26까지 자료로만 학습한 모델로 새 실측 ' + L.n + '건을 맞춘 결과: 평균절대오차 ' + fmt(L.mae) + ' mg/L' + (L.n >= 10 ? ', R² ' + L.r2.toFixed(2) : ' (10건 미만이라 R²는 생략)') + '.</p>';
   if (Object.keys(st).length) h += '<h3 class="mini">오늘 자료 수집</h3><ul class="wl">' + Object.entries(st).map(([k, v]) => '<li>' + esc(k) + ': ' + esc(v) + '</li>').join('') + '</ul>';
