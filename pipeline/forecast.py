@@ -1,6 +1,7 @@
 """SS 1·3·7일 예측: 기준일 D 24시까지의 관측(+ D+1..D+h 예보강우)으로 D+h일 실측 SS를 예측한다.
 
-모델 선택·전진검증 성적은 forecast_20261030 분석에서 고정했다(data/base/forecast_static.json).
+모델 선택·전진검증 성적은 data/base/forecast_static.json에 고정한다(2026-11-02 개선안: XGB 10시드+안전 Ridge 혼합,
+중앙값 보정. 이전 forecast_20261030 모델도 MODELS에 남겨 두어 static의 pick만 바꾸면 되돌릴 수 있다).
 여기서는 매일 (1) 2019년 이후 기준일별 표본외 예측(그 해 이전 자료로만 학습)과
 (2) 마지막 기준일 운영 예측(전체 자료 학습, 기상청 예보강우와 0–120 mm 시나리오)을 다시 만든다.
 """
@@ -24,9 +25,16 @@ def XG(): return xgb.XGBRegressor(n_estimators=300, max_depth=3, learning_rate=0
 def RG(): return make_pipeline(SimpleImputer(strategy='median'), StandardScaler(), RidgeCV(alphas=np.logspace(-2, 3, 20)))
 
 
+from model import Blend
+
+
 # h: (관측만 모델, 예보강우 모델) — (만드는 함수 또는 'clim', 입력열 'all' 또는 목록, 예보강우 사용)
 MODELS = {'월별 기준값': ('clim', None, False), 'XGB 전체입력 (관측만)': (XG, 'all', False),
-          'Ridge 전체입력 + 예보강우': (RG, 'all', True), 'Ridge 축소입력 + 예보강우': (RG, SM, True)}
+          'Ridge 전체입력 + 예보강우': (RG, 'all', True), 'Ridge 축소입력 + 예보강우': (RG, SM, True),
+          'XGB+Ridge 혼합 (관측만)': (Blend, 'all', False),
+          'XGB(예보강우 단조)+Ridge 혼합 + 예보강우': (lambda: Blend(mono=FUT), 'all', True)}
+# 이전 모델(Duan 평균 보정)과 개선 모델(중앙값 보정) 구분
+DUAN = {'XGB 전체입력 (관측만)', 'Ridge 전체입력 + 예보강우', 'Ridge 축소입력 + 예보강우'}
 
 
 def feats(P, Q, Qpk, Havg, Hmax):
@@ -51,6 +59,7 @@ class Forecaster:
         self.P = P; self.f = feats(P, Q, Qpk, Havg, Hmax)
         o = SS.dropna(); self.obs = o[o > 0]
         self.static = static; self.pick = {int(k): v for k, v in static['pick'].items()}
+        self._cache = {}
 
     def rows(self, h, fut):
         X = self.f.shift(h).loc[self.obs.index].copy(); t = self.obs.index
@@ -66,12 +75,17 @@ class Forecaster:
         if fut_rain is not None: Xd['Pfut'], Xd['Pfut_max'] = np.log1p(fut_rain[0]), np.log1p(fut_rain[1])
         return Xd, tgt
 
-    @staticmethod
-    def fit_pred(mk, Xtr, ytr, Xte):
-        m = mk().fit(Xtr, ytr); res = []
-        for a, b in KFold(3, shuffle=True, random_state=0).split(Xtr):
-            mm = mk().fit(Xtr.iloc[a], ytr[a]); res += list(ytr[b] - mm.predict(Xtr.iloc[b]))
-        return m.predict(Xte) + np.log(np.mean(np.exp(res)))
+    def fit_pred(self, mk, Xtr, ytr, Xte, key=None, duan=False):
+        """학습(같은 key면 재사용) + 보정(3겹 내부 잔차: 이전 모델 Duan 평균, 개선 모델 중앙값)."""
+        if key is None or key not in self._cache:
+            m = mk().fit(Xtr, ytr); res = []
+            for a, b in KFold(3, shuffle=True, random_state=0).split(Xtr):
+                mm = mk().fit(Xtr.iloc[a], ytr[a]); res += list(ytr[b] - mm.predict(Xtr.iloc[b]))
+            off = np.log(np.mean(np.exp(res))) if duan else float(np.median(res))
+            if key is None: return m.predict(Xte) + off
+            self._cache[key] = (m, off)
+        m, off = self._cache[key]
+        return m.predict(Xte) + off
 
     def predict(self, h, nm, days, fut_rain=None, train_upto=None):
         """log 예측. train_upto=None이면 기준일 연도 이전 실측으로만 학습(표본외)."""
@@ -87,7 +101,8 @@ class Forecaster:
                 out[sel] = tgt[sel].month.map(med).astype(float)
             else:
                 c = list(X.columns) if cols == 'all' else cols + FUT if fut else cols
-                out[sel] = self.fit_pred(mk, X.loc[tr, c], y[tr], Xd.loc[sel, c])
+                key = (h, nm, str(train_upto) if train_upto is not None else int(days[sel][0].year))
+                out[sel] = self.fit_pred(mk, X.loc[tr, c], y[tr], Xd.loc[sel, c], key, nm in DUAN)
         return out
 
     def hindcast(self, start='2019-01-01'):
@@ -112,15 +127,15 @@ class Forecaster:
           '계절': ['msin', 'mcos']}
 
     def shap_h1(self):
-        """1일 예측 XGB(관측만)를 전체 실측으로 학습해 모든 기준일의 SHAP 묶음 기여(log)."""
+        """1일 예측(관측만)을 전체 실측으로 학습해 모든 기준일의 SHAP 묶음 기여(log). live()와 같은 학습을 재사용."""
         from model import shap_groups
-        X, y = self.rows(1, False)
-        mk = MODELS[self.pick[1][0]][0]
-        m = mk().fit(X, y); res = []
-        for a, b in KFold(3, shuffle=True, random_state=0).split(X):
-            mm = mk().fit(X.iloc[a], y[a]); res += list(y[b] - mm.predict(X.iloc[b]))
+        nm = self.pick[1][0]; mk = MODELS[nm][0]
+        X, y = self.rows(1, False); D = self.f.index[-1]
+        key = (1, nm, str(D))
+        if key not in self._cache: self.fit_pred(mk, X[X.index <= D], y[X.index <= D], X.iloc[:1], key, nm in DUAN)
+        m, off = self._cache[key]
         Xd, _ = self.issue_X(self.f.index, 1)
-        return shap_groups(m, Xd[X.columns], self.G1, np.log(np.mean(np.exp(res))))
+        return shap_groups(m, Xd[X.columns], self.G1, off)
 
     def live(self, fcst_rain=None):
         """마지막 기준일 운영 예측. fcst_rain: {'YYYY-MM-DD': mm} 기상청 예보(Thiessen 가중 일강우)."""

@@ -205,10 +205,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     </div>
   </header>
 
-  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 개선 모델 <b>XGB(log) + 확장변수 + 유량보정 + 첨두수위</b>를 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 2023–26 결과를 본 뒤 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·7일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
+  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·7일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
 
   <section class="kpis" aria-label="요약">
-    <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">XGB 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
+    <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
     <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
     <div class="kpi"><div class="lab"><span id="kF1L">1일 후 예측</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="meta" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
     <div class="kpi"><div class="lab"><span id="kF3L">3일 후 예측</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="meta" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
@@ -217,7 +217,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 
   <section class="grid g-main">
     <div class="card" id="ss">
-      <h2>SS 시계열 <span class="tag">XGB(log) 사후복원</span></h2>
+      <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
       <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%, 실제 포함률 79.7%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·7일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
@@ -245,7 +245,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 3·7일은 관측만 쓴 모델이 월별 기준값보다 나쁘게 나와 기준값을 씁니다.</p>
+      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 7일 관측만은 모델이 월별 기준값보다 낫지 않아 기준값을 씁니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
     </div>
   </section>
 
@@ -256,7 +256,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div class="kv2"><div><span>기준값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
       <div class="bars" id="shBars"></div>
       <p class="shtxt" id="shTxt"></p>
-      <p class="hint">XGB(log) 모델의 TreeSHAP 값을 변수 묶음별로 더했습니다. 로그 척도라 기여는 곱(×배)으로 쌓여 기준값 × 모든 배수 = 예측값이 됩니다. 전체 자료로 학습한 모델 기준이라 과거 날짜의 1일 예측은 위 카드(그해 이전 자료로 학습)와 조금 다를 수 있습니다. 3·7일 예측은 월별 기준값이라 변수 기여가 없습니다.</p>
+      <p class="hint">혼합 모델의 기여(XGB TreeSHAP 평균과 Ridge 선형 기여의 평균)를 변수 묶음별로 더했습니다. 로그 척도라 기여는 곱(×배)으로 쌓여 기준값 × 모든 배수 = 예측값이 됩니다. 전체 자료로 학습한 모델 기준이라 과거 날짜의 1일 예측은 위 카드(그해 이전 자료로 학습)와 조금 다를 수 있습니다. 3·7일 예측은 화면에서 기여를 따로 보여주지 않습니다.</p>
     </div>
     <div class="card">
       <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
@@ -302,14 +302,17 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div class="tbl-wrap"><table>
         <thead><tr><th>모형 · 평가기간</th><th>R²</th><th>로그 R²</th><th>MAE</th></tr></thead>
         <tbody>
-          <tr class="mine"><td>XGB(log) 개선 · 2023–26</td><td>0.506</td><td>0.665</td><td>3.96</td></tr>
-          <tr class="mine"><td>XGB(log) 개선 · 2026</td><td>0.508</td><td>–</td><td>–</td></tr>
+          <tr class="mine"><td>XGB·Ridge 혼합 · 2019–26</td><td>0.494</td><td>0.722</td><td>3.22</td></tr>
+          <tr class="mine"><td>XGB·Ridge 혼합 · 2023–26</td><td>0.541</td><td>0.720</td><td>3.63</td></tr>
+          <tr class="mine"><td>XGB·Ridge 혼합 · 2026</td><td>0.768</td><td>0.587</td><td>2.15</td></tr>
+          <tr><td>이전 XGB(log) · 2019–26</td><td>0.476</td><td>0.630</td><td>3.51</td></tr>
+          <tr><td>이전 XGB(log) · 2023–26</td><td>0.510</td><td>0.657</td><td>3.92</td></tr>
           <tr><td>기존 RF · 2023–26</td><td>0.193</td><td>0.62</td><td>4.3</td></tr>
           <tr><td>기존 RF · 2026</td><td>0.617</td><td>–</td><td>–</td></tr>
           <tr><td>RF+SVR 보정 · 2024–25</td><td>0.936</td><td>–</td><td>–</td></tr>
                   </tbody>
       </table></div>
-      <p class="hint">연도별 전진검증, MAE mg/L. 2024–25의 0.936은 90 mg/L 한 점에 크게 좌우됩니다. 탐색적 결과이며 새 실측으로 잠금 평가 예정.</p>
+      <p class="hint">연도별 전진검증, MAE mg/L. 2024–25의 0.936은 90 mg/L 한 점에 크게 좌우됩니다. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 15건, 이전 22건). 25 mg/L 이상은 13건 중 7건으로 같습니다. 탐색적 결과이며 새 실측으로 잠금 평가 예정.</p>
     </div>
   </section>
 
@@ -356,7 +359,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <div><dt>면적비 유량</dt><dd>상류 원대교 유량에 유역면적 비율 1.0414를 곱해 내린천2 유량으로 환산한 값.</dd></div>
         <div><dt>유량 보정</dt><dd>원대교 유량이 같은 날 수위와 크게 어긋난 73일을 수위로 다시 계산한 것. 예: 2023-06-27 20.8 → 185 m³/s.</dd></div>
         <div><dt>첨두수위</dt><dd>하루 중 가장 높았던 수위. 일평균에 묻히는 짧은 홍수를 잡기 위해 씁니다.</dd></div>
-        <div><dt>XGB(log)</dt><dd>여러 개의 의사결정나무를 차례로 더해 가는 머신러닝 모델(XGBoost). SS에 로그를 취해 학습합니다.</dd></div>
+        <div><dt>XGB·Ridge 혼합</dt><dd>의사결정나무를 차례로 더해 가는 XGBoost를 시드만 바꿔 10개 학습해 평균하고, 같은 입력의 선형 모델(Ridge)과 로그 척도에서 반씩 섞었습니다. 나무 모델은 학습 범위 밖 큰 홍수를 못 따라가고 선형 모델은 과하게 따라가서, 둘을 섞으면 서로 보완됩니다.</dd></div>
         <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023년 실측 SS 상위 10% 경계. 법정 기준이 아니라 이 대시보드의 임시 알림 기준입니다.</dd></div>
     </dl>
   </section>
@@ -403,7 +406,7 @@ $('sfR').textContent = '~' + iso(lastI);
 $('sfU').textContent = D.meta.updated || '–';
 renderStatus();
 $('fObs').textContent = obs[0].d + ' – ' + obs[obs.length - 1].d + ', ' + obs.length + '건';
-$('fEst').textContent = N.toLocaleString('ko-KR') + '일 중 ' + D.meta.n_est.toLocaleString('ko-KR') + '일 XGB 추정';
+$('fEst').textContent = N.toLocaleString('ko-KR') + '일 중 ' + D.meta.n_est.toLocaleString('ko-KR') + '일 모델 추정';
 const QFIX = new Set(D.qfix);
 const PART = new Set(D.part);
 
@@ -629,7 +632,7 @@ function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
     $('kF' + z.h + 'L').textContent = z.h + '일 후 · ' + iso(ref + z.h).slice(5);
-    $('kF' + z.h + 'T').textContent = z.h === 1 ? '관측만' : '월별 기준값';
+    $('kF' + z.h + 'T').textContent = (D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만';
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
     $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]);
