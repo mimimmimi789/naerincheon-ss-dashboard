@@ -163,7 +163,8 @@ def main():
     if fj.exists():
         j = json.loads(fj.read_text(encoding='utf-8'))
         if j['issue'] == str(df.index.max().date()): rain = j['rain_mm']
-        if j.get('weather'): wx = {'base': j['base'], 'point': j.get('weather_point', ''), 'days': j['weather']}
+        if j.get('weather') and (now.date() - dt.date.fromisoformat(j['issue'])).days <= 2:   # 오래된 예보는 날씨 칸에 쓰지 않음
+            wx = {'base': j['base'], 'point': j.get('weather_point', ''), 'days': j['weather'], 'example': bool(j.get('example'))}
     live = fr.live(rain)
     wj = src.LIVE / 'kma_warnings.json'
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None

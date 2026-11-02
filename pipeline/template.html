@@ -139,6 +139,7 @@ footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:
 .gloss dt{font-weight:600;font-size:13.5px}
 .gloss dd{margin:2px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
 .mob-nav{display:none}
+.tag.warnTag{background:var(--warn-bg);color:var(--warn);font-weight:600}
 .wx{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(132px,1fr);gap:8px;overflow-x:auto;padding-bottom:2px}
 .wxd{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
 .wxd.today{outline:2px solid var(--est);outline-offset:-2px}
@@ -436,6 +437,9 @@ function renderWx() {
       + `<div class="tp"><span class="lo">${d.tmin == null ? '–' : d.tmin + '°'}</span> / <span class="hi">${d.tmax == null ? '–' : d.tmax + '°'}</span></div>`
       + `<div class="rn">강수확률 ${d.pop == null ? '–' : d.pop + '%'}${rain ? '<br>' + rain : ''}</div></div>`;
   }).join('');
+  $('wxTag').textContent = W.example ? '예시 화면 · 실제 예보 아님' : '기상청 단기예보';
+  $('wxTag').className = W.example ? 'tag warnTag' : 'tag';
+  if (W.example) { $('wxNote').textContent = '칸 모양을 보여주기 위한 예시 값입니다. 실제 기상청 예보는 다음 자동 갱신(매일 07:30)부터 채워집니다.'; return; }
   $('wxNote').textContent = W.base + ' 발표 단기예보 · 날씨·기온·강수확률은 ' + (W.point || '기린면') + ' 격자, 유역 강수는 원통·기린·내면 티센 가중 합계입니다. 예측 카드의 "기상청 예보" 강우와 같은 자료입니다.';
 }
 renderWx();
