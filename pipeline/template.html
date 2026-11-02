@@ -1,0 +1,686 @@
+<title>내린천2 SS 대시보드</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 강물색 사이드 메뉴 + 밝은 작업면. 요약 카드 → SS 시계열·강우유량 → 작년 비교 → 영향인자·알림 → 성능·유역 */
+:root{
+  --bg:#f3f6f7; --panel:#ffffff; --line:#dfe6e8; --ink:#0f1c22; --ink-2:#4b5b62; --ink-3:#7c8a90;
+  --side:#0e3b4a; --side-2:#15506a; --side-ink:#e6f1f4; --side-ink-2:#9fc0cb;
+  --est:#2a78d6; --band:rgba(42,120,214,.14); --obs:#0f1c22; --ly:#eb6834; --rain:#1baf7a; --flow:#6250d6;
+  --warn-bg:#fff4e0; --warn:#a65d00; --ok-bg:#e5f5ec; --ok:#17673f; --note-bg:#eef4fb; --note:#1c4f8a;
+  --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1517; --panel:#172024; --line:#26343a; --ink:#e8eef0; --ink-2:#b2c0c5; --ink-3:#83949a;
+  --side:#0a2832; --side-2:#123f52; --side-ink:#e6f1f4; --side-ink-2:#8fb2bd;
+  --est:#3987e5; --band:rgba(57,135,229,.20); --obs:#e8eef0; --ly:#d95926; --rain:#199e70; --flow:#9085e9;
+  --warn-bg:#3a2a10; --warn:#f2b44f; --ok-bg:#12301f; --ok:#6fd39b; --note-bg:#152a40; --note:#9cc4f0;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1517; --panel:#172024; --line:#26343a; --ink:#e8eef0; --ink-2:#b2c0c5; --ink-3:#83949a;
+  --side:#0a2832; --side-2:#123f52; --side-ink:#e6f1f4; --side-ink-2:#8fb2bd;
+  --est:#3987e5; --band:rgba(57,135,229,.20); --obs:#e8eef0; --ly:#d95926; --rain:#199e70; --flow:#9085e9;
+  --warn-bg:#3a2a10; --warn:#f2b44f; --ok-bg:#12301f; --ok:#6fd39b; --note-bg:#152a40; --note:#9cc4f0;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55}
+.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
+aside{background:linear-gradient(180deg,var(--side),var(--side-2));color:var(--side-ink);padding:22px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:10px;align-items:center;padding:0 6px}
+.brand svg{flex:none}
+.brand b{font-size:16px;line-height:1.25;display:block}
+.brand small{color:var(--side-ink-2);font-size:11.5px}
+nav{display:flex;flex-direction:column;gap:2px}
+nav a{color:var(--side-ink);text-decoration:none;padding:9px 12px;border-radius:8px;font-size:14px}
+nav a:hover,nav a:focus-visible{background:rgba(255,255,255,.10);outline:none}
+nav a.on{background:rgba(255,255,255,.16);font-weight:600}
+.side-foot{margin-top:auto;font-size:11.5px;color:var(--side-ink-2);padding:0 8px;display:flex;flex-direction:column;gap:6px}
+.side-foot span{display:flex;justify-content:space-between;gap:8px}
+.side-foot code{font-family:var(--f-mono);color:var(--side-ink)}
+main{padding-block:22px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px;min-width:0;max-width:1320px}
+header.top{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between}
+h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--ink-2);margin:2px 0 0;font-size:13.5px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.controls label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
+.controls input,.controls select{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-height:38px}
+.controls input:focus-visible,.controls select:focus-visible,button:focus-visible{outline:2px solid var(--est);outline-offset:1px}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;min-height:38px}
+.btn:hover{border-color:var(--ink-3)}
+.banner{background:var(--note-bg);color:var(--note);border-radius:var(--r);padding:10px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.banner b{white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .lab{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.tag{font-size:10.5px;padding:2px 7px;border-radius:99px;background:var(--note-bg);color:var(--note);white-space:nowrap;letter-spacing:.02em}
+.tag.real{background:var(--ok-bg);color:var(--ok)}
+.tag.wait{background:transparent;border:1px dashed var(--ink-3);color:var(--ink-3)}
+.kpi .val{font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .val small{font-size:14px;font-weight:500;color:var(--ink-2);margin-left:3px}
+.kpi .val.dim{color:var(--ink-3)}
+.kpi .meta{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.grid{display:grid;gap:12px}
+.g-main{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)}
+.g-2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.g-3{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.card h2{font-size:15px;margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 .tag{font-weight:500}
+.card .hint{font-size:12px;color:var(--ink-3);margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink-2)}
+.legend i{display:inline-block;vertical-align:middle;margin-right:5px}
+.sw-line{width:18px;height:2px;background:var(--est)}
+.sw-band{width:18px;height:10px;background:var(--band);border-radius:2px}
+.sw-dot{width:8px;height:8px;border-radius:50%;background:var(--obs)}
+.sw-ly{width:18px;height:2px;background:var(--ly)}
+.sw-wf{width:9px;height:9px;border:2px solid var(--ly);transform:rotate(45deg)}
+.sw-fix{width:9px;height:9px;background:var(--warn);border-radius:2px}
+.sw-fc{width:9px;height:9px;background:var(--ink)}
+.sw-fcr{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid var(--rain)}
+.rainline{color:var(--ink-2)}
+.sw-zone{width:18px;height:10px;border:1px dashed var(--ink-3);border-radius:2px}
+.plot{width:100%;min-height:120px}
+.stack{display:flex;flex-direction:column;gap:4px}
+.chips{display:flex;gap:6px}
+.chip{font:inherit;font-size:12px;border:1px solid var(--line);background:transparent;color:var(--ink-2);border-radius:99px;padding:4px 11px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:grid;grid-template-columns:120px minmax(0,1fr) 44px;gap:8px;align-items:center;font-size:13px}
+.bar-row .tr{height:14px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bar-row .fi{height:100%;background:var(--est);border-radius:0 4px 4px 0}
+.bar-row .n{font-family:var(--f-mono);font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+.alert{border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.alert.warn{background:var(--warn-bg);color:var(--warn)}
+.alert.ok{background:var(--ok-bg);color:var(--ok)}
+.alert b{font-size:14.5px;display:flex;gap:7px;align-items:center}
+.alert p{margin:0;font-size:12.5px;color:var(--ink-2)}
+.cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cmp div{border-top:1px solid var(--line);padding-top:6px;font-size:12px;color:var(--ink-3)}
+.cmp b{display:block;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.cmp b span{color:var(--ly)}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink-3);font-weight:500;font-size:11.5px}
+tr.mine td{color:var(--note)}
+.mapwrap{background:var(--bg);border-radius:8px;padding:6px;display:flex;justify-content:center}
+#map{width:100%;max-width:420px;height:auto;display:block}
+#map .cell{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:4 3}
+#map .ws{fill:none;stroke:var(--ink);stroke-width:2}
+#map text{font-family:var(--f-body);fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
+#map .sub{fill:var(--ink-2);font-size:11px}
+.wt{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12.5px;margin:4px 0 0}
+.facts dt{color:var(--ink-3)} .facts dd{margin:0;font-variant-numeric:tabular-nums}
+h3.mini{font-size:13px;margin:14px 0 4px}.wl{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink-2)}.wl li{margin:2px 0}details summary{cursor:pointer;font-size:12.5px;color:var(--ink-2)}
+.segs{display:flex;gap:4px;background:var(--bg);border-radius:99px;padding:3px;flex-wrap:wrap}
+.seg{font:inherit;font-size:12.5px;flex:1;border:0;background:transparent;color:var(--ink-3);border-radius:99px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.seg[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg .cur{font-size:10px;margin-left:3px;color:var(--warn)}
+.kv2,.kv3{display:grid;gap:8px}.kv2{grid-template-columns:1fr 1fr}.kv3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kv2>div,.kv3>div{background:var(--bg);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kv2 span,.kv3 span{font-size:11.5px;color:var(--ink-3)}.kv2 b,.kv3 b{font-size:18px;font-variant-numeric:tabular-nums}.kv2 b small,.kv3 b small{font-size:11px;font-weight:500;color:var(--ink-3);margin-left:2px}
+.shbar{display:grid;grid-template-columns:104px minmax(0,1fr) 50px;gap:8px;align-items:center;font-size:12.5px}
+.shbar .tr{height:12px;position:relative;background:var(--bg);border-radius:4px}
+.shbar .tr i{position:absolute;top:0;bottom:0;border-radius:3px}.shbar .tr .mid{left:50%;width:1px;background:var(--line)}
+.shbar .n{font-family:var(--f-mono);font-size:12px;text-align:right}
+.shtxt{font-size:13px;margin:0;background:var(--bg);border-radius:8px;padding:8px 10px;color:var(--ink-2)}
+.lvhead{font-size:13px;margin:4px 0 2px;color:var(--ink-2)}
+.ck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ck label{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer}.ck input{margin-top:2px;accent-color:var(--est)}
+.ck small{display:block;font-size:11px;color:var(--ink-3)}
+footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--line);padding-top:12px}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px 20px;margin:4px 0 0}
+.gloss div{min-width:0;border-top:1px solid var(--line);padding-top:8px}
+.gloss dt{font-weight:600;font-size:13.5px}
+.gloss dd{margin:2px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.mob-nav{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.g-main,.g-3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:820px){
+  .app{grid-template-columns:minmax(0,1fr)} aside{display:none}
+  .mob-nav{display:flex;flex-direction:row;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .mob-nav a{white-space:nowrap;font-size:12.5px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:4px 10px;background:var(--panel)}
+  .g-2{grid-template-columns:minmax(0,1fr)} .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi .val{font-size:24px}
+}
+details.banner{display:block}details.banner summary{cursor:pointer;list-style:none;display:inline}details.banner summary::-webkit-details-marker{display:none}
+details.banner summary b::after{content:' ▾';font-weight:400}details.banner[open] summary b::after{content:' ▴'}details.banner span{display:block;margin-top:4px}
+@media (max-width:820px){
+  .mob-nav{position:sticky;top:0;z-index:20;background:var(--bg);margin:-6px -16px 0;padding:8px 16px;box-shadow:0 1px 0 var(--line)}
+  .kpis .kpi:first-child{grid-column:1/-1}
+  main{gap:12px;padding-top:10px}
+  h1{font-size:20px}
+  .controls{width:100%}.controls label{flex:1 1 40%}.controls input,.controls select{width:100%}
+  .card{padding:12px 13px}
+  .kv3 b{font-size:16px}
+  .shbar{grid-template-columns:92px minmax(0,1fr) 46px}
+  .bar-row{grid-template-columns:96px minmax(0,1fr) 44px}
+  th,td{padding:6px 5px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+<aside>
+  <div class="brand">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 22 L11 11 L16 17 L21 9 L31 22 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 26 q4 -3 8 0 t8 0 t8 0 t5 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <div><b>내린천 SS<br>모니터링</b><small>캡스톤디자인2 · 초안</small></div>
+  </div>
+  <nav aria-label="섹션">
+    <a href="#overview" class="on">종합 대시보드</a>
+    <a href="#ss">SS 추정</a>
+    <a href="#hydro">강우 · 유량</a>
+    <a href="#forecast">1·3·7일 예측</a>
+    <a href="#explain">원인 · 유사사례 · 점검</a>
+    <a href="#compare">작년 동기 비교</a>
+    <a href="#perf">모델 성능</a>
+    <a href="#basin">유역 · 자료</a>
+    <a href="#glossary">용어 설명</a>
+  </nav>
+  <div class="side-foot">
+    <span>지점 <code>1012A20</code></span>
+    <span>실측 SS <code id="sfN">–</code></span>
+    <span>자료 기간 <code id="sfR">–</code></span>
+    <span>갱신 <code id="sfU">–</code></span>
+  </div>
+</aside>
+
+<main>
+  <nav class="mob-nav" aria-label="섹션"><a href="#overview">종합</a><a href="#ss">SS 추정</a><a href="#hydro">강우·유량</a><a href="#forecast">예측</a><a href="#explain">원인·점검</a><a href="#compare">작년 비교</a><a href="#perf">모델 성능</a><a href="#basin">유역·자료</a><a href="#glossary">용어</a></nav>
+  <header class="top" id="overview">
+    <div>
+      <h1>내린천2 부유물질(SS) 대시보드</h1>
+      <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·7일 예측</p>
+    </div>
+    <div class="controls">
+      <label for="refDate">기준일<input type="date" id="refDate"></label>
+      <label for="win">표시 기간<select id="win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label>
+      <label for="logY">y축<select id="logY"><option value="lin">선형</option><option value="log">로그</option></select></label>
+      <label for="fcRain">예보 강우 (향후 합계)<select id="fcRain"></select></label>
+      <button class="btn" id="latest" type="button">자료 마지막 날로</button>
+    </div>
+  </header>
+
+  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 개선 모델 <b>XGB(log) + 확장변수 + 유량보정 + 첨두수위</b>를 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 2023–26 결과를 본 뒤 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·7일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
+
+  <section class="kpis" aria-label="요약">
+    <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">XGB 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
+    <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF1L">1일 후 예측</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="meta" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF3L">3일 후 예측</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="meta" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF7L">7일 후 예측</span><span class="tag" id="kF7T">관측만</span></div><div class="val" id="kF7">–</div><div class="meta" id="kF7M">–</div><div class="meta rainline" id="kF7R">–</div></div>
+  </section>
+
+  <section class="grid g-main">
+    <div class="card" id="ss">
+      <h2>SS 시계열 <span class="tag">XGB(log) 사후복원</span></h2>
+      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%, 실제 포함률 79.7%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·7일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
+      <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
+    </div>
+    <div class="card" id="hydro">
+      <h2>강우 · 유량</h2>
+      <div class="stack">
+        <p class="hint">티센 일강우 P0 (원통·기린·내면, mm)</p>
+        <div id="pRain" class="plot" style="height:140px" role="img" aria-label="일강우"></div>
+        <div class="legend"><span><i class="sw-line" style="background:var(--flow)"></i>보정 면적비 일유량 (m³/s)</span><span><i class="sw-dot" style="background:var(--flow)"></i>실측 유량</span><span><i class="sw-fix"></i>수위로 보정한 날</span></div>
+        <div id="pFlow" class="plot" style="height:140px" role="img" aria-label="일유량"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid g-2" id="forecast">
+    <div class="card">
+      <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
+      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>7일 후</span></div>
+      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·7일 후 SS 예측"></div>
+      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꿔 넣은 결과입니다. 강우가 하루에 몰려 온다고 가정했습니다. 운영 때는 기상청 단기예보 강수량을 넣습니다.</p>
+    </div>
+    <div class="card">
+      <h2>예측 성능 <span class="tag real">전진검증 2019–26</span></h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
+        <tbody id="fcTbl"></tbody>
+      </table></div>
+      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 3·7일은 관측만 쓴 모델이 월별 기준값보다 나쁘게 나와 기준값을 씁니다.</p>
+    </div>
+  </section>
+
+  <section class="grid g-3" id="explain">
+    <div class="card">
+      <h2>예측 원인 분석 <span class="tag real">SHAP</span></h2>
+      <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
+      <div class="kv2"><div><span>기준값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
+      <div class="bars" id="shBars"></div>
+      <p class="shtxt" id="shTxt"></p>
+      <p class="hint">XGB(log) 모델의 TreeSHAP 값을 변수 묶음별로 더했습니다. 로그 척도라 기여는 곱(×배)으로 쌓여 기준값 × 모든 배수 = 예측값이 됩니다. 전체 자료로 학습한 모델 기준이라 과거 날짜의 1일 예측은 위 카드(그해 이전 자료로 학습)와 조금 다를 수 있습니다. 3·7일 예측은 월별 기준값이라 변수 기여가 없습니다.</p>
+    </div>
+    <div class="card">
+      <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
+      <div class="kv3"><div><span>향후 3일 강우</span><b id="evR">–</b></div><div><span>선행 7일 강우</span><b id="evA">–</b></div><div><span>현재 유량</span><b id="evQ">–</b></div></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>실측일</th><th>3일 강우</th><th>선행 7일</th><th>유량</th><th>실측 SS</th></tr></thead>
+        <tbody id="evTbl"></tbody>
+      </table></div>
+      <p class="hint" id="evNote">–</p>
+    </div>
+    <div class="card" id="manage">
+      <h2>취수원 관리 점검표 <span class="tag">임시 기준</span></h2>
+      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
+      <div id="lvBox"></div>
+      <p class="hint">단계 경계 25·100 mg/L는 환경정책기본법 시행령 별표1 하천 생활환경기준의 부유물질량(Ia–III 25 이하, IV 100 이하), 10.2 mg/L는 이 지점 2014–23 실측 상위 10% 경계입니다. 정수장 운영기준은 SS가 아니라 탁도(NTU)로 정해져 있고, 이 취수원의 고탁도 대응 기준은 확인하지 못했습니다. 점검 항목은 정수처리기준 해설서(국립환경과학원, 2013)와 고탁도 취수중단 사례를 참고한 예시이며 취수 중단 판단을 대신하지 않습니다.</p>
+    </div>
+  </section>
+
+  <section class="card" id="compare">
+    <h2>작년 동기 비교</h2>
+    <div class="legend"><span><i class="sw-line"></i><span id="lyA">올해</span> 추정</span><span><i class="sw-ly"></i><span id="lyB">작년</span> 추정</span><span><i class="sw-dot"></i>실측 (원: 올해, 테두리: 작년)</span></div>
+    <div class="grid g-2" style="align-items:start">
+      <div id="pLY" class="plot" style="height:240px" role="img" aria-label="올해와 작년 같은 기간의 SS 추정 비교"></div>
+      <div class="cmp" id="cmp"></div>
+    </div>
+  </section>
+
+  <section class="grid g-3">
+    <div class="card">
+      <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
+      <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
+      <div class="bars" id="bars"></div>
+      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 아래 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <h2>수질 알림</h2>
+      <div id="alert"></div>
+      <p class="hint" id="alertRule">–</p>
+      <div id="wrn"></div>
+    </div>
+    <div class="card" id="perf">
+      <h2>모델 성능 <span class="tag real">팀 분석값</span></h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>모형 · 평가기간</th><th>R²</th><th>로그 R²</th><th>MAE</th></tr></thead>
+        <tbody>
+          <tr class="mine"><td>XGB(log) 개선 · 2023–26</td><td>0.506</td><td>0.665</td><td>3.96</td></tr>
+          <tr class="mine"><td>XGB(log) 개선 · 2026</td><td>0.508</td><td>–</td><td>–</td></tr>
+          <tr><td>기존 RF · 2023–26</td><td>0.193</td><td>0.62</td><td>4.3</td></tr>
+          <tr><td>기존 RF · 2026</td><td>0.617</td><td>–</td><td>–</td></tr>
+          <tr><td>RF+SVR 보정 · 2024–25</td><td>0.936</td><td>–</td><td>–</td></tr>
+                  </tbody>
+      </table></div>
+      <p class="hint">연도별 전진검증, MAE mg/L. 2024–25의 0.936은 90 mg/L 한 점에 크게 좌우됩니다. 탐색적 결과이며 새 실측으로 잠금 평가 예정.</p>
+    </div>
+  </section>
+
+  <section class="grid g-2" id="basin">
+    <div class="card">
+      <h2>내린천2 유역도</h2>
+      <div class="mapwrap"><svg id="map" role="img" aria-label="내린천2 유역 경계, 티센 분할, 강우관측소와 수질측정 지점"></svg></div>
+      <div class="legend"><span><i class="sw-dot" style="background:var(--warn)"></i>내린천2 수질측정 지점</span><span><i class="sw-dot" style="background:var(--rain)"></i>강우관측소 (AWS)</span><span><i class="sw-zone"></i>티센 분할</span></div>
+      <div class="wt" id="wt"></div>
+      <dl class="facts">
+        <dt>대상 지점</dt><dd>내린천2 (소양A, 1012A20)</dd>
+        <dt>유역면적</dt><dd>1,082.1 km² (잠정)</dd>
+        <dt>유량 보완</dt><dd>원대교 일유량 × 1.0414 (면적비)</dd>
+        <dt>강우</dt><dd>티센 가중 일강우, 강우일 1 mm 이상</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h2>자료와 다음 단계</h2>
+      <dl class="facts">
+        <dt>실측 SS</dt><dd id="fObs">–</dd>
+        <dt>일 추정 SS</dt><dd id="fEst">–</dd>
+        <dt>유량</dt><dd>원대교 일유량 × 1.0414, 수위와 어긋난 73일은 수위로 보정</dd>
+        <dt>1·3·7일 예측</dt><dd>2019-01-01 이후 기준일마다 표본외 예측, 과거 예보 원본은 미확보</dd>
+      </dl>
+      <p class="hint">최종 구현은 Python + Streamlit + Plotly로 만들고 GitHub Actions로 매일 갱신하는 계획입니다. 다음 단계는 새 실측으로 잠금 평가, 과거 기상청 예보로 예보강우 모델 재검증, 매일 자동 갱신입니다.</p>
+    </div>
+  </section>
+
+  <section class="card" id="glossary">
+    <h2>용어 설명</h2>
+    <dl class="gloss">
+        <div><dt>SS (부유물질)</dt><dd>물에 떠 있는 흙·모래 같은 입자의 농도(mg/L). 비가 많이 와서 흙이 쓸려 들어오면 크게 올라갑니다.</dd></div>
+        <div><dt>실측 SS</dt><dd>총량측정망에서 약 8일 간격으로 채수해 분석한 값. 검증 후 물모아에 약 2달 늦게 공개됩니다.</dd></div>
+        <div><dt>일 추정 SS (사후복원)</dt><dd>채수하지 않은 날의 SS를 그날 강우·유량·수위로 채운 값. 그날 자료를 다 쓰므로 미래 예측이 아니라 과거 빈칸 채우기입니다.</dd></div>
+        <div><dt>전진검증 예측 ◇</dt><dd>맞힐 날의 답을 모르는 모델이 낸 예측. 매년 그해 이전 자료로만 학습해서 그해를 예측합니다. 모델의 실제 실력은 이 값으로 봅니다.</dd></div>
+        <div><dt>1·3·7일 예측</dt><dd>기준일 밤 12시까지 관측된 자료로 1·3·7일 뒤 SS를 미리 계산한 값.</dd></div>
+        <div><dt>예보강우 반영</dt><dd>앞으로 올 비의 양(예보값)을 넣은 예측. 학습 때는 실제 내린 비를 썼기 때문에 예보가 틀리면 그만큼 성능이 낮아질 수 있습니다.</dd></div>
+        <div><dt>월별 기준값</dt><dd>과거 같은 달 SS의 중앙값. 모델이 이것보다 나아야 의미가 있습니다.</dd></div>
+        <div><dt>80% 범위 · 추정 범위</dt><dd>실제 값이 이 범위에 들어올 확률이 약 80%가 되도록 과거 예측 오차로 만든 구간.</dd></div>
+        <div><dt>R²</dt><dd>예측이 실측의 오르내림을 얼마나 설명하는지(1이 완벽, 0은 평균만 맞히는 수준). 큰 값 몇 개에 크게 좌우됩니다.</dd></div>
+        <div><dt>로그 R²</dt><dd>SS에 로그를 취해서 계산한 R². 평상시 낮은 농도까지 고르게 반영해서 큰 값 한두 개에 덜 흔들립니다.</dd></div>
+        <div><dt>MAE</dt><dd>예측과 실측 차이의 평균 크기(mg/L). 작을수록 좋습니다.</dd></div>
+        <div><dt>티센 강우</dt><dd>유역을 관측소별 영역으로 나눠 면적 비율로 가중 평균한 강우. 원통 4.9%, 기린 51.1%, 내면 44.0%.</dd></div>
+        <div><dt>면적비 유량</dt><dd>상류 원대교 유량에 유역면적 비율 1.0414를 곱해 내린천2 유량으로 환산한 값.</dd></div>
+        <div><dt>유량 보정</dt><dd>원대교 유량이 같은 날 수위와 크게 어긋난 73일을 수위로 다시 계산한 것. 예: 2023-06-27 20.8 → 185 m³/s.</dd></div>
+        <div><dt>첨두수위</dt><dd>하루 중 가장 높았던 수위. 일평균에 묻히는 짧은 홍수를 잡기 위해 씁니다.</dd></div>
+        <div><dt>XGB(log)</dt><dd>여러 개의 의사결정나무를 차례로 더해 가는 머신러닝 모델(XGBoost). SS에 로그를 취해 학습합니다.</dd></div>
+        <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023년 실측 SS 상위 10% 경계. 법정 기준이 아니라 이 대시보드의 임시 알림 기준입니다.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <span>자료: 물환경정보시스템 총량측정망(소양A), 기상청 AWS 321·557·559, WAMIS 원대교. 티센 가중치는 현재 좌표 기준 잠정값.</span>
+    <span>알림 기준은 학습기간(2014–2023) 실측 SS 상위 10% 경계를 쓴 임시값이며 법정 기준이 아닙니다. 매일 자동 갱신: 원대교 유량·수위(WAMIS), 기상청 AWS 일강수·단기예보, 물모아 실측을 받아 추정·예측을 다시 계산합니다.</span>
+  </footer>
+</main>
+</div>
+
+<script>/*PLOTLY*/</script>
+<script>
+const D = /*DATA*/;
+const GEO = /*GEO*/;
+const DAY = 86400000;
+const t0 = Date.parse(D.d0 + 'T00:00:00Z');
+const N = D.p.length;
+const iso = i => new Date(t0 + Math.round(i) * DAY).toISOString().slice(0, 10);
+const isoT = i => new Date(t0 + i * DAY).toISOString().slice(0, 19);
+const idx = s => Math.round((Date.parse(s + 'T00:00:00Z') - t0) / DAY);
+const lastI = (() => { for (let i = N - 1; i >= 0; i--) if (D.est[i] != null) return i; return N - 1; })();
+const firstI = D.est.findIndex(v => v != null);
+const obs = D.obs.map(([d, v, q]) => ({ d, i: idx(d), v, q }));
+const fmt = (v, n = 1) => v == null ? '–' : v.toLocaleString('ko-KR', { maximumFractionDigits: n, minimumFractionDigits: n });
+const CORR = { 1: { 'AP7 (7일 누적)': .547, 'AP3 (3일 누적)': .490, 'P (당일 강우)': .430 },
+               3: { 'AP7 (7일 누적)': .318, 'AP3 (3일 누적)': .396, 'P (당일 강우)': .279 },
+               7: { 'AP7 (7일 누적)': .276, 'AP3 (3일 누적)': .176, 'P (당일 강우)': .225 } };
+const W = [['기린 557', .5113], ['내면 559', .4400], ['원통 321', .0487]];
+
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const refEl = $('refDate'), winEl = $('win'), logEl = $('logY'), fcEl = $('fcRain');
+if (matchMedia('(max-width:820px)').matches) $('banner').removeAttribute('open');
+const KMA = [1, 3, 7].some(h => D.fc.scen.h[h].kma);
+fcEl.innerHTML = (KMA ? '<option value="kma" selected>기상청 예보</option>' : '') + D.fc.scen.grid_mm.map(v => `<option value="${v}"${!KMA && v === 30 ? ' selected' : ''}>${v} mm</option>`).join('');
+refEl.min = iso(firstI); refEl.max = iso(lastI);
+let state = { ref: lastI, win: 90, h: 1, v: 4 };
+try { const s = JSON.parse(localStorage.getItem('ssdash') || 'null'); if (s && s.v === 4 && s.ref >= firstI && s.ref <= lastI) state = Object.assign(state, s); } catch (e) {}
+const save = () => { try { localStorage.setItem('ssdash', JSON.stringify(state)); } catch (e) {} };
+
+$('sfN').textContent = obs.filter(o => o.v != null).length + '건';
+$('sfR').textContent = '~' + iso(lastI);
+$('sfU').textContent = D.meta.updated || '–';
+renderStatus();
+$('fObs').textContent = obs[0].d + ' – ' + obs[obs.length - 1].d + ', ' + obs.length + '건';
+$('fEst').textContent = N.toLocaleString('ko-KR') + '일 중 ' + D.meta.n_est.toLocaleString('ko-KR') + '일 XGB 추정';
+const QFIX = new Set(D.qfix);
+const PART = new Set(D.part);
+
+function baseLayout(h, extra) {
+  const ink2 = css('--ink-2'), line = css('--line');
+  return Object.assign({
+    height: h, margin: { l: 44, r: 10, t: 8, b: 30 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: css('--f-body'), size: 11.5, color: ink2 }, showlegend: false, hovermode: 'x unified',
+    hoverlabel: { bgcolor: css('--panel'), bordercolor: line, font: { color: css('--ink'), size: 12 } },
+    xaxis: { type: 'date', gridcolor: 'rgba(0,0,0,0)', linecolor: line, tickformat: '%m/%d', hoverformat: '%Y-%m-%d', fixedrange: true },
+    yaxis: { gridcolor: line, zeroline: false, linecolor: line, fixedrange: true, rangemode: 'tozero' }
+  }, extra || {});
+}
+const CFG = { displayModeBar: false, responsive: true };
+
+function series(a, b, arr) { const x = [], y = []; for (let i = a; i <= b; i++) { x.push(iso(i)); y.push(i >= 0 && i < N ? arr[i] : null); } return { x, y }; }
+
+function render() {
+  const { ref, win } = state;
+  const a = Math.max(0, ref - win + 1), b = ref;
+  const xr = [iso(a), iso(b + 8)];
+  refEl.value = iso(ref); winEl.value = String(win);
+  const log = logEl.value === 'log';
+  const est = series(a, b, D.est), lo = series(a, b, D.lo), hi = series(a, b, D.hi), wf = series(a, b, D.wf), rain = series(a, b, D.p), flow = series(a, b, D.q);
+  const ob = obs.filter(o => o.i >= a && o.i <= b && o.v != null);
+  const obAhead = obs.filter(o => o.i > b && o.i <= b + 7 && o.v != null);
+  const FCS = forecasts(ref);
+  const est_c = css('--est'), obs_c = css('--obs'), panel = css('--panel');
+  const ymaxData = Math.max(1, ...ob.map(o => o.v), ...est.y.filter(v => v != null), ...wf.y.filter(v => v != null), ...FCS.flatMap(z => [z.o ? z.o[2] : 0, z.r ? z.r[2] : 0]), ...obAhead.map(o => o.v));
+
+  // KPIs
+  renderFc(ref); fcEl.disabled = ref !== lastI; fcEl.title = ref !== lastI ? '과거 기준일은 실제 내린 비를 씁니다' : '';
+  const e = D.est[ref];
+  $('kEst').innerHTML = fmt(e) + '<small>mg/L</small>';
+  $('kEstM').textContent = iso(ref) + ' · 범위 ' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + (PART.has(ref) ? ' · 입력 일부 결측' : '');
+  const lastObs = [...obs].reverse().find(o => o.i <= ref && o.v != null);
+  if (lastObs) {
+    const prev = [...obs].reverse().find(o => o.i < lastObs.i && o.v != null);
+    $('kObs').innerHTML = fmt(lastObs.v) + '<small>mg/L</small>';
+    const gap = ref - lastObs.i;
+    $('kObsM').textContent = lastObs.d + (gap ? ' (' + gap + '일 전)' : ' (기준일)') + (prev ? ' · 직전 ' + fmt(prev.v) : '');
+  }
+
+  // SS chart
+  const shapes = [
+    { type: 'rect', xref: 'x', yref: 'paper', x0: iso(b), x1: iso(b + 7), y0: 0, y1: 1, fillcolor: 'rgba(0,0,0,0)', line: { color: css('--ink-3'), width: 1, dash: 'dot' } },
+    { type: 'line', xref: 'x', yref: 'paper', x0: iso(b), x1: iso(b), y0: 0, y1: 1, line: { color: css('--ink-3'), width: 1 } }
+  ];
+  const ann = [{ xref: 'x', yref: 'paper', x: isoT(b + 3.5), y: 1, yanchor: 'bottom', text: '예측 1–7일', showarrow: false, font: { size: 10.5, color: css('--ink-3') } }];
+  const fo = FCS.filter(z => z.o), fr = FCS.filter(z => z.r);
+  const fcTr = [
+    { x: fo.map(z => iso(b + z.h)), y: fo.map(z => z.o[0]), mode: 'markers', name: '예측(관측만)', marker: { symbol: 'square', size: 9, color: obs_c },
+      error_y: { type: 'data', symmetric: false, array: fo.map(z => z.o[2] - z.o[0]), arrayminus: fo.map(z => z.o[0] - z.o[1]), color: css('--ink-3'), thickness: 1.5, width: 4 },
+      hovertemplate: fo.map(z => z.h + '일 후 %{y:.1f} mg/L (' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + ')') },
+    { x: fr.map(z => isoT(b + z.h + 0.35)), y: fr.map(z => z.r[0]), mode: 'markers', name: '예측(예보강우)', marker: { symbol: 'triangle-up', size: 10, color: css('--rain') },
+      error_y: { type: 'data', symmetric: false, array: fr.map(z => z.r[2] - z.r[0]), arrayminus: fr.map(z => z.r[0] - z.r[1]), color: css('--rain'), thickness: 1.5, width: 4 },
+      hovertemplate: fr.map(z => z.h + '일 후, 강우 ' + fmt(z.mm, 0) + ' mm: %{y:.1f} mg/L') },
+    { x: obAhead.map(o => o.d), y: obAhead.map(o => o.v), mode: 'markers', name: '실측(예측 구간)', marker: { size: 9, color: obs_c, line: { color: panel, width: 2 } }, hovertemplate: '실측 %{y:.1f} mg/L' }
+  ];
+  Plotly.react('pSS', [
+    { x: hi.x, y: hi.y, mode: 'lines', line: { width: 0 }, hoverinfo: 'skip' },
+    { x: lo.x, y: lo.y, mode: 'lines', line: { width: 0 }, fill: 'tonexty', fillcolor: css('--band'), hoverinfo: 'skip' },
+    { x: wf.x, y: wf.y, mode: 'markers', name: '전진검증', marker: { symbol: 'diamond-open', size: 10, color: css('--ly'), line: { width: 2 } }, hovertemplate: '전진검증 %{y:.1f} mg/L' },
+    { x: est.x, y: est.y, mode: 'lines', name: '추정', line: { color: est_c, width: 2 }, hovertemplate: '%{y:.1f} mg/L' },
+    { x: ob.map(o => o.d), y: ob.map(o => o.v), mode: 'markers', name: '실측', marker: { size: 9, color: obs_c, line: { color: panel, width: 2 } }, hovertemplate: '%{y:.1f} mg/L' },
+    ...fcTr
+  ], baseLayout(330, {
+    margin: { l: 44, r: 10, t: 22, b: 30 }, shapes, annotations: ann,
+    xaxis: Object.assign(baseLayout(0).xaxis, { range: xr }),
+    yaxis: Object.assign(baseLayout(0).yaxis, log ? { type: 'log', title: { text: 'SS (mg/L)', font: { size: 11 } } } : { range: [0, ymaxData * 1.2], title: { text: 'SS (mg/L)', font: { size: 11 } } })
+  }), CFG);
+
+  // Rain
+  Plotly.react('pRain', [{ x: rain.x, y: rain.y, type: 'bar', name: '강우', marker: { color: css('--rain') }, hovertemplate: '%{y:.1f} mm' }],
+    baseLayout(140, { bargap: .25, margin: { l: 44, r: 10, t: 4, b: 26 }, xaxis: Object.assign(baseLayout(0).xaxis, { range: xr }) }), CFG);
+  // Flow: daily area-ratio flow + measured dots
+  const fq = obs.filter(o => o.i >= a && o.i <= b && o.q != null);
+  Plotly.react('pFlow', [
+    { x: flow.x, y: flow.y, mode: 'lines', name: '면적비 일유량', line: { color: css('--flow'), width: 2 }, hovertemplate: '%{y:.1f} m³/s' },
+    (() => { const fx = []; for (let i = a; i <= b; i++) if (QFIX.has(i)) fx.push(i); return { x: fx.map(iso), y: fx.map(i => D.q[i]), mode: 'markers', name: '수위 보정', marker: { symbol: 'square', size: 9, color: css('--warn'), line: { color: panel, width: 2 } }, hovertemplate: '수위 보정 %{y:.1f} m³/s' }; })(),
+    { x: fq.map(o => o.d), y: fq.map(o => o.q), mode: 'markers', name: '실측 유량', marker: { size: 8, color: css('--flow'), line: { color: panel, width: 2 } }, hovertemplate: '실측 %{y:.1f} m³/s' }
+  ], baseLayout(140, { margin: { l: 44, r: 10, t: 4, b: 26 }, xaxis: Object.assign(baseLayout(0).xaxis, { range: xr }), yaxis: Object.assign(baseLayout(0).yaxis, log ? { type: 'log' } : {}) }), CFG);
+
+  // Last year
+  const yr = new Date(t0 + ref * DAY).getUTCFullYear();
+  let md = iso(ref).slice(4); if (md === '-02-29') md = '-02-28';
+  const shift = ref - idx((yr - 1) + md);
+  const la = a - shift, lb = b - shift;
+  const lyEst = series(la, lb, D.est);
+  $('lyA').textContent = yr + '년'; $('lyB').textContent = (yr - 1) + '년';
+  const lyOb = obs.filter(o => o.i >= la && o.i <= lb && o.v != null);
+  Plotly.react('pLY', [
+    { x: est.x, y: lyEst.y, mode: 'lines', name: (yr - 1) + '년 추정', line: { color: css('--ly'), width: 2 }, hovertemplate: '%{y:.1f}' },
+    { x: est.x, y: est.y, mode: 'lines', name: yr + '년 추정', line: { color: est_c, width: 2 }, hovertemplate: '%{y:.1f}' },
+    { x: lyOb.map(o => iso(o.i + shift)), y: lyOb.map(o => o.v), mode: 'markers', name: (yr - 1) + '년 실측', marker: { size: 9, color: panel, line: { color: obs_c, width: 2 } }, hovertemplate: '%{y:.1f}' },
+    { x: ob.map(o => o.d), y: ob.map(o => o.v), mode: 'markers', name: yr + '년 실측', marker: { size: 9, color: obs_c, line: { color: panel, width: 2 } }, hovertemplate: '%{y:.1f}' }
+  ], baseLayout(240, { xaxis: Object.assign(baseLayout(0).xaxis, { range: [iso(a), iso(b)] }), yaxis: Object.assign(baseLayout(0).yaxis, log ? { type: 'log' } : {}) }), CFG);
+  const mean = arr => { const v = arr.filter(x => x != null); return v.length ? v.reduce((s, x) => s + x, 0) / v.length : null; };
+  const sum = arr => { const v = arr.filter(x => x != null); return v.length ? v.reduce((s, x) => s + x, 0) : null; };
+  const lyRain = series(la, lb, D.p);
+  const row = (lab, x, y, u, n) => `<div>${lab}<b>${fmt(x, n)} <span>/ ${fmt(y, n)}</span> ${u}</b></div>`;
+  $('cmp').innerHTML =
+    row('평균 추정 SS', mean(est.y), mean(lyEst.y), 'mg/L', 1) +
+    row('실측 평균 SS', mean(ob.map(o => o.v)), mean(lyOb.map(o => o.v)), 'mg/L', 1) +
+    row('누적 강우', sum(rain.y), sum(lyRain.y), 'mm', 0) +
+    row('실측 횟수', ob.length, lyOb.length, '회', 0) +
+    row('최대 일강우', Math.max(0, ...rain.y.filter(v => v != null)), Math.max(0, ...lyRain.y.filter(v => v != null)), 'mm', 0) +
+    row('최대 실측 SS', ob.length ? Math.max(...ob.map(o => o.v)) : null, lyOb.length ? Math.max(...lyOb.map(o => o.v)) : null, 'mg/L', 1) +
+    `<div style="grid-column:1/-1;border:0;padding:0">앞 숫자 ${yr}년, <span style="color:var(--ly)">뒤 숫자 ${yr - 1}년</span> · 같은 날짜 범위 (${iso(a).slice(5)}–${iso(b).slice(5)})</div>`;
+
+  // Alert
+  const th = D.meta.p90, p = D.p[ref], ap3 = sum(series(ref - 2, ref, D.p).y);
+  const fmax = Math.max(0, ...FCS.map(z => z.o ? z.o[0] : 0)), fmaxR = Math.max(0, ...FCS.map(z => z.r ? z.r[0] : 0));
+  const hot = (e != null && e >= th) || fmax >= th || fmaxR >= th, wet = p != null && p >= 30;
+  $('alert').innerHTML = (hot || wet)
+    ? `<div class="alert warn"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 v4 M8 11.6 v.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>주의 · SS 상승 가능</b><p>${hot ? '추정 SS ' + fmt(e) + ', 7일 내 예측 최대 ' + fmt(fmax) + (fmaxR ? ' (예보강우 반영 ' + fmt(fmaxR) + ')' : '') + ' mg/L 중 임시 기준 ' + fmt(th) + ' mg/L 이상인 값이 있습니다. ' : ''}${wet ? '당일 강우 ' + fmt(p) + ' mm. ' : ''}직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`
+    : `<div class="alert ok"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 8.2 l2 2 l4 -4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>보통</b><p>추정 SS ${fmt(e)} mg/L, 7일 내 예측 최대 ${fmt(Math.max(fmax, fmaxR))} mg/L, 당일 강우 ${fmt(p)} mm, 직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`;
+  $('alertRule').textContent = '주의 조건: 추정 SS 또는 1·3·7일 예측 ≥ ' + fmt(th) + ' mg/L (2014–2023 실측 상위 10%) 또는 당일 강우 ≥ 30 mm. 둘 다 임시 기준입니다.';
+  renderExplain(ref, FCS, e);
+  save();
+}
+
+
+// ---- 예측 원인 분석 · 유사 강우사상 · 관리 점검표 ----
+let shM = 'est', lvSel = null;
+const LV = [
+  { k: '정상', lo: 0, c: 'ok', d: '평소 범위 (이 지점 2014–23 실측의 하위 90%)', it: [
+    ['대시보드의 추정·1·3·7일 예측과 기상청 예보강우 확인', '매일 갱신 후'],
+    ['정기 원수 탁도 측정값과 SS 추정 추이 비교', 'SS–탁도 관계를 쌓아 두면 탁도 기준으로 바꿀 수 있음'],
+    ['원대교 수위·유량 평소 수준인지 확인', 'WAMIS 1012650']] },
+  { k: '관심', lo: 0, c: 'note', d: '평소보다 높음. 하천 생활환경기준 상수원 등급(Ia–III, SS 25 mg/L 이하)은 만족', it: [
+    ['향후 3일 예보강우와 원대교 수위 상승 여부 확인', '기상청 단기예보, WAMIS 시간수위'],
+    ['과거 유사 강우사상의 실측 SS 확인', '옆 표'],
+    ['원수 탁도 측정 주기 늘리기 검토', '집중호우·해빙기 원수 탁도 상승 대비 (정수처리기준 해설서)']] },
+  { k: '주의', lo: 25, c: 'warn', d: 'SS 25 mg/L 초과: 상수원 등급(Ia–III) 기준을 넘음 (IV등급 범위)', it: [
+    ['원수 탁도 급변에 대비해 응집제 주입률 조정 준비', '원수 탁도가 오르면 응집제 투입량도 늘려야 함 (정수처리기준 해설서)'],
+    ['여과지별 탁도 감시 강화', '개별 여과지 15분 간격 감시 권장, 통합탁도계만으로는 초기 누출 확인 불가'],
+    ['역세척 배수 반송 시 각 공정 탁도 관리', '반송수가 원수 농도를 높인 사례 (밀워키)'],
+    ['현장 점검 필요성 검토', '취수구 주변 탁수 유입 육안 확인 등']] },
+  { k: '경계', lo: 100, c: 'warn', d: 'SS 100 mg/L 초과: 하천 IV등급 기준도 넘음', it: [
+    ['취수 중단 또는 대체 수원 전환 기준 검토', '고탁도 때 취수를 멈추고 다른 수원으로 바꾼 사례 (K-water 물야정수장)'],
+    ['여과수 탁도 기준 충족 여부 집중 감시', '급속여과 월 95% 이상 0.3 NTU 이하, 각 시료 1.0 NTU 이하'],
+    ['정수처리 불안정 시 주민 공지·비상급수 대책 확인', '기준 위반이 크고 길면 주민 공지와 기술진단'],
+    ['관계기관(지자체 상수도·K-water) 연락 체계 확인', '']] },
+];
+LV[1].lo = D.meta.p90;
+const level = v => { let i = 0; LV.forEach((L, j) => { if (v >= L.lo) i = j; }); return i; };
+let ckState = {};
+try { ckState = JSON.parse(localStorage.getItem('ssdashCk') || '{}'); } catch (e) {}
+
+function renderExplain(ref, FCS, e) {
+  // SHAP
+  const S = D.shap[shM], k = ref - S.off;
+  document.querySelectorAll('#explain .seg[data-m]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === shM)));
+  const vals = Object.entries(S.g).map(([g, a]) => [g, k >= 0 && k < a.length ? a[k] : null]);
+  const ok = vals.every(([, v]) => v != null);
+  $('shB').innerHTML = fmt(Math.exp(S.base)) + '<small>mg/L</small>';
+  $('shTL').textContent = (shM === 'est' ? '당일 추정 · ' + iso(ref).slice(5) : '1일 후 예측 · ' + iso(ref + 1).slice(5));
+  if (!ok) { $('shV').textContent = '–'; $('shBars').innerHTML = ''; $('shTxt').textContent = '이 날짜는 입력이 모자라 계산하지 않았습니다.'; }
+  else {
+    const tot = S.base + vals.reduce((s, [, v]) => s + v, 0), mx = Math.max(.3, ...vals.map(([, v]) => Math.abs(v)));
+    $('shV').innerHTML = fmt(Math.exp(tot)) + '<small>mg/L</small>';
+    vals.sort((p, q) => Math.abs(q[1]) - Math.abs(p[1]));
+    $('shBars').innerHTML = vals.map(([g, v]) => { const w = Math.abs(v) / mx * 50; return `<div class="shbar"><span>${g}</span><div class="tr"><i class="mid"></i><i style="${v >= 0 ? 'left:50%' : 'right:50%'};width:${w.toFixed(1)}%;background:var(${v >= 0 ? '--warn' : '--note'})"></i></div><span class="n" style="color:var(${v >= 0 ? '--warn' : '--note'})">×${Math.exp(v).toFixed(2)}</span></div>`; }).join('');
+    const up = vals.filter(([, v]) => v >= 0.1).map(([g]) => g), dn = vals.filter(([, v]) => v <= -0.1).map(([g]) => g);
+    $('shTxt').textContent = (up.length ? up.join(', ') + '이(가) 예측을 높였고' : '크게 높인 변수는 없고') + (dn.length ? ', ' + dn.join(', ') + '이(가) 낮췄습니다.' : ', 크게 낮춘 변수는 없습니다.') + ' (×1.1 이상 또는 ×0.9 이하만 언급)';
+  }
+  // 유사 강우사상
+  let R0, src;
+  if (ref === lastI) {
+    const K = D.fc.scen.h[3].kma;
+    if (fcEl.value === 'kma' && K) { R0 = K.mm; src = '기상청 예보 (' + K.days + '일치)'; } else { R0 = fcEl.value === 'kma' ? 0 : +fcEl.value; src = '선택한 예보강우'; }
+  } else { R0 = 0; for (let i = ref + 1; i <= ref + 3; i++) R0 += D.p[i] || 0; src = '실제 내린 비'; }
+  let A0 = 0; for (let i = ref - 6; i <= ref; i++) A0 += D.p[i] || 0;
+  const Q0 = D.q[ref];
+  $('evR').innerHTML = fmt(R0, 0) + '<small>mm</small>'; $('evA').innerHTML = fmt(A0, 0) + '<small>mm</small>'; $('evQ').innerHTML = fmt(Q0) + '<small>m³/s</small>';
+  const cand = D.ev.filter(v => v[0] < iso(ref - 3) || ref === lastI);
+  const tr = [v => Math.log1p(v[1]), v => Math.log1p(v[2]), v => Math.log(Math.max(.1, v[3]))];
+  const sd = tr.map(f => { const x = cand.map(f), m = x.reduce((s, y) => s + y, 0) / x.length; return Math.sqrt(x.reduce((s, y) => s + (y - m) ** 2, 0) / x.length) || 1; });
+  const q = [Math.log1p(R0), Math.log1p(A0), Math.log(Math.max(.1, Q0 || .1))], wt = [2, 1, 1];
+  const top = Q0 == null ? [] : cand.map(v => [v, tr.reduce((s, f, j) => s + wt[j] * ((f(v) - q[j]) / sd[j]) ** 2, 0)]).sort((p, r) => p[1] - r[1]).slice(0, 5).map(p => p[0]);
+  $('evTbl').innerHTML = top.map(v => `<tr><td>${v[0]}</td><td>${fmt(v[1], 0)} mm</td><td>${fmt(v[2], 0)} mm</td><td>${fmt(v[3])}</td><td><b>${fmt(v[4])}</b> mg/L</td></tr>`).join('');
+  const ss = top.map(v => v[4]).sort((p, r) => p - r);
+  $('evNote').textContent = top.length ? `향후 3일 강우는 ${src} 기준. 비슷한 ${top.length}건의 실측 SS 중앙값 ${fmt(ss[Math.floor(ss.length / 2)])}, 범위 ${fmt(ss[0])}–${fmt(ss[ss.length - 1])} mg/L. 실측일 기준 3일 강우(그날 포함), 그 전 7일 강우, 사상 전 유량을 로그 척도로 비교했고 강우량에 가중치 2를 줬습니다.` + (ref === lastI ? '' : ' 과거 기준일은 그 이전 사례만 찾습니다.') : '유량 자료가 없어 찾지 않았습니다.';
+  // 관리 점검표
+  const vmax = Math.max(e || 0, ...FCS.map(z => z.o ? z.o[0] : 0), ...FCS.map(z => z.r ? z.r[0] : 0)), cur = level(vmax);
+  const sel = lvSel == null ? cur : lvSel;
+  $('lvSegs').innerHTML = LV.map((L, j) => `<button class="seg" data-lv="${j}" aria-pressed="${j === sel}">${L.k}${j === cur ? '<span class="cur">● 현재</span>' : ''}</button>`).join('');
+  const L = LV[sel], hi = sel < 3 ? LV[sel + 1].lo : null;
+  $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k} · ${hi == null ? fmt(L.lo, 0) + ' mg/L 초과' : (sel ? fmt(L.lo, L.lo % 1 ? 1 : 0) + '–' : '') + fmt(hi, hi % 1 ? 1 : 0) + ' mg/L' + (sel ? '' : ' 미만')}</b><p>${L.d}. 현재 판단값 ${fmt(vmax)} mg/L (추정·1·3·7일 예측 중 최대).</p></div>`
+    + `<ul class="ck">${L.it.map(([a, b], j) => { const id = sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
+  document.querySelectorAll('#lvSegs .seg').forEach(b => b.addEventListener('click', () => { lvSel = +b.dataset.lv; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
+  document.querySelectorAll('[data-ck]').forEach(c => c.addEventListener('change', () => { ckState[c.dataset.ck] = c.checked; try { localStorage.setItem('ssdashCk', JSON.stringify(ckState)); } catch (e) {} }));
+}
+document.querySelectorAll('#explain .seg[data-m]').forEach(b => b.addEventListener('click', () => { shM = b.dataset.m; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
+
+function renderStatus() {
+  const M = D.meta, W = M.warnings, L = M.locked, st = M.sources || {};
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+  let h = '<h3 class="mini">기상특보 (인제)</h3>';
+  if (!W) h += '<p class="hint">기상청 특보 자료를 아직 받지 못했습니다.</p>';
+  else {
+    const fw = r => r.reg + ' ' + r.wrn + r.lvl;
+    h += W.now.length ? '<ul class="wl">' + W.now.map(r => '<li><b>발효 중</b> ' + esc(fw(r)) + ' (' + esc(r.tm) + ' ' + esc(r.cmd) + ')</li>').join('') + '</ul>' : '<p class="hint">현재 유역(' + esc(W.areas.join('·')) + ')에 발효 중인 특보 없음 (' + esc(W.fetched) + ' 기준)</p>';
+    const hh = W.hist.filter(r => r.cmd === '발표');
+    if (hh.length) h += '<details><summary>올해 발표 이력 ' + hh.length + '건 (호우 ' + hh.filter(r => r.wrn === '호우').length + '건)</summary><ul class="wl">' + hh.slice(-40).reverse().map(r => '<li>' + esc(r.tm.slice(0, 10)) + ' ' + esc(fw(r)) + '</li>').join('') + '</ul></details>';
+  }
+  if (L && L.n) h += '<h3 class="mini">잠금 평가 (2026-08-27 이후 새 실측)</h3><p class="hint">8/26까지 자료로만 학습한 모델로 새 실측 ' + L.n + '건을 맞춘 결과: 평균절대오차 ' + fmt(L.mae) + ' mg/L' + (L.n >= 10 ? ', R² ' + L.r2.toFixed(2) : ' (10건 미만이라 R²는 생략)') + '.</p>';
+  if (Object.keys(st).length) h += '<h3 class="mini">오늘 자료 수집</h3><ul class="wl">' + Object.entries(st).map(([k, v]) => '<li>' + esc(k) + ': ' + esc(v) + '</li>').join('') + '</ul>';
+  $('wrn').innerHTML = h;
+}
+function forecasts(ref) {
+  const F = D.fc, k = ref - F.off, isLast = ref === lastI, mm = fcEl.value === 'kma' ? 'kma' : +fcEl.value;
+  return [1, 3, 7].map(h => {
+    const pick = (tag) => { const A = F[h + tag]; if (k < 0 || k >= A[0].length || A[0][k] == null) return null; return [A[0][k], A[1][k], A[2][k]]; };
+    let o = pick('obs'), r = null, rmm = null;
+    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; } } else { r = S.rain[F.scen.grid_mm.indexOf(mm)]; rmm = mm; } }
+    else { r = pick('rain'); if (r) { rmm = 0; for (let i = ref + 1; i <= ref + h; i++) rmm += D.p[i] || 0; } }
+    return { h, o, r, mm: rmm, isLast };
+  });
+}
+function renderFc(ref) {
+  const FCS = forecasts(ref);
+  FCS.forEach(z => {
+    $('kF' + z.h + 'L').textContent = z.h + '일 후 · ' + iso(ref + z.h).slice(5);
+    $('kF' + z.h + 'T').textContent = z.h === 1 ? '관측만' : '월별 기준값';
+    if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
+    $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
+    $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]);
+    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : '예보강우 반영값 없음';
+  });
+  const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
+  $('scTag').textContent = '기준일 ' + S.issue;
+  Plotly.react('pScen', [1, 3, 7].map((h, j) => ({ x: g, y: S.h[h].rain.map(v => v[0]), mode: 'lines+markers', name: h + '일 후', line: { color: cols[j], width: 2 }, marker: { size: 7, color: cols[j], line: { color: css('--panel'), width: 2 } }, hovertemplate: h + '일 후 %{y:.1f} mg/L' })).concat([1, 3, 7].filter(h => S.h[h].kma).map((h, j) => ({ x: [S.h[h].kma.mm], y: [S.h[h].kma.v[0]], mode: 'markers', name: h + '일 후 · 기상청 예보', marker: { size: 12, symbol: 'star', color: cols[[1, 3, 7].indexOf(h)], line: { color: css('--panel'), width: 1.5 } }, hovertemplate: h + '일 후 기상청 예보 %{x:.0f} mm → %{y:.1f} mg/L<extra></extra>' }))),
+    baseLayout(240, { hovermode: 'x unified', xaxis: { type: 'linear', title: { text: '향후 강우 합계 (mm)', font: { size: 11 } }, gridcolor: 'rgba(0,0,0,0)', linecolor: css('--line'), fixedrange: true, tickvals: innerWidth < 600 ? [0, 20, 50, 80, 120] : g },
+      yaxis: Object.assign(baseLayout(0).yaxis, { title: { text: 'SS (mg/L)', font: { size: 11 } } }),
+      shapes: [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: D.meta.p90, y1: D.meta.p90, line: { color: css('--warn'), width: 1, dash: 'dot' } }],
+      annotations: [{ xref: 'paper', x: 0, y: D.meta.p90, yanchor: 'bottom', xanchor: 'left', text: '주의 ' + fmt(D.meta.p90) + ' mg/L', showarrow: false, font: { size: 10.5, color: css('--warn') } }] }), CFG);
+  return FCS;
+}
+function renderTbl() {
+  $('fcTbl').innerHTML = D.fc.tbl.map(([h, lab, nm, lr, r2, mae]) => `<tr${lab === '관측만' && nm !== '월별 기준값' || lab.startsWith('+') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${lab === '관측만' && nm === '월별 기준값' ? ' (=기준값)' : ''}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
+}
+function renderBars() {
+  const c = CORR[state.h];
+  $('bars').innerHTML = Object.entries(c).map(([k, v]) => `<div class="bar-row"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v / .6 * 100).toFixed(1)}%"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('');
+  document.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.h === state.h)));
+}
+function renderMap() {
+  const g = GEO, svg = $('map');
+  svg.setAttribute('viewBox', `0 0 ${g.W} ${g.H}`);
+  const op = w => (0.10 + w * 0.5).toFixed(2);
+  let h = g.cells.map(c => `<path class="cell" d="${c.d}" fill="var(--rain)" fill-opacity="${op(c.w)}"><title>${c.nm} ${c.id}: 티센 ${c.a} km², 가중치 ${c.w.toFixed(3)}</title></path>`).join('');
+  h += `<path class="ws" d="${g.ws}"/>`;
+  h += g.cells.map(c => `<g><circle cx="${c.sx}" cy="${c.sy}" r="6" fill="var(--rain)" stroke="var(--panel)" stroke-width="2"><title>AWS ${c.id} ${c.nm}</title></circle><text x="${c.sx + 10}" y="${c.sy + 4}" font-size="12" font-weight="600">${c.nm} ${c.id}</text><text class="sub" x="${c.sx + 10}" y="${c.sy + 18}">티센 ${(c.w * 100).toFixed(1)}%</text></g>`).join('');
+  const [nx, ny] = g.nr;
+  h += `<circle cx="${nx}" cy="${ny}" r="7" fill="var(--warn)" stroke="var(--panel)" stroke-width="2"><title>내린천2 (1012A20)</title></circle><text x="${nx + 10}" y="${ny + 18}" font-size="12" font-weight="600">내린천2 1012A20</text><text class="sub" x="${nx + 10}" y="${ny + 32}">유역 출구 · 수질측정</text>`;
+  const bx = g.W - 24 - g.km10, by = g.H - 16;
+  h += `<path d="M${bx},${by} h${g.km10}" stroke="var(--ink)" stroke-width="2"/><path d="M${bx},${by - 4} v8 M${bx + g.km10},${by - 4} v8" stroke="var(--ink)" stroke-width="1.5"/><text class="sub" x="${bx + g.km10 / 2}" y="${by - 7}" text-anchor="middle">10 km</text>`;
+  h += `<g transform="translate(${g.W - 30},34)"><path d="M0,-14 L6,4 L0,0 L-6,4 Z" fill="var(--ink)"/><text class="sub" x="0" y="18" text-anchor="middle">N</text></g>`;
+  svg.innerHTML = h;
+}
+function renderWt() {
+  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km².</p>';
+}
+
+refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
+winEl.addEventListener('change', () => { state.win = +winEl.value; render(); });
+logEl.addEventListener('change', render);
+fcEl.addEventListener('change', render);
+$('latest').addEventListener('click', () => { state.ref = lastI; render(); });
+document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { state.h = +b.dataset.h; renderBars(); save(); }));
+const navs = document.querySelectorAll('aside nav a');
+navs.forEach(a => a.addEventListener('click', () => { navs.forEach(x => x.classList.remove('on')); a.classList.add('on'); }));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+renderBars(); renderWt(); renderMap(); renderTbl();
+if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
+</script>
