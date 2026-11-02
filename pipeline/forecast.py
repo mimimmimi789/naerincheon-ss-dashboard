@@ -107,6 +107,21 @@ class Forecaster:
                     out[f'h{h}_{tag}{k}'] = np.exp(lp + a).round(2)
         return out
 
+    G1 = {'유량': ['lQ', 'lQ1', 'dlQ', 'dlQ3', 'lQmax3', 'Qrel30'], '당일·전일 강우': ['P0', 'P1', 'Pmax3'],
+          '선행강우 (3–30일)': ['AP3', 'AP7', 'AP14', 'API7'], '무강우일수': ['ADD'], '수위·첨두유량': ['lQpk', 'Hrise'],
+          '계절': ['msin', 'mcos']}
+
+    def shap_h1(self):
+        """1일 예측 XGB(관측만)를 전체 실측으로 학습해 모든 기준일의 SHAP 묶음 기여(log)."""
+        from model import shap_groups
+        X, y = self.rows(1, False)
+        mk = MODELS[self.pick[1][0]][0]
+        m = mk().fit(X, y); res = []
+        for a, b in KFold(3, shuffle=True, random_state=0).split(X):
+            mm = mk().fit(X.iloc[a], y[a]); res += list(y[b] - mm.predict(X.iloc[b]))
+        Xd, _ = self.issue_X(self.f.index, 1)
+        return shap_groups(m, Xd[X.columns], self.G1, np.log(np.mean(np.exp(res))))
+
     def live(self, fcst_rain=None):
         """마지막 기준일 운영 예측. fcst_rain: {'YYYY-MM-DD': mm} 기상청 예보(Thiessen 가중 일강우)."""
         last = self.f.index[-1:]; D = last[0]

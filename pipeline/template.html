@@ -117,6 +117,22 @@ tr.mine td{color:var(--note)}
 .facts{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12.5px;margin:4px 0 0}
 .facts dt{color:var(--ink-3)} .facts dd{margin:0;font-variant-numeric:tabular-nums}
 h3.mini{font-size:13px;margin:14px 0 4px}.wl{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink-2)}.wl li{margin:2px 0}details summary{cursor:pointer;font-size:12.5px;color:var(--ink-2)}
+.segs{display:flex;gap:4px;background:var(--bg);border-radius:99px;padding:3px;flex-wrap:wrap}
+.seg{font:inherit;font-size:12.5px;flex:1;border:0;background:transparent;color:var(--ink-3);border-radius:99px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.seg[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg .cur{font-size:10px;margin-left:3px;color:var(--warn)}
+.kv2,.kv3{display:grid;gap:8px}.kv2{grid-template-columns:1fr 1fr}.kv3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kv2>div,.kv3>div{background:var(--bg);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kv2 span,.kv3 span{font-size:11.5px;color:var(--ink-3)}.kv2 b,.kv3 b{font-size:18px;font-variant-numeric:tabular-nums}.kv2 b small,.kv3 b small{font-size:11px;font-weight:500;color:var(--ink-3);margin-left:2px}
+.shbar{display:grid;grid-template-columns:104px minmax(0,1fr) 50px;gap:8px;align-items:center;font-size:12.5px}
+.shbar .tr{height:12px;position:relative;background:var(--bg);border-radius:4px}
+.shbar .tr i{position:absolute;top:0;bottom:0;border-radius:3px}.shbar .tr .mid{left:50%;width:1px;background:var(--line)}
+.shbar .n{font-family:var(--f-mono);font-size:12px;text-align:right}
+.shtxt{font-size:13px;margin:0;background:var(--bg);border-radius:8px;padding:8px 10px;color:var(--ink-2)}
+.lvhead{font-size:13px;margin:4px 0 2px;color:var(--ink-2)}
+.ck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ck label{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer}.ck input{margin-top:2px;accent-color:var(--est)}
+.ck small{display:block;font-size:11px;color:var(--ink-3)}
 footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--line);padding-top:12px}
 .gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px 20px;margin:4px 0 0}
 .gloss div{min-width:0;border-top:1px solid var(--line);padding-top:8px}
@@ -145,6 +161,7 @@ footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:
     <a href="#ss">SS 추정</a>
     <a href="#hydro">강우 · 유량</a>
     <a href="#forecast">1·3·7일 예측</a>
+    <a href="#explain">원인 · 유사사례 · 점검</a>
     <a href="#compare">작년 동기 비교</a>
     <a href="#perf">모델 성능</a>
     <a href="#basin">유역 · 자료</a>
@@ -159,7 +176,7 @@ footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:
 </aside>
 
 <main>
-  <nav class="mob-nav" aria-label="섹션"><a href="#overview">종합</a><a href="#ss">SS 추정</a><a href="#hydro">강우·유량</a><a href="#forecast">예측</a><a href="#compare">작년 비교</a><a href="#perf">모델 성능</a><a href="#basin">유역·자료</a><a href="#glossary">용어</a></nav>
+  <nav class="mob-nav" aria-label="섹션"><a href="#overview">종합</a><a href="#ss">SS 추정</a><a href="#hydro">강우·유량</a><a href="#forecast">예측</a><a href="#explain">원인·점검</a><a href="#compare">작년 비교</a><a href="#perf">모델 성능</a><a href="#basin">유역·자료</a><a href="#glossary">용어</a></nav>
   <header class="top" id="overview">
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
@@ -218,6 +235,32 @@ footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:
     </div>
   </section>
 
+  <section class="grid g-3" id="explain">
+    <div class="card">
+      <h2>예측 원인 분석 <span class="tag real">SHAP</span></h2>
+      <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
+      <div class="kv2"><div><span>기준값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
+      <div class="bars" id="shBars"></div>
+      <p class="shtxt" id="shTxt"></p>
+      <p class="hint">XGB(log) 모델의 TreeSHAP 값을 변수 묶음별로 더했습니다. 로그 척도라 기여는 곱(×배)으로 쌓여 기준값 × 모든 배수 = 예측값이 됩니다. 전체 자료로 학습한 모델 기준이라 과거 날짜의 1일 예측은 위 카드(그해 이전 자료로 학습)와 조금 다를 수 있습니다. 3·7일 예측은 월별 기준값이라 변수 기여가 없습니다.</p>
+    </div>
+    <div class="card">
+      <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
+      <div class="kv3"><div><span>향후 3일 강우</span><b id="evR">–</b></div><div><span>선행 7일 강우</span><b id="evA">–</b></div><div><span>현재 유량</span><b id="evQ">–</b></div></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>실측일</th><th>3일 강우</th><th>선행 7일</th><th>유량</th><th>실측 SS</th></tr></thead>
+        <tbody id="evTbl"></tbody>
+      </table></div>
+      <p class="hint" id="evNote">–</p>
+    </div>
+    <div class="card" id="manage">
+      <h2>취수원 관리 점검표 <span class="tag">임시 기준</span></h2>
+      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
+      <div id="lvBox"></div>
+      <p class="hint">단계 경계 25·100 mg/L는 환경정책기본법 시행령 별표1 하천 생활환경기준의 부유물질량(Ia–III 25 이하, IV 100 이하), 10.2 mg/L는 이 지점 2014–23 실측 상위 10% 경계입니다. 정수장 운영기준은 SS가 아니라 탁도(NTU)로 정해져 있고, 이 취수원의 고탁도 대응 기준은 확인하지 못했습니다. 점검 항목은 정수처리기준 해설서(국립환경과학원, 2013)와 고탁도 취수중단 사례를 참고한 예시이며 취수 중단 판단을 대신하지 않습니다.</p>
+    </div>
+  </section>
+
   <section class="card" id="compare">
     <h2>작년 동기 비교</h2>
     <div class="legend"><span><i class="sw-line"></i><span id="lyA">올해</span> 추정</span><span><i class="sw-ly"></i><span id="lyB">작년</span> 추정</span><span><i class="sw-dot"></i>실측 (원: 올해, 테두리: 작년)</span></div>
@@ -232,7 +275,7 @@ footer{font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:
       <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
       <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
       <div class="bars" id="bars"></div>
-      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 변수 중요도(SHAP 등)는 최종 모형이 정해지면 바꿀 예정입니다.</p>
+      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 아래 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
     </div>
     <div class="card">
       <h2>수질 알림</h2>
@@ -464,8 +507,83 @@ function render() {
     ? `<div class="alert warn"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 v4 M8 11.6 v.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>주의 · SS 상승 가능</b><p>${hot ? '추정 SS ' + fmt(e) + ', 7일 내 예측 최대 ' + fmt(fmax) + (fmaxR ? ' (예보강우 반영 ' + fmt(fmaxR) + ')' : '') + ' mg/L 중 임시 기준 ' + fmt(th) + ' mg/L 이상인 값이 있습니다. ' : ''}${wet ? '당일 강우 ' + fmt(p) + ' mm. ' : ''}직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`
     : `<div class="alert ok"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 8.2 l2 2 l4 -4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>보통</b><p>추정 SS ${fmt(e)} mg/L, 7일 내 예측 최대 ${fmt(Math.max(fmax, fmaxR))} mg/L, 당일 강우 ${fmt(p)} mm, 직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`;
   $('alertRule').textContent = '주의 조건: 추정 SS 또는 1·3·7일 예측 ≥ ' + fmt(th) + ' mg/L (2014–2023 실측 상위 10%) 또는 당일 강우 ≥ 30 mm. 둘 다 임시 기준입니다.';
+  renderExplain(ref, FCS, e);
   save();
 }
+
+
+// ---- 예측 원인 분석 · 유사 강우사상 · 관리 점검표 ----
+let shM = 'est', lvSel = null;
+const LV = [
+  { k: '정상', lo: 0, c: 'ok', d: '평소 범위 (이 지점 2014–23 실측의 하위 90%)', it: [
+    ['대시보드의 추정·1·3·7일 예측과 기상청 예보강우 확인', '매일 갱신 후'],
+    ['정기 원수 탁도 측정값과 SS 추정 추이 비교', 'SS–탁도 관계를 쌓아 두면 탁도 기준으로 바꿀 수 있음'],
+    ['원대교 수위·유량 평소 수준인지 확인', 'WAMIS 1012650']] },
+  { k: '관심', lo: 0, c: 'note', d: '평소보다 높음. 하천 생활환경기준 상수원 등급(Ia–III, SS 25 mg/L 이하)은 만족', it: [
+    ['향후 3일 예보강우와 원대교 수위 상승 여부 확인', '기상청 단기예보, WAMIS 시간수위'],
+    ['과거 유사 강우사상의 실측 SS 확인', '옆 표'],
+    ['원수 탁도 측정 주기 늘리기 검토', '집중호우·해빙기 원수 탁도 상승 대비 (정수처리기준 해설서)']] },
+  { k: '주의', lo: 25, c: 'warn', d: 'SS 25 mg/L 초과: 상수원 등급(Ia–III) 기준을 넘음 (IV등급 범위)', it: [
+    ['원수 탁도 급변에 대비해 응집제 주입률 조정 준비', '원수 탁도가 오르면 응집제 투입량도 늘려야 함 (정수처리기준 해설서)'],
+    ['여과지별 탁도 감시 강화', '개별 여과지 15분 간격 감시 권장, 통합탁도계만으로는 초기 누출 확인 불가'],
+    ['역세척 배수 반송 시 각 공정 탁도 관리', '반송수가 원수 농도를 높인 사례 (밀워키)'],
+    ['현장 점검 필요성 검토', '취수구 주변 탁수 유입 육안 확인 등']] },
+  { k: '경계', lo: 100, c: 'warn', d: 'SS 100 mg/L 초과: 하천 IV등급 기준도 넘음', it: [
+    ['취수 중단 또는 대체 수원 전환 기준 검토', '고탁도 때 취수를 멈추고 다른 수원으로 바꾼 사례 (K-water 물야정수장)'],
+    ['여과수 탁도 기준 충족 여부 집중 감시', '급속여과 월 95% 이상 0.3 NTU 이하, 각 시료 1.0 NTU 이하'],
+    ['정수처리 불안정 시 주민 공지·비상급수 대책 확인', '기준 위반이 크고 길면 주민 공지와 기술진단'],
+    ['관계기관(지자체 상수도·K-water) 연락 체계 확인', '']] },
+];
+LV[1].lo = D.meta.p90;
+const level = v => { let i = 0; LV.forEach((L, j) => { if (v >= L.lo) i = j; }); return i; };
+let ckState = {};
+try { ckState = JSON.parse(localStorage.getItem('ssdashCk') || '{}'); } catch (e) {}
+
+function renderExplain(ref, FCS, e) {
+  // SHAP
+  const S = D.shap[shM], k = ref - S.off;
+  document.querySelectorAll('#explain .seg[data-m]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === shM)));
+  const vals = Object.entries(S.g).map(([g, a]) => [g, k >= 0 && k < a.length ? a[k] : null]);
+  const ok = vals.every(([, v]) => v != null);
+  $('shB').innerHTML = fmt(Math.exp(S.base)) + '<small>mg/L</small>';
+  $('shTL').textContent = (shM === 'est' ? '당일 추정 · ' + iso(ref).slice(5) : '1일 후 예측 · ' + iso(ref + 1).slice(5));
+  if (!ok) { $('shV').textContent = '–'; $('shBars').innerHTML = ''; $('shTxt').textContent = '이 날짜는 입력이 모자라 계산하지 않았습니다.'; }
+  else {
+    const tot = S.base + vals.reduce((s, [, v]) => s + v, 0), mx = Math.max(.3, ...vals.map(([, v]) => Math.abs(v)));
+    $('shV').innerHTML = fmt(Math.exp(tot)) + '<small>mg/L</small>';
+    vals.sort((p, q) => Math.abs(q[1]) - Math.abs(p[1]));
+    $('shBars').innerHTML = vals.map(([g, v]) => { const w = Math.abs(v) / mx * 50; return `<div class="shbar"><span>${g}</span><div class="tr"><i class="mid"></i><i style="${v >= 0 ? 'left:50%' : 'right:50%'};width:${w.toFixed(1)}%;background:var(${v >= 0 ? '--warn' : '--note'})"></i></div><span class="n" style="color:var(${v >= 0 ? '--warn' : '--note'})">×${Math.exp(v).toFixed(2)}</span></div>`; }).join('');
+    const up = vals.filter(([, v]) => v >= 0.1).map(([g]) => g), dn = vals.filter(([, v]) => v <= -0.1).map(([g]) => g);
+    $('shTxt').textContent = (up.length ? up.join(', ') + '이(가) 예측을 높였고' : '크게 높인 변수는 없고') + (dn.length ? ', ' + dn.join(', ') + '이(가) 낮췄습니다.' : ', 크게 낮춘 변수는 없습니다.') + ' (×1.1 이상 또는 ×0.9 이하만 언급)';
+  }
+  // 유사 강우사상
+  let R0, src;
+  if (ref === lastI) {
+    const K = D.fc.scen.h[3].kma;
+    if (fcEl.value === 'kma' && K) { R0 = K.mm; src = '기상청 예보 (' + K.days + '일치)'; } else { R0 = fcEl.value === 'kma' ? 0 : +fcEl.value; src = '선택한 예보강우'; }
+  } else { R0 = 0; for (let i = ref + 1; i <= ref + 3; i++) R0 += D.p[i] || 0; src = '실제 내린 비'; }
+  let A0 = 0; for (let i = ref - 6; i <= ref; i++) A0 += D.p[i] || 0;
+  const Q0 = D.q[ref];
+  $('evR').innerHTML = fmt(R0, 0) + '<small>mm</small>'; $('evA').innerHTML = fmt(A0, 0) + '<small>mm</small>'; $('evQ').innerHTML = fmt(Q0) + '<small>m³/s</small>';
+  const cand = D.ev.filter(v => v[0] < iso(ref - 3) || ref === lastI);
+  const tr = [v => Math.log1p(v[1]), v => Math.log1p(v[2]), v => Math.log(Math.max(.1, v[3]))];
+  const sd = tr.map(f => { const x = cand.map(f), m = x.reduce((s, y) => s + y, 0) / x.length; return Math.sqrt(x.reduce((s, y) => s + (y - m) ** 2, 0) / x.length) || 1; });
+  const q = [Math.log1p(R0), Math.log1p(A0), Math.log(Math.max(.1, Q0 || .1))], wt = [2, 1, 1];
+  const top = Q0 == null ? [] : cand.map(v => [v, tr.reduce((s, f, j) => s + wt[j] * ((f(v) - q[j]) / sd[j]) ** 2, 0)]).sort((p, r) => p[1] - r[1]).slice(0, 5).map(p => p[0]);
+  $('evTbl').innerHTML = top.map(v => `<tr><td>${v[0]}</td><td>${fmt(v[1], 0)} mm</td><td>${fmt(v[2], 0)} mm</td><td>${fmt(v[3])}</td><td><b>${fmt(v[4])}</b> mg/L</td></tr>`).join('');
+  const ss = top.map(v => v[4]).sort((p, r) => p - r);
+  $('evNote').textContent = top.length ? `향후 3일 강우는 ${src} 기준. 비슷한 ${top.length}건의 실측 SS 중앙값 ${fmt(ss[Math.floor(ss.length / 2)])}, 범위 ${fmt(ss[0])}–${fmt(ss[ss.length - 1])} mg/L. 실측일 기준 3일 강우(그날 포함), 그 전 7일 강우, 사상 전 유량을 로그 척도로 비교했고 강우량에 가중치 2를 줬습니다.` + (ref === lastI ? '' : ' 과거 기준일은 그 이전 사례만 찾습니다.') : '유량 자료가 없어 찾지 않았습니다.';
+  // 관리 점검표
+  const vmax = Math.max(e || 0, ...FCS.map(z => z.o ? z.o[0] : 0), ...FCS.map(z => z.r ? z.r[0] : 0)), cur = level(vmax);
+  const sel = lvSel == null ? cur : lvSel;
+  $('lvSegs').innerHTML = LV.map((L, j) => `<button class="seg" data-lv="${j}" aria-pressed="${j === sel}">${L.k}${j === cur ? '<span class="cur">● 현재</span>' : ''}</button>`).join('');
+  const L = LV[sel], hi = sel < 3 ? LV[sel + 1].lo : null;
+  $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k} · ${hi == null ? fmt(L.lo, 0) + ' mg/L 초과' : (sel ? fmt(L.lo, L.lo % 1 ? 1 : 0) + '–' : '') + fmt(hi, hi % 1 ? 1 : 0) + ' mg/L' + (sel ? '' : ' 미만')}</b><p>${L.d}. 현재 판단값 ${fmt(vmax)} mg/L (추정·1·3·7일 예측 중 최대).</p></div>`
+    + `<ul class="ck">${L.it.map(([a, b], j) => { const id = sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
+  document.querySelectorAll('#lvSegs .seg').forEach(b => b.addEventListener('click', () => { lvSel = +b.dataset.lv; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
+  document.querySelectorAll('[data-ck]').forEach(c => c.addEventListener('change', () => { ckState[c.dataset.ck] = c.checked; try { localStorage.setItem('ssdashCk', JSON.stringify(ckState)); } catch (e) {} }));
+}
+document.querySelectorAll('#explain .seg[data-m]').forEach(b => b.addEventListener('click', () => { shM = b.dataset.m; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
 
 function renderStatus() {
   const M = D.meta, W = M.warnings, L = M.locked, st = M.sources || {};

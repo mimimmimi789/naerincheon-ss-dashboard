@@ -97,7 +97,7 @@ def locked_eval(df):
             'rows': [[str(d.date()), float(a), round(float(b), 2)] for d, a, b in zip(newo, y, p)]}
 
 
-def build(df, est, hc, live, static, status, warnings, locked, updated):
+def build(df, est, hc, live, static, status, warnings, locked, updated, shp):
     r = est.join(df[['P0', 'SS', 'Q_meas']])
     wf = csv(BASE / 'daily_xgblog_final_20261030.csv').ss_wf_mgL.reindex(r.index)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
@@ -114,6 +114,18 @@ def build(df, est, hc, live, static, status, warnings, locked, updated):
             F[f'{h}{t}'] = [f(hc[f'h{h}_{t}']), f(hc[f'h{h}_{t}_lo']), f(hc[f'h{h}_{t}_hi'])]
     F['scen'] = live; F['bands'] = static['bands']; F['tbl'] = static['tbl']
     D['fc'] = F
+    # SHAP: 묶음별 log 기여, 일별 배열
+    D['shap'] = {k: {'base': round(b, 3), 'off': (S.index[0] - r.index.min()).days,
+                     'g': {g: [None if pd.isna(x) else round(float(x), 3) for x in S[g]] for g in S.columns}}
+                 for k, (S, b) in shp.items()}
+    # 과거 유사 강우사상: 실측일 T마다 3일 강우(T-2..T), 그 전 7일 강우(T-9..T-3), 사상 전 유량(T-3)
+    P, Q = r.P0, r.q_corr
+    R3 = P.rolling(3, min_periods=3).sum(); A7 = P.shift(3).rolling(7, min_periods=7).sum(); Q0 = Q.shift(3)
+    ev = []
+    for T, s in o.SS.items():
+        if pd.notna(R3[T]) and pd.notna(A7[T]) and pd.notna(Q0[T]):
+            ev.append([str(T.date()), round(float(R3[T]), 1), round(float(A7[T]), 1), round(float(Q0[T]), 1), float(s)])
+    D['ev'] = ev
     t = (Path(__file__).parent / 'template.html').read_text(encoding='utf-8')
     pl = (Path(__file__).parent / 'plotly-basic.min.js').read_text(encoding='utf-8').replace('</script', '<\\/script')
     html = (t.replace('/*DATA*/', json.dumps(D, separators=(',', ':'), ensure_ascii=False))
@@ -136,7 +148,7 @@ def main():
     if '--no-fetch' not in args:
         collect(today, key, status)
     df = assemble()
-    est = model.estimate(df)
+    est, shp_est = model.estimate(df)
     static = json.loads((BASE / 'forecast_static.json').read_text(encoding='utf-8'))
     fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static)
     hc = fr.hindcast()
@@ -150,7 +162,7 @@ def main():
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
     locked = locked_eval(df)
     updated = now.strftime('%Y-%m-%d %H:%M KST')
-    build(df, est, hc, live, static, status, warnings, locked, updated)
+    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()})
     print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', locked.get('n'), '|', status)
     if '--push' in args:
         g = lambda *c: subprocess.run(['git', '-C', str(ROOT), *c], check=False)

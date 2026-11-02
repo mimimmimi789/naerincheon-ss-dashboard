@@ -85,11 +85,30 @@ def fit_log(mk, X, y):
     return m, np.log(np.mean(np.exp(res)))
 
 
+# SHAP 기여도를 화면에 보일 변수 묶음
+GROUPS = {'유량': ['Q', 'Qprev', 'Qdelta1', 'Qratio3', 'lQ', 'dlQ', 'dlQ2', 'Qmax3', 'Q_rel30', 'Q_rel90', 'Q_over_base', 'days_since_big'],
+          '당일·전일 강우': ['P0', 'Pprev', 'P2', 'Pmax3'],
+          '선행강우 (3–30일)': ['P3prior', 'P7prior', 'P14prior', 'P30prior', 'API7'],
+          '무강우일수': ['ADD_prior'],
+          '수위·첨두유량': ['lQpk', 'Hrise', 'dHmax'],
+          '계절': ['msin', 'mcos']}
+
+
+def shap_groups(m, X, groups, offset=0.0):
+    """XGB TreeSHAP(log 척도)을 변수 묶음별로 더한다. 반환: (묶음별 DataFrame, 기준값 log)."""
+    c = m.get_booster().predict(xgb.DMatrix(X), pred_contribs=True)
+    cols = list(X.columns)
+    out = pd.DataFrame({g: c[:, [cols.index(v) for v in vs]].sum(axis=1) for g, vs in groups.items()}, index=X.index)
+    return out, float(c[0, -1] + offset)
+
+
 def estimate(df):
-    """전체 실측으로 학습해 매일 SS 사후추정. 반환 DataFrame(est, lo, hi, q_corr, q_fix, partial, qpk)."""
+    """전체 실측으로 학습해 매일 SS 사후추정.
+    반환: (DataFrame(est, lo, hi, q_corr, q_fix, partial, qpk), (SHAP 묶음별 기여 DataFrame, 기준값 log))"""
     F, qc, bad, qpk = features(df)
     tr = df.SS.notna() & (df.SS > 0)
     m, sm = fit_log(XG, F[tr], df.SS[tr].values)
     lp = m.predict(F) + sm
-    return pd.DataFrame({'est': np.exp(lp), 'lo': np.exp(lp + LOG_LO), 'hi': np.exp(lp + LOG_HI), 'q_corr': qc,
-                         'q_fix': bad.astype(int), 'partial': F.isna().any(axis=1).astype(int), 'qpk': qpk}, index=df.index)
+    est = pd.DataFrame({'est': np.exp(lp), 'lo': np.exp(lp + LOG_LO), 'hi': np.exp(lp + LOG_HI), 'q_corr': qc,
+                        'q_fix': bad.astype(int), 'partial': F.isna().any(axis=1).astype(int), 'qpk': qpk}, index=df.index)
+    return est, shap_groups(m, F, GROUPS, sm)
