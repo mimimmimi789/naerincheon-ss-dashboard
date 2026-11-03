@@ -95,7 +95,8 @@ h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .sw-fbar{width:7px;height:14px;border-radius:2px;background:var(--ink-3)}
 .sw-zn{width:14px;height:10px;border-radius:2px}.sw-zn.n{background:var(--note-bg);border:1px solid var(--note)}.sw-zn.w{background:var(--warn-bg);border:1px solid var(--warn)}
 .lvp{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;margin-left:8px;letter-spacing:0;vertical-align:middle}.lvp i{width:8px;height:8px;border-radius:50%}
-.kpi{border-top:3px solid var(--line)}.kpi.lv-note{border-top:3px solid var(--note)}.kpi.lv-warn{border-top:3px solid var(--warn)}.kpi.lv-ok{border-top:3px solid var(--ok)}
+.kpi{border-top:3px solid var(--line)}.r2g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.r2g>div{background:var(--note-bg);border-radius:8px;padding:10px 12px}.r2g b{color:var(--ink)}.r2g>div>b:first-child{display:block;font-size:14px;color:var(--note);margin-bottom:2px}.r2g p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.6}@media (max-width:820px){.r2g{grid-template-columns:minmax(0,1fr)}}
+.kpi.lv-note{border-top:3px solid var(--note)}.kpi.lv-warn{border-top:3px solid var(--warn)}.kpi.lv-ok{border-top:3px solid var(--ok)}
 .plot{width:100%;min-height:120px}
 .stack{display:flex;flex-direction:column;gap:4px}
 .chips{display:flex;gap:6px}
@@ -368,6 +369,14 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   </div>
 
   <div class="tab" id="tab-perf" data-tab="perf" hidden>
+  <section class="card r2guide" aria-label="R² 읽는 법">
+    <h2>성능 숫자 읽는 법 · 로그 R²와 R²</h2>
+    <div class="r2g">
+      <div><b>R² (그냥 R²)</b><p>mg/L 값 그대로 오차를 잽니다. SS가 수백 mg/L까지 오르는 <b>몇몇 홍수 날의 오차가 점수를 거의 결정</b>하고, 평상시 1~5 mg/L 날을 잘 맞혀도 점수에는 별로 반영되지 않습니다. → <b>「큰 홍수 때 값을 얼마나 맞히는가」</b>에 민감합니다.</p></div>
+      <div><b>로그 R²</b><p>값에 로그를 씌운 뒤 오차를 잽니다. 2→4 mg/L로 틀린 것과 50→100 mg/L로 틀린 것을 같은 크기(<b>2배 틀림</b>)로 봅니다. 몇 mg/L가 아니라 몇 배 틀렸는지를 보므로 맑은 날과 탁한 날을 고르게 반영합니다. → <b>「평소부터 고농도까지 전체 흐름을 얼마나 잘 따라가는가」</b>입니다 (운영 모델 0.761).</p></div>
+    </div>
+    <p class="hint">둘 다 1에 가까울수록 좋습니다. 취수원 관리에서는 고농도 날이 중요하므로 두 값을 함께 보세요. 이 모델은 고농도 날(25 mg/L 이상)을 실제보다 낮게(실측의 약 35~40%) 예측하는 한계가 있으니, 그런 날에는 <b>범위의 위쪽 값</b>을 기준으로 판단하세요.</p>
+  </section>
   <section class="grid g-2">
     <div class="card">
       <h2>예측 성능 <span class="tag real">전진검증 2019–26</span></h2>
