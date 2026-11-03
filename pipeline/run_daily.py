@@ -19,6 +19,7 @@ import sources as src  # noqa: E402
 
 ROOT = src.ROOT
 BASE = ROOT / 'data' / 'base'
+AUX = ROOT / 'data' / 'auxdata'          # Windows에서 'aux'는 예약 이름이라 auxdata
 DOCS = ROOT / 'docs'
 LOCK = pd.Timestamp('2026-08-26')        # 잠금 평가 기준: 이 날까지 실측으로만 학습
 KST = dt.timezone(dt.timedelta(hours=9))
@@ -49,6 +50,9 @@ def collect(today, key, status):
         aw = csv(src.LIVE / 'kma_aws_rain.csv')
         a0 = LOCK.date() + dt.timedelta(days=1) if aw is None else (aw.index.max() - pd.Timedelta(days=7)).date()
         run('기상청 AWS 일강수', src.kma_aws_day, list(pd.date_range(a0, yday).date), key)
+        tf = csv(src.LIVE / 'kma_asos_temp.csv')
+        t0 = dt.date(2026, 10, 25) if tf is None else (tf.index.max() - pd.Timedelta(days=3)).date()
+        run('기상청 인제 기온', src.kma_asos_temp, list(pd.date_range(t0, yday).date), key)
         run('기상청 단기예보', src.kma_fcst, yday, key)
         run('기상청 특보', src.kma_warnings, key, today)
     else:
@@ -77,6 +81,14 @@ def assemble():
         s = st.reindex(idx)
         for c in ('Havg', 'Hmax', 'Hmin'):
             df[c] = df[c].where(df[c].notna(), s[c])
+    # 기온(인제 ASOS 211 일최고·최저): 과거 파일 + 매일 수집분(겹치면 수집분 우선)
+    ta = csv(AUX / 'inje_asos211_daily_temp_20140101_20261101.csv')
+    tl = csv(src.LIVE / 'kma_asos_temp.csv')
+    df['TAMAX'] = ta.TA_MAX.reindex(idx) if ta is not None else np.nan
+    df['TAMIN'] = ta.TA_MIN.reindex(idx) if ta is not None else np.nan
+    if tl is not None:
+        t = tl.reindex(idx)
+        df['TAMAX'] = t.ta_max.where(t.ta_max.notna(), df.TAMAX); df['TAMIN'] = t.ta_min.where(t.ta_min.notna(), df.TAMIN)
     if ss is not None:
         s = ss[ss.index > b.index.max()].reindex(idx)
         df['SS'] = df.SS.where(df.SS.notna(), s.ss); df['Q_meas'] = df.Q_meas.where(df.Q_meas.notna(), s.q_meas)
@@ -98,8 +110,8 @@ def locked_eval(df):
 
 
 def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None):
-    r = est.join(df[['P0', 'SS', 'Q_meas']])
-    wf = csv(BASE / 'ss_wf_blend_20261102.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
+    r = est.join(df[['P0', 'SS', 'Q_meas', 'TAMAX', 'TAMIN']])
+    wf = csv(BASE / 'ss_wf_blend_temp_20261103.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
     o = r[r.SS.notna()]
     p90 = float(o[o.index < '2024-01-01'].SS.quantile(.9))
@@ -139,7 +151,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
     (DOCS.parent / 'build').mkdir(exist_ok=True)
     (DOCS.parent / 'build' / 'artifact.html').write_text(html, encoding='utf-8')   # Claude 아티팩트용(문서 틀은 아티팩트가 씌움)
     out = r.rename(columns={'P0': 'p0_mm', 'SS': 'ss_obs_mgL', 'Q_meas': 'q_meas_m3s', 'est': 'ss_est_mgL', 'lo': 'ss_lo80',
-                            'hi': 'ss_hi80', 'q_corr': 'q_corr_m3s', 'q_fix': 'q_corrected', 'partial': 'input_partial', 'qpk': 'q_peak_m3s'})
+                            'hi': 'ss_hi80', 'TAMAX': 'ta_max_c', 'TAMIN': 'ta_min_c', 'q_corr': 'q_corr_m3s', 'q_fix': 'q_corrected', 'partial': 'input_partial', 'qpk': 'q_peak_m3s'})
     out.round(3).to_csv(DOCS / 'ss_daily.csv', encoding='utf-8-sig')
     hc.to_csv(DOCS / 'forecast_daily.csv', encoding='utf-8-sig')
     (DOCS / 'latest.json').write_text(json.dumps({'updated': updated, 'last_day': str(r.index.max().date()), 'forecast': live,
@@ -156,7 +168,7 @@ def main():
     df = assemble()
     est, shp_est = model.estimate(df)
     static = json.loads((BASE / 'forecast_static.json').read_text(encoding='utf-8'))
-    fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static)
+    fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static, model.temp_feats(df))
     hc = fr.hindcast()
     fj = src.LIVE / 'kma_fcst.json'
     rain = wx = None

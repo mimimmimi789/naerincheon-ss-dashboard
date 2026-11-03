@@ -37,7 +37,8 @@ MODELS = {'월별 기준값': ('clim', None, False), 'XGB 전체입력 (관측�
 DUAN = {'XGB 전체입력 (관측만)', 'Ridge 전체입력 + 예보강우', 'Ridge 축소입력 + 예보강우'}
 
 
-def feats(P, Q, Qpk, Havg, Hmax):
+def feats(P, Q, Qpk, Havg, Hmax, T=None):
+    """T: model.temp_feats 결과(TA, TA7, TAmin). 기준일 D의 관측 기온이라 예측에 그대로 쓸 수 있다."""
     f = pd.DataFrame(index=P.index)
     f['P0'] = P; f['P1'] = P.shift(1)
     f['AP3'] = P.rolling(3, min_periods=3).sum(); f['AP7'] = P.rolling(7, min_periods=7).sum()
@@ -51,12 +52,14 @@ def feats(P, Q, Qpk, Havg, Hmax):
     f['Qrel30'] = lq - lq.rolling(30, min_periods=10).median()
     f['lQpk'] = np.log(Qpk.clip(lower=0.05))
     f['Hrise'] = Hmax - Havg
+    if T is not None:
+        f = f.join(T[['TA', 'TA7', 'TAmin']])
     return f
 
 
 class Forecaster:
-    def __init__(self, P, Q, Qpk, Havg, Hmax, SS, static):
-        self.P = P; self.f = feats(P, Q, Qpk, Havg, Hmax)
+    def __init__(self, P, Q, Qpk, Havg, Hmax, SS, static, T=None):
+        self.P = P; self.f = feats(P, Q, Qpk, Havg, Hmax, T)
         o = SS.dropna(); self.obs = o[o > 0]
         self.static = static; self.pick = {int(k): v for k, v in static['pick'].items()}
         self._cache = {}
@@ -124,7 +127,7 @@ class Forecaster:
 
     G1 = {'유량': ['lQ', 'lQ1', 'dlQ', 'dlQ3', 'lQmax3', 'Qrel30'], '당일·전일 강우': ['P0', 'P1', 'Pmax3'],
           '선행강우 (3–30일)': ['AP3', 'AP7', 'AP14', 'API7'], '무강우일수': ['ADD'], '수위·첨두유량': ['lQpk', 'Hrise'],
-          '계절': ['msin', 'mcos']}
+          '계절': ['msin', 'mcos'], '기온': ['TA', 'TA7', 'TAmin']}
 
     def shap_h1(self):
         """1일 예측(관측만)을 전체 실측으로 학습해 모든 기준일의 SHAP 묶음 기여(log). live()와 같은 학습을 재사용."""
