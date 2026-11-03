@@ -25,7 +25,7 @@ DOCS = ROOT / 'docs'
 LOCK = pd.Timestamp('2026-08-26')        # 잠금 평가 기준: 이 날까지 실측으로만 학습
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
-MODEL_TAG = 'blend+temp 2026-11-03'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
+MODEL_TAG = 'blend+temp+chain13 2026-11-03'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):
@@ -213,6 +213,7 @@ def main():
     est, shp_est = model.estimate(df)
     static = json.loads((BASE / 'forecast_static.json').read_text(encoding='utf-8'))
     fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static, model.temp_feats(df))
+    fr.chain = fcm.FlowChain(fr, df.P0, est.q_corr, est.qpk, df.Hmax, df.Hmin, df.SS, model.temp_feats(df))   # 2026-11-03 1·3일 연결 혼합
     hc = fr.hindcast()
     fj = src.LIVE / 'kma_fcst.json'
     rain = wx = full = None
