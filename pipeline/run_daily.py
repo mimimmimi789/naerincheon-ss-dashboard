@@ -14,6 +14,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import forecast as fcm  # noqa: E402
+import manager as mg  # noqa: E402
 import model  # noqa: E402
 import sources as src  # noqa: E402
 
@@ -150,7 +151,7 @@ def score_log(log, df):
     return res
 
 
-def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None, fscore=None):
+def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None, fscore=None, mgr=None):
     r = est.join(df[['P0', 'SS', 'Q_meas', 'TAMAX', 'TAMIN']])
     wf = csv(BASE / 'ss_wf_blend_temp_hh_20261103.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
@@ -179,6 +180,8 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
         if pd.notna(R3[T]) and pd.notna(A7[T]) and pd.notna(Q0[T]):
             ev.append([str(T.date()), round(float(R3[T]), 1), round(float(A7[T]), 1), round(float(Q0[T]), 1), float(s)])
     D['ev'] = ev
+    if mgr:   # 취수원 관리자용 보조 정보(manager.py): 유사사상은 확장 열로 바꿔 넣음
+        mgr = dict(mgr); D['ev'] = mgr.pop('ev', ev); D['meta']['mgr'] = mgr
     t = (Path(__file__).parent / 'template.html').read_text(encoding='utf-8')
     pl = (Path(__file__).parent / 'plotly-basic.min.js').read_text(encoding='utf-8').replace('</script', '<\\/script')
     html = (t.replace('/*DATA*/', json.dumps(D, separators=(',', ':'), ensure_ascii=False))
@@ -224,7 +227,12 @@ def main():
     locked = locked_eval(df)
     updated = now.strftime('%Y-%m-%d %H:%M KST')
     fscore = score_log(log_forecast(live, updated), df)
-    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()}, wx, fscore)
+    o = df.SS[df.SS > 0].dropna()
+    fetch = mg.update_fetch_log(src.LIVE, status, str(o.index.max().date()) if len(o) else None, now)
+    mgr = {'fresh': mg.freshness(df, src.LIVE, status, j if fj.exists() else None, now, updated, fetch),
+           'cover': mg.coverage(live), 'exceed': mg.exceed(hc, df.SS, live), 'ood': mg.ood(fr),
+           'ev': mg.events(df.P0, est.q_corr, df.Havg, df.Hmax, df.Hmin, df.SS)}
+    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()}, wx, fscore, mgr)
     print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', locked.get('n'), '|', status)
     if '--push' in args:
         g = lambda *c: subprocess.run(['git', '-C', str(ROOT), *c], check=False)

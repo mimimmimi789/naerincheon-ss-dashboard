@@ -184,6 +184,20 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   th,td{padding:6px 5px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* 취수원 관리자용 (2026-11-03) */
+.ops{display:grid;grid-template-columns:minmax(0,1.1fr) repeat(3,minmax(0,1fr));gap:10px}
+.ops>div{background:var(--bg);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.ops .lb{font-size:11.5px;color:var(--ink-3)}.ops .v{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}.ops .s{font-size:12px;color:var(--ink-2)}
+.ops ul{margin:2px 0 0;padding-left:16px;font-size:12px;color:var(--ink-2)}.ops li{margin:1px 0}
+.stg{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:17px}.stg i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.st-ok{color:var(--ok)}.st-ok i{background:var(--ok)}.st-note{color:var(--note)}.st-note i{background:var(--note)}.st-warn{color:var(--warn)}.st-warn i{background:var(--warn)}
+.disc{font-size:12px;color:var(--ink-2);background:var(--bg);border-left:3px solid var(--ink-3);border-radius:4px;padding:6px 10px;margin:0}
+.fr td:nth-child(2),.fr td:nth-child(3){font-family:var(--f-mono);font-size:12px}.fr th:last-child{text-align:left}.fr td:last-child{white-space:normal;text-align:left;color:var(--ink-3);font-size:11.5px;min-width:180px}
+.bdg{font-size:11px;padding:1px 7px;border-radius:99px;white-space:nowrap}.bdg.ok{background:var(--ok-bg);color:var(--ok)}.bdg.late,.bdg.fail{background:var(--warn-bg);color:var(--warn);font-weight:600}.bdg.none{border:1px dashed var(--ink-3);color:var(--ink-3)}
+.cov{font-size:11.5px;font-variant-numeric:tabular-nums}.cov b{font-weight:600}.cov.part{color:var(--warn)}
+@media (max-width:1100px){.ops{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.ops{grid-template-columns:minmax(0,1fr)}}
+.grade td,.grade th{white-space:normal}
 </style>
 
 <div class="app">
@@ -225,6 +239,16 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   </header>
 
   <div class="tab" id="tab-home" data-tab="home">
+  <section class="card" id="opsum" aria-label="운영 요약">
+    <h2>운영 요약 <span class="tag">관리자 참고용</span><span class="tag" id="opRef">–</span></h2>
+    <div class="ops">
+      <div><span class="lb">참고 단계 (임시 구간)</span><span id="opStage">–</span><ul id="opWhy"></ul></div>
+      <div><span class="lb">내일 SS 기준 이상 가능성</span><span class="v" id="opP">–</span><span class="s" id="opPs">–</span></div>
+      <div><span class="lb">예보강우 확보</span><span class="v" id="opCov">–</span><span class="s" id="opCovS">–</span></div>
+      <div><span class="lb">자료 상태</span><span class="v" id="opData">–</span><span class="s" id="opDataS">–</span></div>
+    </div>
+    <p class="disc">이 화면의 SS는 <b>내린천2 하천 측정지점</b>(총량측정망)의 값과 모델 추정·예측입니다. 이 프로젝트는 이 값을 <b>고사취수장 복류수로 들어가기 전 하천수 수질</b>로 가정합니다. 복류수(하상여과)를 거친 원수 수질이나 탁도(NTU)와는 다를 수 있습니다. 이 시스템은 취수 중단·약품 투입·시설 제어를 결정하지 않으며, 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
+  </section>
   <section class="kpis" aria-label="요약">
     <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
     <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
@@ -233,6 +257,11 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="kpi"><div class="lab"><span id="kF5L">5일 후 예측</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="meta" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
   </section>
   <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
+  <section class="card" id="fresh">
+    <h2>자료 최신성 <span class="tag" id="frTag">–</span></h2>
+    <div class="tbl-wrap"><table class="fr"><thead><tr><th>자료</th><th>마지막 관측·발표</th><th>경과</th><th>상태</th><th>비고</th></tr></thead><tbody id="frTbl"></tbody></table></div>
+    <p class="hint" id="frNote">–</p>
+  </section>
 
   <section class="card" id="weather">
     <h2>기상 예보 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
@@ -248,11 +277,11 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div id="wrn"></div>
     </div>
     <div class="card" id="manage">
-      <h2>취수원 관리 점검표 <span class="tag">임시 기준</span></h2>
+      <h2>관리자 참고 점검사항 <span class="tag">임시 구간 · 자동 조치 아님</span></h2>
       <div id="grade"></div>
       <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
       <div id="lvBox"></div>
-      <p class="hint">단계 경계 25 mg/L는 이 취수원의 목표 수질등급 Ia(강원도 수자원관리계획 2021)의 SS 기준, 100 mg/L는 하천 생활환경기준 IV등급 SS 상한(환경정책기본법 시행령 별표1), 10.2 mg/L는 이 지점 2014–23 실측 상위 10% 경계입니다. 정수장 운영기준은 SS가 아니라 탁도(NTU)로 정해져 있고, 이 취수원의 고탁도 대응 기준은 확인하지 못했습니다. 점검 항목은 정수처리기준 해설서(국립환경과학원, 2013)와 고탁도 취수중단 사례를 참고한 예시이며 취수 중단 판단을 대신하지 않습니다.</p>
+      <p class="hint">단계는 <b>내린천2 하천 SS</b>로 정한 임시 참고 구간입니다. 10.2 mg/L는 이 지점 2014–23 실측 상위 10%(통계 기준), 25 mg/L는 하천 생활환경기준 Ia의 SS(하천 수질 평가 기준)이며 둘 다 취수 운영기준이 아닙니다. 정수장 운영기준은 원수 탁도(NTU)로 정해지고 이 취수원의 공식 기준은 아직 확인하지 못했습니다. 확인되면 그 기준으로 바꿉니다. 점검 항목은 관리자가 확인할 사항의 예시이며, 취수 중단·약품 투입량·시설 제어를 지시하지 않습니다.</p>
     </div>
   </section>
 
@@ -299,7 +328,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
       <div class="kv3"><div><span>향후 3일 강우</span><b id="evR">–</b></div><div><span>선행 7일 강우</span><b id="evA">–</b></div><div><span>현재 유량</span><b id="evQ">–</b></div></div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>실측일</th><th>3일 강우</th><th>선행 7일</th><th>유량</th><th>실측 SS</th></tr></thead>
+        <thead><tr><th>실측일</th><th>3일 강우</th><th>선행 7일</th><th>사전 유량</th><th>당일 유량</th><th>수위 변동</th><th>실측 SS</th><th>±3일 최대</th></tr></thead>
         <tbody id="evTbl"></tbody>
       </table></div>
       <p class="hint" id="evNote">–</p>
@@ -372,6 +401,29 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <p class="hint">연도별 전진검증, MAE mg/L. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 16건, 이전 22건). 25 mg/L 이상은 실측의 약 35% 수준으로 낮게 추정합니다. 2026-11-03 인제 기온(당일·7일 평균·최저)을 넣어 로그 R² 0.722→0.754, MAE 3.22→3.04로 좋아졌습니다(8개 연도 모두 개선, 부트스트랩 95% 구간 +0.009~+0.055). 같은 날 원대교 시간 수위(오전 10시 기준, 채수 대표 시각 14시에서 흐름 지연 4시간을 뺀 시각)를 더해 로그 R² 0.761, MAE 2.91(개선 폭은 작음, 95% 구간 0~+0.015). 탐색적 결과이며 새 실측으로 잠금 평가 예정. 1·3일 독립 시험은 연구용 별도 틀(SS 60일 지연 반영)로, 월평균 기준 대비 MAE가 1일 −34%(예보 포함 −40%), 3일 −9%(−10%)입니다. 2025년은 고농도가 없는 해라 고농도 예측력은 검증되지 않았습니다.</p>
       <p class="hint"><b>과적합 점검 (2026-11-03):</b> 입력 37개·실측 493건. 학습자료 로그 R² 0.90, 전진검증 0.76 (XGB 단독은 0.97→0.75라 Ridge 혼합이 차이를 줄임). 변수 묶음을 하나씩 빼거나 14개·6개로 줄이면 거의 같거나 나빠졌고(0.74–0.76, 0.74, 0.56), 의미 없는 난수 변수 10개를 넣어도 0.755로 거의 같아 입력 수 때문에 생기는 과적합은 뚜렷하지 않습니다. 다만 변수와 모델을 같은 2019–26 전진검증을 보며 골랐으므로 실제 성능은 잠금 평가로 확인합니다. 1·3일 예측도 입력을 줄이면 나빠졌고, 7일 관측만 예측은 학습 0.72→검증 0.40으로 차이가 커서 2026-11-03 5일 예측으로 바꿨습니다.</p>
     </div>
+  </section>
+  <section class="card" id="mgrval">
+    <h2>관리자 기능 검증 <span class="tag real">2026-11-03 · 실측일만 채점</span></h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>기준 이상 가능성 (정확히 그날)</th><th>표본 · 초과</th><th>PR-AUC (우연 수준)</th><th>20% 이상일 때 잡은 비율</th><th>그때 맞은 비율</th></tr></thead>
+      <tbody>
+        <tr class="mine"><td>내일 · SS 10.2 이상 · 관측만</td><td>237 · 23</td><td>0.81 (0.10)</td><td>70%</td><td>84%</td></tr>
+        <tr class="mine"><td>내일 · SS 25 이상 · 관측만</td><td>237 · 10</td><td>0.57 (0.04)</td><td>50%</td><td>56%</td></tr>
+        <tr><td>내일 · SS 25 이상 · 실제 기상청 예보</td><td>199 · 7</td><td>0.66 (0.04)</td><td>57%</td><td>80%</td></tr>
+        <tr><td>3일 뒤 · SS 25 이상 · 관측만</td><td>237 · 10</td><td>0.16 (0.04)</td><td>0%</td><td>–</td></tr>
+        <tr><td>7일 뒤 · SS 25 이상 · 관측만</td><td>236 · 10</td><td>0.10 (0.04)</td><td>0%</td><td>–</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hint">2020–26 시간순 평가: 확률은 기준일보다 60일 이상 앞선 과거 예측 오차만으로 계산(공개 지연 반영). 채수하지 않은 날은 정상으로 치지 않고 평가에서 뺐습니다. 3일 이후는 우연 수준과 비슷해 화면에 확률을 내지 않습니다(5일 예측도 같음). 25 이상 10건 중 놓친 5건은 2021-03-03(110 mg/L, 해빙기), 2023-06-13, 2023-07-12, 2024-06-25, 2024-07-23입니다.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>1–7일 연속 직접예측 (로그 R²)</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead>
+      <tbody>
+        <tr><td>관측만</td><td>0.70</td><td>0.51</td><td>0.45</td><td>0.43</td><td>0.43</td><td>0.41</td><td>0.40</td></tr>
+        <tr><td>실제 내린 비 대입 (사후, 예보 오차 없음)</td><td>0.72</td><td>0.64</td><td>0.63</td><td>0.61</td><td>0.59</td><td>0.55</td><td>0.52</td></tr>
+        <tr><td>월별 기준값</td><td colspan="7" style="text-align:center">0.37</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hint">2019–26 전진검증 n=295, 날짜마다 따로 학습한 직접예측. 관측만 쓰면 2일 뒤부터 월별 기준값과 차이가 작습니다. 실제 내린 비를 넣은 값은 예보가 정확하다는 가정의 상한이며, 실제 예보로는 이보다 낮습니다(1일 0.75, 3일은 2일치 예보로 0.60). 일 단위 예측이라 하루 중 첨두 시각은 알 수 없습니다. 아직 화면의 일별 연속 예측으로는 넣지 않았습니다.</p>
   </section>
   <section class="card" id="modelcfg">
     <h2>대시보드 모델 구성 <span class="tag">2026-11-03 기온·시간 수위 추가</span></h2>
@@ -449,6 +501,12 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <div><dt>유량 보정</dt><dd>원대교 유량이 같은 날 수위와 크게 어긋난 73일을 수위로 다시 계산한 것. 예: 2023-06-27 20.8 → 185 m³/s.</dd></div>
         <div><dt>첨두수위</dt><dd>하루 중 가장 높았던 수위. 일평균에 묻히는 짧은 홍수를 잡기 위해 씁니다.</dd></div>
         <div><dt>XGB·Ridge 혼합</dt><dd>의사결정나무를 차례로 더해 가는 XGBoost를 시드만 바꿔 10개 학습해 평균하고, 같은 입력의 선형 모델(Ridge)과 로그 척도에서 반씩 섞었습니다. 나무 모델은 학습 범위 밖 큰 홍수를 못 따라가고 선형 모델은 과하게 따라가서, 둘을 섞으면 서로 보완됩니다.</dd></div>
+        <div><dt>SS와 탁도</dt><dd>SS는 물을 걸러 말린 입자 무게(mg/L), 탁도는 물이 흐린 정도(NTU)입니다. 둘은 같은 값이 아니고, 이 지점의 SS–탁도 관계는 아직 확인하지 않았습니다. 정수장 운영기준은 탁도로 정해집니다.</dd></div>
+        <div><dt>복류수 유입 전 하천수 (가정)</dt><dd>이 대시보드의 SS는 내린천2 하천 측정지점 값이며, 고사취수장(덕산정수장 수원) 복류수로 들어가기 전 하천수 수질과 같다고 가정합니다. 하상여과를 거친 뒤의 원수 수질과의 연계는 이번 단계에서 보류했습니다.</dd></div>
+        <div><dt>기준 이상 가능성</dt><dd>내일 하천 SS가 정확히 그날 기준값 이상일 확률을 과거 예측 오차로 계산한 값. "앞으로 며칠 안에 한 번이라도"의 확률과 다르고, 그보다 작거나 같습니다.</dd></div>
+        <div><dt>참고 단계</dt><dd>평상·관심·대응 검토. 하천 SS 통계 기준(10.2), 하천 Ia 기준(25), 호우특보로 정한 임시 구간이며, 시설 공식 운영기준이 확인되면 바꿉니다.</dd></div>
+        <div><dt>예보강우 확보</dt><dd>예측에 필요한 날짜 중 기상청 예보를 받은 날 수. 예: 5일 예측에 4일치만 있으면 4/5일.</dd></div>
+        <div><dt>학습 범위 밖 입력</dt><dd>오늘 예측 입력값이 과거 실측일 입력의 최솟값–최댓값을 벗어난 경우. 모델이 경험하지 못한 조건이라 예측을 덜 믿어야 합니다.</dd></div>
         <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023년 실측 SS 상위 10% 경계. 법정 기준이 아니라 이 대시보드의 임시 알림 기준입니다.</dd></div>
     </dl>
   </section>
@@ -522,7 +580,7 @@ function renderGrade() {
   const nOk = yr.filter(o => ok(o.v)).length, mx = Math.max(...yr.map(o => o.v)), mean = yr.reduce((a, o) => a + o.v, 0) / yr.length;
   const e = D.est[lastI], fc = forecasts(lastI).flatMap(z => [z.o ? z.o[0] : null, z.r ? z.r[0] : null]).filter(v => v != null), fmax = fc.length ? Math.max(...fc) : null;
   const badge = v => '<b class="g" style="color:var(' + (ok(v) ? '--ok' : '--warn') + ')">' + (ok(v) ? '목표 달성' : '목표 초과') + '</b>';
-  $('grade').innerHTML = '<div class="grade"><div>목표 수질등급 <b class="g">Ia</b> (생활용수) · SS 기준 ' + LIM + ' mg/L 이하</div>'
+  $('grade').innerHTML = '<div class="grade"><div>목표 수질등급 <b class="g">Ia</b> (생활용수) · SS 기준 ' + LIM + ' mg/L 이하 <span style="color:var(--ink-3);font-size:11.5px">· 하천 지점 수질 평가이며 취수 운영기준이 아님</span></div>'
     + '<table><thead><tr><th>판정</th><th>SS (mg/L)</th><th>Ia 기준 대비</th></tr></thead><tbody>'
     + '<tr><td>최근 실측 ' + last.d + '</td><td>' + fmt(last.v) + '</td><td>' + badge(last.v) + '</td></tr>'
     + '<tr><td>기준일 추정 ' + iso(lastI) + '</td><td>' + fmt(e) + '</td><td>' + badge(e) + '</td></tr>'
@@ -682,28 +740,24 @@ function render() {
 
 // ---- 예측 원인 분석 · 유사 강우사상 · 관리 점검표 ----
 let shM = 'est', lvSel = null;
+// 관리자 참고 단계 (임시 구간). 근거는 stageEval에서 계산. 시설 공식 기준(원수 탁도 등)이 확인되면 교체한다.
 const LV = [
-  { k: '정상', lo: 0, c: 'ok', d: '평소 범위 (이 지점 2014–23 실측의 하위 90%)', it: [
-    ['대시보드의 추정·1·3·5일 예측과 기상청 예보강우 확인', '매일 갱신 후'],
-    ['정기 원수 탁도 측정값과 SS 추정 추이 비교', 'SS–탁도 관계를 쌓아 두면 탁도 기준으로 바꿀 수 있음'],
-    ['원대교 수위·유량 평소 수준인지 확인', 'WAMIS 1012650']] },
-  { k: '관심', lo: 0, c: 'note', d: '평소보다 높음. 목표 수질등급 Ia의 SS 기준(25 mg/L 이하)은 만족', it: [
-    ['향후 3일 예보강우와 원대교 수위 상승 여부 확인', '기상청 단기예보, WAMIS 시간수위'],
-    ['과거 유사 강우사상의 실측 SS 확인', '옆 표'],
-    ['원수 탁도 측정 주기 늘리기 검토', '집중호우·해빙기 원수 탁도 상승 대비 (정수처리기준 해설서)']] },
-  { k: '주의', lo: 25, c: 'warn', d: 'SS 25 mg/L 초과: 목표 수질등급 Ia의 SS 기준을 넘음', it: [
-    ['원수 탁도 급변에 대비해 응집제 주입률 조정 준비', '원수 탁도가 오르면 응집제 투입량도 늘려야 함 (정수처리기준 해설서)'],
-    ['여과지별 탁도 감시 강화', '개별 여과지 15분 간격 감시 권장, 통합탁도계만으로는 초기 누출 확인 불가'],
-    ['역세척 배수 반송 시 각 공정 탁도 관리', '반송수가 원수 농도를 높인 사례 (밀워키)'],
-    ['현장 점검 필요성 검토', '취수구 주변 탁수 유입 육안 확인 등']] },
-  { k: '경계', lo: 100, c: 'warn', d: 'SS 100 mg/L 초과: 하천 IV등급 기준도 넘음', it: [
-    ['취수 중단 또는 대체 수원 전환 기준 검토', '고탁도 때 취수를 멈추고 다른 수원으로 바꾼 사례 (K-water 물야정수장)'],
-    ['여과수 탁도 기준 충족 여부 집중 감시', '급속여과 월 95% 이상 0.3 NTU 이하, 각 시료 1.0 NTU 이하'],
-    ['정수처리 불안정 시 주민 공지·비상급수 대책 확인', '기준 위반이 크고 길면 주민 공지와 기술진단'],
-    ['관계기관(지자체 상수도·K-water) 연락 체계 확인', '']] },
+  { k: '평상', c: 'ok', d: '평소 범위. 하천 SS가 통계 기준(2014–23 실측 상위 10%) 아래이고 특보·초과 가능성 신호가 없음', it: [
+    ['최신 원수 수질(탁도 등) 확인', '시설 자체 측정값 기준. 이 화면의 SS는 복류수 유입 전 하천수(가정)'],
+    ['기존 관측·시설 운영 유지', ''],
+    ['자료 갱신 상태 확인', '종합 탭 「자료 최신성」 표에서 늦음·실패 항목 확인']] },
+  { k: '관심', c: 'note', d: '하천 SS가 평소보다 높거나 높아질 신호(통계 기준 이상, 호우 특보 등)가 있음', it: [
+    ['원수 탁도·SS 확인 권고', '하상여과 후 원수는 하천수와 다를 수 있음'],
+    ['강우예보와 원대교 수위·유량 증가 추세 점검', '기상청 단기예보, WAMIS 1012650 시간수위'],
+    ['원수 관측 빈도 증가 검토', ''],
+    ['취수시설 상태 확인', '취수구 주변, 스크린 등'],
+    ['과거 유사 강우사상의 실측 SS 확인', '「예측 · 원인」 탭의 표']] },
+  { k: '대응 검토', c: 'warn', d: '하천 SS가 25 mg/L(하천 Ia 참고값) 이상으로 추정·예측되거나 호우 경보 등 강한 신호가 있음', it: [
+    ['현장 실측자료 확인', '원수 탁도·SS 현장 측정'],
+    ['취수시설 및 처리공정 대응능력 점검', '시설별 운영절차 기준'],
+    ['시설별 운영절차(고탁도 대응 등) 확인', ''],
+    ['필요 시 관계자에게 상황 공유', '지자체 상수도 부서 등']] },
 ];
-LV[1].lo = D.meta.p90;
-const level = v => { let i = 0; LV.forEach((L, j) => { if (v >= L.lo) i = j; }); return i; };
 let ckState = {};
 try { ckState = JSON.parse(localStorage.getItem('ssdashCk') || '{}'); } catch (e) {}
 
@@ -749,25 +803,95 @@ function renderExplain(ref, FCS, e) {
   const Q0 = D.q[ref];
   $('evR').innerHTML = fmt(R0, 0) + '<small>mm</small>'; $('evA').innerHTML = fmt(A0, 0) + '<small>mm</small>'; $('evQ').innerHTML = fmt(Q0) + '<small>m³/s</small>';
   const cand = D.ev.filter(v => v[0] < iso(ref - 3) || ref === lastI);
-  const tr = [v => Math.log1p(v[1]), v => Math.log1p(v[2]), v => Math.log(Math.max(.1, v[3]))];
+  // 2026-11-03: 계절(월) 추가. 2016–26 검증에서 실측 SS와 순위상관 0.36→0.72, 로그 오차 0.84→0.63 (e4_analog)
+  const mon = new Date(t0 + ref * DAY).getUTCMonth() + 1, ang = m => 2 * Math.PI * m / 12;
+  const tr = [v => Math.log1p(v[1]), v => Math.log1p(v[2]), v => Math.log(Math.max(.1, v[3])), v => Math.sin(ang(v[5] || 1)), v => Math.cos(ang(v[5] || 1))];
   const sd = tr.map(f => { const x = cand.map(f), m = x.reduce((s, y) => s + y, 0) / x.length; return Math.sqrt(x.reduce((s, y) => s + (y - m) ** 2, 0) / x.length) || 1; });
-  const q = [Math.log1p(R0), Math.log1p(A0), Math.log(Math.max(.1, Q0 || .1))], wt = [2, 1, 1];
+  const hasM = cand.length && cand[0].length > 5;
+  const q = [Math.log1p(R0), Math.log1p(A0), Math.log(Math.max(.1, Q0 || .1)), Math.sin(ang(mon)), Math.cos(ang(mon))], wt = hasM ? [2, 1, 1, .5, .5] : [2, 1, 1, 0, 0];
   const top = Q0 == null ? [] : cand.map(v => [v, tr.reduce((s, f, j) => s + wt[j] * ((f(v) - q[j]) / sd[j]) ** 2, 0)]).sort((p, r) => p[1] - r[1]).slice(0, 5).map(p => p[0]);
-  $('evTbl').innerHTML = top.map(v => `<tr><td>${v[0]}</td><td>${fmt(v[1], 0)} mm</td><td>${fmt(v[2], 0)} mm</td><td>${fmt(v[3])}</td><td><b>${fmt(v[4])}</b> mg/L</td></tr>`).join('');
+  $('evTbl').innerHTML = top.map(v => `<tr><td>${v[0]}</td><td>${fmt(v[1], 0)} mm</td><td>${fmt(v[2], 0)} mm</td><td>${fmt(v[3])}</td><td>${v[6] == null ? '–' : fmt(v[6])}</td><td>${v[7] == null ? '–' : fmt(v[7], 2) + ' m'}</td><td><b>${fmt(v[4])}</b> mg/L</td><td>${v[8] == null ? '–' : fmt(v[8])}</td></tr>`).join('');
   const ss = top.map(v => v[4]).sort((p, r) => p - r);
-  $('evNote').textContent = top.length ? `향후 3일 강우는 ${src} 기준. 비슷한 ${top.length}건의 실측 SS 중앙값 ${fmt(ss[Math.floor(ss.length / 2)])}, 범위 ${fmt(ss[0])}–${fmt(ss[ss.length - 1])} mg/L. 실측일 기준 3일 강우(그날 포함), 그 전 7일 강우, 사상 전 유량을 로그 척도로 비교했고 강우량에 가중치 2를 줬습니다.` + (ref === lastI ? '' : ' 과거 기준일은 그 이전 사례만 찾습니다.') : '유량 자료가 없어 찾지 않았습니다.';
-  // 관리 점검표
-  const vmax = Math.max(e || 0, ...FCS.map(z => z.o ? z.o[0] : 0), ...FCS.map(z => z.r ? z.r[0] : 0)), cur = level(vmax);
+  $('evNote').textContent = top.length ? `향후 3일 강우는 ${src} 기준. 비슷한 ${top.length}건의 실측 SS 중앙값 ${fmt(ss[Math.floor(ss.length / 2)])}, 범위 ${fmt(ss[0])}–${fmt(ss[ss.length - 1])} mg/L. 실측일 기준 3일 강우(그날 포함), 그 전 7일 강우, 사상 전 유량을 로그 척도로, 계절(월)을 함께 비교했고 강우량에 가중치 2를 줬습니다. 유량은 m³/s(사전 = 3일 전), 수위 변동은 원대교 그날 최고−최저, ±3일 최대는 그 앞뒤 3일 안 실측 SS 최대입니다. 비슷한 조건이었다고 같은 SS가 나온다는 뜻은 아닙니다. 당시 원수 탁도와 시설 조치 기록은 아직 확보하지 못해 넣지 못했습니다.` + (ref === lastI ? '' : ' 과거 기준일은 그 이전 사례만 찾습니다.') : '유량 자료가 없어 찾지 않았습니다.';
+  // 관리자 참고 점검사항
+  const SE = stageEval(ref, FCS, e), cur = SE.lv;
   const sel = lvSel == null ? cur : lvSel;
   $('lvSegs').innerHTML = LV.map((L, j) => `<button class="seg" data-lv="${j}" aria-pressed="${j === sel}">${L.k}${j === cur ? '<span class="cur">● 현재</span>' : ''}</button>`).join('');
-  const L = LV[sel], hi = sel < 3 ? LV[sel + 1].lo : null;
-  $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k} · ${hi == null ? fmt(L.lo, 0) + ' mg/L 초과' : (sel ? fmt(L.lo, L.lo % 1 ? 1 : 0) + '–' : '') + fmt(hi, hi % 1 ? 1 : 0) + ' mg/L' + (sel ? '' : ' 미만')}</b><p>${L.d}. 현재 판단값 ${fmt(vmax)} mg/L (추정·1·3·5일 예측 중 최대).</p></div>`
-    + `<ul class="ck">${L.it.map(([a, b], j) => { const id = sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
+  const L = LV[sel];
+  $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k}</b><p>${L.d}.</p><p>현재 근거: ${SE.why.length ? SE.why.map(w => w[1]).join(' · ') : '해당 신호 없음'}</p></div>`
+    + `<ul class="ck">${L.it.map(([a, b], j) => { const id = 'v2-' + sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
+  renderOps(ref, FCS, e, SE);
   document.querySelectorAll('#lvSegs .seg').forEach(b => b.addEventListener('click', () => { lvSel = +b.dataset.lv; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
   document.querySelectorAll('[data-ck]').forEach(c => c.addEventListener('change', () => { ckState[c.dataset.ck] = c.checked; try { localStorage.setItem('ssdashCk', JSON.stringify(ckState)); } catch (e) {} }));
 }
 document.querySelectorAll('#explain .seg[data-m]').forEach(b => b.addEventListener('click', () => { shM = b.dataset.m; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
 
+// ---- 취수원 관리자용 (2026-11-03): 참고 단계 근거, 운영 요약, 자료 최신성, 예보 확보 배지 ----
+const MG = D.meta.mgr || null;
+const pct = p => p == null ? '–' : p < .05 ? '5% 미만' : p > .95 ? '95% 초과' : Math.round(p * 100) + '%';
+function stageEval(ref, FCS, e) {
+  const isLast = ref === lastI, why = [], p90 = D.meta.p90, add = (l, t) => why.push([l, t]);
+  if (e != null && e >= 25) add(2, '기준일 추정 SS ' + fmt(e) + ' mg/L (25 이상)');
+  else if (e != null && e >= p90) add(1, '기준일 추정 SS ' + fmt(e) + ' mg/L (상위 10% ' + fmt(p90) + ' 이상)');
+  FCS.forEach(z => {
+    const S = D.fc.scen.h[z.h], v = [];
+    if (isLast) { if (S && S.obs) v.push(S.obs[0]); if (S && S.kma) v.push(S.kma.v[0]); }   // 운영 판단은 시나리오 선택과 무관하게 관측만·완전 예보값만
+    else { if (z.o) v.push(z.o[0]); if (z.r) v.push(z.r[0]); }
+    if (!v.length) return;
+    const m = Math.max(...v);
+    if (z.h === 1 && m >= 25) add(2, '1일 후 예측 ' + fmt(m) + ' mg/L (25 이상)');
+    else if (m >= p90) add(1, z.h + '일 후 예측' + (z.h > 1 ? '(참고)' : '') + ' ' + fmt(m) + ' mg/L (상위 10% 이상)');
+  });
+  let p10 = null, p25 = null;
+  if (isLast && MG && MG.exceed) {
+    Object.values(MG.exceed).forEach(x => { p10 = Math.max(p10 || 0, x.p['10.2']); p25 = Math.max(p25 || 0, x.p['25.0']); });
+    if (p25 != null && p25 >= .2) add(2, '내일 25 mg/L 이상 가능성 ' + pct(p25));
+    else if (p10 != null && p10 >= .2) add(1, '내일 10.2 mg/L 이상 가능성 ' + pct(p10));
+  }
+  const W = D.meta.warnings;
+  if (isLast && W && W.now) W.now.filter(r => r.wrn === '호우').forEach(r => add(r.lvl === '경보' ? 2 : 1, '호우' + r.lvl + ' 발효 (' + r.reg + ')'));
+  return { lv: Math.max(0, ...why.map(w => w[0])), why, p10, p25 };
+}
+function renderOps(ref, FCS, e, SE) {
+  const isLast = ref === lastI, L = LV[SE.lv];
+  $('opRef').textContent = '기준일 ' + iso(ref) + (isLast ? '' : ' · 과거 날짜 보기');
+  $('opStage').innerHTML = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span>';
+  $('opWhy').innerHTML = SE.why.length ? SE.why.map(w => '<li>' + w[1] + '</li>').join('') : '<li>올라갈 신호 없음</li>';
+  if (!isLast) { $('opP').textContent = '–'; $('opPs').textContent = '자료 마지막 날에만 계산합니다.'; }
+  else if (SE.p10 == null) { $('opP').textContent = '–'; $('opPs').textContent = '계산에 필요한 과거 예측 기록이 부족합니다.'; }
+  else {
+    $('opP').innerHTML = '10.2↑ ' + pct(SE.p10) + ' · 25↑ ' + pct(SE.p25);
+    $('opPs').textContent = '내일(' + iso(ref + 1).slice(5) + ') 하천 SS가 그 값(mg/L) 이상일 가능성. 과거 예측 오차로 계산했고, 2020–26 검증에서 25 이상 10건 중 5건을 20% 이상으로 미리 잡았습니다. 3일 이후는 판별력이 낮아 표시하지 않습니다.';
+  }
+  const C = MG && MG.cover;
+  if (C) {
+    const hs = Object.keys(C).map(Number).sort((a, b) => a - b), part = hs.filter(h => !C[h].full);
+    $('opCov').innerHTML = hs.map(h => h + '일 ' + C[h].have + '/' + C[h].need).join(' · ');
+    $('opCovS').textContent = part.length ? part.join('·') + '일 예측은 예보가 모자라 예보 반영값을 참고로만 봅니다. 기상청 단기예보는 보통 D+5까지 나옵니다.' : '필요한 날짜의 기상청 예보를 모두 받았습니다.';
+    hs.forEach(h => {
+      const r = $('kF' + h + 'R'); if (!r) return;
+      let b = $('kF' + h + 'C'); if (!b) { b = document.createElement('div'); b.id = 'kF' + h + 'C'; r.after(b); }
+      b.className = 'meta cov' + (C[h].full ? '' : ' part');
+      const z = FCS.find(f => f.h === h), wide = z && z.o && z.o[1] > 0 && z.o[2] / z.o[1] > 12;   // 평소 80% 범위 폭은 4–9배
+      b.innerHTML = (isLast ? '예보강우 확보 <b>' + C[h].have + '/' + C[h].need + '일</b>' + (C[h].full ? '' : ' · 부족, 예보 반영값은 참고') : '') + (wide ? (isLast ? ' · ' : '') + '<b>범위가 평소보다 넓음</b>, 불확실성 큼' : '');
+      if (wide) b.classList.add('part');
+    });
+  } else { $('opCov').textContent = '–'; $('opCovS').textContent = '이번 갱신에는 예보 확보 정보가 없습니다.'; }
+  const F = (MG && MG.fresh) || [], bad = F.filter(r => r[3] === 'late' || r[3] === 'fail' || r[3] === 'none'), O = MG && MG.ood;
+  $('opData').innerHTML = bad.length ? '<span style="color:var(--warn)">확인 필요 ' + bad.length + '건</span>' : (F.length ? '<span style="color:var(--ok)">정상</span>' : '–');
+  let t = bad.map(r => r[0].replace(/ \(.*/, '') + ' ' + (r[3] === 'fail' ? '수집 실패' : r[3] === 'none' ? '없음' : r[2] + '일 전')).join(', ');
+  if (O) t += (t ? '. ' : '') + (O.out.length ? '예측 입력 ' + O.out.length + '개가 학습 범위 밖(' + [...new Set(O.out.map(x => x[0]))].join('·') + '), 예측 신뢰도 낮음' : '예측 입력은 학습 범위 안') + (O.missing.length ? ', 결측 입력 ' + O.missing.length + '개' : '');
+  $('opDataS').textContent = t || '–';
+}
+function renderFresh() {
+  const F = MG && MG.fresh;
+  if (!F) { $('fresh').hidden = true; return; }
+  const lab = { ok: '정상', late: '늦음', fail: '수집 실패', none: '없음' };
+  $('frTbl').innerHTML = F.map(([n, last, age, st, note]) => '<tr><td>' + n + '</td><td>' + (last || '–') + '</td><td>' + (age == null ? '–' : (age < 1 && age > 0 ? fmt(age * 24, 0) + '시간' : age + '일')) + '</td><td><span class="bdg ' + st + '">' + lab[st] + '</span></td><td>' + (note || '') + '</td></tr>').join('');
+  const nb = F.filter(r => r[3] !== 'ok').length;
+  $('frTag').textContent = nb ? '확인 필요 ' + nb + '건' : '모두 정상'; $('frTag').className = 'tag' + (nb ? ' warnTag' : ' real');
+  $('frNote').textContent = '경과는 오늘(' + new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10) + ') 기준. 강우·유량·수위·기온은 2일, 예보는 1.5일, SS 실측은 14일을 넘으면 「늦음」입니다. SS는 약 8일 간격으로 채수하고 검증 후 공개되므로 수주–2개월 늦는 것이 보통이며, 그동안의 SS는 모두 모델 추정값입니다.';
+}
 function renderStatus() {
   const M = D.meta, W = M.warnings, L = M.locked, st = M.sources || {};
   const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
@@ -881,6 +1005,6 @@ showTab(location.hash.slice(1) || 'home');
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
 new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-renderBars(); renderWt(); renderMap(); renderTbl();
+renderBars(); renderWt(); renderMap(); renderTbl(); renderFresh();
 if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
 </script>
