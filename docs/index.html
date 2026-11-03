@@ -92,6 +92,11 @@ h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .sw-fcr{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid var(--rain)}
 .rainline{color:var(--ink-2)}
 .sw-zone{width:18px;height:10px;border:1px dashed var(--ink-3);border-radius:2px}
+#outlook h2 .sub2{font-weight:400;font-size:12.5px;color:var(--ink-3)}
+.sw-fbar{width:7px;height:14px;border-radius:2px;background:var(--ink-3)}
+.sw-zn{width:14px;height:10px;border-radius:2px}.sw-zn.n{background:var(--note-bg);border:1px solid var(--note)}.sw-zn.w{background:var(--warn-bg);border:1px solid var(--warn)}
+.lvp{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;margin-left:8px;letter-spacing:0;vertical-align:middle}.lvp i{width:8px;height:8px;border-radius:50%}
+.kpi{border-top:3px solid var(--line)}.kpi.lv-note{border-top:3px solid var(--note)}.kpi.lv-warn{border-top:3px solid var(--warn)}.kpi.lv-ok{border-top:3px solid var(--ok)}
 .plot{width:100%;min-height:120px}
 .stack{display:flex;flex-direction:column;gap:4px}
 .chips{display:flex;gap:6px}
@@ -249,6 +254,12 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div><span class="lb">자료 상태</span><span class="v" id="opData">–</span><span class="s" id="opDataS">–</span></div>
     </div>
     <p class="disc">이 화면의 SS는 <b>내린천2 하천 측정지점</b>(총량측정망)의 값과 모델 추정·예측입니다. 이 프로젝트는 이 값을 <b>고사취수장 복류수로 들어가기 전 하천수 수질</b>로 가정합니다. 복류수(하상여과)를 거친 원수 수질이나 탁도(NTU)와는 다를 수 있습니다. 이 시스템은 취수 중단·약품 투입·시설 제어를 결정하지 않으며, 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
+  </section>
+  <section class="card" id="outlook" aria-label="SS 전망 그래프">
+    <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span></h2>
+    <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
+    <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위</span><span><i class="sw-fbar"></i>예측 80% 범위 (점 = 중앙값, 색 = 참고 단계)</span><span><i class="sw-fcr"></i>기상청 예보강우 반영</span><span><i class="sw-zn n"></i>관심 (실측 상위 10% 이상)</span><span><i class="sw-zn w"></i>대응 검토 (25 mg/L 이상)</span></div>
+    <p class="hint">세로축은 로그 눈금입니다(0.3 → 3 → 30이 같은 간격). 참고 단계 구간은 임시 기준이며, 5일 후 예측은 참고용입니다.</p>
   </section>
   <section class="kpis" aria-label="요약">
     <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
@@ -660,6 +671,7 @@ function render() {
     $('kObsM').textContent = lastObs.d + (gap ? ' (' + gap + '일 전)' : ' (기준일)') + (prev ? ' · 직전 ' + fmt(prev.v) : '');
   }
   renderGap(ref, lastObs);
+  renderOutlook(ref, FCS, lastObs);
 
   // SS chart
   const shapes = [
@@ -745,6 +757,59 @@ function render() {
   save();
 }
 
+
+// ---- SS 전망 그래프 (요약 카드 위) ----
+const lvOf = v => v == null ? null : v >= 25 ? 2 : v >= D.meta.p90 ? 1 : 0;
+const LVK = [['ok', '평상'], ['note', '관심'], ['warn', '대응 검토']];
+const lvPill = v => { const l = lvOf(v); return l == null ? '' : '<span class="lvp st-' + LVK[l][0] + '"><i></i>' + LVK[l][1] + '</span>'; };
+function renderOutlook(ref, FCS, lastObs) {
+  const p90 = D.meta.p90, a = ref - 13, H = 5, L10 = Math.log10;
+  const est = series(a, ref, D.est), lo = series(a, ref, D.lo), hi = series(a, ref, D.hi);
+  const ob = obs.filter(o => o.i >= a && o.i <= ref + H && o.v != null);
+  const fo = FCS.filter(z => z.o), fr = FCS.filter(z => z.r);
+  const lvc = l => css(['--ok', '--note', '--warn'][l]);
+  const vals = [...est.y, ...hi.y, ...ob.map(o => o.v), ...fo.map(z => z.o[2]), ...fr.map(z => z.r[2])].filter(v => v != null && v > 0);
+  const ymin = Math.min(0.3, ...vals) * 0.7, ymax = Math.max(140, ...vals) * 1.4;
+  const xr = [isoT(a - 0.5), isoT(ref + H + 0.8)];
+  const zone = (y0, y1, c) => ({ type: 'rect', xref: 'paper', x0: 0, x1: 1, yref: 'y', y0, y1, fillcolor: c, opacity: .55, line: { width: 0 }, layer: 'below' });
+  const hl = (y, c, dash) => ({ type: 'line', xref: 'paper', x0: 0, x1: 1, yref: 'y', y0: y, y1: y, line: { color: c, width: 1, dash } });
+  const shapes = [zone(p90, 25, css('--note-bg')), zone(25, ymax, css('--warn-bg')),
+    hl(p90, css('--note'), 'dot'), hl(25, css('--warn'), 'dash'), hl(100, css('--warn'), 'dot'),
+    { type: 'line', xref: 'x', yref: 'paper', x0: isoT(ref + 0.5), x1: isoT(ref + 0.5), y0: 0, y1: 1, line: { color: css('--ink-3'), width: 1 } }];
+  const tl = (y, txt, c) => ({ xref: 'paper', x: 0.005, xanchor: 'left', yref: 'y', y: L10(y), yanchor: 'bottom', text: txt, showarrow: false, font: { size: 10.5, color: c } });
+  const ann = [tl(p90, '관심 ' + fmt(p90), css('--note')), tl(25, '대응 검토 25', css('--warn')), tl(100, '100 mg/L', css('--warn')),
+    { xref: 'x', x: isoT(ref + 0.5), yref: 'paper', y: 1, yanchor: 'bottom', xanchor: 'center', text: '추정 ◀ ' + (ref === lastI ? '기준일 ' : '') + iso(ref).slice(5) + ' ▶ 예측', showarrow: false, font: { size: 10.5, color: css('--ink-2') } }];
+  const narrow = innerWidth < 600;
+  fo.forEach(z => ann.push({ xref: 'x', x: iso(ref + z.h), yref: 'y', y: L10(z.o[2]), yanchor: 'bottom', yshift: 2, showarrow: false,
+    text: '<b>' + fmt(z.o[0]) + '</b>' + (narrow ? '' : '<br><span style="font-size:10px">' + z.h + '일 후</span>'), font: { size: 12, color: css('--ink') } }));
+  const e = D.est[ref], chain = fo.map(z => [iso(ref + z.h), z.o[0]]);
+  const tr = [
+    { x: hi.x, y: hi.y, mode: 'lines', line: { width: 0 }, hoverinfo: 'skip' },
+    { x: lo.x, y: lo.y, mode: 'lines', line: { width: 0 }, fill: 'tonexty', fillcolor: css('--band'), hoverinfo: 'skip' },
+    { x: [iso(ref), ...chain.map(c => c[0])], y: [e, ...chain.map(c => c[1])], mode: 'lines', line: { color: css('--ink-3'), width: 1.5, dash: 'dot' }, hoverinfo: 'skip' },
+    { x: est.x, y: est.y, mode: 'lines', name: '추정', line: { color: css('--est'), width: 2 }, hovertemplate: '추정 %{y:.1f} mg/L<extra></extra>' },
+    ...fo.map(z => ({ x: [iso(ref + z.h), iso(ref + z.h)], y: [z.o[1], z.o[2]], mode: 'lines', line: { color: lvc(lvOf(z.o[0])), width: 9 }, opacity: .35, hoverinfo: 'skip' })),
+    { x: fo.map(z => iso(ref + z.h)), y: fo.map(z => z.o[0]), mode: 'markers', name: '예측', marker: { symbol: 'square', size: 11, color: fo.map(z => lvc(lvOf(z.o[0]))), line: { color: css('--panel'), width: 2 } },
+      hovertemplate: fo.map(z => z.h + '일 후 예측 %{y:.1f} mg/L (80% ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + ')' + (z.h === 5 ? ', 참고용' : '') + '<extra></extra>') },
+    { x: fr.map(z => isoT(ref + z.h + 0.32)), y: fr.map(z => z.r[0]), mode: 'markers', name: '예보강우', marker: { symbol: 'triangle-up', size: 10, color: css('--rain'), line: { color: css('--panel'), width: 1.5 } },
+      error_y: { type: 'data', symmetric: false, array: fr.map(z => z.r[2] - z.r[0]), arrayminus: fr.map(z => z.r[0] - z.r[1]), color: css('--rain'), thickness: 1.5, width: 3 },
+      hovertemplate: fr.map(z => (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 반영 %{y:.1f} mg/L (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')<extra></extra>') },
+    { x: ob.map(o => o.d), y: ob.map(o => o.v), mode: 'markers', name: '실측', marker: { size: 9, color: css('--obs'), line: { color: css('--panel'), width: 2 } }, hovertemplate: '실측 %{y:.1f} mg/L<extra></extra>' }
+  ];
+  Plotly.react('pOut', tr, baseLayout(narrow ? 240 : 270, {
+    margin: { l: 40, r: 8, t: 22, b: 28 }, shapes, annotations: ann, hovermode: 'closest',
+    xaxis: Object.assign(baseLayout(0).xaxis, { range: xr, dtick: narrow ? 3 * DAY : 2 * DAY }),
+    yaxis: Object.assign(baseLayout(0).yaxis, { type: 'log', range: [L10(ymin), L10(ymax)], tickvals: [0.1, 0.3, 1, 3, 10, 25, 100], ticktext: ['0.1', '0.3', '1', '3', '10', '25', '100'], rangemode: 'normal' })
+  }), CFG);
+  $('pOut').style.height = (narrow ? 240 : 270) + 'px';
+  const worst = Math.max(lvOf(e) || 0, ...fo.map(z => lvOf(z.o[0]) || 0), ...fr.map(z => lvOf(z.r[0]) || 0));
+  $('olTag').textContent = '예측 중앙값 기준 ' + LVK[worst][1]; $('olTag').className = 'tag' + (worst === 2 ? ' warnTag' : worst === 0 ? ' real' : '');
+  const up = fo.filter(z => z.o[2] >= 25).map(z => z.h + '일');
+  $('olSub').textContent = '최근 2주 추정·실측과 1·3·5일 후 예측' + (up.length ? ' · ' + up.join('·') + ' 후 80% 범위 위쪽이 25 mg/L 이상' : '');
+  // 요약 카드에 참고 단계 표시
+  const mark = (id, v) => { const k = $(id).closest('.kpi'); k.classList.remove('lv-ok', 'lv-note', 'lv-warn'); const l = lvOf(v); if (l != null) k.classList.add('lv-' + LVK[l][0]); $(id).insertAdjacentHTML('beforeend', lvPill(v)); };
+  mark('kEst', e); FCS.forEach(z => z.o ? mark('kF' + z.h, z.o[0]) : $('kF' + z.h).closest('.kpi').classList.remove('lv-ok', 'lv-note', 'lv-warn'));
+}
 
 // ---- 예측 원인 분석 · 유사 강우사상 · 관리 점검표 ----
 let shM = 'est', lvSel = null;
