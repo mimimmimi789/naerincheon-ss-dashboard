@@ -205,10 +205,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 @media (max-width:520px){.ops{grid-template-columns:minmax(0,1fr)}}
 .grade td,.grade th{white-space:normal}
 /* 2026-11-03: 조절 항목은 적용되는 카드 제목 줄에, 종합 탭 맨 위는 한 줄 결론 */
-.cctl{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;font-weight:400}
+.cctl{display:flex;gap:8px 10px;flex-wrap:wrap;align-items:center;font-weight:400}
 .cctl label{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink-3)}
-.cctl select{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:4px 8px;min-height:32px}
-.cctl select:focus-visible{outline:2px solid var(--est);outline-offset:1px}.cctl select:disabled{opacity:.6}
+.cctl select,.cctl input{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:4px 8px;min-height:32px}
+.cctl select:focus-visible,.cctl input:focus-visible{outline:2px solid var(--est);outline-offset:1px}.cctl select:disabled{opacity:.6}.cctl .btn{min-height:32px;padding:4px 10px;font-size:12.5px}
 .headline{background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:var(--r);padding:16px 20px;display:flex;flex-direction:column;gap:4px}
 .headline.lv-note{border-left-color:var(--note);background:var(--note-bg)}.headline.lv-warn{border-left-color:var(--warn);background:var(--warn-bg)}
 .hl-main{margin:0;font-size:clamp(19px,2.3vw,27px);font-weight:700;letter-spacing:-.015em;line-height:1.3;font-variant-numeric:tabular-nums;color:var(--ink)}
@@ -217,7 +217,8 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .hl-main .ref{font-size:.62em;font-weight:500;color:var(--ink-3)}
 .hl-main .it{white-space:nowrap}
 .hl-sub{margin:0;font-size:12.5px;color:var(--ink-2)}
-@media (max-width:820px){.cctl{margin-left:0;width:100%}.cctl label{flex:1 1 45%}.cctl select{width:100%}.headline{padding:13px 14px}}
+.cctl label{white-space:nowrap}
+@media (max-width:820px){.cctl label{flex:1 1 45%;flex-direction:column;align-items:stretch;gap:2px}.cctl .btn{flex:1 1 100%}.cctl select,.cctl input{width:100%}.headline{padding:13px 14px}}
 </style>
 
 <div class="app">
@@ -248,11 +249,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <h1>내린천2 부유물질(SS) 대시보드</h1>
       <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·5일 예측</p>
     </div>
-    <div class="controls">
-      <label for="refDate">기준일 (모든 탭 공통)<input type="date" id="refDate"></label>
-      <button class="btn" id="latest" type="button">자료 마지막 날로</button>
-      <p class="refnote" id="refNote" hidden></p>
-    </div>
+    <p class="refnote" id="refNote" hidden></p>
   </header>
 
   <div class="tab" id="tab-home" data-tab="home">
@@ -261,8 +258,8 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <p class="hl-sub" id="hlSub">–</p>
   </section>
   <section class="card" id="outlook" aria-label="SS 전망 그래프">
-    <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span>
-      <span class="cctl"><label for="fcRain">예보 강우 (향후 합계)<select id="fcRain"></select></label></span></h2>
+    <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span></h2>
+      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
     <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
     <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위</span><span><i class="sw-fbar"></i>예측 80% 범위 (점 = 중앙값, 색 = 참고 단계)</span><span><i class="sw-fcr"></i>기상청 예보강우 반영</span><span><i class="sw-zn n"></i>관심 (실측 상위 10% 이상)</span><span><i class="sw-zn w"></i>대응 검토 (25 mg/L 이상)</span></div>
     <p class="hint">세로축은 로그 눈금입니다(0.3 → 3 → 30이 같은 간격). 참고 단계 구간은 임시 기준이며, 5일 후 예측은 참고용입니다.</p>
@@ -315,9 +312,9 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 
   <section class="grid g-main">
     <div class="card" id="ss">
-      <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span>
-        <span class="cctl"><label for="win">표시 기간<select id="win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label for="logY">y축<select id="logY"><option value="lin">선형</option><option value="log">로그</option></select></label></span></h2>
-      <p class="hint">표시 기간은 오른쪽 강우·유량 그래프에도, y축은 유량 그래프에도 함께 적용됩니다.</p>
+      <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
+      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
+      <p class="hint">표시 기간은 오른쪽 강우·유량 그래프에도, y축은 유량 그래프에도 적용됩니다. 기준일·기간·y축·예보 강우는 어느 그래프에서 바꿔도 모든 그래프가 같이 바뀝니다.</p>
       <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%. 시간순 검증 포함률 76%, 25 mg/L 이상에서는 42%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
@@ -348,6 +345,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section class="grid g-2" id="explain">
     <div class="card">
       <h2>예측 원인 분석 <span class="tag real">SHAP</span></h2>
+      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
       <div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
       <div class="bars" id="shBars"></div>
@@ -355,8 +353,8 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <p class="hint">"평소 예측값"에서 출발해 항목마다 오늘 상황을 보고 예측을 몇 배 올리거나(주황) 내립니다(파랑). 모든 배수를 곱하면 최종 예측이 됩니다. 문장에는 ×1.1 이상 올리거나 ×0.9 이하로 내린 항목만 적었습니다. (계산: XGB와 Ridge의 SHAP 기여 평균. 전체 자료로 학습한 모델이라 과거 날짜는 위 예측 카드와 조금 다를 수 있습니다.)</p>
     </div>
     <div class="card">
-      <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span>
-        <span class="cctl"><label for="fcRain2" title="종합 탭 SS 전망의 예보 강우와 같이 바뀝니다">향후 강우 (종합 탭과 연동)<select id="fcRain2"></select></label></span></h2>
+      <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
+      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
       <div class="kv3"><div><span>향후 3일 강우</span><b id="evR">–</b></div><div><span>선행 7일 강우</span><b id="evA">–</b></div><div><span>현재 유량</span><b id="evQ">–</b></div></div>
       <div class="tbl-wrap"><table>
         <thead><tr><th>실측일</th><th>3일 강우</th><th>선행 7일</th><th>사전 유량</th><th>당일 유량</th><th>수위 변동</th><th>실측 SS</th><th>±3일 최대</th></tr></thead>
@@ -369,8 +367,8 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 
   <div class="tab" id="tab-cmp" data-tab="cmp" hidden>
   <section class="card" id="compare">
-    <h2>작년 동기 비교
-      <span class="cctl"><label for="lyWin">표시 기간<select id="lyWin"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label for="lyLog">y축<select id="lyLog"><option value="lin">선형</option><option value="log">로그</option></select></label></span></h2>
+    <h2>작년 동기 비교</h2>
+      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
     <div class="legend"><span><i class="sw-line"></i><span id="lyA">올해</span> 추정</span><span><i class="sw-ly"></i><span id="lyB">작년</span> 추정</span><span><i class="sw-dot"></i><span id="lyOA">올해</span> 실측</span><span><i class="sw-ring"></i><span id="lyOB">작년</span> 실측</span></div>
     <div class="grid g-2" style="align-items:start">
       <div id="pLY" class="plot" style="height:240px" role="img" aria-label="올해와 작년 같은 기간의 SS 추정 비교"></div>
@@ -580,14 +578,18 @@ const W = [['기린 557', .5113], ['내면 559', .4400], ['원통 321', .0487]];
 
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const refEl = $('refDate'), winEl = $('win'), logEl = $('logY'), fcEl = $('fcRain'), fcEl2 = $('fcRain2'), lyWinEl = $('lyWin'), lyLogEl = $('lyLog');
+// 그래프마다 같은 조절 항목이 있고 모두 하나의 상태(state)를 공유한다: 한 곳을 바꾸면 전부 같이 바뀜
+const ALL = c => [...document.querySelectorAll('.' + c)];
+const refEls = ALL('c-ref'), winEls = ALL('c-win'), logEls = ALL('c-log'), fcEls = ALL('c-fc');
+const fcEl = fcEls[0];
 if (matchMedia('(max-width:820px)').matches) $('banner').removeAttribute('open');
 const KMA = [1, 3, 5].some(h => D.fc.scen.h[h].kma || D.fc.scen.h[h].kma_partial);
-fcEl.innerHTML = fcEl2.innerHTML = (KMA ? '<option value="kma" selected>기상청 예보</option>' : '') + D.fc.scen.grid_mm.map(v => `<option value="${v}"${!KMA && v === 30 ? ' selected' : ''}>${v} mm</option>`).join('');
+const fcOpts = (KMA ? '<option value="kma" selected>기상청 예보</option>' : '') + D.fc.scen.grid_mm.map(v => `<option value="${v}"${!KMA && v === 30 ? ' selected' : ''}>${v} mm</option>`).join('');
+fcEls.forEach(el => { el.innerHTML = fcOpts; });
 // max를 오늘(KST)로 둬야 달력의 '오늘' 버튼이 눌린다. 자료보다 뒤 날짜는 change에서 lastI로 맞춘다.
-refEl.min = iso(firstI); refEl.max = new Date(Math.max(Date.now() + 9 * 3600e3, t0 + lastI * DAY)).toISOString().slice(0, 10);
-let state = { ref: lastI, win: 90, lyWin: 90, h: 1, v: 4 };
-try { const s = JSON.parse(localStorage.getItem('ssdash') || 'null'); if (s && s.v === 4 && s.ref >= firstI && s.ref <= lastI) state = Object.assign(state, s); } catch (e) {}
+refEls.forEach(el => { el.min = iso(firstI); el.max = new Date(Math.max(Date.now() + 9 * 3600e3, t0 + lastI * DAY)).toISOString().slice(0, 10); });
+let state = { ref: lastI, win: 90, log: 'lin', h: 1, v: 5 };
+try { const s = JSON.parse(localStorage.getItem('ssdash') || 'null'); if (s && s.v === 5 && s.ref >= firstI && s.ref <= lastI) state = Object.assign(state, s); } catch (e) {}
 const save = () => { try { localStorage.setItem('ssdash', JSON.stringify(state)); } catch (e) {} };
 
 $('sfN').textContent = obs.filter(o => o.v != null).length + '건';
@@ -670,8 +672,8 @@ function render() {
   const { ref, win } = state;
   const a = Math.max(0, ref - win + 1), b = ref;
   const xr = [iso(a), iso(b + 8)];
-  refEl.value = iso(ref); winEl.value = String(win); lyWinEl.value = String(state.lyWin || 90);
-  const log = logEl.value === 'log';
+  refEls.forEach(el => { el.value = iso(ref); }); winEls.forEach(el => { el.value = String(win); }); logEls.forEach(el => { el.value = state.log; });
+  const log = state.log === 'log';
   const est = series(a, b, D.est), lo = series(a, b, D.lo), hi = series(a, b, D.hi), wf = series(a, b, D.wf), rain = series(a, b, D.p), flow = series(a, b, D.q);
   const ob = obs.filter(o => o.i >= a && o.i <= b && o.v != null);
   const obAhead = obs.filter(o => o.i > b && o.i <= b + 7 && o.v != null);
@@ -680,7 +682,7 @@ function render() {
   const ymaxData = Math.max(1, ...ob.map(o => o.v), ...est.y.filter(v => v != null), ...wf.y.filter(v => v != null), ...FCS.flatMap(z => [z.o ? z.o[2] : 0, z.r ? z.r[2] : 0]), ...obAhead.map(o => o.v));
 
   // KPIs
-  renderFc(ref); [fcEl, fcEl2].forEach(el => { el.disabled = ref !== lastI; el.title = ref !== lastI ? '과거 기준일은 실제 내린 비를 씁니다' : ''; });
+  renderFc(ref); fcEls.forEach(el => { el.disabled = ref !== lastI; el.title = ref !== lastI ? '과거 기준일은 실제 내린 비를 씁니다' : ''; });
   const e = D.est[ref];
   $('kEst').innerHTML = fmt(e) + '<small>mg/L</small>';
   $('kEstM').textContent = iso(ref) + ' · 범위 ' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + (PART.has(ref) ? ' · 입력 일부 결측' : '');
@@ -743,7 +745,7 @@ function render() {
   const yr = new Date(t0 + ref * DAY).getUTCFullYear();
   let md = iso(ref).slice(4); if (md === '-02-29') md = '-02-28';
   const shift = ref - idx((yr - 1) + md);
-  const lyw = state.lyWin || 90, ya = Math.max(0, ref - lyw + 1), lyLog = lyLogEl.value === 'log';
+  const ya = a, lyLog = log;
   const la = ya - shift, lb = b - shift;
   const lyEst = series(la, lb, D.est), yEst = series(ya, b, D.est), yOb = obs.filter(o => o.i >= ya && o.i <= b && o.v != null);
   $('lyA').textContent = yr + '년'; $('lyB').textContent = (yr - 1) + '년'; $('lyOA').textContent = yr + '년'; $('lyOB').textContent = (yr - 1) + '년';
@@ -1098,14 +1100,11 @@ if (todayKST > iso(lastI)) {
   refNote.hidden = false;
   refNote.textContent = '자료는 ' + md(iso(lastI)) + '까지 있어요. SS 추정은 하루치 강우·유량이 다 모여야 계산되므로 오늘(' + md(todayKST) + ') 자료는 다음 날 07:30 자동 갱신 때 들어갑니다. 오늘 이후 SS는 1·3·5일 예측 카드에서 보세요.';
 }
-refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { refNote.classList.toggle('flash', i > lastI); state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
-winEl.addEventListener('change', () => { state.win = +winEl.value; render(); });
-logEl.addEventListener('change', render);
-lyWinEl.addEventListener('change', () => { state.lyWin = +lyWinEl.value; render(); });
-lyLogEl.addEventListener('change', render);
-// 예보 강우는 종합 탭(SS 전망)과 예측·원인 탭(유사 강우사상) 두 곳에 있고 서로 맞춰 둔다
-[[fcEl, fcEl2], [fcEl2, fcEl]].forEach(([x, y]) => x.addEventListener('change', () => { y.value = x.value; render(); }));
-$('latest').addEventListener('click', () => { refNote.classList.remove('flash'); state.ref = lastI; render(); });
+refEls.forEach(el => el.addEventListener('change', () => { const i = idx(el.value); if (!isNaN(i)) { refNote.classList.toggle('flash', i > lastI); state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } }));
+winEls.forEach(el => el.addEventListener('change', () => { state.win = +el.value; render(); }));
+logEls.forEach(el => el.addEventListener('change', () => { state.log = el.value; render(); }));
+fcEls.forEach(el => el.addEventListener('change', () => { fcEls.forEach(o => { o.value = el.value; }); render(); }));
+ALL('c-latest').forEach(b => b.addEventListener('click', () => { refNote.classList.remove('flash'); state.ref = lastI; render(); }));
 document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { state.h = +b.dataset.h; renderBars(); save(); }));
 const TABS = ['home', 'fc', 'cmp', 'perf', 'info'];
 function showTab(t, push) {
