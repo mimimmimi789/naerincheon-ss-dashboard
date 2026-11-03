@@ -196,22 +196,25 @@ def weather_days(items, rain):
 def kma_fcst(issue, key):
     """기준일 D 23시 발표 단기예보로 D+1.. 일강수 예보(Thiessen 가중).
     기상청 API허브 키를 먼저 쓰고, 공공데이터포털 키(DATA_GO_KR_KEY)가 있으면 그쪽으로도 받을 수 있다."""
-    dk = env_key('DATA_GO_KR_KEY'); out = {}
+    dk = env_key('DATA_GO_KR_KEY'); out = {}; nh = {}
     for stn, (nx, ny) in GRID.items():
         q = f'pageNo=1&numOfRows=1000&dataType=JSON&base_date={issue:%Y%m%d}&base_time=2300&nx={nx}&ny={ny}'
         url = (f'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey={dk}&{q}' if dk else
                f'{KMA}/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst?{q}&authKey={key}')
         j = get(url).json()
         items = j['response']['body']['items']['item']
-        day = {}
+        day = {}; hrs = {}
         for it in items:
             if it['category'] == 'PCP':
                 day[it['fcstDate']] = day.get(it['fcstDate'], 0) + pcp_mm(it['fcstValue'])
-        out[stn] = day
+                hrs[it['fcstDate']] = hrs.get(it['fcstDate'], 0) + 1
+        out[stn] = day; nh[stn] = hrs
         if stn == WX_STN: wx_items = items
     dates = sorted(set().union(*[d.keys() for d in out.values()]))
     rain = {f'{x[:4]}-{x[4:6]}-{x[6:]}': round(sum(AWS[s] * out[s].get(x, 0) for s in AWS), 1) for x in dates}
-    res = {'issue': str(issue), 'base': f'{issue:%Y-%m-%d} 23:00', 'rain_mm': rain}
+    # 예보 끝날은 몇 시간만 있을 수 있다: 세 격자 모두 24시간(PCP 24개)이 있는 날만 완전한 날로 표시
+    full = {f'{x[:4]}-{x[4:6]}-{x[6:]}': all(nh[s].get(x, 0) >= 24 for s in AWS) for x in dates}
+    res = {'issue': str(issue), 'base': f'{issue:%Y-%m-%d} 23:00', 'rain_mm': rain, 'full_day': full}
     try:
         res['weather'] = weather_days(wx_items, rain)
         res['weather_point'] = WX_NAME

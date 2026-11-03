@@ -194,7 +194,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   </div>
   <nav aria-label="탭">
     <a href="#home" data-tab="home" class="on">종합 대시보드</a>
-    <a href="#fc" data-tab="fc">1·3·7일 예측 · 원인</a>
+    <a href="#fc" data-tab="fc">1·3·5일 예측 · 원인</a>
     <a href="#cmp" data-tab="cmp">작년 비교 · 강우 상관</a>
     <a href="#perf" data-tab="perf">모델 성능</a>
     <a href="#info" data-tab="info">유역 · 자료 · 용어</a>
@@ -212,7 +212,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <header class="top" id="overview">
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
-      <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·7일 예측</p>
+      <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·5일 예측</p>
     </div>
     <div class="controls">
       <label for="refDate">기준일<input type="date" id="refDate"></label>
@@ -230,7 +230,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
     <div class="kpi"><div class="lab"><span id="kF1L">1일 후 예측</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="meta" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
     <div class="kpi"><div class="lab"><span id="kF3L">3일 후 예측</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="meta" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF7L">7일 후 예측</span><span class="tag" id="kF7T">관측만</span></div><div class="val" id="kF7">–</div><div class="meta" id="kF7M">–</div><div class="meta rainline" id="kF7R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF5L">5일 후 예측</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="meta" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
   </section>
   <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
 
@@ -259,7 +259,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section class="grid g-main">
     <div class="card" id="ss">
       <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
-      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%, 실제 포함률 79.7%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·7일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
+      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%. 시간순 검증 포함률 76%, 25 mg/L 이상에서는 42%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
     <div class="card" id="hydro">
@@ -273,15 +273,15 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     </div>
   </section>
 
-  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·7일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
+  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·5일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
   </div>
 
   <div class="tab" id="tab-fc" data-tab="fc" hidden>
   <section id="forecast">
     <div class="card">
       <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
-      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>7일 후</span></div>
-      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·7일 후 SS 예측"></div>
+      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span></div>
+      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
       <p class="hint">마지막 기준일에서 향후 강우 합계만 바꿔 넣은 결과입니다. 강우가 하루에 몰려 온다고 가정했습니다. 운영 때는 기상청 단기예보 강수량을 넣습니다.</p>
     </div>
   </section>
@@ -322,7 +322,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
       <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
       <div class="bars" id="bars"></div>
-      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 「1·3·7일 예측 · 원인」 탭의 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
+      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 「1·3·5일 예측 · 원인」 탭의 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
     </div>
   </section>
   </div>
@@ -335,8 +335,14 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 기온을 넣은 뒤 7일 관측만도 모델이 월별 기준값보다 조금 나아져(로그 R² 0.401 vs 0.368) 모델을 쓰지만 차이는 작습니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
-      <p class="hint"><b>7일 예측은 참고용입니다.</b> 전진검증에서 월별 기준값과 차이가 작고(로그 R² 0.401 vs 0.368), 2024–25 독립 시험에서는 월평균보다 오차가 컸습니다(MAE 5.00 vs 4.24, 실제 강우를 알려 줘도 4.63). 7일 뒤 SS는 계절 평균 이상으로 맞히기 어렵습니다.</p>
+      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. 이 기간은 변수·모델을 고를 때도 쓴 기간이라 실제 성능보다 조금 좋게 나올 수 있습니다(독립 성적은 잠금 평가). * 실제 내린 비 = 지난 날짜를 평가할 때 앞으로 내릴 비 자리에 실제로 내린 비를 넣은 사후 계산입니다. 예보가 틀리는 오차가 빠져 있어 운영 성능보다 좋게 나올 수 있습니다. 기상청 예보로 다시 계산한 값은 아래 표를 보세요. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
+      <p class="hint"><b>5일 예측은 참고용입니다 (2026-11-03 7일→5일 변경).</b> 관측만 로그 R² 0.433으로 월별 기준값(0.368)보다 유의하게 낫지만(+0.065, 95% 구간 +0.013~+0.119) 1일보다 크게 낮습니다. 7일은 기준값과 차이가 유의하지 않았고(0.401, 구간이 0 포함) 2024–25 독립 시험에서 월평균보다 오차가 컸으며(MAE 5.00 vs 4.24), 기상청 단기예보(현재 D+5까지)로 7일을 채울 수 없어 5일로 바꿨습니다.</p>
+      <h3 class="mini">기상청 발표 예보로 다시 계산 <span class="tag">2019–25 보관 예보</span></h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>선행 · 방법</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
+        <tbody id="fcReal"></tbody>
+      </table></div>
+      <p class="hint">기상청 23시 발표 단기예보 보관본이 있는 채수일만 같은 날짜로 비교했습니다(학습은 위와 같음). 1일은 기상청 예보를 넣어도 실제 내린 비를 넣은 경우와 거의 같고, 3일은 보관본이 앞 2일만 있어 그만큼만 넣었습니다. 예보 기간이 모자라면(예: 7일에 예보 2일분) 관측만보다 나빠지므로, 대시보드는 예보가 예측 기간을 다 채우지 못하면 기상청 예보 반영값을 내지 않습니다.</p>
       <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
       <div id="fscore"></div>
     </div>
@@ -364,7 +370,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
                   </tbody>
       </table></div>
       <p class="hint">연도별 전진검증, MAE mg/L. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 16건, 이전 22건). 25 mg/L 이상은 실측의 약 35% 수준으로 낮게 추정합니다. 2026-11-03 인제 기온(당일·7일 평균·최저)을 넣어 로그 R² 0.722→0.754, MAE 3.22→3.04로 좋아졌습니다(8개 연도 모두 개선, 부트스트랩 95% 구간 +0.009~+0.055). 같은 날 원대교 시간 수위(오전 10시 기준, 채수 대표 시각 14시에서 흐름 지연 4시간을 뺀 시각)를 더해 로그 R² 0.761, MAE 2.91(개선 폭은 작음, 95% 구간 0~+0.015). 탐색적 결과이며 새 실측으로 잠금 평가 예정. 1·3일 독립 시험은 연구용 별도 틀(SS 60일 지연 반영)로, 월평균 기준 대비 MAE가 1일 −34%(예보 포함 −40%), 3일 −9%(−10%)입니다. 2025년은 고농도가 없는 해라 고농도 예측력은 검증되지 않았습니다.</p>
-      <p class="hint"><b>과적합 점검 (2026-11-03):</b> 입력 37개·실측 493건. 학습자료 로그 R² 0.90, 전진검증 0.76 (XGB 단독은 0.97→0.75라 Ridge 혼합이 차이를 줄임). 변수 묶음을 하나씩 빼거나 14개·6개로 줄이면 거의 같거나 나빠졌고(0.74–0.76, 0.74, 0.56), 의미 없는 난수 변수 10개를 넣어도 0.755로 거의 같아 입력 수 때문에 생기는 과적합은 뚜렷하지 않습니다. 다만 변수와 모델을 같은 2019–26 전진검증을 보며 골랐으므로 실제 성능은 잠금 평가로 확인합니다. 1·3일 예측도 입력을 줄이면 나빠졌고, 7일 관측만 예측은 학습 0.72→검증 0.40으로 차이가 커 참고용으로 둡니다.</p>
+      <p class="hint"><b>과적합 점검 (2026-11-03):</b> 입력 37개·실측 493건. 학습자료 로그 R² 0.90, 전진검증 0.76 (XGB 단독은 0.97→0.75라 Ridge 혼합이 차이를 줄임). 변수 묶음을 하나씩 빼거나 14개·6개로 줄이면 거의 같거나 나빠졌고(0.74–0.76, 0.74, 0.56), 의미 없는 난수 변수 10개를 넣어도 0.755로 거의 같아 입력 수 때문에 생기는 과적합은 뚜렷하지 않습니다. 다만 변수와 모델을 같은 2019–26 전진검증을 보며 골랐으므로 실제 성능은 잠금 평가로 확인합니다. 1·3일 예측도 입력을 줄이면 나빠졌고, 7일 관측만 예측은 학습 0.72→검증 0.40으로 차이가 커서 2026-11-03 5일 예측으로 바꿨습니다.</p>
     </div>
   </section>
   <section class="card" id="modelcfg">
@@ -380,21 +386,21 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
           <td>XGB 10개 + Ridge 혼합</td>
           <td>기준일까지의 강우(당일·전일·3·7·14일 합, API7, 무강우 일수), 유량(log 유량·변화·30일 중앙값 대비), 첨두유량, 수위 상승, 기준일 기온(당일·7일 평균·최저), 목표일 월</td>
           <td>목표일 log SS, 중앙값 보정. 80% 범위는 전진검증 잔차</td></tr>
-        <tr><td><b>7일 예측 (관측만)</b></td>
+        <tr><td><b>5일 예측 (관측만)</b></td>
           <td>XGB 10개 + Ridge 혼합</td>
           <td>1·3일과 같은 입력</td>
-          <td>기온 추가 후 월별 기준값보다 조금 나음(로그 R² 0.401 vs 0.368). 의미는 작고 2024–25 독립 시험에선 월평균보다 나빠 <b>참고용</b></td></tr>
-        <tr><td><b>1·3·7일 예측 (예보강우 포함)</b></td>
+          <td>월별 기준값보다 나음(로그 R² 0.433 vs 0.368, 유의). 1일보다 크게 낮아 <b>참고용</b>. 이전 7일 예측은 기준값과 차이가 유의하지 않아 2026-11-03 5일로 변경</td></tr>
+        <tr><td><b>1·3·5일 예측 (예보강우 포함)</b></td>
           <td>XGB 10개(예보강우가 늘면 예측이 줄지 않게 단조 제약) + Ridge 혼합</td>
           <td>위 관측 입력 + 앞으로 h일 강우 합·일 최대(기상청 단기예보, 3일 넘는 날은 0–120 mm 시나리오)</td>
-          <td>학습 때는 실제 내린 비를 넣고(완벽 예보 가정), 운영 때 예보값을 넣음</td></tr>
+          <td>학습 때는 실제 내린 비를 넣고, 운영 때 기상청 예보값을 넣음</td></tr>
         <tr><td><b>보조 장치</b></td>
           <td colspan="3">유량 품질보정: 연도별 수위–유량 관계식(log Q ~ 평균수위 2차식)과 0.7(log) 넘게 어긋나는 날은 수위 환산 유량으로 대체. 안전 Ridge: 입력을 학습 범위로 자르고 출력은 최대 실측의 2배로 제한해 큰 홍수일 폭주 방지.</td></tr>
         <tr><td><b>자료</b></td>
           <td colspan="3">강우: 기상청 AWS 원통 321·기린 557·내면 559 티센 가중 (0.049·0.511·0.440). 유량·수위: WAMIS 원대교(1012650), 유량은 면적비 보정. 기온: 기상청 인제 ASOS(211) 일최고·최저, 평균은 (최고+최저)/2. 채수시각: 물모아 수질측정망 내린천2(대부분 12–15시, 중앙 13:53). 원대교는 내린천2 상류 직선 7.46 km라 시간 수위는 4시간 앞선 값을 씀. SS: 물환경정보시스템 총량측정망 내린천2(1012A20).</td></tr>
       </tbody>
     </table></div>
-    <p class="hint">일별 추정은 같은 날 강우·유량·수위를 쓰는 사후복원이고, 1·3·7일 예측은 기준일까지의 관측(과 예보강우)만 씁니다. 성능은 왼쪽 표의 전진검증(그해 이전 자료로만 학습) 결과입니다.</p>
+    <p class="hint">일별 추정은 같은 날 강우·유량·수위를 쓰는 사후복원이고, 1·3·5일 예측은 기준일까지의 관측(과 예보강우)만 씁니다. 성능은 왼쪽 표의 전진검증(그해 이전 자료로만 학습) 결과입니다.</p>
   </section>
   </div>
 
@@ -418,7 +424,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <dt>실측 SS</dt><dd id="fObs">–</dd>
         <dt>일 추정 SS</dt><dd id="fEst">–</dd>
         <dt>유량</dt><dd>원대교 일유량 × 1.0414, 수위와 어긋난 73일은 수위로 보정</dd>
-        <dt>1·3·7일 예측</dt><dd>2019-01-01 이후 기준일마다 표본외 예측, 과거 예보 원본은 미확보</dd>
+        <dt>1·3·5일 예측</dt><dd>2019-01-01 이후 기준일마다 표본외 예측, 과거 예보 원본은 미확보</dd>
       </dl>
       <p class="hint">최종 구현은 Python + Streamlit + Plotly로 만들고 GitHub Actions로 매일 갱신하는 계획입니다. 다음 단계는 새 실측으로 잠금 평가, 과거 기상청 예보로 예보강우 모델 재검증, 매일 자동 갱신입니다.</p>
     </div>
@@ -431,10 +437,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <div><dt>실측 SS</dt><dd>총량측정망에서 약 8일 간격으로 채수해 분석한 값. 검증 후 물모아에 약 2달 늦게 공개됩니다.</dd></div>
         <div><dt>일 추정 SS (사후복원)</dt><dd>채수하지 않은 날의 SS를 그날 강우·유량·수위로 채운 값. 그날 자료를 다 쓰므로 미래 예측이 아니라 과거 빈칸 채우기입니다.</dd></div>
         <div><dt>전진검증 예측 ◇</dt><dd>맞힐 날의 답을 모르는 모델이 낸 예측. 매년 그해 이전 자료로만 학습해서 그해를 예측합니다. 모델의 실제 실력은 이 값으로 봅니다.</dd></div>
-        <div><dt>1·3·7일 예측</dt><dd>기준일 밤 12시까지 관측된 자료로 1·3·7일 뒤 SS를 미리 계산한 값.</dd></div>
+        <div><dt>1·3·5일 예측</dt><dd>기준일 밤 12시까지 관측된 자료로 1·3·5일 뒤 SS를 미리 계산한 값.</dd></div>
         <div><dt>예보강우 반영</dt><dd>앞으로 올 비의 양(예보값)을 넣은 예측. 학습 때는 실제 내린 비를 썼기 때문에 예보가 틀리면 그만큼 성능이 낮아질 수 있습니다.</dd></div>
         <div><dt>월별 기준값</dt><dd>과거 같은 달 SS의 중앙값. 모델이 이것보다 나아야 의미가 있습니다.</dd></div>
-        <div><dt>80% 범위 · 추정 범위</dt><dd>실제 값이 이 범위에 들어올 확률이 약 80%가 되도록 과거 예측 오차로 만든 구간.</dd></div>
+        <div><dt>80% 범위 · 추정 범위</dt><dd>과거 예측 오차(로그 잔차 10–90%)로 만든 구간. 과거 자료로 다시 확인하면 평상시에는 약 80%가 들어오지만, 큰 비가 온 날은 64–79%, SS 25 mg/L 이상인 날은 0–42%만 들어와 대부분 범위 위로 벗어났습니다. 포함 확률이 보장된 구간이 아닙니다.</dd></div>
         <div><dt>R²</dt><dd>예측이 실측의 오르내림을 얼마나 설명하는지(1이 완벽, 0은 평균만 맞히는 수준). 큰 값 몇 개에 크게 좌우됩니다.</dd></div>
         <div><dt>로그 R²</dt><dd>SS에 로그를 취해서 계산한 R². 평상시 낮은 농도까지 고르게 반영해서 큰 값 한두 개에 덜 흔들립니다.</dd></div>
         <div><dt>MAE</dt><dd>예측과 실측 차이의 평균 크기(mg/L). 작을수록 좋습니다.</dd></div>
@@ -478,7 +484,7 @@ const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const refEl = $('refDate'), winEl = $('win'), logEl = $('logY'), fcEl = $('fcRain');
 if (matchMedia('(max-width:820px)').matches) $('banner').removeAttribute('open');
-const KMA = [1, 3, 7].some(h => D.fc.scen.h[h].kma);
+const KMA = [1, 3, 5].some(h => D.fc.scen.h[h].kma || D.fc.scen.h[h].kma_partial);
 fcEl.innerHTML = (KMA ? '<option value="kma" selected>기상청 예보</option>' : '') + D.fc.scen.grid_mm.map(v => `<option value="${v}"${!KMA && v === 30 ? ' selected' : ''}>${v} mm</option>`).join('');
 // max를 오늘(KST)로 둬야 달력의 '오늘' 버튼이 눌린다. 자료보다 뒤 날짜는 change에서 lastI로 맞춘다.
 refEl.min = iso(firstI); refEl.max = new Date(Math.max(Date.now() + 9 * 3600e3, t0 + lastI * DAY)).toISOString().slice(0, 10);
@@ -520,7 +526,7 @@ function renderGrade() {
     + '<table><thead><tr><th>판정</th><th>SS (mg/L)</th><th>Ia 기준 대비</th></tr></thead><tbody>'
     + '<tr><td>최근 실측 ' + last.d + '</td><td>' + fmt(last.v) + '</td><td>' + badge(last.v) + '</td></tr>'
     + '<tr><td>기준일 추정 ' + iso(lastI) + '</td><td>' + fmt(e) + '</td><td>' + badge(e) + '</td></tr>'
-    + (fmax != null ? '<tr><td>1·3·7일 예측 최대</td><td>' + fmt(fmax) + '</td><td>' + badge(fmax) + '</td></tr>' : '')
+    + (fmax != null ? '<tr><td>1·3·5일 예측 최대</td><td>' + fmt(fmax) + '</td><td>' + badge(fmax) + '</td></tr>' : '')
     + '<tr><td>최근 1년 실측 ' + yr.length + '건</td><td>평균 ' + fmt(mean) + ' · 최대 ' + fmt(mx) + '</td><td>' + nOk + '건 달성 · ' + (yr.length - nOk) + '건 초과</td></tr>'
     + '</tbody></table>'
     + '<div style="color:var(--ink-3);font-size:11.5px;margin-top:4px">목표등급: 강원도 수자원관리계획(2021) 상수원보호구역 지정 현황의 내린천2 = Ia (수원평가 생활용수). Ia의 SS 기준은 환경정책기본법 시행령 별표1 하천 생활환경기준 25 mg/L 이하입니다. 여기서는 SS 항목만 판정하며, 공식 등급 평가는 BOD·TOC·총인 등을 함께 봅니다.</div></div>';
@@ -594,7 +600,7 @@ function render() {
     { type: 'rect', xref: 'x', yref: 'paper', x0: iso(b), x1: iso(b + 7), y0: 0, y1: 1, fillcolor: 'rgba(0,0,0,0)', line: { color: css('--ink-3'), width: 1, dash: 'dot' } },
     { type: 'line', xref: 'x', yref: 'paper', x0: iso(b), x1: iso(b), y0: 0, y1: 1, line: { color: css('--ink-3'), width: 1 } }
   ];
-  const ann = [{ xref: 'x', yref: 'paper', x: isoT(b + 3.5), y: 1, yanchor: 'bottom', text: '예측 1–7일', showarrow: false, font: { size: 10.5, color: css('--ink-3') } }];
+  const ann = [{ xref: 'x', yref: 'paper', x: isoT(b + 3.5), y: 1, yanchor: 'bottom', text: '예측 1–5일', showarrow: false, font: { size: 10.5, color: css('--ink-3') } }];
   if (lastObs && b - lastObs.i >= 3) {
     const g0 = Math.max(a, lastObs.i);
     shapes.push({ type: 'rect', xref: 'x', yref: 'paper', x0: iso(g0), x1: iso(b), y0: 0, y1: 1, fillcolor: css('--warn-bg'), opacity: .6, line: { width: 0 }, layer: 'below' });
@@ -666,9 +672,9 @@ function render() {
   const fmax = Math.max(0, ...FCS.map(z => z.o ? z.o[0] : 0)), fmaxR = Math.max(0, ...FCS.map(z => z.r ? z.r[0] : 0));
   const hot = (e != null && e >= th) || fmax >= th || fmaxR >= th, wet = p != null && p >= 30;
   $('alert').innerHTML = (hot || wet)
-    ? `<div class="alert warn"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 v4 M8 11.6 v.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>주의 · SS 상승 가능</b><p>${hot ? '추정 SS ' + fmt(e) + ', 7일 내 예측 최대 ' + fmt(fmax) + (fmaxR ? ' (예보강우 반영 ' + fmt(fmaxR) + ')' : '') + ' mg/L 중 임시 기준 ' + fmt(th) + ' mg/L 이상인 값이 있습니다. ' : ''}${wet ? '당일 강우 ' + fmt(p) + ' mm. ' : ''}직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`
-    : `<div class="alert ok"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 8.2 l2 2 l4 -4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>보통</b><p>추정 SS ${fmt(e)} mg/L, 7일 내 예측 최대 ${fmt(Math.max(fmax, fmaxR))} mg/L, 당일 강우 ${fmt(p)} mm, 직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`;
-  $('alertRule').textContent = '주의 조건: 추정 SS 또는 1·3·7일 예측 ≥ ' + fmt(th) + ' mg/L (2014–2023 실측 상위 10%) 또는 당일 강우 ≥ 30 mm. 둘 다 임시 기준입니다.';
+    ? `<div class="alert warn"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 v4 M8 11.6 v.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>주의 · SS 상승 가능</b><p>${hot ? '추정 SS ' + fmt(e) + ', 5일 내 예측 최대 ' + fmt(fmax) + (fmaxR ? ' (예보강우 반영 ' + fmt(fmaxR) + ')' : '') + ' mg/L 중 임시 기준 ' + fmt(th) + ' mg/L 이상인 값이 있습니다. ' : ''}${wet ? '당일 강우 ' + fmt(p) + ' mm. ' : ''}직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`
+    : `<div class="alert ok"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 8.2 l2 2 l4 -4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>보통</b><p>추정 SS ${fmt(e)} mg/L, 5일 내 예측 최대 ${fmt(Math.max(fmax, fmaxR))} mg/L, 당일 강우 ${fmt(p)} mm, 직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`;
+  $('alertRule').textContent = '주의 조건: 추정 SS 또는 1·3·5일 예측 ≥ ' + fmt(th) + ' mg/L (2014–2023 실측 상위 10%) 또는 당일 강우 ≥ 30 mm. 둘 다 임시 기준입니다.';
   renderExplain(ref, FCS, e);
   save();
 }
@@ -678,7 +684,7 @@ function render() {
 let shM = 'est', lvSel = null;
 const LV = [
   { k: '정상', lo: 0, c: 'ok', d: '평소 범위 (이 지점 2014–23 실측의 하위 90%)', it: [
-    ['대시보드의 추정·1·3·7일 예측과 기상청 예보강우 확인', '매일 갱신 후'],
+    ['대시보드의 추정·1·3·5일 예측과 기상청 예보강우 확인', '매일 갱신 후'],
     ['정기 원수 탁도 측정값과 SS 추정 추이 비교', 'SS–탁도 관계를 쌓아 두면 탁도 기준으로 바꿀 수 있음'],
     ['원대교 수위·유량 평소 수준인지 확인', 'WAMIS 1012650']] },
   { k: '관심', lo: 0, c: 'note', d: '평소보다 높음. 목표 수질등급 Ia의 SS 기준(25 mg/L 이하)은 만족', it: [
@@ -736,7 +742,8 @@ function renderExplain(ref, FCS, e) {
   let R0, src;
   if (ref === lastI) {
     const K = D.fc.scen.h[3].kma;
-    if (fcEl.value === 'kma' && K) { R0 = K.mm; src = '기상청 예보 (' + K.days + '일치)'; } else { R0 = fcEl.value === 'kma' ? 0 : +fcEl.value; src = '선택한 예보강우'; }
+    const KP = D.fc.scen.h[3].kma_partial;
+    if (fcEl.value === 'kma' && K) { R0 = K.mm; src = '기상청 예보 (' + K.days + '일치)'; } else if (fcEl.value === 'kma' && KP) { R0 = KP.mm; src = '기상청 예보 (' + KP.days + '/3일치뿐, 일부)'; } else { R0 = fcEl.value === 'kma' ? 0 : +fcEl.value; src = '선택한 예보강우'; }
   } else { R0 = 0; for (let i = ref + 1; i <= ref + 3; i++) R0 += D.p[i] || 0; src = '실제 내린 비'; }
   let A0 = 0; for (let i = ref - 6; i <= ref; i++) A0 += D.p[i] || 0;
   const Q0 = D.q[ref];
@@ -754,7 +761,7 @@ function renderExplain(ref, FCS, e) {
   const sel = lvSel == null ? cur : lvSel;
   $('lvSegs').innerHTML = LV.map((L, j) => `<button class="seg" data-lv="${j}" aria-pressed="${j === sel}">${L.k}${j === cur ? '<span class="cur">● 현재</span>' : ''}</button>`).join('');
   const L = LV[sel], hi = sel < 3 ? LV[sel + 1].lo : null;
-  $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k} · ${hi == null ? fmt(L.lo, 0) + ' mg/L 초과' : (sel ? fmt(L.lo, L.lo % 1 ? 1 : 0) + '–' : '') + fmt(hi, hi % 1 ? 1 : 0) + ' mg/L' + (sel ? '' : ' 미만')}</b><p>${L.d}. 현재 판단값 ${fmt(vmax)} mg/L (추정·1·3·7일 예측 중 최대).</p></div>`
+  $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k} · ${hi == null ? fmt(L.lo, 0) + ' mg/L 초과' : (sel ? fmt(L.lo, L.lo % 1 ? 1 : 0) + '–' : '') + fmt(hi, hi % 1 ? 1 : 0) + ' mg/L' + (sel ? '' : ' 미만')}</b><p>${L.d}. 현재 판단값 ${fmt(vmax)} mg/L (추정·1·3·5일 예측 중 최대).</p></div>`
     + `<ul class="ck">${L.it.map(([a, b], j) => { const id = sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
   document.querySelectorAll('#lvSegs .seg').forEach(b => b.addEventListener('click', () => { lvSel = +b.dataset.lv; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
   document.querySelectorAll('[data-ck]').forEach(c => c.addEventListener('change', () => { ckState[c.dataset.ck] = c.checked; try { localStorage.setItem('ssdashCk', JSON.stringify(ckState)); } catch (e) {} }));
@@ -778,27 +785,27 @@ function renderStatus() {
 }
 function forecasts(ref) {
   const F = D.fc, k = ref - F.off, isLast = ref === lastI, mm = fcEl.value === 'kma' ? 'kma' : +fcEl.value;
-  return [1, 3, 7].map(h => {
+  return [1, 3, 5].map(h => {
     const pick = (tag) => { const A = F[h + tag]; if (k < 0 || k >= A[0].length || A[0][k] == null) return null; return [A[0][k], A[1][k], A[2][k]]; };
-    let o = pick('obs'), r = null, rmm = null;
-    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; } } else { r = S.rain[F.scen.grid_mm.indexOf(mm)]; rmm = mm; } }
+    let o = pick('obs'), r = null, rmm = null, part = null;
+    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; } else part = S.kma_partial || null; } else { r = S.rain[F.scen.grid_mm.indexOf(mm)]; rmm = mm; } }
     else { r = pick('rain'); if (r) { rmm = 0; for (let i = ref + 1; i <= ref + h; i++) rmm += D.p[i] || 0; } }
-    return { h, o, r, mm: rmm, isLast };
+    return { h, o, r, mm: rmm, isLast, part };
   });
 }
 function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
     $('kF' + z.h + 'L').textContent = z.h + '일 후 · ' + iso(ref + z.h).slice(5);
-    $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 7 ? ' · 참고용' : '');
+    $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 5 ? ' · 참고용' : '');
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
-    $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + (z.h === 7 ? ' · 월평균 수준' : '');
-    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : '예보강우 반영값 없음';
+    $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) ;
+    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
   $('scTag').textContent = '기준일 ' + S.issue;
-  Plotly.react('pScen', [1, 3, 7].map((h, j) => ({ x: g, y: S.h[h].rain.map(v => v[0]), mode: 'lines+markers', name: h + '일 후', line: { color: cols[j], width: 2 }, marker: { size: 7, color: cols[j], line: { color: css('--panel'), width: 2 } }, hovertemplate: h + '일 후 %{y:.1f} mg/L' })).concat([1, 3, 7].filter(h => S.h[h].kma).map((h, j) => ({ x: [S.h[h].kma.mm], y: [S.h[h].kma.v[0]], mode: 'markers', name: h + '일 후 · 기상청 예보', marker: { size: 12, symbol: 'star', color: cols[[1, 3, 7].indexOf(h)], line: { color: css('--panel'), width: 1.5 } }, hovertemplate: h + '일 후 기상청 예보 %{x:.0f} mm → %{y:.1f} mg/L<extra></extra>' }))),
+  Plotly.react('pScen', [1, 3, 5].map((h, j) => ({ x: g, y: S.h[h].rain.map(v => v[0]), mode: 'lines+markers', name: h + '일 후', line: { color: cols[j], width: 2 }, marker: { size: 7, color: cols[j], line: { color: css('--panel'), width: 2 } }, hovertemplate: h + '일 후 %{y:.1f} mg/L' })).concat([1, 3, 5].filter(h => S.h[h].kma).map((h, j) => ({ x: [S.h[h].kma.mm], y: [S.h[h].kma.v[0]], mode: 'markers', name: h + '일 후 · 기상청 예보', marker: { size: 12, symbol: 'star', color: cols[[1, 3, 5].indexOf(h)], line: { color: css('--panel'), width: 1.5 } }, hovertemplate: h + '일 후 기상청 예보 %{x:.0f} mm → %{y:.1f} mg/L<extra></extra>' }))),
     baseLayout(240, { hovermode: 'x unified', xaxis: { type: 'linear', title: { text: '향후 강우 합계 (mm)', font: { size: 11 } }, gridcolor: 'rgba(0,0,0,0)', linecolor: css('--line'), fixedrange: true, tickvals: innerWidth < 600 ? [0, 20, 50, 80, 120] : g },
       yaxis: Object.assign(baseLayout(0).yaxis, { title: { text: 'SS (mg/L)', font: { size: 11 } } }),
       shapes: [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: D.meta.p90, y1: D.meta.p90, line: { color: css('--warn'), width: 1, dash: 'dot' } }],
@@ -808,16 +815,17 @@ function renderFc(ref) {
 function renderFscore() {
   const S = D.meta.fscore, el = $('fscore'); if (!el) return;
   if (!S) { el.innerHTML = '<p class="hint">아직 기록이 없습니다.</p>'; return; }
-  const any = [1, 3, 7].some(h => S.h[h] && S.h[h].n);
+  const any = [1, 3, 5].some(h => S.h[h] && S.h[h].n);
   let t = '<p class="hint">' + S.first + '부터 매일 낸 예측 ' + S.n_log + '회를 docs/forecast_log.csv에 기록합니다. 목표일에 SS 실측이 공개되면 실제 기상청 예보를 넣은 성적을 여기서 채점합니다(실측은 측정 후 공개까지 시간이 걸립니다).</p>';
   if (any) t += '<div class="tbl-wrap"><table><thead><tr><th>선행</th><th>채점 건수</th><th>관측만 MAE</th><th>기상청 예보 MAE</th><th>월별 기준값 MAE</th></tr></thead><tbody>'
-    + [1, 3, 7].map(h => { const z = S.h[h] || { n: 0 }; return '<tr><td>' + h + '일</td><td>' + z.n + '</td><td>' + (z.n ? fmt(z.mae_obs, 2) : '–') + '</td><td>' + (z.mae_kma != null ? fmt(z.mae_kma, 2) + ' (' + z.n_kma + '건)' : '–') + '</td><td>' + (z.n ? fmt(z.mae_clim, 2) : '–') + '</td></tr>'; }).join('')
-    + '</tbody></table></div><p class="hint">10건 미만은 우연의 영향이 큽니다. 기상청 단기예보는 3–5일까지라 7일 예보 성적은 비어 있을 수 있습니다.</p>';
+    + [1, 3, 5].map(h => { const z = S.h[h] || { n: 0 }; return '<tr><td>' + h + '일</td><td>' + z.n + '</td><td>' + (z.n ? fmt(z.mae_obs, 2) : '–') + '</td><td>' + (z.mae_kma != null ? fmt(z.mae_kma, 2) + ' (' + z.n_kma + '건)' : '–') + '</td><td>' + (z.n ? fmt(z.mae_clim, 2) : '–') + '</td></tr>'; }).join('')
+    + '</tbody></table></div><p class="hint">10건 미만은 우연의 영향이 큽니다. 기상청 단기예보는 발표 시각에 따라 4–5일까지라 5일 예보 성적은 비어 있을 수 있습니다(5일을 다 채운 예보만 채점).</p>';
   else t += '<p class="hint">아직 목표일 실측이 들어온 예측이 없어 채점 전입니다.</p>';
   el.innerHTML = t;
 }
 function renderTbl() {
   renderFscore();
+  $('fcReal').innerHTML = (D.fc.real || []).map(([h, lab, lr, r2, mae, n, note]) => `<tr${lab.startsWith('+기상청') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${note ? ' <small style="color:var(--ink-3)">(' + note + ')</small>' : ''}</td><td>${n}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
   $('fcTbl').innerHTML = D.fc.tbl.map(([h, lab, nm, lr, r2, mae]) => `<tr${lab === '관측만' && nm !== '월별 기준값' || lab.startsWith('+') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${lab === '관측만' && nm === '월별 기준값' ? ' (=기준값)' : ''}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
 }
 function renderBars() {
@@ -850,7 +858,7 @@ const todayKST = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), r
 const md = s => +s.slice(5, 7) + '/' + +s.slice(8, 10);
 if (todayKST > iso(lastI)) {
   refNote.hidden = false;
-  refNote.textContent = '자료는 ' + md(iso(lastI)) + '까지 있어요. SS 추정은 하루치 강우·유량이 다 모여야 계산되므로 오늘(' + md(todayKST) + ') 자료는 다음 날 07:30 자동 갱신 때 들어갑니다. 오늘 이후 SS는 1·3·7일 예측 카드에서 보세요.';
+  refNote.textContent = '자료는 ' + md(iso(lastI)) + '까지 있어요. SS 추정은 하루치 강우·유량이 다 모여야 계산되므로 오늘(' + md(todayKST) + ') 자료는 다음 날 07:30 자동 갱신 때 들어갑니다. 오늘 이후 SS는 1·3·5일 예측 카드에서 보세요.';
 }
 refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { refNote.classList.toggle('flash', i > lastI); state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
 winEl.addEventListener('change', () => { state.win = +winEl.value; render(); });
