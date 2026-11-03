@@ -335,14 +335,14 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. 이 기간은 변수·모델을 고를 때도 쓴 기간이라 실제 성능보다 조금 좋게 나올 수 있습니다(독립 성적은 잠금 평가). * 완벽예보 = 실제로 내린 비를 예보 자리에 넣은 사후 계산이라 예보 오차가 빠져 있습니다. 실제 발표 예보로 다시 계산한 값은 아래 표를 보세요. 기온을 넣은 뒤 7일 관측만도 모델이 월별 기준값보다 조금 나아져(로그 R² 0.401 vs 0.368) 모델을 쓰지만 차이는 작습니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
+      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. 이 기간은 변수·모델을 고를 때도 쓴 기간이라 실제 성능보다 조금 좋게 나올 수 있습니다(독립 성적은 잠금 평가). * 실제 내린 비 = 지난 날짜를 평가할 때 앞으로 내릴 비 자리에 실제로 내린 비를 넣은 사후 계산입니다. 예보가 틀리는 오차가 빠져 있어 운영 성능보다 좋게 나올 수 있습니다. 기상청 예보로 다시 계산한 값은 아래 표를 보세요. 기온을 넣은 뒤 7일 관측만도 모델이 월별 기준값보다 조금 나아져(로그 R² 0.401 vs 0.368) 모델을 쓰지만 차이는 작습니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
       <p class="hint"><b>7일 예측은 참고용입니다.</b> 전진검증에서 월별 기준값과 차이가 작고(로그 R² 0.401 vs 0.368), 2024–25 독립 시험에서는 월평균보다 오차가 컸습니다(MAE 5.00 vs 4.24, 실제 강우를 알려 줘도 4.63). 7일 뒤 SS는 계절 평균 이상으로 맞히기 어렵습니다.</p>
-      <h3 class="mini">실제 발표 예보로 다시 계산 <span class="tag">2019–25 보관 예보</span></h3>
+      <h3 class="mini">기상청 발표 예보로 다시 계산 <span class="tag">2019–25 보관 예보</span></h3>
       <div class="tbl-wrap"><table>
         <thead><tr><th>선행 · 방법</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcReal"></tbody>
       </table></div>
-      <p class="hint">기상청 23시 발표 단기예보 보관본이 있는 채수일만 같은 날짜로 비교했습니다(학습은 위와 같음). 1일은 실제 예보로도 완벽예보와 거의 같고, 3일은 보관본이 앞 2일만 있어 그만큼만 넣었습니다. 7일에 예보 2일분만 넣으면 관측만보다 나빠지므로, 대시보드는 예보가 예측 기간을 다 채우지 못하면 기상청 예보 반영값을 내지 않습니다.</p>
+      <p class="hint">기상청 23시 발표 단기예보 보관본이 있는 채수일만 같은 날짜로 비교했습니다(학습은 위와 같음). 1일은 기상청 예보를 넣어도 실제 내린 비를 넣은 경우와 거의 같고, 3일은 보관본이 앞 2일만 있어 그만큼만 넣었습니다. 7일에 예보 2일분만 넣으면 관측만보다 나빠지므로, 대시보드는 예보가 예측 기간을 다 채우지 못하면 기상청 예보 반영값을 내지 않습니다.</p>
       <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
       <div id="fscore"></div>
     </div>
@@ -393,7 +393,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <tr><td><b>1·3·7일 예측 (예보강우 포함)</b></td>
           <td>XGB 10개(예보강우가 늘면 예측이 줄지 않게 단조 제약) + Ridge 혼합</td>
           <td>위 관측 입력 + 앞으로 h일 강우 합·일 최대(기상청 단기예보, 3일 넘는 날은 0–120 mm 시나리오)</td>
-          <td>학습 때는 실제 내린 비를 넣고(완벽 예보 가정), 운영 때 예보값을 넣음</td></tr>
+          <td>학습 때는 실제 내린 비를 넣고, 운영 때 기상청 예보값을 넣음</td></tr>
         <tr><td><b>보조 장치</b></td>
           <td colspan="3">유량 품질보정: 연도별 수위–유량 관계식(log Q ~ 평균수위 2차식)과 0.7(log) 넘게 어긋나는 날은 수위 환산 유량으로 대체. 안전 Ridge: 입력을 학습 범위로 자르고 출력은 최대 실측의 2배로 제한해 큰 홍수일 폭주 방지.</td></tr>
         <tr><td><b>자료</b></td>
@@ -825,7 +825,7 @@ function renderFscore() {
 }
 function renderTbl() {
   renderFscore();
-  $('fcReal').innerHTML = (D.fc.real || []).map(([h, lab, lr, r2, mae, n, note]) => `<tr${lab.startsWith('+실제') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${note ? ' <small style="color:var(--ink-3)">(' + note + ')</small>' : ''}</td><td>${n}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
+  $('fcReal').innerHTML = (D.fc.real || []).map(([h, lab, lr, r2, mae, n, note]) => `<tr${lab.startsWith('+기상청') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${note ? ' <small style="color:var(--ink-3)">(' + note + ')</small>' : ''}</td><td>${n}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
   $('fcTbl').innerHTML = D.fc.tbl.map(([h, lab, nm, lr, r2, mae]) => `<tr${lab === '관측만' && nm !== '월별 기준값' || lab.startsWith('+') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${lab === '관측만' && nm === '월별 기준값' ? ' (=기준값)' : ''}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
 }
 function renderBars() {
