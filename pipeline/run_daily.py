@@ -189,7 +189,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
     DOCS.mkdir(exist_ok=True)
     head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
-            '<meta name="theme-color" content="#0e3b4a"><meta name="apple-mobile-web-app-capable" content="yes">'
+            '<meta name="theme-color" content="#4c9ee8"><meta name="apple-mobile-web-app-capable" content="yes">'
             '<meta name="apple-mobile-web-app-title" content="내린천 SS"></head><body>\n')
     (DOCS / 'index.html').write_text(head + html + '\n</body></html>', encoding='utf-8')
     (DOCS.parent / 'build').mkdir(exist_ok=True)
