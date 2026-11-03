@@ -89,6 +89,10 @@ def assemble():
     if tl is not None:
         t = tl.reindex(idx)
         df['TAMAX'] = t.ta_max.where(t.ta_max.notna(), df.TAMAX); df['TAMIN'] = t.ta_min.where(t.ta_min.notna(), df.TAMIN)
+    # 원대교 시간 수위 → 날마다 오전 10시 기준 변수(과거 파일 + 매일 수집분)
+    hh = model.read_hourly([AUX / 'wondae_wl_hourly_2014_2026.csv', src.LIVE / 'wamis_stage_hourly.csv'])
+    if len(hh):
+        df = df.join(model.hourly_feats(hh, idx, df.Havg))
     if ss is not None:
         s = ss[ss.index > b.index.max()].reindex(idx)
         df['SS'] = df.SS.where(df.SS.notna(), s.ss); df['Q_meas'] = df.Q_meas.where(df.Q_meas.notna(), s.q_meas)
@@ -111,7 +115,7 @@ def locked_eval(df):
 
 def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None):
     r = est.join(df[['P0', 'SS', 'Q_meas', 'TAMAX', 'TAMIN']])
-    wf = csv(BASE / 'ss_wf_blend_temp_20261103.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
+    wf = csv(BASE / 'ss_wf_blend_temp_hh_20261103.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
     o = r[r.SS.notna()]
     p90 = float(o[o.index < '2024-01-01'].SS.quantile(.9))

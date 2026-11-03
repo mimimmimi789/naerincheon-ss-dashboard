@@ -1,8 +1,8 @@
 """SS 일별 추정 모델 (2026-11-02 개선안): [XGB 10시드 평균 + 안전 Ridge] log 평균, 중앙값 보정
-+ 확장변수 + 수위 기반 유량보정 + 첨두수위 + 기온(2026-11-03). (2026-10-30 고정안은 XGB 1개 + Duan 평균 보정)
++ 확장변수 + 수위 기반 유량보정 + 첨두수위 + 기온·시간 수위(2026-11-03). (2026-10-30 고정안은 XGB 1개 + Duan 평균 보정)
 
 입력 df: 날짜 색인, 열 P0(유역 Thiessen 일강우 mm), Q(원대교 일유량 × 면적비 m³/s), Havg·Hmin·Hmax(원대교 수위 m), SS(실측 mg/L),
-TAMAX·TAMIN(인제 ASOS 211 일최고·최저기온 ℃)
+TAMAX·TAMIN(인제 ASOS 211 일최고·최저기온 ℃), HCOLS(원대교 시간 수위 변수, hourly_feats)
 """
 import numpy as np
 import pandas as pd
@@ -13,8 +13,8 @@ from sklearn.model_selection import KFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-# 전진검증 잔차 10–90% (2019–26, n=295, 포함률 79.7%; 기온 추가 전 -0.763, 0.670; 이전 XGB+Duan은 -1.057, 0.553)
-LOG_LO, LOG_HI = -0.6765101372519452, 0.6113518170373943
+# 전진검증 잔차 10–90% (2019–26, n=295, 포함률 79.7%; 시간수위 추가 전 -0.677, 0.611; 기온 추가 전 -0.763, 0.670; 이전 XGB+Duan은 -1.057, 0.553)
+LOG_LO, LOG_HI = -0.7198675791279654, 0.6506970000934704
 
 
 def XG(random_state=0, **kw):
@@ -94,9 +94,44 @@ def build(df):
     return f
 
 
+HCOLS = ['Hh', 'Hh_d3', 'Hh_d6', 'Hh_pk6', 'Hh_pk24', 'Hh_rng24', 'Hh_avg']
+HH_AT = 10   # 채수 대표 시각 14시(실측 중앙 13:53) − 원대교→내린천2 흐름 지연 4시간
+
+
 COLS = ['P0', 'Pprev', 'P3prior', 'P7prior', 'API7', 'ADD_prior', 'Q', 'Qprev', 'Qdelta1', 'Qratio3', 'msin', 'mcos',
         'lQ', 'dlQ', 'dlQ2', 'Qmax3', 'Q_rel30', 'Q_rel90', 'Q_over_base', 'days_since_big', 'P2', 'Pmax3',
-        'P14prior', 'P30prior', 'lQpk', 'Hrise', 'dHmax', 'TA', 'TA7', 'TAmin']
+        'P14prior', 'P30prior', 'lQpk', 'Hrise', 'dHmax', 'TA', 'TA7', 'TAmin'] + HCOLS
+
+
+
+
+def hourly_feats(h, days, havg=None):
+    """원대교 시간 수위(색인 = 시각, 24시는 다음날 0시)로 날마다 HH_AT시 기준 변수(2026-11-03 추가).
+    Hh 수위, Hh_d3·Hh_d6 직전 3·6시간 변화, Hh_pk6·Hh_pk24 직전 6·24시간 최고−현재, Hh_rng24 24시간 범위, Hh_avg 그날 일평균 대비."""
+    h = h[(h > 0.5) & (h < 10)]
+    h = h[~h.index.duplicated(keep='last')].sort_index().asfreq('h').interpolate(limit=6, limit_area='inside')
+    t = days + pd.Timedelta(hours=HH_AT)
+    at = lambda k: h.reindex(t - pd.Timedelta(hours=k)).values
+    m6 = h.rolling(7, min_periods=4).max(); m24 = h.rolling(25, min_periods=13).max(); n24 = h.rolling(25, min_periods=13).min()
+    H0 = at(0)
+    out = pd.DataFrame({'Hh': H0, 'Hh_d3': H0 - at(3), 'Hh_d6': H0 - at(6), 'Hh_pk6': m6.reindex(t).values - H0,
+                        'Hh_pk24': m24.reindex(t).values - H0, 'Hh_rng24': m24.reindex(t).values - n24.reindex(t).values}, index=days)
+    out['Hh_avg'] = out.Hh - (havg.reindex(days).values if havg is not None else np.nan)
+    return out
+
+
+def read_hourly(paths):
+    """ymdh(YYYYMMDDHH, 01–24시), wl 열 CSV들을 합쳐 시각 색인 Series로. 뒤 파일 우선."""
+    parts = []
+    for p in paths:
+        try:
+            d = pd.read_csv(p, dtype={'ymdh': str}, encoding='utf-8-sig')
+        except FileNotFoundError:
+            continue
+        parts.append(pd.Series(pd.to_numeric(d.wl, errors='coerce').values,
+                               index=pd.to_datetime(d.ymdh.str[:8]) + pd.to_timedelta(d.ymdh.str[8:10].astype(int), unit='h')))
+    if not parts: return pd.Series(dtype=float)
+    s = pd.concat(parts); return s[~s.index.duplicated(keep='last')].sort_index()
 
 
 def temp_feats(df):
@@ -135,6 +170,8 @@ def features(df):
     F['Hrise'] = df.Hmax - df.Hmin
     F['dHmax'] = df.Hmax - df.Hmin.rolling(60, min_periods=10).quantile(0.1)
     F = F.join(temp_feats(df))
+    for c in HCOLS:
+        F[c] = df[c] if c in df else np.nan
     return F[COLS], dfx.Q, bad, QPK
 
 
@@ -153,7 +190,7 @@ GROUPS = {'유량': ['Q', 'Qprev', 'Qdelta1', 'Qratio3', 'lQ', 'dlQ', 'dlQ2', 'Q
           '선행강우 (3–30일)': ['P3prior', 'P7prior', 'P14prior', 'P30prior', 'API7'],
           '무강우일수': ['ADD_prior'],
           '수위·첨두유량': ['lQpk', 'Hrise', 'dHmax'],
-          '계절': ['msin', 'mcos'], '기온': ['TA', 'TA7', 'TAmin']}
+          '계절': ['msin', 'mcos'], '기온': ['TA', 'TA7', 'TAmin'], '시간 수위 (오전)': HCOLS}
 
 
 def shap_groups(m, X, groups, offset=0.0):
