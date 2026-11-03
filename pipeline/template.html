@@ -45,6 +45,7 @@ header.top{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-con
 h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .sub{color:var(--ink-2);margin:2px 0 0;font-size:13.5px}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.refnote{flex-basis:100%;margin:0;font-size:12px;line-height:1.5;color:var(--ink-3)}.refnote.flash{color:var(--ink);background:var(--panel);border:1px solid var(--est);border-radius:8px;padding:6px 10px}
 .controls label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
 .controls input,.controls select{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-height:38px}
 .controls input:focus-visible,.controls select:focus-visible,button:focus-visible{outline:2px solid var(--est);outline-offset:1px}
@@ -219,6 +220,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <label for="logY">y축<select id="logY"><option value="lin">선형</option><option value="log">로그</option></select></label>
       <label for="fcRain">예보 강우 (향후 합계)<select id="fcRain"></select></label>
       <button class="btn" id="latest" type="button">자료 마지막 날로</button>
+      <p class="refnote" id="refNote" hidden></p>
     </div>
   </header>
 
@@ -471,7 +473,8 @@ const refEl = $('refDate'), winEl = $('win'), logEl = $('logY'), fcEl = $('fcRai
 if (matchMedia('(max-width:820px)').matches) $('banner').removeAttribute('open');
 const KMA = [1, 3, 7].some(h => D.fc.scen.h[h].kma);
 fcEl.innerHTML = (KMA ? '<option value="kma" selected>기상청 예보</option>' : '') + D.fc.scen.grid_mm.map(v => `<option value="${v}"${!KMA && v === 30 ? ' selected' : ''}>${v} mm</option>`).join('');
-refEl.min = iso(firstI); refEl.max = iso(lastI);
+// max를 오늘(KST)로 둬야 달력의 '오늘' 버튼이 눌린다. 자료보다 뒤 날짜는 change에서 lastI로 맞춘다.
+refEl.min = iso(firstI); refEl.max = new Date(Math.max(Date.now() + 9 * 3600e3, t0 + lastI * DAY)).toISOString().slice(0, 10);
 let state = { ref: lastI, win: 90, h: 1, v: 4 };
 try { const s = JSON.parse(localStorage.getItem('ssdash') || 'null'); if (s && s.v === 4 && s.ref >= firstI && s.ref <= lastI) state = Object.assign(state, s); } catch (e) {}
 const save = () => { try { localStorage.setItem('ssdash', JSON.stringify(state)); } catch (e) {} };
@@ -822,11 +825,18 @@ function renderWt() {
   $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km². 하천망(파란 선, 굵은 선은 본류)은 © OpenStreetMap 기여자(ODbL) 자료입니다.</p>';
 }
 
-refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
+// 오늘 자료는 하루가 끝나야 생기므로 기준일은 자료 마지막 날까지만 고를 수 있다는 안내
+const todayKST = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), refNote = $('refNote');
+const md = s => +s.slice(5, 7) + '/' + +s.slice(8, 10);
+if (todayKST > iso(lastI)) {
+  refNote.hidden = false;
+  refNote.textContent = '자료는 ' + md(iso(lastI)) + '까지 있어요. SS 추정은 하루치 강우·유량이 다 모여야 계산되므로 오늘(' + md(todayKST) + ') 자료는 다음 날 07:30 자동 갱신 때 들어갑니다. 오늘 이후 SS는 1·3·7일 예측 카드에서 보세요.';
+}
+refEl.addEventListener('change', () => { const i = idx(refEl.value); if (!isNaN(i)) { refNote.classList.toggle('flash', i > lastI); state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } });
 winEl.addEventListener('change', () => { state.win = +winEl.value; render(); });
 logEl.addEventListener('change', render);
 fcEl.addEventListener('change', render);
-$('latest').addEventListener('click', () => { state.ref = lastI; render(); });
+$('latest').addEventListener('click', () => { refNote.classList.remove('flash'); state.ref = lastI; render(); });
 document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { state.h = +b.dataset.h; renderBars(); save(); }));
 const TABS = ['home', 'fc', 'cmp', 'perf', 'info'];
 function showTab(t, push) {
