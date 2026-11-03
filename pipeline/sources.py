@@ -94,6 +94,7 @@ def wamis_stage(start, end):
     if not rows: return None
     h = pd.DataFrame(rows).dropna()
     h = h[(h.wl > 0.5) & (h.wl < 10)]
+    merge(LIVE / 'wamis_stage_hourly.csv', h[['ymdh', 'wl']].copy(), key='ymdh')   # 시간 수위 변수용(2026-11-03)
     # ymdh의 24시는 그날 자정(다음날 00시) 값이라 그날 자료로 둔다
     h['date'] = h.ymdh.str[:4] + '-' + h.ymdh.str[4:6] + '-' + h.ymdh.str[6:8]
     g = h.groupby('date').wl
