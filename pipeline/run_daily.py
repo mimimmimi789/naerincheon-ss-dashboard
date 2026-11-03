@@ -1,4 +1,4 @@
-"""매일 실행: 자료 수집 → 입력 조립 → SS 추정 → 1·3·7일 예측 → docs/index.html 생성 (→ 선택: git push).
+"""매일 실행: 자료 수집 → 입력 조립 → SS 추정 → 1·3·5일 예측 → docs/index.html 생성 (→ 선택: git push).
 
 사용법:  python pipeline/run_daily.py [--no-fetch] [--push]
 """

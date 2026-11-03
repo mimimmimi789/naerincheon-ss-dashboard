@@ -1,4 +1,4 @@
-"""SS 1·3·7일 예측: 기준일 D 24시까지의 관측(+ D+1..D+h 예보강우)으로 D+h일 실측 SS를 예측한다.
+"""SS 1·3·5일 예측: 기준일 D 24시까지의 관측(+ D+1..D+h 예보강우)으로 D+h일 실측 SS를 예측한다.
 
 모델 선택·전진검증 성적은 data/base/forecast_static.json에 고정한다(2026-11-02 개선안: XGB 10시드+안전 Ridge 혼합,
 중앙값 보정. 이전 forecast_20261030 모델도 MODELS에 남겨 두어 static의 pick만 바꾸면 되돌릴 수 있다).
@@ -14,7 +14,7 @@ from sklearn.model_selection import KFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-H = [1, 3, 7]
+H = [1, 3, 5]   # 2026-11-03 7일→5일: 7일은 월별 기준값과 차이 유의하지 않고 기상청 단기예보(D+5)로 채울 수 없음
 SM = ['lQ', 'Qrel30', 'AP7', 'AP14', 'msin', 'mcos']
 FUT = ['Pfut', 'Pfut_max']
 GRID = [0, 5, 10, 20, 30, 50, 80, 120]
