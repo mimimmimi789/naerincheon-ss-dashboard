@@ -336,6 +336,9 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <tbody id="fcTbl"></tbody>
       </table></div>
       <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 기온을 넣은 뒤 7일 관측만도 모델이 월별 기준값보다 조금 나아져(로그 R² 0.401 vs 0.368) 모델을 쓰지만 차이는 작습니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
+      <p class="hint"><b>7일 예측은 참고용입니다.</b> 전진검증에서 월별 기준값과 차이가 작고(로그 R² 0.401 vs 0.368), 2024–25 독립 시험에서는 월평균보다 오차가 컸습니다(MAE 5.00 vs 4.24, 실제 강우를 알려 줘도 4.63). 7일 뒤 SS는 계절 평균 이상으로 맞히기 어렵습니다.</p>
+      <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
+      <div id="fscore"></div>
     </div>
     <div class="card" id="perf">
       <h2>모델 성능 <span class="tag real">팀 분석값</span></h2>
@@ -351,14 +354,17 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
           <tr><td>이전 XGB(log) · 2023–26</td><td>0.510</td><td>0.657</td><td>3.92</td></tr>
           <tr><td>기존 RF · 2023–26</td><td>0.193</td><td>0.62</td><td>4.3</td></tr>
           <tr><td>기존 RF · 2026</td><td>0.617</td><td>–</td><td>–</td></tr>
-          <tr><td colspan="4" style="color:var(--ink-3);font-size:11.5px">1·3일 예측 독립 시험 (2014–23 학습 → 2024–25)</td></tr>
+          <tr><td colspan="4" style="color:var(--ink-3);font-size:11.5px">1·3·7일 예측 독립 시험 (2014–23 학습 → 2024–25)</td></tr>
           <tr><td>1일 · 관측만</td><td>0.048</td><td>0.592</td><td>2.78</td></tr>
           <tr class="mine"><td>1일 · 기상청 예보 포함</td><td>0.256</td><td>0.697</td><td>2.50</td></tr>
           <tr><td>3일 · 관측만</td><td>0.154</td><td>0.282</td><td>3.85</td></tr>
           <tr class="mine"><td>3일 · 기상청 예보 포함</td><td>0.083</td><td>0.537</td><td>3.38</td></tr>
+          <tr><td>7일 · 관측만 (월평균 4.24)</td><td>–</td><td>–</td><td>5.00</td></tr>
+          <tr><td>7일 · 실제 강우 알려 줌 (월평균 4.24)</td><td>–</td><td>–</td><td>4.63</td></tr>
                   </tbody>
       </table></div>
       <p class="hint">연도별 전진검증, MAE mg/L. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 16건, 이전 22건). 25 mg/L 이상은 실측의 약 35% 수준으로 낮게 추정합니다. 2026-11-03 인제 기온(당일·7일 평균·최저)을 넣어 로그 R² 0.722→0.754, MAE 3.22→3.04로 좋아졌습니다(8개 연도 모두 개선, 부트스트랩 95% 구간 +0.009~+0.055). 같은 날 원대교 시간 수위(오전 10시 기준, 채수 대표 시각 14시에서 흐름 지연 4시간을 뺀 시각)를 더해 로그 R² 0.761, MAE 2.91(개선 폭은 작음, 95% 구간 0~+0.015). 탐색적 결과이며 새 실측으로 잠금 평가 예정. 1·3일 독립 시험은 연구용 별도 틀(SS 60일 지연 반영)로, 월평균 기준 대비 MAE가 1일 −34%(예보 포함 −40%), 3일 −9%(−10%)입니다. 2025년은 고농도가 없는 해라 고농도 예측력은 검증되지 않았습니다.</p>
+      <p class="hint"><b>과적합 점검 (2026-11-03):</b> 입력 37개·실측 493건. 학습자료 로그 R² 0.90, 전진검증 0.76 (XGB 단독은 0.97→0.75라 Ridge 혼합이 차이를 줄임). 변수 묶음을 하나씩 빼거나 14개·6개로 줄이면 거의 같거나 나빠졌고(0.74–0.76, 0.74, 0.56), 의미 없는 난수 변수 10개를 넣어도 0.755로 거의 같아 입력 수 때문에 생기는 과적합은 뚜렷하지 않습니다. 다만 변수와 모델을 같은 2019–26 전진검증을 보며 골랐으므로 실제 성능은 잠금 평가로 확인합니다. 1·3일 예측도 입력을 줄이면 나빠졌고, 7일 관측만 예측은 학습 0.72→검증 0.40으로 차이가 커 참고용으로 둡니다.</p>
     </div>
   </section>
   <section class="card" id="modelcfg">
@@ -377,7 +383,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <tr><td><b>7일 예측 (관측만)</b></td>
           <td>XGB 10개 + Ridge 혼합</td>
           <td>1·3일과 같은 입력</td>
-          <td>기온 추가 후 월별 기준값보다 조금 나음(로그 R² 0.401 vs 0.368). 의미는 작음</td></tr>
+          <td>기온 추가 후 월별 기준값보다 조금 나음(로그 R² 0.401 vs 0.368). 의미는 작고 2024–25 독립 시험에선 월평균보다 나빠 <b>참고용</b></td></tr>
         <tr><td><b>1·3·7일 예측 (예보강우 포함)</b></td>
           <td>XGB 10개(예보강우가 늘면 예측이 줄지 않게 단조 제약) + Ridge 혼합</td>
           <td>위 관측 입력 + 앞으로 h일 강우 합·일 최대(기상청 단기예보, 3일 넘는 날은 0–120 mm 시나리오)</td>
@@ -784,10 +790,10 @@ function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
     $('kF' + z.h + 'L').textContent = z.h + '일 후 · ' + iso(ref + z.h).slice(5);
-    $('kF' + z.h + 'T').textContent = (D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만';
+    $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 7 ? ' · 참고용' : '');
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
-    $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]);
+    $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + (z.h === 7 ? ' · 월평균 수준' : '');
     $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : '예보강우 반영값 없음';
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
@@ -799,7 +805,19 @@ function renderFc(ref) {
       annotations: [{ xref: 'paper', x: 0, y: D.meta.p90, yanchor: 'bottom', xanchor: 'left', text: '주의 ' + fmt(D.meta.p90) + ' mg/L', showarrow: false, font: { size: 10.5, color: css('--warn') } }] }), CFG);
   return FCS;
 }
+function renderFscore() {
+  const S = D.meta.fscore, el = $('fscore'); if (!el) return;
+  if (!S) { el.innerHTML = '<p class="hint">아직 기록이 없습니다.</p>'; return; }
+  const any = [1, 3, 7].some(h => S.h[h] && S.h[h].n);
+  let t = '<p class="hint">' + S.first + '부터 매일 낸 예측 ' + S.n_log + '회를 docs/forecast_log.csv에 기록합니다. 목표일에 SS 실측이 공개되면 실제 기상청 예보를 넣은 성적을 여기서 채점합니다(실측은 측정 후 공개까지 시간이 걸립니다).</p>';
+  if (any) t += '<div class="tbl-wrap"><table><thead><tr><th>선행</th><th>채점 건수</th><th>관측만 MAE</th><th>기상청 예보 MAE</th><th>월별 기준값 MAE</th></tr></thead><tbody>'
+    + [1, 3, 7].map(h => { const z = S.h[h] || { n: 0 }; return '<tr><td>' + h + '일</td><td>' + z.n + '</td><td>' + (z.n ? fmt(z.mae_obs, 2) : '–') + '</td><td>' + (z.mae_kma != null ? fmt(z.mae_kma, 2) + ' (' + z.n_kma + '건)' : '–') + '</td><td>' + (z.n ? fmt(z.mae_clim, 2) : '–') + '</td></tr>'; }).join('')
+    + '</tbody></table></div><p class="hint">10건 미만은 우연의 영향이 큽니다. 기상청 단기예보는 3–5일까지라 7일 예보 성적은 비어 있을 수 있습니다.</p>';
+  else t += '<p class="hint">아직 목표일 실측이 들어온 예측이 없어 채점 전입니다.</p>';
+  el.innerHTML = t;
+}
 function renderTbl() {
+  renderFscore();
   $('fcTbl').innerHTML = D.fc.tbl.map(([h, lab, nm, lr, r2, mae]) => `<tr${lab === '관측만' && nm !== '월별 기준값' || lab.startsWith('+') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${lab === '관측만' && nm === '월별 기준값' ? ' (=기준값)' : ''}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
 }
 function renderBars() {

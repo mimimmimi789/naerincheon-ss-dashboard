@@ -23,6 +23,8 @@ AUX = ROOT / 'data' / 'auxdata'          # Windows에서 'aux'는 예약 이름�
 DOCS = ROOT / 'docs'
 LOCK = pd.Timestamp('2026-08-26')        # 잠금 평가 기준: 이 날까지 실측으로만 학습
 KST = dt.timezone(dt.timedelta(hours=9))
+FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
+MODEL_TAG = 'blend+temp 2026-11-03'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):
@@ -113,7 +115,42 @@ def locked_eval(df):
             'rows': [[str(d.date()), float(a), round(float(b), 2)] for d, a, b in zip(newo, y, p)]}
 
 
-def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None):
+def log_forecast(live, updated):
+    """운영 예측을 기록 파일에 쌓는다. 같은 기준일을 다시 돌리면 마지막 실행으로 덮어쓴다."""
+    rows = []
+    for h, e in live['h'].items():
+        k = e.get('kma') or {}
+        rows.append({'issue': live['issue'], 'h': int(h), 'target': e['target'], 'obs': e['obs'][0], 'obs_lo': e['obs'][1],
+                     'obs_hi': e['obs'][2], 'kma_mm': k.get('mm'), 'kma_days': k.get('days'), 'kma': (k.get('v') or [None])[0],
+                     'model': MODEL_TAG, 'run': updated})
+    new = pd.DataFrame(rows)
+    old = pd.read_csv(FCLOG, encoding='utf-8-sig') if FCLOG.exists() else new.iloc[:0]
+    out = pd.concat([old[old.issue != live['issue']], new]).sort_values(['issue', 'h'])
+    out.to_csv(FCLOG, index=False, encoding='utf-8-sig')
+    return out
+
+
+def score_log(log, df):
+    """기록된 운영 예측 중 목표일에 실측이 생긴 것만 채점. 기상청 예보값은 h일을 모두 받은 경우만 쓴다.
+    월별 기준값 = 기준일까지 실측의 목표월 log SS 중앙값."""
+    o = df.SS[df.SS > 0]; res = {'n_log': int(log.issue.nunique()), 'first': str(log.issue.min()), 'h': {}}
+    for h in fcm.H:
+        g = log[log.h == h].copy(); g['y'] = pd.to_datetime(g.target).map(o)
+        g = g[g.y.notna()]
+        if not len(g): res['h'][h] = {'n': 0}; continue
+        clim = []
+        for _, r in g.iterrows():
+            a = o[o.index <= pd.Timestamp(r.issue)]; m = pd.Timestamp(r.target).month
+            clim.append(float(np.exp(np.log(a[a.index.month == m]).median())))
+        g['clim'] = clim; full = g.kma.notna() & (g.kma_days >= h)
+        mae = lambda c, s=slice(None): round(float((g.loc[s, c] - g.loc[s, 'y']).abs().mean()), 2)
+        res['h'][h] = {'n': int(len(g)), 'mae_obs': mae('obs'), 'mae_clim': mae('clim'), 'n_kma': int(full.sum()),
+                       'mae_kma': mae('kma', full) if full.any() else None,
+                       'rows': [[r.issue, r.target, float(r.y), r.obs, None if pd.isna(r.kma) else r.kma] for r in g.itertuples()]}
+    return res
+
+
+def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None, fscore=None):
     r = est.join(df[['P0', 'SS', 'Q_meas', 'TAMAX', 'TAMIN']])
     wf = csv(BASE / 'ss_wf_blend_temp_hh_20261103.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
@@ -123,7 +160,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
          'wf': f(wf), 'qfix': [i for i, x in enumerate(r.q_fix) if x == 1], 'part': [i for i, x in enumerate(r.partial) if x == 1],
          'obs': [[str(a.date()), float(b), None if pd.isna(c) else round(float(c), 1)] for a, b, c in zip(o.index, o.SS, o.Q_meas)],
          'meta': {'p90': round(p90, 1), 'n_est': int(r.SS.isna().sum()), 'updated': updated, 'sources': status,
-                  'warnings': warnings, 'locked': locked, 'wx': wx}}
+                  'warnings': warnings, 'locked': locked, 'wx': wx, 'fscore': fscore}}
     F = {'off': (hc.index[0] - r.index.min()).days}
     for h in fcm.H:
         for t in ('obs', 'rain'):
@@ -186,7 +223,8 @@ def main():
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
     locked = locked_eval(df)
     updated = now.strftime('%Y-%m-%d %H:%M KST')
-    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()}, wx)
+    fscore = score_log(log_forecast(live, updated), df)
+    build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()}, wx, fscore)
     print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', locked.get('n'), '|', status)
     if '--push' in args:
         g = lambda *c: subprocess.run(['git', '-C', str(ROOT), *c], check=False)
