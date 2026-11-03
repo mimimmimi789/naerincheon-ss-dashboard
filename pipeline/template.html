@@ -259,7 +259,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section class="grid g-main">
     <div class="card" id="ss">
       <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
-      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%, 실제 포함률 79.7%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·7일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
+      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%. 시간순 검증 포함률 76%, 25 mg/L 이상에서는 42%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·7일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
     <div class="card" id="hydro">
@@ -335,8 +335,14 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. * 예보강우 모델은 학습 때 실제 내린 비를 예보값 자리에 넣어서(완벽 예보 가정) 실제 예보 오차는 빠져 있습니다. 기온을 넣은 뒤 7일 관측만도 모델이 월별 기준값보다 조금 나아져(로그 R² 0.401 vs 0.368) 모델을 쓰지만 차이는 작습니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
+      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. 이 기간은 변수·모델을 고를 때도 쓴 기간이라 실제 성능보다 조금 좋게 나올 수 있습니다(독립 성적은 잠금 평가). * 완벽예보 = 실제로 내린 비를 예보 자리에 넣은 사후 계산이라 예보 오차가 빠져 있습니다. 실제 발표 예보로 다시 계산한 값은 아래 표를 보세요. 기온을 넣은 뒤 7일 관측만도 모델이 월별 기준값보다 조금 나아져(로그 R² 0.401 vs 0.368) 모델을 쓰지만 차이는 작습니다. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
       <p class="hint"><b>7일 예측은 참고용입니다.</b> 전진검증에서 월별 기준값과 차이가 작고(로그 R² 0.401 vs 0.368), 2024–25 독립 시험에서는 월평균보다 오차가 컸습니다(MAE 5.00 vs 4.24, 실제 강우를 알려 줘도 4.63). 7일 뒤 SS는 계절 평균 이상으로 맞히기 어렵습니다.</p>
+      <h3 class="mini">실제 발표 예보로 다시 계산 <span class="tag">2019–25 보관 예보</span></h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>선행 · 방법</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
+        <tbody id="fcReal"></tbody>
+      </table></div>
+      <p class="hint">기상청 23시 발표 단기예보 보관본이 있는 채수일만 같은 날짜로 비교했습니다(학습은 위와 같음). 1일은 실제 예보로도 완벽예보와 거의 같고, 3일은 보관본이 앞 2일만 있어 그만큼만 넣었습니다. 7일에 예보 2일분만 넣으면 관측만보다 나빠지므로, 대시보드는 예보가 예측 기간을 다 채우지 못하면 기상청 예보 반영값을 내지 않습니다.</p>
       <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
       <div id="fscore"></div>
     </div>
@@ -434,7 +440,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <div><dt>1·3·7일 예측</dt><dd>기준일 밤 12시까지 관측된 자료로 1·3·7일 뒤 SS를 미리 계산한 값.</dd></div>
         <div><dt>예보강우 반영</dt><dd>앞으로 올 비의 양(예보값)을 넣은 예측. 학습 때는 실제 내린 비를 썼기 때문에 예보가 틀리면 그만큼 성능이 낮아질 수 있습니다.</dd></div>
         <div><dt>월별 기준값</dt><dd>과거 같은 달 SS의 중앙값. 모델이 이것보다 나아야 의미가 있습니다.</dd></div>
-        <div><dt>80% 범위 · 추정 범위</dt><dd>실제 값이 이 범위에 들어올 확률이 약 80%가 되도록 과거 예측 오차로 만든 구간.</dd></div>
+        <div><dt>80% 범위 · 추정 범위</dt><dd>과거 예측 오차(로그 잔차 10–90%)로 만든 구간. 과거 자료로 다시 확인하면 평상시에는 약 80%가 들어오지만, 큰 비가 온 날은 64–79%, SS 25 mg/L 이상인 날은 0–42%만 들어와 대부분 범위 위로 벗어났습니다. 포함 확률이 보장된 구간이 아닙니다.</dd></div>
         <div><dt>R²</dt><dd>예측이 실측의 오르내림을 얼마나 설명하는지(1이 완벽, 0은 평균만 맞히는 수준). 큰 값 몇 개에 크게 좌우됩니다.</dd></div>
         <div><dt>로그 R²</dt><dd>SS에 로그를 취해서 계산한 R². 평상시 낮은 농도까지 고르게 반영해서 큰 값 한두 개에 덜 흔들립니다.</dd></div>
         <div><dt>MAE</dt><dd>예측과 실측 차이의 평균 크기(mg/L). 작을수록 좋습니다.</dd></div>
@@ -478,7 +484,7 @@ const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const refEl = $('refDate'), winEl = $('win'), logEl = $('logY'), fcEl = $('fcRain');
 if (matchMedia('(max-width:820px)').matches) $('banner').removeAttribute('open');
-const KMA = [1, 3, 7].some(h => D.fc.scen.h[h].kma);
+const KMA = [1, 3, 7].some(h => D.fc.scen.h[h].kma || D.fc.scen.h[h].kma_partial);
 fcEl.innerHTML = (KMA ? '<option value="kma" selected>기상청 예보</option>' : '') + D.fc.scen.grid_mm.map(v => `<option value="${v}"${!KMA && v === 30 ? ' selected' : ''}>${v} mm</option>`).join('');
 // max를 오늘(KST)로 둬야 달력의 '오늘' 버튼이 눌린다. 자료보다 뒤 날짜는 change에서 lastI로 맞춘다.
 refEl.min = iso(firstI); refEl.max = new Date(Math.max(Date.now() + 9 * 3600e3, t0 + lastI * DAY)).toISOString().slice(0, 10);
@@ -736,7 +742,8 @@ function renderExplain(ref, FCS, e) {
   let R0, src;
   if (ref === lastI) {
     const K = D.fc.scen.h[3].kma;
-    if (fcEl.value === 'kma' && K) { R0 = K.mm; src = '기상청 예보 (' + K.days + '일치)'; } else { R0 = fcEl.value === 'kma' ? 0 : +fcEl.value; src = '선택한 예보강우'; }
+    const KP = D.fc.scen.h[3].kma_partial;
+    if (fcEl.value === 'kma' && K) { R0 = K.mm; src = '기상청 예보 (' + K.days + '일치)'; } else if (fcEl.value === 'kma' && KP) { R0 = KP.mm; src = '기상청 예보 (' + KP.days + '/3일치뿐, 일부)'; } else { R0 = fcEl.value === 'kma' ? 0 : +fcEl.value; src = '선택한 예보강우'; }
   } else { R0 = 0; for (let i = ref + 1; i <= ref + 3; i++) R0 += D.p[i] || 0; src = '실제 내린 비'; }
   let A0 = 0; for (let i = ref - 6; i <= ref; i++) A0 += D.p[i] || 0;
   const Q0 = D.q[ref];
@@ -780,10 +787,10 @@ function forecasts(ref) {
   const F = D.fc, k = ref - F.off, isLast = ref === lastI, mm = fcEl.value === 'kma' ? 'kma' : +fcEl.value;
   return [1, 3, 7].map(h => {
     const pick = (tag) => { const A = F[h + tag]; if (k < 0 || k >= A[0].length || A[0][k] == null) return null; return [A[0][k], A[1][k], A[2][k]]; };
-    let o = pick('obs'), r = null, rmm = null;
-    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; } } else { r = S.rain[F.scen.grid_mm.indexOf(mm)]; rmm = mm; } }
+    let o = pick('obs'), r = null, rmm = null, part = null;
+    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; } else part = S.kma_partial || null; } else { r = S.rain[F.scen.grid_mm.indexOf(mm)]; rmm = mm; } }
     else { r = pick('rain'); if (r) { rmm = 0; for (let i = ref + 1; i <= ref + h; i++) rmm += D.p[i] || 0; } }
-    return { h, o, r, mm: rmm, isLast };
+    return { h, o, r, mm: rmm, isLast, part };
   });
 }
 function renderFc(ref) {
@@ -794,7 +801,7 @@ function renderFc(ref) {
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
     $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + (z.h === 7 ? ' · 월평균 수준' : '');
-    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : '예보강우 반영값 없음';
+    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
   $('scTag').textContent = '기준일 ' + S.issue;
@@ -818,6 +825,7 @@ function renderFscore() {
 }
 function renderTbl() {
   renderFscore();
+  $('fcReal').innerHTML = (D.fc.real || []).map(([h, lab, lr, r2, mae, n, note]) => `<tr${lab.startsWith('+실제') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${note ? ' <small style="color:var(--ink-3)">(' + note + ')</small>' : ''}</td><td>${n}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
   $('fcTbl').innerHTML = D.fc.tbl.map(([h, lab, nm, lr, r2, mae]) => `<tr${lab === '관측만' && nm !== '월별 기준값' || lab.startsWith('+') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${lab === '관측만' && nm === '월별 기준값' ? ' (=기준값)' : ''}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
 }
 function renderBars() {

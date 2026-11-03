@@ -165,7 +165,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
     for h in fcm.H:
         for t in ('obs', 'rain'):
             F[f'{h}{t}'] = [f(hc[f'h{h}_{t}']), f(hc[f'h{h}_{t}_lo']), f(hc[f'h{h}_{t}_hi'])]
-    F['scen'] = live; F['bands'] = static['bands']; F['tbl'] = static['tbl']
+    F['scen'] = live; F['bands'] = static['bands']; F['tbl'] = static['tbl']; F['real'] = static.get('tbl_real', [])
     D['fc'] = F
     # SHAP: 묶음별 log 기여, 일별 배열
     D['shap'] = {k: {'base': round(b, 3), 'off': (S.index[0] - r.index.min()).days,
@@ -212,13 +212,13 @@ def main():
     fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static, model.temp_feats(df))
     hc = fr.hindcast()
     fj = src.LIVE / 'kma_fcst.json'
-    rain = wx = None
+    rain = wx = full = None
     if fj.exists():
         j = json.loads(fj.read_text(encoding='utf-8'))
-        if j['issue'] == str(df.index.max().date()): rain = j['rain_mm']
+        if j['issue'] == str(df.index.max().date()): rain = j['rain_mm']; full = j.get('full_day')
         if j.get('weather') and (now.date() - dt.date.fromisoformat(j['issue'])).days <= 2:   # 오래된 예보는 날씨 칸에 쓰지 않음
             wx = {'base': j['base'], 'point': j.get('weather_point', ''), 'days': j['weather'], 'example': bool(j.get('example'))}
-    live = fr.live(rain)
+    live = fr.live(rain, full)
     wj = src.LIVE / 'kma_warnings.json'
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
     locked = locked_eval(df)

@@ -140,8 +140,10 @@ class Forecaster:
         Xd, _ = self.issue_X(self.f.index, 1)
         return shap_groups(m, Xd[X.columns], self.G1, off)
 
-    def live(self, fcst_rain=None):
-        """마지막 기준일 운영 예측. fcst_rain: {'YYYY-MM-DD': mm} 기상청 예보(Thiessen 가중 일강우)."""
+    def live(self, fcst_rain=None, fcst_full=None):
+        """마지막 기준일 운영 예측. fcst_rain: {'YYYY-MM-DD': mm} 기상청 예보(Thiessen 가중 일강우).
+        fcst_full: {'YYYY-MM-DD': bool} 그날 24시간 예보가 다 있는지(없으면 모두 완전한 날로 본다).
+        기상청 예보 반영값은 h일 모두 완전한 예보가 있을 때만 낸다."""
         last = self.f.index[-1:]; D = last[0]
         res = {'issue': str(D.date()), 'grid_mm': GRID, 'h': {}}
         for h in H:
@@ -155,11 +157,16 @@ class Forecaster:
                 e['rain'].append([round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)])
             if fcst_rain:
                 want = [str((D + pd.Timedelta(days=k)).date()) for k in range(1, h + 1)]
-                have = [fcst_rain[x] for x in want if x in fcst_rain]
-                if have:
+                full = fcst_full or {}
+                have = [fcst_rain[x] for x in want if x in fcst_rain and full.get(x, True)]
+                if len(have) == h:
                     tot, mx = float(sum(have)), float(max(have))
                     lp = self.predict(h, nm_r, last, (np.array([tot]), np.array([mx])), train_upto=D).iloc[0]
                     e['kma'] = {'mm': round(tot, 1), 'days': len(have), 'need': h,
                                 'v': [round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)]}
+                elif have:
+                    # 예보가 h일을 다 채우지 못하면 반영값을 내지 않는다. 학습은 h일 실제 강우 합으로 했으므로
+                    # 모자란 날을 0 mm로 넣으면 과소예측된다(2026-11-03 감사: 7일에 2일 예보만 넣으면 로그 R² 0.288 < 관측만 0.383).
+                    e['kma_partial'] = {'mm': round(float(sum(have)), 1), 'days': len(have), 'need': h}
             res['h'][h] = e
         return res
