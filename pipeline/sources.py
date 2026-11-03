@@ -1,4 +1,4 @@
-"""자료 수집: WAMIS 원대교 유량·수위, 기상청 AWS 일강수·단기예보·특보, 물모아 총량측정망 SS.
+"""자료 수집: WAMIS 원대교 유량·수위, 기상청 AWS 일강수·인제 기온·단기예보·특보, 물모아 총량측정망 SS.
 
 모두 data/live/ 아래 CSV/JSON에 날짜 기준으로 합쳐 저장한다(같은 날짜는 새 값으로 덮어씀).
 기상청 키는 환경변수 KMA_API_KEY 또는 저장소 상위 폴더들의 .env / .env.txt 에서 읽는다.
@@ -26,6 +26,7 @@ WAMIS = 'http://www.wamis.go.kr:8080/wamis/openapi/wkw'
 WONDAE = '1012650'                       # 인제군(원대교) 수위·유량 관측소
 DAR = 1.0414                             # 내린천2 / 원대교 유역면적비
 KMA = 'https://apihub.kma.go.kr'
+ASOS_TEMP = 211                          # 인제 ASOS (기온)
 AWS = {321: 0.0487, 557: 0.5113, 559: 0.4400}           # 원통·기린·내면 Thiessen 가중치
 GRID = {321: (80, 139), 557: (83, 136), 559: (84, 132)}  # 단기예보 격자 (각 AWS 위치)
 MULMOA = 'https://www.mulmoa.go.kr'
@@ -116,6 +117,22 @@ def kma_aws_day(days, key):
     w = pd.DataFrame(rows).pivot_table(index='date', columns='stn', values='rn').reset_index()
     w.columns = ['date'] + [f'rn_{c}' for c in w.columns[1:]]
     return merge(LIVE / 'kma_aws_rain.csv', w)
+
+
+def kma_asos_temp(days, key):
+    """인제 ASOS(211) 일최고·최저기온. sfc_aws_day는 일평균 코드가 없어 평균은 모델에서 (최고+최저)/2로 쓴다.
+    응답(disp=0): YYMMDD STN LON LAT HT VAL 이름. -50 이하는 결측."""
+    if not days: return None
+    a, b = min(days), max(days); cols = {}
+    for obs in ('ta_max', 'ta_min'):
+        t = get(f'{KMA}/api/typ01/url/sfc_aws_day.php?tm1={a:%Y%m%d}&tm2={b:%Y%m%d}&obs={obs}&stn={ASOS_TEMP}&disp=0&help=0&authKey={key}')
+        for line in t.content.decode('cp949', 'replace').splitlines():
+            p = line.split()
+            if len(p) >= 6 and p[0].isdigit() and len(p[0]) == 8 and p[1] == str(ASOS_TEMP):
+                v = float(p[5]); cols.setdefault(f'{p[0][:4]}-{p[0][4:6]}-{p[0][6:8]}', {})[obs] = v if v > -50 else None
+        time.sleep(0.5)
+    if not cols: return None
+    return merge(LIVE / 'kma_asos_temp.csv', pd.DataFrame([{'date': d, **v} for d, v in sorted(cols.items())]))
 
 
 def pcp_mm(s):

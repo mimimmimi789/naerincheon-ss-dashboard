@@ -1,7 +1,8 @@
 """SS 일별 추정 모델 (2026-11-02 개선안): [XGB 10시드 평균 + 안전 Ridge] log 평균, 중앙값 보정
-+ 확장변수 + 수위 기반 유량보정 + 첨두수위. (2026-10-30 고정안은 XGB 1개 + Duan 평균 보정)
++ 확장변수 + 수위 기반 유량보정 + 첨두수위 + 기온(2026-11-03). (2026-10-30 고정안은 XGB 1개 + Duan 평균 보정)
 
-입력 df: 날짜 색인, 열 P0(유역 Thiessen 일강우 mm), Q(원대교 일유량 × 면적비 m³/s), Havg·Hmin·Hmax(원대교 수위 m), SS(실측 mg/L)
+입력 df: 날짜 색인, 열 P0(유역 Thiessen 일강우 mm), Q(원대교 일유량 × 면적비 m³/s), Havg·Hmin·Hmax(원대교 수위 m), SS(실측 mg/L),
+TAMAX·TAMIN(인제 ASOS 211 일최고·최저기온 ℃)
 """
 import numpy as np
 import pandas as pd
@@ -12,8 +13,8 @@ from sklearn.model_selection import KFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-# 전진검증 잔차 10–90% (2019–26, n=295, 포함률 79.7%; 이전 XGB+Duan은 -1.057, 0.553)
-LOG_LO, LOG_HI = -0.7625834110974855, 0.6699241069878145
+# 전진검증 잔차 10–90% (2019–26, n=295, 포함률 79.7%; 기온 추가 전 -0.763, 0.670; 이전 XGB+Duan은 -1.057, 0.553)
+LOG_LO, LOG_HI = -0.6765101372519452, 0.6113518170373943
 
 
 def XG(random_state=0, **kw):
@@ -95,7 +96,16 @@ def build(df):
 
 COLS = ['P0', 'Pprev', 'P3prior', 'P7prior', 'API7', 'ADD_prior', 'Q', 'Qprev', 'Qdelta1', 'Qratio3', 'msin', 'mcos',
         'lQ', 'dlQ', 'dlQ2', 'Qmax3', 'Q_rel30', 'Q_rel90', 'Q_over_base', 'days_since_big', 'P2', 'Pmax3',
-        'P14prior', 'P30prior', 'lQpk', 'Hrise', 'dHmax']
+        'P14prior', 'P30prior', 'lQpk', 'Hrise', 'dHmax', 'TA', 'TA7', 'TAmin']
+
+
+def temp_feats(df):
+    """인제 ASOS 기온(2026-11-03 추가): 당일 평균((최고+최저)/2), 7일 평균, 당일 최저. 자료가 없으면 NaN."""
+    tx = df['TAMAX'] if 'TAMAX' in df else pd.Series(np.nan, index=df.index)
+    tn = df['TAMIN'] if 'TAMIN' in df else pd.Series(np.nan, index=df.index)
+    tx = tx.interpolate(limit=3, limit_area='inside'); tn = tn.interpolate(limit=3, limit_area='inside')
+    ta = (tx + tn) / 2
+    return pd.DataFrame({'TA': ta, 'TA7': ta.rolling(7, min_periods=4).mean(), 'TAmin': tn}, index=df.index)
 
 
 def stage_flow(df):
@@ -124,6 +134,7 @@ def features(df):
     F['lQpk'] = np.log(QPK.where(QPK.notna(), dfx.Q))
     F['Hrise'] = df.Hmax - df.Hmin
     F['dHmax'] = df.Hmax - df.Hmin.rolling(60, min_periods=10).quantile(0.1)
+    F = F.join(temp_feats(df))
     return F[COLS], dfx.Q, bad, QPK
 
 
@@ -142,14 +153,15 @@ GROUPS = {'유량': ['Q', 'Qprev', 'Qdelta1', 'Qratio3', 'lQ', 'dlQ', 'dlQ2', 'Q
           '선행강우 (3–30일)': ['P3prior', 'P7prior', 'P14prior', 'P30prior', 'API7'],
           '무강우일수': ['ADD_prior'],
           '수위·첨두유량': ['lQpk', 'Hrise', 'dHmax'],
-          '계절': ['msin', 'mcos']}
+          '계절': ['msin', 'mcos'], '기온': ['TA', 'TA7', 'TAmin']}
 
 
 def shap_groups(m, X, groups, offset=0.0):
     """TreeSHAP(log 척도; 혼합모델은 XGB 평균 SHAP과 Ridge 선형 기여의 평균)을 변수 묶음별로 더한다. 반환: (묶음별 DataFrame, 기준값 log)."""
     c = m.contribs(X) if hasattr(m, 'contribs') else m.get_booster().predict(xgb.DMatrix(X), pred_contribs=True)
     cols = list(X.columns)
-    out = pd.DataFrame({g: c[:, [cols.index(v) for v in vs]].sum(axis=1) for g, vs in groups.items()}, index=X.index)
+    out = pd.DataFrame({g: c[:, [cols.index(v) for v in vs if v in cols]].sum(axis=1) for g, vs in groups.items()
+                        if any(v in cols for v in vs)}, index=X.index)
     return out, float(c[0, -1] + offset)
 
 
