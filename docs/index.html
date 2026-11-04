@@ -1,4 +1,3 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0e3b4a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="내린천 SS"></head><body>
 <title>내린천2 SS 대시보드</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -398,71 +397,34 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   </section>
   <section class="grid g-2">
     <div class="card">
-      <h2>예측 성능 <span class="tag real">전진검증 2019–26</span></h2>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>선행 · 방법</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
-        <tbody id="fcTbl"></tbody>
-      </table></div>
-      <p class="hint">n = 295 (2019–26 실측일), 그해 이전 자료로만 학습. MAE mg/L. 이 기간은 변수·모델을 고를 때도 쓴 기간이라 실제 성능보다 조금 좋게 나올 수 있습니다(독립 성적은 잠금 평가). * 실제 내린 비 = 지난 날짜를 평가할 때 앞으로 내릴 비 자리에 실제로 내린 비를 넣은 사후 계산입니다. 예보가 틀리는 오차가 빠져 있어 운영 성능보다 좋게 나올 수 있습니다. 기상청 예보로 다시 계산한 값은 아래 표를 보세요. 예보강우 모델의 XGB는 강우가 늘면 예측이 줄지 않도록 단조 제약을 걸었습니다.</p>
-      <p class="hint"><b>5일 예측은 참고용입니다 (2026-11-03 7일→5일 변경).</b> 관측만 로그 R² 0.433으로 월별 기준값(0.368)보다 유의하게 낫지만(+0.065, 95% 구간 +0.013~+0.119) 1일보다 크게 낮습니다. 7일은 기준값과 차이가 유의하지 않았고(0.401, 구간이 0 포함) 2024–25 독립 시험에서 월평균보다 오차가 컸으며(MAE 5.00 vs 4.24), 기상청 단기예보(현재 D+5까지)로 7일을 채울 수 없어 5일로 바꿨습니다.</p>
-      <h3 class="mini">기상청 발표 예보로 다시 계산 <span class="tag">2019–25 보관 예보</span></h3>
+      <h2>1·3·5일 예측 성능 <span class="tag real">과거 기상청 예보로 채점</span></h2>
       <div class="tbl-wrap"><table>
         <thead><tr><th>선행 · 방법</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
-        <tbody id="fcReal"></tbody>
+        <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">기상청 23시 발표 단기예보 보관본이 있는 채수일만 같은 날짜로 비교했습니다(학습은 위와 같음). 1일은 기상청 예보를 넣어도 실제 내린 비를 넣은 경우와 거의 같고, 3일은 보관본이 앞 2일만 있어 그만큼만 넣었습니다. 예보 기간이 모자라면(예: 7일에 예보 2일분) 관측만보다 나빠지므로, 대시보드는 예보가 예측 기간을 다 채우지 못하면 기상청 예보 반영값을 내지 않습니다.</p>
+      <p class="hint">2019–26 실측일, 그해 이전 자료로만 학습한 전진검증. MAE 단위 mg/L. 「기상청 예보 반영」은 그날 실제로 발표된 기상청 23시 단기예보를 넣어 다시 계산한 값으로, 대시보드가 매일 내는 예측과 같은 방식입니다. 3일은 과거 예보 보관본이 앞 2일치만 있어 그만큼만 넣었습니다. <b>5일은 참고용</b>입니다(과거 예보 보관본이 없어 관측만 성적, 월별 기준값보다는 낫지만 1일보다 크게 낮음). 이 기간은 모델을 고를 때도 쓴 기간이라 실제보다 조금 좋게 나올 수 있으며, 독립 성적은 아래 운영 예측 성적과 잠금 평가로 확인합니다.</p>
       <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
       <div id="fscore"></div>
     </div>
     <div class="card" id="perf">
-      <h2>모델 성능 <span class="tag real">팀 분석값</span></h2>
+      <h2>일별 SS 추정 성능 <span class="tag real">전진검증 2019–26</span></h2>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>모형 · 평가기간</th><th>R²</th><th>로그 R²</th><th>MAE</th></tr></thead>
+        <thead><tr><th>모형</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody>
-          <tr class="mine"><td>혼합 + 기온 + 시간 수위 · 2019–26</td><td>0.564</td><td>0.761</td><td>2.91</td></tr>
-          <tr class="mine"><td>혼합 + 기온 + 시간 수위 · 2023–26</td><td>0.632</td><td>0.770</td><td>3.14</td></tr>
-          <tr class="mine"><td>혼합 + 기온 + 시간 수위 · 2026</td><td>0.961</td><td>0.680</td><td>1.34</td></tr>
-          <tr><td>XGB·Ridge 혼합 + 기온 · 2019–26</td><td>0.512</td><td>0.754</td><td>3.04</td></tr>
-          <tr><td>XGB·Ridge 혼합 (기온 전) · 2019–26</td><td>0.494</td><td>0.722</td><td>3.22</td></tr>
-          <tr><td>이전 XGB(log) · 2019–26</td><td>0.476</td><td>0.630</td><td>3.51</td></tr>
-          <tr><td>이전 XGB(log) · 2023–26</td><td>0.510</td><td>0.657</td><td>3.92</td></tr>
-          <tr><td>기존 RF · 2023–26</td><td>0.193</td><td>0.62</td><td>4.3</td></tr>
-          <tr><td>기존 RF · 2026</td><td>0.617</td><td>–</td><td>–</td></tr>
-          <tr><td colspan="4" style="color:var(--ink-3);font-size:11.5px">1·3·7일 예측 독립 시험 (2014–23 학습 → 2024–25)</td></tr>
-          <tr><td>1일 · 관측만</td><td>0.048</td><td>0.592</td><td>2.78</td></tr>
-          <tr class="mine"><td>1일 · 기상청 예보 포함</td><td>0.256</td><td>0.697</td><td>2.50</td></tr>
-          <tr><td>3일 · 관측만</td><td>0.154</td><td>0.282</td><td>3.85</td></tr>
-          <tr class="mine"><td>3일 · 기상청 예보 포함</td><td>0.083</td><td>0.537</td><td>3.38</td></tr>
-          <tr><td>7일 · 관측만 (월평균 4.24)</td><td>–</td><td>–</td><td>5.00</td></tr>
-          <tr><td>7일 · 실제 강우 알려 줌 (월평균 4.24)</td><td>–</td><td>–</td><td>4.63</td></tr>
-                  </tbody>
+          <tr class="mine"><td>운영 모델 (XGB·Ridge 혼합 + 기온 + 시간 수위)</td><td>295</td><td>0.761</td><td>0.564</td><td>2.91</td></tr>
+        </tbody>
       </table></div>
-      <p class="hint">연도별 전진검증, MAE mg/L. 혼합 모델은 중앙값(평상시 농도) 기준이라 이전 모델보다 평상시 과대추정이 줄었고, 10 mg/L 이상 고농도는 덜 잡습니다(30건 중 16건, 이전 22건). 25 mg/L 이상은 실측의 약 35% 수준으로 낮게 추정합니다. 2026-11-03 인제 기온(당일·7일 평균·최저)을 넣어 로그 R² 0.722→0.754, MAE 3.22→3.04로 좋아졌습니다(8개 연도 모두 개선, 부트스트랩 95% 구간 +0.009~+0.055). 같은 날 원대교 시간 수위(오전 10시 기준, 채수 대표 시각 14시에서 흐름 지연 4시간을 뺀 시각)를 더해 로그 R² 0.761, MAE 2.91(개선 폭은 작음, 95% 구간 0~+0.015). 탐색적 결과이며 새 실측으로 잠금 평가 예정. 1·3일 독립 시험은 연구용 별도 틀(SS 60일 지연 반영)로, 월평균 기준 대비 MAE가 1일 −34%(예보 포함 −40%), 3일 −9%(−10%)입니다. 2025년은 고농도가 없는 해라 고농도 예측력은 검증되지 않았습니다.</p>
-      <p class="hint"><b>과적합 점검 (2026-11-03):</b> 입력 37개·실측 493건. 학습자료 로그 R² 0.90, 전진검증 0.76 (XGB 단독은 0.97→0.75라 Ridge 혼합이 차이를 줄임). 변수 묶음을 하나씩 빼거나 14개·6개로 줄이면 거의 같거나 나빠졌고(0.74–0.76, 0.74, 0.56), 의미 없는 난수 변수 10개를 넣어도 0.755로 거의 같아 입력 수 때문에 생기는 과적합은 뚜렷하지 않습니다. 다만 변수와 모델을 같은 2019–26 전진검증을 보며 골랐으므로 실제 성능은 잠금 평가로 확인합니다. 1·3일 예측도 입력을 줄이면 나빠졌고, 7일 관측만 예측은 학습 0.72→검증 0.40으로 차이가 커서 2026-11-03 5일 예측으로 바꿨습니다.</p>
+      <p class="hint">그래프 파란 선(일별 추정)의 성능입니다. 같은 날 강우·유량·수위를 쓰는 사후복원이라 예측이 아닙니다. 25 mg/L 이상 고농도는 실측의 약 35~40%로 낮게 추정합니다.</p>
+      <h3 class="mini">내일 기준 이상 가능성 검증 <span class="tag">2020–26 · 실측일만</span></h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>내일 SS 기준</th><th>표본·초과</th><th>PR-AUC (우연)</th><th>잡은 비율</th><th>맞은 비율</th></tr></thead>
+        <tbody>
+          <tr class="mine"><td>10.2 mg/L 이상 (관심)</td><td>237 · 23</td><td>0.81 (0.10)</td><td>70%</td><td>84%</td></tr>
+          <tr class="mine"><td>25 mg/L 이상 (대응 검토)</td><td>237 · 10</td><td>0.57 (0.04)</td><td>50%</td><td>56%</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hint">종합 탭 운영 요약의 「내일 기준 이상 가능성」이 과거에 얼마나 맞았는지입니다. 잡은 비율 = 실제 초과한 날 중 가능성이 20% 이상이었던 비율, 맞은 비율 = 20% 이상이라고 한 날 중 실제 초과한 비율. 확률은 기준일보다 60일 이상 앞선 과거 예측 오차만으로 계산했습니다. 3일 뒤부터는 우연 수준과 비슷해 확률을 내지 않습니다. 25 mg/L 이상 10건 중 5건은 놓쳤습니다(예: 2021-03-03 해빙기 110 mg/L).</p>
     </div>
-  </section>
-  <section class="card" id="mgrval">
-    <h2>관리자 기능 검증 <span class="tag real">2026-11-03 · 실측일만 채점</span></h2>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>기준 이상 가능성 (정확히 그날)</th><th>표본 · 초과</th><th>PR-AUC (우연 수준)</th><th>20% 이상일 때 잡은 비율</th><th>그때 맞은 비율</th></tr></thead>
-      <tbody>
-        <tr class="mine"><td>내일 · SS 10.2 이상 · 관측만</td><td>237 · 23</td><td>0.81 (0.10)</td><td>70%</td><td>84%</td></tr>
-        <tr class="mine"><td>내일 · SS 25 이상 · 관측만</td><td>237 · 10</td><td>0.57 (0.04)</td><td>50%</td><td>56%</td></tr>
-        <tr><td>내일 · SS 25 이상 · 실제 기상청 예보</td><td>199 · 7</td><td>0.66 (0.04)</td><td>57%</td><td>80%</td></tr>
-        <tr><td>3일 뒤 · SS 25 이상 · 관측만</td><td>237 · 10</td><td>0.16 (0.04)</td><td>0%</td><td>–</td></tr>
-        <tr><td>7일 뒤 · SS 25 이상 · 관측만</td><td>236 · 10</td><td>0.10 (0.04)</td><td>0%</td><td>–</td></tr>
-      </tbody>
-    </table></div>
-    <p class="hint">2020–26 시간순 평가: 확률은 기준일보다 60일 이상 앞선 과거 예측 오차만으로 계산(공개 지연 반영). 채수하지 않은 날은 정상으로 치지 않고 평가에서 뺐습니다. 3일 이후는 우연 수준과 비슷해 화면에 확률을 내지 않습니다(5일 예측도 같음). 25 이상 10건 중 놓친 5건은 2021-03-03(110 mg/L, 해빙기), 2023-06-13, 2023-07-12, 2024-06-25, 2024-07-23입니다.</p>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>1–7일 연속 직접예측 (로그 R²)</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead>
-      <tbody>
-        <tr><td>관측만</td><td>0.70</td><td>0.51</td><td>0.45</td><td>0.43</td><td>0.43</td><td>0.41</td><td>0.40</td></tr>
-        <tr><td>실제 내린 비 대입 (사후, 예보 오차 없음)</td><td>0.72</td><td>0.64</td><td>0.63</td><td>0.61</td><td>0.59</td><td>0.55</td><td>0.52</td></tr>
-        <tr><td>월별 기준값</td><td colspan="7" style="text-align:center">0.37</td></tr>
-      </tbody>
-    </table></div>
-    <p class="hint">2019–26 전진검증 n=295, 날짜마다 따로 학습한 직접예측. 관측만 쓰면 2일 뒤부터 월별 기준값과 차이가 작습니다. 실제 내린 비를 넣은 값은 예보가 정확하다는 가정의 상한이며, 실제 예보로는 이보다 낮습니다(운영 모델 기준 1일 0.75, 3일은 2일치 예보로 0.60. 2026-11-03부터 대시보드의 1·3일 예보강우 예측은 강우→유량→SS 연결 모델을 섞어 1일 0.76, 3일 0.61). 일 단위 예측이라 하루 중 첨두 시각은 알 수 없습니다. 아직 화면의 일별 연속 예측으로는 넣지 않았습니다.</p>
   </section>
   <section class="card" id="modelcfg">
     <h2>대시보드 모델 구성 <span class="tag">2026-11-03 기온·시간 수위 추가</span></h2>
@@ -495,7 +457,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
           <td colspan="3">강우: 기상청 AWS 원통 321·기린 557·내면 559 티센 가중 (0.049·0.511·0.440). 유량·수위: WAMIS 원대교(1012650), 유량은 면적비 보정. 기온: 기상청 인제 ASOS(211) 일최고·최저, 평균은 (최고+최저)/2. 채수시각: 물모아 수질측정망 내린천2(대부분 12–15시, 중앙 13:53). 원대교는 내린천2 상류 직선 7.46 km라 시간 수위는 4시간 앞선 값을 씀. SS: 물환경정보시스템 총량측정망 내린천2(1012A20).</td></tr>
       </tbody>
     </table></div>
-    <p class="hint">일별 추정은 같은 날 강우·유량·수위를 쓰는 사후복원이고, 1·3·5일 예측은 기준일까지의 관측(과 예보강우)만 씁니다. 성능은 왼쪽 표의 전진검증(그해 이전 자료로만 학습) 결과입니다.</p>
+    <p class="hint">일별 추정은 같은 날 강우·유량·수위를 쓰는 사후복원이고, 1·3·5일 예측은 기준일까지의 관측(과 예보강우)만 씁니다. 성능은 위 표의 전진검증(그해 이전 자료로만 학습) 결과입니다.</p>
   </section>
   </div>
 
@@ -1077,8 +1039,18 @@ function renderFscore() {
 }
 function renderTbl() {
   renderFscore();
-  $('fcReal').innerHTML = (D.fc.real || []).map(([h, lab, lr, r2, mae, n, note]) => `<tr${lab.startsWith('+기상청') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${note ? ' <small style="color:var(--ink-3)">(' + note + ')</small>' : ''}</td><td>${n}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
-  $('fcTbl').innerHTML = D.fc.tbl.map(([h, lab, nm, lr, r2, mae]) => `<tr${lab === '관측만' && nm !== '월별 기준값' || lab.startsWith('+') ? ' class="mine"' : ''}><td>${h}일 · ${lab}${lab === '관측만' && nm === '월별 기준값' ? ' (=기준값)' : ''}</td><td>${lr.toFixed(3)}</td><td>${r2.toFixed(3)}</td><td>${mae.toFixed(2)}</td></tr>`).join('');
+  const R = D.fc.real || [], T = D.fc.tbl || [], f3 = v => v == null ? '–' : v.toFixed(3);
+  const row = (lab, n, lr, r2, mae, mine) => `<tr${mine ? ' class="mine"' : ''}><td>${lab}</td><td>${n}</td><td>${f3(lr)}</td><td>${f3(r2)}</td><td>${mae == null ? '–' : mae.toFixed(2)}</td></tr>`;
+  let h = '';
+  [1, 3].forEach(k => {
+    const kma = R.find(r => r[0] === k && r[1].startsWith('+기상청')), obs = R.find(r => r[0] === k && r[1] === '관측만');
+    if (kma) h += row(k + '일 · 기상청 예보 반영' + (k === 3 ? ' <small style="color:var(--ink-3)">(앞 2일 예보)</small>' : ''), kma[5], kma[2], kma[3], kma[4], true);
+    if (obs) h += row(k + '일 · 관측만', obs[5], obs[2], obs[3], obs[4], false);
+  });
+  const o5 = T.find(r => r[0] === 5 && r[1] === '관측만'), base = T.find(r => r[1] === '월별 기준값');
+  if (o5) h += row('5일 · 관측만 <small style="color:var(--ink-3)">(참고용)</small>', 295, o5[3], o5[4], o5[5], false);
+  if (base) h += row('비교: 월별 기준값 <small style="color:var(--ink-3)">(그 달 평균만 쓴 값)</small>', 295, base[3], base[4], base[5], false);
+  $('fcTbl').innerHTML = h;
 }
 function renderBars() {
   const c = CORR[state.h];
@@ -1136,5 +1108,3 @@ new MutationObserver(render).observe(document.documentElement, { attributes: tru
 renderBars(); renderWt(); renderMap(); renderTbl(); renderFresh();
 if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
 </script>
-
-</body></html>
