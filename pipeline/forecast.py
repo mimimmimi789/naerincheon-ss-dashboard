@@ -36,6 +36,21 @@ CHAIN_H = (1, 3)
 # 3일은 효과 없음(0.448→0.446) (capstone/perf_explore_20261104 p4.py)
 CHAIN_OBS_H = (1,)
 FLV = ['lQ', 'lQpk', 'Hrise', 'dlQ']
+# 2026-11-04 평상시/고농도 전환(1일 예보강우 예측만, 사용자 요청): 예측값이 thr mg/L 이상이면 '고농도 모드'로 보고
+# 그 모드 날의 과거 잔차 중앙값(med)의 k배만큼 올린다. 고농도 쪽 추정 = 모드 날 잔차 90% 분위(q_hi)만큼 위
+# (기상청 보관 예보 표본외 검증: 실측이 이 값 아래 80%). 상수는 2019–26 '실제 내린 비 대입' 1일 예측 잔차(모드 날 30일)로 적합.
+# 검증(연도별 이전 자료만, 보관 예보 n=257): 로그 R² 0.758→0.759, MAE 2.85→2.89, 25 mg/L 예측 4/4→5/5, 10.2 16/18→19/22.
+HIMODE = dict(h=(1,), thr=6.0, med=0.2334, k=0.5, q_hi=0.9453)
+
+
+def himode(h, lp):
+    """(조정한 log 예측, 고농도 모드 여부, 고농도 쪽 추정 log 또는 None). lp는 스칼라 또는 배열."""
+    if h not in HIMODE['h']: return lp, False, None
+    lp = np.asarray(lp, float); on = lp >= np.log(HIMODE['thr'])
+    adj = np.where(on, lp + HIMODE['k'] * HIMODE['med'], lp)
+    hi = np.where(on, adj + HIMODE['q_hi'], np.nan)
+    if adj.ndim == 0: return float(adj), bool(on), (float(hi) if on else None)
+    return adj, on, hi
 RS_RAIN = ['P0', 'Pprev', 'P3prior', 'P7prior', 'API7', 'ADD_prior', 'P2', 'Pmax3', 'P14prior', 'P30prior']
 
 
@@ -211,6 +226,7 @@ class Forecaster:
                     lp = (lp + self.chain.predict(h, days)) / 2
                 if tag == 'obs' and self.chain is not None and h in CHAIN_OBS_H:
                     lp = (lp + self.chain.predict(h, days, np.zeros((len(days), h)))) / 2
+                if tag == 'rain': lp = pd.Series(himode(h, lp.values)[0], index=lp.index)
                 if tag == 'rain': lp[days + pd.Timedelta(days=h) > last] = np.nan
                 for k, a in (('', 0), ('_lo', lo), ('_hi', hi)):
                     out[f'h{h}_{tag}{k}'] = np.exp(lp + a).round(2)
@@ -250,7 +266,9 @@ class Forecaster:
                 lp = self.predict(h, nm_r, last, (np.array([g]), np.array([g])), train_upto=D).iloc[0]
                 if mix:   # 연결 모델 쪽 시나리오는 h일 동안 고르게 내린다고 본다
                     lp = (lp + self.chain.predict(h, last, np.full((1, h), g / h), train_upto=D).iloc[0]) / 2
+                lp, on, lph = himode(h, lp)
                 e['rain'].append([round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)])
+                if h in HIMODE['h']: e.setdefault('rain_high', []).append(round(float(np.exp(lph)), 2) if on else None)
             if fcst_rain:
                 want = [str((D + pd.Timedelta(days=k)).date()) for k in range(1, h + 1)]
                 full = fcst_full or {}
@@ -261,8 +279,10 @@ class Forecaster:
                     if mix:   # 연결 모델에는 과거 보관본 기준 실제/예보 비율로 줄인 예보강우를 넣는다(기상청 예보가 비를 많이 예보)
                         sc = float(self.static.get('kma_rain_scale', 1.0))
                         lp = (lp + self.chain.predict(h, last, np.array([have]) * sc, train_upto=D).iloc[0]) / 2
+                    lp, on, lph = himode(h, lp)
                     e['kma'] = {'mm': round(tot, 1), 'days': len(have), 'need': h,
                                 'v': [round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)]}
+                    if on: e['kma']['high'] = round(float(np.exp(lph)), 2)
                 elif have:
                     # 예보가 h일을 다 채우지 못하면 반영값을 내지 않는다. 학습은 h일 실제 강우 합으로 했으므로
                     # 모자란 날을 0 mm로 넣으면 과소예측된다(2026-11-03 감사: 7일에 2일 예보만 넣으면 로그 R² 0.288 < 관측만 0.383).
