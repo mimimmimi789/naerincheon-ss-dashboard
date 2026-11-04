@@ -23,9 +23,9 @@ BASE = ROOT / 'data' / 'base'
 AUX = ROOT / 'data' / 'auxdata'          # Windows에서 'aux'는 예약 이름이라 auxdata
 DOCS = ROOT / 'docs'
 LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(수집 시작 기준)
-# 잠금 평가 기준(2026-11-04 사용자 요청으로 2026-08-26 → 2025-12-31): 이 날까지 실측으로만 학습한 모델로 2026년 이후 실측을 맞춘다.
-# 2026년 실측도 모델을 고를 때 전진검증에 포함됐으므로 완전한 미지 자료는 아니다(구성 선택만, 학습에는 미사용).
-LOCK_EVAL = pd.Timestamp('2025-12-31')
+# 잠금 평가 기준(2026-11-04 사용자 요청): 2023년까지 실측으로만 학습한 모델로 2024년 이후 실측을 맞춘다(학습:시험 약 8:2, 3년, 2024-07-23 90 mg/L 포함).
+# 이전 기준 2025-12-31(2026년만 26건)은 한 해에 기대 너무 짧았다. 2024–26 실측도 모델 구성을 고를 때 전진검증에 포함됐으므로 완전한 미지 자료는 아니다(학습에는 미사용).
+LOCK_EVAL = pd.Timestamp('2023-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
 MODEL_TAG = 'blend+temp+chain13+obs1chain+flood075+himode1 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
@@ -106,21 +106,33 @@ def assemble():
     return df
 
 
-def locked_eval(df):
-    """LOCK_EVAL까지 실측으로만 학습한 고정 모델로 그 뒤 실측을 맞춘 성적(월별 기준값과 비교)."""
-    newo = df.index[(df.index > LOCK_EVAL) & df.SS.notna() & (df.SS > 0)]
-    if not len(newo): return {'n': 0, 'since': str((LOCK_EVAL + pd.Timedelta(days=1)).date())}
+def locked_eval(df, upto=LOCK_EVAL, flood=None):
+    """upto까지 실측으로만 학습한 고정 모델로 그 뒤 실측을 맞춘 성적(월별 기준값과 비교).
+    cov = 실측이 80% 범위 안에 든 비율. years = 연도별 성적."""
+    flood = flood or model.FLOOD_2023
+    since = str((upto + pd.Timedelta(days=1)).date())
+    newo = df.index[(df.index > upto) & df.SS.notna() & (df.SS > 0)]
+    if not len(newo): return {'n': 0, 'since': since, 'train': upto.year}
     F, _, _, _ = model.features(df)
-    tr = (df.index <= LOCK_EVAL) & df.SS.notna() & (df.SS > 0)
+    tr = (df.index <= upto) & df.SS.notna() & (df.SS > 0)
     m, sm = model.fit_log(model.Daily, F[tr], df.SS[tr].values)
-    p = np.exp(m.predict(F.loc[newo]) + sm + model.flood_shift(F.loc[newo], model.FLOOD_2025)); y = df.SS[newo].values
+    Fn = F.loc[newo]; lp = m.predict(Fn) + sm + model.flood_shift(Fn, flood); blo, bhi = model.band(Fn)
+    p = np.exp(lp); y = df.SS[newo].values; lo, hi = np.exp(lp + blo), np.exp(lp + bhi)
     med = np.log(df.SS[tr]).groupby(df.index[tr].month).median()
     c = np.exp(newo.month.map(med).values.astype(float))
     r2 = lambda a, b: None if len(a) < 2 else round(float(1 - np.sum((a - b) ** 2) / np.sum((a - a.mean()) ** 2)), 3)
-    return {'n': int(len(y)), 'since': str((LOCK_EVAL + pd.Timedelta(days=1)).date()), 'mae': round(float(np.mean(np.abs(y - p))), 2),
-            'r2': r2(y, p), 'logr2': r2(np.log(y), np.log(p)), 'mae_clim': round(float(np.mean(np.abs(y - c))), 2),
-            'logr2_clim': r2(np.log(y), np.log(c)), 'ymax': float(y.max()),
-            'rows': [[str(d.date()), float(a), round(float(b), 2)] for d, a, b in zip(newo, y, p)]}
+
+    def stats(k):
+        return {'n': int(k.sum()), 'mae': round(float(np.mean(np.abs(y[k] - p[k]))), 2), 'r2': r2(y[k], p[k]),
+                'logr2': r2(np.log(y[k]), np.log(p[k])), 'mae_clim': round(float(np.mean(np.abs(y[k] - c[k]))), 2),
+                'logr2_clim': r2(np.log(y[k]), np.log(c[k])), 'cov': round(float(np.mean((y[k] >= lo[k]) & (y[k] <= hi[k]))), 2),
+                'ymax': float(y[k].max())}
+    out = {'since': since, 'train': upto.year, **stats(np.ones(len(y), bool)),
+           'rows': [[str(d.date()), float(a), round(float(b), 2), round(float(l), 2), round(float(h), 2)]
+                    for d, a, b, l, h in zip(newo, y, p, lo, hi)]}
+    yrs = sorted(set(newo.year))
+    if len(yrs) > 1: out['years'] = {int(Y): stats(newo.year == Y) for Y in yrs}
+    return out
 
 
 def log_forecast(live, updated):
@@ -232,7 +244,7 @@ def main():
     live = fr.live(rain, full)
     wj = src.LIVE / 'kma_warnings.json'
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
-    locked = locked_eval(df)
+    locked = [locked_eval(df)]
     updated = now.strftime('%Y-%m-%d %H:%M KST')
     fscore = score_log(log_forecast(live, updated), df)
     o = df.SS[df.SS > 0].dropna()
@@ -241,7 +253,7 @@ def main():
            'cover': mg.coverage(live), 'exceed': mg.exceed(hc, df.SS, live), 'ood': mg.ood(fr),
            'ev': mg.events(df.P0, est.q_corr, df.Havg, df.Hmax, df.Hmin, df.SS)}
     build(df, est, hc, live, static, status, warnings, locked, updated, {'est': shp_est, 'h1': fr.shap_h1()}, wx, fscore, mgr)
-    print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', locked.get('n'), '|', status)
+    print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', [L.get('n') for L in locked], '|', status)
     if '--push' in args:
         g = lambda *c: subprocess.run(['git', '-C', str(ROOT), *c], check=False)
         g('add', 'docs', 'data/live')

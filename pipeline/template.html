@@ -72,6 +72,8 @@ body.nohelp p.hint:not(.keep),body.nohelp .disc,body.nohelp #banner,body.nohelp 
 .kpi .val{font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
 .kpi .val small{font-size:14px;font-weight:500;color:var(--ink-2);margin-left:3px}
 .kpi .val.dim{color:var(--ink-3)}
+.kpi .rng{font-size:15px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums;margin:-1px 0 2px}
+.kpi .rng small{font-size:11.5px;font-weight:500;color:var(--ink-3);margin-right:5px}
 .kpi .meta{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .grid{display:grid;gap:12px}
 .g-main{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)}
@@ -216,9 +218,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .headline.lv-note{border-left-color:var(--note);background:var(--note-bg)}.headline.lv-warn{border-left-color:var(--warn);background:var(--warn-bg)}
 .hl-main{margin:0;font-size:clamp(19px,2.3vw,27px);font-weight:700;letter-spacing:-.015em;line-height:1.3;font-variant-numeric:tabular-nums;color:var(--ink)}
 .hl-main .stg{font-size:inherit;margin-right:10px;vertical-align:baseline}.hl-main .stg i{width:.55em;height:.55em}
-.hl-main .u{font-size:.6em;font-weight:500;color:var(--ink-2);margin-left:2px}.hl-main .sep{color:var(--ink-3);font-weight:400;margin:0 .35em}
+.hl-main .u{font-size:.6em;font-weight:500;color:var(--ink-2);margin-left:2px}.hl-main .sep{color:var(--ink-3);font-weight:400;margin:0 .1em}
 .hl-main .ref{font-size:.62em;font-weight:500;color:var(--ink-3)}
 .hl-main .it{white-space:nowrap}
+.hl-main .rr{font-size:.6em;font-weight:500;color:var(--ink-2);margin-left:.3em}
 .hl-sub{margin:0;font-size:12.5px;color:var(--ink-2)}
 .cctl label{white-space:nowrap}
 @media (max-width:820px){.cctl label{flex:1 1 45%;flex-direction:column;align-items:stretch;gap:2px}.cctl .btn{flex:1 1 100%}.cctl select,.cctl input{width:100%}.headline{padding:13px 14px}}
@@ -279,11 +282,11 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <p class="disc">내린천2 하천 SS(복류수 유입 전 하천수로 가정)이며 원수 탁도와 다를 수 있습니다. 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
   </section>
   <section class="kpis" aria-label="요약">
-    <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
+    <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
     <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF1L">1일 후 예측</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="meta" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF3L">3일 후 예측</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="meta" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF5L">5일 후 예측</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="meta" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF1L">1일 후 예측</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF3L">3일 후 예측</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF5L">5일 후 예측</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
   </section>
   <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
   <section class="card" id="fresh">
@@ -412,9 +415,9 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card" id="perf">
       <h2>일별 SS 추정 성능 <span class="tag real">전진검증 2019–26</span></h2>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>모형</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
+        <thead><tr><th>모형</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th><th>범위 안</th></tr></thead>
         <tbody>
-          <tr class="mine"><td>운영 모델 (XGB·Ridge 혼합 + 기온 + 시간 수위 + 홍수 사상 + 홍수일 보정)</td><td>295</td><td>0.770</td><td>0.663</td><td>2.79</td></tr>
+          <tr class="mine"><td>운영 모델 (2019–26 전진검증)</td><td>295</td><td>0.770</td><td>0.663</td><td>2.79</td><td>80%</td></tr>
         </tbody>
         <tbody id="lockTbl"></tbody>
       </table></div>
@@ -494,7 +497,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <div><dt>1·3·5일 예측</dt><dd>기준일 자정까지의 자료로 1·3·5일 뒤 SS를 계산한 값.</dd></div>
         <div><dt>예보강우 반영</dt><dd>예보 강우를 넣은 예측. 예보가 틀리면 그만큼 빗나갑니다.</dd></div>
         <div><dt>월별 기준값</dt><dd>과거 같은 달 SS 중앙값. 모델은 이보다 나아야 합니다.</dd></div>
-        <div><dt>80% 범위 · 추정 범위</dt><dd>과거 오차 10–90%로 만든 구간. 고농도 날은 범위 위로 벗어나는 경우가 많습니다.</dd></div>
+        <div><dt>80% 범위 · 추정 범위</dt><dd>과거 오차 10–90%로 만든 구간. 실측이 10번 중 8번 이 안에 듭니다. 비·수위 상승일은 더 넓게 잡습니다. 고농도 날은 범위 위로 벗어나는 경우가 많습니다.</dd></div>
         <div><dt>R²</dt><dd>mg/L 그대로의 설명력. 큰 홍수 몇 날에 좌우됩니다.</dd></div>
         <div><dt>로그 R²</dt><dd>로그 값의 설명력. 평상시부터 고농도까지 고르게 반영합니다.</dd></div>
         <div><dt>MAE</dt><dd>예측과 실측 차이의 평균(mg/L).</dd></div>
@@ -649,7 +652,8 @@ function render() {
   renderFc(ref); fcEls.forEach(el => { el.disabled = ref !== lastI; el.title = ref !== lastI ? '과거 기준일은 실제 내린 비를 씁니다' : ''; });
   const e = D.est[ref];
   $('kEst').innerHTML = fmt(e) + '<small>mg/L</small>';
-  $('kEstM').textContent = iso(ref) + ' · 범위 ' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + (PART.has(ref) ? ' · 입력 일부 결측' : '');
+  $('kEstG').innerHTML = D.lo[ref] == null ? '' : rngTxt(D.lo[ref], D.hi[ref]);
+  $('kEstM').textContent = iso(ref) + (PART.has(ref) ? ' · 입력 일부 결측' : '');
   const lastObs = [...obs].reverse().find(o => o.i <= ref && o.v != null);
   if (lastObs) {
     const prev = [...obs].reverse().find(o => o.i < lastObs.i && o.v != null);
@@ -920,14 +924,14 @@ function renderHeadline(ref, FCS, e, SE) {
   const tail = ['평소 범위 유지 전망', '평소보다 높아질 수 있어 관심', '25 mg/L 이상 가능, 대응 검토'][SE.lv];
   let h = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span>';
   if (fo.length) {
-    h += fo.map((z, j) => '<span class="it"><span class="ref">' + dl(iso(ref + z.h)) + '</span> ' + (j ? '' : 'SS ') + fmt(z.o[0]) + (j ? '' : '<span class="u">mg/L</span>') + (z.h === 5 ? '<span class="ref">(참고)</span>' : '') + '</span>').join('<span class="sep">·</span>');
-  } else h += '<span class="ref">' + md(iso(ref)) + '</span> 추정 SS ' + fmt(e) + '<span class="u">mg/L</span>';
+    h += fo.map((z, j) => '<span class="it"><span class="ref">' + dl(iso(ref + z.h)) + '</span> ' + (j ? '' : 'SS ') + fmt(z.o[0]) + (j ? '' : '<span class="u">mg/L</span>') + '<span class="rr">(' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + ')</span>' + (z.h === 5 ? '<span class="ref">(참고)</span>' : '') + '</span>').join(' <span class="sep">·</span> ');
+  } else h += '<span class="ref">' + md(iso(ref)) + '</span> 추정 SS ' + fmt(e) + '<span class="u">mg/L</span>' + (D.lo[ref] == null ? '' : '<span class="rr">(' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + ')</span>');
   h += '<span class="sep">—</span><span class="it">' + tail + '</span>';
   $('hlMain').innerHTML = h;
   const hd = $('headline'); hd.classList.remove('lv-ok', 'lv-note', 'lv-warn'); hd.classList.add('lv-' + L.c);
   const r1 = FCS.find(z => z.h === 1 && z.r && z.isLast && fcEl.value === 'kma');
-  $('hlSub').textContent = (isLast ? '' : '과거 날짜 보기 · ') + md(iso(ref)) + '까지 자료로 낸 예측 중앙값(관측 자료만 입력)'
-    + (r1 ? ' · 기상청 예보강우 ' + fmt(r1.mm, 0) + ' mm 반영 시 ' + md(iso(ref + 1)) + ' ' + fmt(r1.r[0]) + ' mg/L' : '')
+  $('hlSub').textContent = (isLast ? '' : '과거 날짜 보기 · ') + md(iso(ref)) + '까지 자료로 낸 예측 중앙값, 괄호는 80% 범위(관측 자료만 입력)'
+    + (r1 ? ' · 기상청 예보강우 ' + fmt(r1.mm, 0) + ' mm 반영 시 ' + md(iso(ref + 1)) + ' ' + fmt(r1.r[0]) + ' (' + fmt(r1.r[1]) + '–' + fmt(r1.r[2]) + ') mg/L' : '')
     + ' · 단계는 임시 참고 구간, 근거는 아래 운영 요약';
 }
 function renderOps(ref, FCS, e, SE) {
@@ -972,7 +976,7 @@ function renderFresh() {
   $('frNote').textContent = '경과는 오늘(' + new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10) + ') 기준. SS 실측은 보통 수주–2개월 늦게 공개됩니다.';
 }
 function renderStatus() {
-  const M = D.meta, W = M.warnings, L = M.locked, st = M.sources || {};
+  const M = D.meta, W = M.warnings, LS = [].concat(M.locked || []), st = M.sources || {};
   const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
   let h = '<h3 class="mini">기상특보 (인제)</h3>';
   if (!W) h += '<p class="hint">기상청 특보 자료를 아직 받지 못했습니다.</p>';
@@ -982,7 +986,7 @@ function renderStatus() {
     const hh = W.hist.filter(r => r.cmd === '발표');
     if (hh.length) h += '<details><summary>올해 발표 이력 ' + hh.length + '건 (호우 ' + hh.filter(r => r.wrn === '호우').length + '건)</summary><ul class="wl">' + hh.slice(-40).reverse().map(r => '<li>' + esc(r.tm.slice(0, 10)) + ' ' + esc(fw(r)) + '</li>').join('') + '</ul></details>';
   }
-  if (L && L.n) h += '<h3 class="mini">잠금 평가 (' + L.since + ' 이후 실측)</h3><p class="hint">2025년까지 자료로만 학습한 모델로 ' + L.n + '건을 맞춘 결과: 평균절대오차 ' + fmt(L.mae) + ' mg/L (월별 기준값 ' + fmt(L.mae_clim) + ')' + (L.n >= 10 && L.logr2 != null ? ', 로그 R² ' + L.logr2.toFixed(2) : ' (10건 미만이라 R²는 생략)') + '. 자세한 내용은 모델 성능 탭.</p>';
+  LS.filter(L => L && L.n).forEach(L => { h += '<h3 class="mini">잠금 평가 (' + L.train + '년까지 학습 → ' + L.since.slice(0, 4) + '년~)</h3><p class="hint">' + L.n + '건: MAE ' + fmt(L.mae) + ' mg/L (월별 기준값 ' + fmt(L.mae_clim) + ')' + (L.n >= 10 && L.logr2 != null ? ', 로그 R² ' + L.logr2.toFixed(2) : '') + (L.cov != null ? ', 80% 범위 안 ' + Math.round(L.cov * 100) + '%' : '') + '. 자세한 내용은 모델 성능 탭.</p>'; });
   if (Object.keys(st).length) h += '<h3 class="mini">오늘 자료 수집</h3><ul class="wl">' + Object.entries(st).map(([k, v]) => '<li>' + esc(k) + ': ' + esc(v) + '</li>').join('') + '</ul>';
   $('wrn').innerHTML = h;
 }
@@ -996,6 +1000,8 @@ function forecasts(ref) {
     return { h, o, r, mm: rmm, isLast, part, high };
   });
 }
+// 80% 범위: 과거 오차로 만든 구간(실측이 10번 중 8번 이 안에 듦)
+const rngTxt = (lo, hi) => '<small>80% 범위</small>' + fmt(lo) + '–' + fmt(hi) + ' <small style="margin:0">mg/L</small>';
 function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
@@ -1003,7 +1009,7 @@ function renderFc(ref) {
     $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 5 ? ' · 참고용' : '');
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; if ($('kF' + z.h + 'H')) $('kF' + z.h + 'H').hidden = true; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
-    $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) ;
+    $('kF' + z.h + 'M').innerHTML = rngTxt(z.o[1], z.o[2]);
     $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
     const rl = $('kF' + z.h + 'R'); let hm = $('kF' + z.h + 'H');
     if (!hm) { hm = document.createElement('div'); hm.id = 'kF' + z.h + 'H'; hm.className = 'himode'; rl.after(hm); }
@@ -1031,12 +1037,18 @@ function renderFscore() {
   el.innerHTML = t;
 }
 function renderLock() {
-  const L = D.meta.locked, tb = $('lockTbl'); if (!tb || !L || !L.n) return;
-  const f3 = v => v == null ? '–' : v.toFixed(3);
-  tb.innerHTML = '<tr><td colspan="5" style="color:var(--ink-3);font-size:11.5px">잠금 평가: 2025년까지 학습 → ' + L.since + ' 이후 실측</td></tr>'
-    + '<tr class="mine"><td>운영 모델 (2025년까지 학습)</td><td>' + L.n + '</td><td>' + f3(L.logr2) + '</td><td>' + f3(L.r2) + '</td><td>' + fmt(L.mae, 2) + '</td></tr>'
-    + '<tr><td>비교: 월별 기준값</td><td>' + L.n + '</td><td>' + f3(L.logr2_clim) + '</td><td>–</td><td>' + fmt(L.mae_clim, 2) + '</td></tr>';
-  $('lockHint').innerHTML = '잠금 평가 = 2025년까지 학습한 모델로 2026년 이후 실측을 맞춘 성적(새 실측마다 갱신). 2026년 최고 ' + fmt(L.ymax) + ' mg/L 한 건이 R²를 좌우합니다.';
+  const LS = [].concat(D.meta.locked || []).filter(L => L && L.n), tb = $('lockTbl'); if (!tb || !LS.length) return;
+  const f3 = v => v == null ? '–' : v.toFixed(3), cv = v => v == null ? '–' : Math.round(v * 100) + '%';
+  const row = (lab, z, cls) => '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + lab + '</td><td>' + z.n + '</td><td>' + f3(z.logr2) + '</td><td>' + f3(z.r2) + '</td><td>' + fmt(z.mae, 2) + '</td><td>' + cv(z.cov) + '</td></tr>';
+  tb.innerHTML = LS.map(L => {
+    const yrs = L.years ? Object.keys(L.years) : [], to = L.since.slice(0, 4) + (yrs.length ? '–' + yrs[yrs.length - 1].slice(2) : '');
+    return '<tr><td colspan="6" style="color:var(--ink-3);font-size:11.5px;padding-top:10px">잠금 평가: ' + L.train + '년까지 학습 → ' + to + '년 실측</td></tr>'
+      + row('운영 모델 (' + L.train + '년까지 학습)', L, 'mine')
+      + yrs.map(y => row('　└ ' + y + '년만', L.years[y])).join('')
+      + '<tr><td>비교: 월별 기준값</td><td>' + L.n + '</td><td>' + f3(L.logr2_clim) + '</td><td>–</td><td>' + fmt(L.mae_clim, 2) + '</td><td>–</td></tr>';
+  }).join('');
+  const ym = Math.max(...LS.map(L => L.ymax));
+  $('lockHint').innerHTML = '잠금 평가 = 2023년까지 자료로만 학습한 모델로 2024년 이후 실측을 맞춘 성적(학습:시험 약 8:2, 새 실측마다 갱신). 범위 안 = 실측이 80% 범위에 든 비율(목표 80%). 최고 ' + fmt(ym) + ' mg/L 같은 큰 홍수 몇 건이 R²를 좌우합니다.';
 }
 function renderTbl() {
   renderFscore(); renderLock();
