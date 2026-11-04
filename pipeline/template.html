@@ -49,6 +49,8 @@ h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .controls label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
 .controls input,.controls select{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-height:38px}
 .controls input:focus-visible,.controls select:focus-visible,button:focus-visible{outline:2px solid var(--est);outline-offset:1px}
+.helpbtn{margin-left:auto;align-self:center;white-space:nowrap}.helpbtn[aria-pressed="true"]{background:var(--note-bg);color:var(--note);border-color:var(--note)}
+body.nohelp p.hint:not(.keep),body.nohelp .disc,body.nohelp #banner,body.nohelp .r2guide,body.nohelp .helpnote,body.nohelp footer>span+span{display:none!important}
 .btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;min-height:38px}
 .btn:hover{border-color:var(--ink-3)}
 .banner{background:var(--note-bg);color:var(--note);border-radius:var(--r);padding:10px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
@@ -251,6 +253,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·5일 예측</p>
     </div>
     <p class="refnote" id="refNote" hidden></p>
+    <button class="btn helpbtn" id="helpBtn" type="button" aria-pressed="false">설명 보기</button>
   </header>
 
   <div class="tab" id="tab-home" data-tab="home">
@@ -263,7 +266,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
     <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
     <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위</span><span><i class="sw-fbar"></i>예측 80% 범위 (점 = 중앙값, 색 = 참고 단계)</span><span><i class="sw-fcr"></i>기상청 예보강우 반영</span><span><i class="sw-zn n"></i>관심 (실측 상위 10% 이상)</span><span><i class="sw-zn w"></i>대응 검토 (25 mg/L 이상)</span></div>
-    <p class="hint">세로축은 로그 눈금입니다(0.3 → 3 → 30이 같은 간격). 참고 단계 구간은 임시 기준이며, 5일 후 예측은 참고용입니다.</p>
+    <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
   </section>
   <section class="card" id="opsum" aria-label="운영 요약">
     <h2>운영 요약 <span class="tag">관리자 참고용</span><span class="tag" id="opRef">–</span></h2>
@@ -273,7 +276,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div><span class="lb">예보강우 확보</span><span class="v" id="opCov">–</span><span class="s" id="opCovS">–</span></div>
       <div><span class="lb">자료 상태</span><span class="v" id="opData">–</span><span class="s" id="opDataS">–</span></div>
     </div>
-    <p class="disc">이 화면의 SS는 <b>내린천2 하천 측정지점</b>(총량측정망)의 값과 모델 추정·예측입니다. 이 프로젝트는 이 값을 <b>고사취수장 복류수로 들어가기 전 하천수 수질</b>로 가정합니다. 복류수(하상여과)를 거친 원수 수질이나 탁도(NTU)와는 다를 수 있습니다. 이 시스템은 취수 중단·약품 투입·시설 제어를 결정하지 않으며, 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
+    <p class="disc">내린천2 하천 SS(복류수 유입 전 하천수로 가정)이며 원수 탁도와 다를 수 있습니다. 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
   </section>
   <section class="kpis" aria-label="요약">
     <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="meta" id="kEstM">–</div></div>
@@ -307,7 +310,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div id="grade"></div>
       <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
       <div id="lvBox"></div>
-      <p class="hint">단계는 <b>내린천2 하천 SS</b>로 정한 임시 참고 구간입니다. 10.2 mg/L는 이 지점 2014–23 실측 상위 10%(통계 기준), 25 mg/L는 하천 생활환경기준 Ia의 SS(하천 수질 평가 기준)이며 둘 다 취수 운영기준이 아닙니다. 정수장 운영기준은 원수 탁도(NTU)로 정해지고 이 취수원의 공식 기준은 아직 확인하지 못했습니다. 확인되면 그 기준으로 바꿉니다. 점검 항목은 관리자가 확인할 사항의 예시이며, 취수 중단·약품 투입량·시설 제어를 지시하지 않습니다.</p>
+      <p class="hint">임시 구간: 10.2 mg/L = 이 지점 실측 상위 10%, 25 mg/L = 하천 Ia 기준. 취수 운영기준(원수 탁도) 확인 시 교체.</p>
     </div>
   </section>
 
@@ -315,14 +318,13 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card" id="ss">
       <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
-      <p class="hint">표시 기간은 오른쪽 강우·유량 그래프에도, y축은 유량 그래프에도 적용됩니다. 기준일·기간·y축·예보 강우는 어느 그래프에서 바꿔도 모든 그래프가 같이 바뀝니다.</p>
-      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (전진검증 잔차 10–90%. 시간순 검증 포함률 76%, 25 mg/L 이상에서는 42%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
+      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (10–90%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
     <div class="card" id="hydro">
       <h2>강우 · 유량</h2>
       <div class="stack">
-        <p class="hint">티센 일강우 P0 (원통·기린·내면, mm)</p>
+        <p class="hint keep">티센 일강우 P0 (원통·기린·내면, mm)</p>
         <div id="pRain" class="plot" style="height:140px" role="img" aria-label="일강우"></div>
         <div class="legend"><span><i class="sw-line" style="background:var(--flow)"></i>보정 면적비 일유량 (m³/s)</span><span><i class="sw-dot" style="background:var(--flow)"></i>실측 유량</span><span><i class="sw-fix"></i>수위로 보정한 날</span></div>
         <div id="pFlow" class="plot" style="height:140px" role="img" aria-label="일유량"></div>
@@ -330,7 +332,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     </div>
   </section>
 
-  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2025년까지 자료로만 학습한 모델로 2026년 이후 실측을 맞추는 잠금 평가를 모델 성능 탭에 함께 보여줍니다. 1·3·5일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
+  <details class="banner" id="banner"><summary><b>읽는 법</b></summary><span>파란 선은 그날 강우·유량·수위로 채운 사후 추정(예보 아님)입니다. 실력은 ◇ 전진검증 예측과 모델 성능 탭에서 보세요. 예측 카드의 큰 숫자는 관측만 쓴 값, 아래 줄은 예보강우 반영값입니다.</span></details>
   </div>
 
   <div class="tab" id="tab-fc" data-tab="fc" hidden>
@@ -339,7 +341,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
       <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span></div>
       <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
-      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꿔 넣은 결과입니다. 강우가 하루에 몰려 온다고 가정했습니다. 운영 때는 기상청 단기예보 강수량을 넣습니다.</p>
+      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과. ★ = 기상청 예보.</p>
     </div>
   </section>
 
@@ -351,7 +353,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
       <div class="bars" id="shBars"></div>
       <p class="shtxt" id="shTxt"></p>
-      <p class="hint">"평소 예측값"에서 출발해 항목마다 오늘 상황을 보고 예측을 몇 배 올리거나(주황) 내립니다(파랑). 모든 배수를 곱하면 최종 예측이 됩니다. 문장에는 ×1.1 이상 올리거나 ×0.9 이하로 내린 항목만 적었습니다. (계산: XGB와 Ridge의 SHAP 기여 평균. 전체 자료로 학습한 모델이라 과거 날짜는 위 예측 카드와 조금 다를 수 있습니다.)</p>
+      <p class="hint">평소 예측값에 항목별 배수를 곱하면 최종 예측입니다. 주황 = 올림, 파랑 = 내림.</p>
     </div>
     <div class="card">
       <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
@@ -361,7 +363,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <thead><tr><th>실측일</th><th>3일 강우</th><th>선행 7일</th><th>사전 유량</th><th>당일 유량</th><th>수위 변동</th><th>실측 SS</th><th>±3일 최대</th></tr></thead>
         <tbody id="evTbl"></tbody>
       </table></div>
-      <p class="hint" id="evNote">–</p>
+      <p class="hint keep" id="evNote">–</p>
     </div>
   </section>
   </div>
@@ -382,7 +384,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
       <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
       <div class="bars" id="bars"></div>
-      <p class="hint">Spearman ρ, 관측강우 X(t)와 SS(t+h). 2014–2024, n 281–306. 2026-10-14 분석 결과에서 가져옴. 날짜별 변수 기여는 「1·3·5일 예측 · 원인」 탭의 예측 원인 분석(SHAP)에서 볼 수 있습니다.</p>
+      <p class="hint">Spearman ρ, 강우 X(t)와 SS(t+h), 2014–2024.</p>
     </div>
   </section>
   </div>
@@ -391,10 +393,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section class="card r2guide" aria-label="R² 읽는 법">
     <h2>성능 숫자 읽는 법 · 로그 R²와 R²</h2>
     <div class="r2g">
-      <div><b>R² (그냥 R²)</b><p>mg/L 값 그대로 오차를 잽니다. SS가 수백 mg/L까지 오르는 <b>몇몇 홍수 날의 오차가 점수를 거의 결정</b>하고, 평상시 1~5 mg/L 날을 잘 맞혀도 점수에는 별로 반영되지 않습니다. → <b>「큰 홍수 때 값을 얼마나 맞히는가」</b>에 민감합니다.</p></div>
-      <div><b>로그 R²</b><p>값에 로그를 씌운 뒤 오차를 잽니다. 2→4 mg/L로 틀린 것과 50→100 mg/L로 틀린 것을 같은 크기(<b>2배 틀림</b>)로 봅니다. 몇 mg/L가 아니라 몇 배 틀렸는지를 보므로 맑은 날과 탁한 날을 고르게 반영합니다. → <b>「평소부터 고농도까지 전체 흐름을 얼마나 잘 따라가는가」</b>입니다 (운영 모델 0.770).</p></div>
+      <div><b>R²</b><p>mg/L 그대로 오차를 잽니다. <b>큰 홍수 날을 얼마나 맞히는지</b>에 민감합니다.</p></div>
+      <div><b>로그 R²</b><p>몇 배 틀렸는지를 잽니다. <b>평상시부터 고농도까지 전체 흐름</b>을 봅니다 (운영 모델 0.770).</p></div>
     </div>
-    <p class="hint">둘 다 1에 가까울수록 좋습니다. 취수원 관리에서는 고농도 날이 중요하므로 두 값을 함께 보세요. 일별 추정은 비가 와서 물이 불어난 고농도 날을 실측의 약 90% 수준으로 맞추도록 보정했지만(2026-11-04), 비·수위 변화 없이 SS만 높았던 날(4일)은 맞히지 못합니다. 1·3·5일 예측은 여전히 고농도를 낮게 잡으니 그런 날에는 <b>범위의 위쪽 값</b>을 기준으로 판단하세요.</p>
+    <p class="hint">둘 다 1에 가까울수록 좋습니다. 예측은 고농도를 낮게 잡는 경향이 있어 비 오는 날은 <b>범위 위쪽 값</b>도 함께 보세요.</p>
   </section>
   <section class="grid g-2">
     <div class="card">
@@ -403,7 +405,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <thead><tr><th>선행 · 방법</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">2019–26 실측일, 그해 이전 자료로만 학습한 전진검증. MAE 단위 mg/L. 「기상청 예보 반영」은 그날 실제로 발표된 기상청 23시 단기예보를 넣어 다시 계산한 값으로, 대시보드가 매일 내는 예측과 같은 방식입니다. 3일은 과거 예보 보관본이 앞 2일치만 있어 그만큼만 넣었습니다. <b>5일은 참고용</b>입니다(과거 예보 보관본이 없어 관측만 성적, 월별 기준값보다는 낫지만 1일보다 크게 낮음). 이 기간은 모델을 고를 때도 쓴 기간이라 실제보다 조금 좋게 나올 수 있으며, 독립 성적은 아래 운영 예측 성적과 잠금 평가로 확인합니다.</p>
+      <p class="hint">2019–26 전진검증(그해 이전 자료로만 학습), MAE mg/L. 기상청 예보 반영 = 그날 발표된 예보를 넣은 값(3일은 앞 2일치만). 5일은 참고용.</p>
       <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
       <div id="fscore"></div>
     </div>
@@ -417,7 +419,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <tbody id="lockTbl"></tbody>
       </table></div>
       <p class="hint" id="lockHint"></p>
-      <p class="hint">그래프 파란 선(일별 추정)의 성능입니다. 같은 날 강우·유량·수위를 쓰는 사후복원이라 예측이 아닙니다. 비·수위가 오른 날은 첨두유량에 따라 추정을 올리는 홍수일 보정을 넣어 10 mg/L 이상 고농도의 예측/실측이 0.73→0.92가 됐습니다(25 이상 경보 7번 중 7번 적중 → 10번 중 7번, 나머지 3번은 실측 17–23 mg/L). 비·수위 변화 없는 고농도 4일은 맞히지 못합니다.</p>
+      <p class="hint">파란 선(사후 추정)의 성능. 비 없이 생긴 고농도 4일은 맞히지 못합니다.</p>
       <h3 class="mini">내일 기준 이상 가능성 검증 <span class="tag">2020–26 · 실측일만</span></h3>
       <div class="tbl-wrap"><table>
         <thead><tr><th>내일 SS 기준</th><th>표본·초과</th><th>PR-AUC (우연)</th><th>잡은 비율</th><th>맞은 비율</th></tr></thead>
@@ -426,45 +428,34 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
           <tr class="mine"><td>25 mg/L 이상 (대응 검토)</td><td>237 · 10</td><td>0.57 (0.04)</td><td>50%</td><td>56%</td></tr>
         </tbody>
       </table></div>
-      <p class="hint">종합 탭 운영 요약의 「내일 기준 이상 가능성」이 과거에 얼마나 맞았는지입니다. 잡은 비율 = 실제 초과한 날 중 가능성이 20% 이상이었던 비율, 맞은 비율 = 20% 이상이라고 한 날 중 실제 초과한 비율. 확률은 기준일보다 60일 이상 앞선 과거 예측 오차만으로 계산했습니다. 3일 뒤부터는 우연 수준과 비슷해 확률을 내지 않습니다. 25 mg/L 이상 10건 중 5건은 놓쳤습니다(예: 2021-03-03 해빙기 110 mg/L).</p>
+      <p class="hint">잡은 비율 = 실제 초과일 중 가능성 20% 이상이던 비율, 맞은 비율 = 20% 이상이라 한 날 중 실제 초과 비율.</p>
     </div>
   </section>
   <section class="card" id="modelcfg">
-    <h2>대시보드 모델 구성 <span class="tag">2026-11-04 홍수 사상 변수·단조 제약 추가</span></h2>
+    <h2>대시보드 모델 구성</h2>
     <div class="tbl-wrap"><table>
-      <thead><tr><th>구분</th><th>모델</th><th>입력</th><th>출력·보정</th></tr></thead>
+      <thead><tr><th>구분</th><th>모델</th><th>입력</th><th>보정</th></tr></thead>
       <tbody>
-        <tr><td><b>일별 SS 추정</b><br><span class="hint">그래프 파란 선</span></td>
-          <td>XGBoost 10개(시드만 다름, 깊이 3·300그루·학습률 0.05) 평균 + 안전 Ridge를 log 값으로 반씩 평균. XGB는 유량·수위·강우가 커지면 추정이 줄지 않게 단조 제약</td>
-          <td>40개: 강우(당일·전일·직전 3·7·14·30일 합, API7, 3일 최대, 무강우 일수), 유량(일유량·전일 대비·최근 3일 최대·30/90일 대비·기저 대비·큰 홍수 이후 일수), 수위(첨두수위로 환산한 첨두유량, 일 수위 변동, 평상 수위 대비 최고수위), 계절(월 sin·cos), 기온(인제 ASOS 당일·7일 평균·최저), 원대교 시간 수위(오전 10시 수위, 직전 3·6시간 변화, 직전 6·24시간 최고와의 차, 24시간 범위, 일평균 대비), 홍수 사상(직전 72시간 최고수위 이후 경과시간, 그 최고수위 대비 하강량, 연속강우 누적)</td>
-          <td>log SS를 학습, 중앙값 보정(내부 3겹 잔차 중앙값). 홍수일 보정: 비·수위 상승일(2일 강우 10 mm 이상 또는 24시간 수위 범위 0.3 m 이상)은 첨두유량이 클수록 추정을 올리고(전진검증 잔차로 적합한 선형식의 ¾), 그 밖의 날은 잔차 중앙값만큼 옮김. 범위는 전진검증 잔차 10–90%. 실측 전체로 매일 다시 학습</td></tr>
-        <tr><td><b>1·3일 예측 (관측만)</b></td>
-          <td>XGB 10개 + Ridge 혼합. 1일은 아래 강우→유량→SS 연결 모델(앞으로 비 0 mm)과 log 반반 평균(2026-11-04, 로그 R² 0.703→0.718)</td>
-          <td>기준일까지의 강우(당일·전일·3·7·14일 합, API7, 무강우 일수), 유량(log 유량·변화·30일 중앙값 대비), 첨두유량, 수위 상승, 기준일 기온(당일·7일 평균·최저), 목표일 월</td>
-          <td>목표일 log SS, 중앙값 보정. 80% 범위는 전진검증 잔차</td></tr>
-        <tr><td><b>5일 예측 (관측만)</b></td>
-          <td>XGB 10개 + Ridge 혼합</td>
-          <td>1·3일과 같은 입력</td>
-          <td>월별 기준값보다 나음(로그 R² 0.433 vs 0.368, 유의). 1일보다 크게 낮아 <b>참고용</b>. 이전 7일 예측은 기준값과 차이가 유의하지 않아 2026-11-03 5일로 변경</td></tr>
-        <tr><td><b>1·3·5일 예측 (예보강우 포함)</b></td>
-          <td>XGB 10개(예보강우가 늘면 예측이 줄지 않게 단조 제약) + Ridge 혼합</td>
-          <td>위 관측 입력 + 앞으로 h일 강우 합·일 최대(기상청 단기예보, 3일 넘는 날은 0–120 mm 시나리오)</td>
-          <td>학습 때는 실제 내린 비를 넣고, 운영 때 기상청 예보값을 넣음</td></tr>
-        <tr><td><b>1·3일 예측 (예보강우 포함) 고농도 보강</b><br><span class="hint">2026-11-03 추가</span></td>
-          <td>위 예보강우 모델과 <b>강우→유량→SS 연결 모델</b>을 log 값으로 반씩 평균</td>
-          <td>(1) 유량 예측: 기준일 관측 + 앞으로 h일 일강우 → 목표일 유량·첨두유량·수위 변동(XGBoost, 유량 자료가 있는 모든 날 약 4,000일로 학습). (2) 목표일 강우·계절·기온 + 예측 유량을 일별 SS 모델 구조(XGB+Ridge)에 넣음</td>
-          <td>기상청 예보는 과거 실제/예보 비율(0.63)로 줄여 연결 모델에만 넣음. 과거 예보로 검증: 1일 로그 R² 0.749→0.761, MAE 3.02→2.88 mg/L. 5일은 과거 예보 자료가 없어 적용 안 함</td></tr>
-        <tr><td><b>1일 예측 (예보강우 포함) 평상시/고농도 전환</b><br><span class="hint">2026-11-04 추가</span></td>
-          <td>1일 예보강우 예측값이 6 mg/L 이상이면 <b>고농도 모드</b>로 보고, 과거 고농도 모드 날의 잔차 중앙값의 절반만큼 올림. 6 mg/L 미만(평상시)은 그대로</td>
-          <td>운영 모델 자신의 1일 예측값(따로 만든 판별 모델보다 고농도일 구분이 나음: 과거 예보로 SS 10 이상 26일 중 23일이 모드 안)</td>
-          <td>고농도 모드일 때 <b>고농도 쪽 추정</b>(모드 날 잔차 90% 분위만큼 위, 과거 예보로 실측이 이 값 아래 80%)을 함께 표시. 과거 예보로 검증: 로그 R² 0.758→0.759, MAE 2.85→2.89 mg/L(차이 유의 아님), 25 mg/L 이상 예측 4번 중 4번 → 5번 중 5번 적중. 3일·5일·일별은 이득 없어 적용 안 함</td></tr>
-        <tr><td><b>보조 장치</b></td>
-          <td colspan="3">유량 품질보정: 연도별 수위–유량 관계식(log Q ~ 평균수위 2차식)과 0.7(log) 넘게 어긋나는 날은 수위 환산 유량으로 대체. 안전 Ridge: 입력을 학습 범위로 자르고 출력은 최대 실측의 2배로 제한해 큰 홍수일 폭주 방지.</td></tr>
+        <tr><td><b>일별 SS 추정</b><br><span class="hint">파란 선</span></td>
+          <td>XGBoost 10개 평균 + Ridge (log 반반), 유량·수위·강우에 단조 제약</td>
+          <td>40개: 강우, 유량, 수위·첨두유량, 시간 수위, 홍수 사상, 계절, 기온</td>
+          <td>중앙값 보정. 비·수위 상승일은 홍수일 보정(¾)</td></tr>
+        <tr><td><b>1·3·5일 예측 (관측만)</b></td>
+          <td>XGB + Ridge 혼합. 1일은 강우→유량→SS 연결 모델과 반반</td>
+          <td>기준일까지의 강우·유량·수위·기온, 목표일 월</td>
+          <td>중앙값 보정. 5일은 참고용</td></tr>
+        <tr><td><b>1·3·5일 예측 (예보강우)</b></td>
+          <td>위 모델 + 앞으로 h일 강우. 1·3일은 연결 모델과 반반</td>
+          <td>기상청 단기예보(없는 날은 시나리오)</td>
+          <td>연결 모델 쪽 예보 ×0.63</td></tr>
+        <tr><td><b>1일 고농도 모드</b><br><span class="hint">2026-11-04</span></td>
+          <td>예보강우 1일 예측 ≥ 6 mg/L이면 고농도 모드</td>
+          <td>운영 모델 자신의 예측값</td>
+          <td>모드 날 잔차 중앙값 ½만큼 올림. 고농도 쪽 추정(80% 포함) 표시</td></tr>
         <tr><td><b>자료</b></td>
-          <td colspan="3">강우: 기상청 AWS 원통 321·기린 557·내면 559 티센 가중 (0.049·0.511·0.440). 유량·수위: WAMIS 원대교(1012650), 유량은 면적비 보정. 기온: 기상청 인제 ASOS(211) 일최고·최저, 평균은 (최고+최저)/2. 채수시각: 물모아 수질측정망 내린천2(대부분 12–15시, 중앙 13:53). 원대교는 내린천2 상류 직선 7.46 km라 시간 수위는 4시간 앞선 값을 씀. SS: 물환경정보시스템 총량측정망 내린천2(1012A20).</td></tr>
+          <td colspan="3">강우: AWS 원통·기린·내면 티센. 유량·수위: WAMIS 원대교(면적비 보정). 기온: 인제 ASOS. SS: 총량측정망 내린천2(1012A20).</td></tr>
       </tbody>
     </table></div>
-    <p class="hint">일별 추정은 같은 날 강우·유량·수위를 쓰는 사후복원이고, 1·3·5일 예측은 기준일까지의 관측(과 예보강우)만 씁니다. 성능은 위 표의 전진검증(그해 이전 자료로만 학습) 결과입니다.</p>
   </section>
   </div>
 
@@ -490,36 +481,35 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <dt>유량</dt><dd>원대교 일유량 × 1.0414, 수위와 어긋난 73일은 수위로 보정</dd>
         <dt>1·3·5일 예측</dt><dd>2019-01-01 이후 기준일마다 표본외 예측, 과거 예보 원본은 미확보</dd>
       </dl>
-      <p class="hint">최종 구현은 Python + Streamlit + Plotly로 만들고 GitHub Actions로 매일 갱신하는 계획입니다. 다음 단계는 새 실측으로 잠금 평가, 과거 기상청 예보로 예보강우 모델 재검증, 매일 자동 갱신입니다.</p>
     </div>
   </section>
 
   <section class="card" id="glossary">
     <h2>용어 설명</h2>
     <dl class="gloss">
-        <div><dt>SS (부유물질)</dt><dd>물에 떠 있는 흙·모래 같은 입자의 농도(mg/L). 비가 많이 와서 흙이 쓸려 들어오면 크게 올라갑니다.</dd></div>
-        <div><dt>실측 SS</dt><dd>총량측정망에서 약 8일 간격으로 채수해 분석한 값. 검증 후 물모아에 약 2달 늦게 공개됩니다.</dd></div>
-        <div><dt>일 추정 SS (사후복원)</dt><dd>채수하지 않은 날의 SS를 그날 강우·유량·수위로 채운 값. 그날 자료를 다 쓰므로 미래 예측이 아니라 과거 빈칸 채우기입니다.</dd></div>
-        <div><dt>전진검증 예측 ◇</dt><dd>맞힐 날의 답을 모르는 모델이 낸 예측. 매년 그해 이전 자료로만 학습해서 그해를 예측합니다. 모델의 실제 실력은 이 값으로 봅니다.</dd></div>
-        <div><dt>1·3·5일 예측</dt><dd>기준일 밤 12시까지 관측된 자료로 1·3·5일 뒤 SS를 미리 계산한 값.</dd></div>
-        <div><dt>예보강우 반영</dt><dd>앞으로 올 비의 양(예보값)을 넣은 예측. 학습 때는 실제 내린 비를 썼기 때문에 예보가 틀리면 그만큼 성능이 낮아질 수 있습니다.</dd></div>
-        <div><dt>월별 기준값</dt><dd>과거 같은 달 SS의 중앙값. 모델이 이것보다 나아야 의미가 있습니다.</dd></div>
-        <div><dt>80% 범위 · 추정 범위</dt><dd>과거 예측 오차(로그 잔차 10–90%)로 만든 구간. 과거 자료로 다시 확인하면 평상시에는 약 80%가 들어오지만, 큰 비가 온 날은 64–79%, SS 25 mg/L 이상인 날은 0–42%만 들어와 대부분 범위 위로 벗어났습니다. 포함 확률이 보장된 구간이 아닙니다.</dd></div>
-        <div><dt>R²</dt><dd>예측이 실측의 오르내림을 얼마나 설명하는지(1이 완벽, 0은 평균만 맞히는 수준). 큰 값 몇 개에 크게 좌우됩니다.</dd></div>
-        <div><dt>로그 R²</dt><dd>SS에 로그를 취해서 계산한 R². 평상시 낮은 농도까지 고르게 반영해서 큰 값 한두 개에 덜 흔들립니다.</dd></div>
-        <div><dt>MAE</dt><dd>예측과 실측 차이의 평균 크기(mg/L). 작을수록 좋습니다.</dd></div>
-        <div><dt>티센 강우</dt><dd>유역을 관측소별 영역으로 나눠 면적 비율로 가중 평균한 강우. 원통 4.9%, 기린 51.1%, 내면 44.0%.</dd></div>
-        <div><dt>면적비 유량</dt><dd>상류 원대교 유량에 유역면적 비율 1.0414를 곱해 내린천2 유량으로 환산한 값.</dd></div>
-        <div><dt>유량 보정</dt><dd>원대교 유량이 같은 날 수위와 크게 어긋난 73일을 수위로 다시 계산한 것. 예: 2023-06-27 20.8 → 185 m³/s.</dd></div>
-        <div><dt>첨두수위</dt><dd>하루 중 가장 높았던 수위. 일평균에 묻히는 짧은 홍수를 잡기 위해 씁니다.</dd></div>
-        <div><dt>XGB·Ridge 혼합</dt><dd>의사결정나무를 차례로 더해 가는 XGBoost를 시드만 바꿔 10개 학습해 평균하고, 같은 입력의 선형 모델(Ridge)과 로그 척도에서 반씩 섞었습니다. 나무 모델은 학습 범위 밖 큰 홍수를 못 따라가고 선형 모델은 과하게 따라가서, 둘을 섞으면 서로 보완됩니다.</dd></div>
-        <div><dt>SS와 탁도</dt><dd>SS는 물을 걸러 말린 입자 무게(mg/L), 탁도는 물이 흐린 정도(NTU)입니다. 둘은 같은 값이 아니고, 이 지점의 SS–탁도 관계는 아직 확인하지 않았습니다. 정수장 운영기준은 탁도로 정해집니다.</dd></div>
-        <div><dt>복류수 유입 전 하천수 (가정)</dt><dd>이 대시보드의 SS는 내린천2 하천 측정지점 값이며, 고사취수장(덕산정수장 수원) 복류수로 들어가기 전 하천수 수질과 같다고 가정합니다. 하상여과를 거친 뒤의 원수 수질과의 연계는 이번 단계에서 보류했습니다.</dd></div>
-        <div><dt>기준 이상 가능성</dt><dd>내일 하천 SS가 정확히 그날 기준값 이상일 확률을 과거 예측 오차로 계산한 값. "앞으로 며칠 안에 한 번이라도"의 확률과 다르고, 그보다 작거나 같습니다.</dd></div>
-        <div><dt>참고 단계</dt><dd>평상·관심·대응 검토. 하천 SS 통계 기준(10.2), 하천 Ia 기준(25), 호우특보로 정한 임시 구간이며, 시설 공식 운영기준이 확인되면 바꿉니다.</dd></div>
-        <div><dt>예보강우 확보</dt><dd>예측에 필요한 날짜 중 기상청 예보를 받은 날 수. 예: 5일 예측에 4일치만 있으면 4/5일.</dd></div>
-        <div><dt>학습 범위 밖 입력</dt><dd>오늘 예측 입력값이 과거 실측일 입력의 최솟값–최댓값을 벗어난 경우. 모델이 경험하지 못한 조건이라 예측을 덜 믿어야 합니다.</dd></div>
-        <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023년 실측 SS 상위 10% 경계. 법정 기준이 아니라 이 대시보드의 임시 알림 기준입니다.</dd></div>
+        <div><dt>SS (부유물질)</dt><dd>물에 떠 있는 흙·모래 입자 농도(mg/L). 큰 비에 크게 오릅니다.</dd></div>
+        <div><dt>실측 SS</dt><dd>약 8일 간격 채수, 약 2달 늦게 공개.</dd></div>
+        <div><dt>일 추정 SS (사후복원)</dt><dd>채수 안 한 날을 그날 강우·유량·수위로 채운 값(예측 아님).</dd></div>
+        <div><dt>전진검증 예측 ◇</dt><dd>그해 이전 자료로만 학습해 맞힌 값. 실제 실력은 이것으로 봅니다.</dd></div>
+        <div><dt>1·3·5일 예측</dt><dd>기준일 자정까지의 자료로 1·3·5일 뒤 SS를 계산한 값.</dd></div>
+        <div><dt>예보강우 반영</dt><dd>예보 강우를 넣은 예측. 예보가 틀리면 그만큼 빗나갑니다.</dd></div>
+        <div><dt>월별 기준값</dt><dd>과거 같은 달 SS 중앙값. 모델은 이보다 나아야 합니다.</dd></div>
+        <div><dt>80% 범위 · 추정 범위</dt><dd>과거 오차 10–90%로 만든 구간. 고농도 날은 범위 위로 벗어나는 경우가 많습니다.</dd></div>
+        <div><dt>R²</dt><dd>mg/L 그대로의 설명력. 큰 홍수 몇 날에 좌우됩니다.</dd></div>
+        <div><dt>로그 R²</dt><dd>로그 값의 설명력. 평상시부터 고농도까지 고르게 반영합니다.</dd></div>
+        <div><dt>MAE</dt><dd>예측과 실측 차이의 평균(mg/L).</dd></div>
+        <div><dt>티센 강우</dt><dd>관측소별 면적 비율로 가중 평균한 유역 강우(원통 4.9%, 기린 51.1%, 내면 44.0%).</dd></div>
+        <div><dt>면적비 유량</dt><dd>원대교 유량 × 1.0414.</dd></div>
+        <div><dt>유량 보정</dt><dd>원대교 유량이 수위와 크게 어긋난 73일을 수위로 다시 계산한 것.</dd></div>
+        <div><dt>첨두수위</dt><dd>하루 중 가장 높았던 수위.</dd></div>
+        <div><dt>XGB·Ridge 혼합</dt><dd>나무 모델(XGBoost)과 선형 모델(Ridge)을 반씩 섞어 큰 홍수에서 서로 보완.</dd></div>
+        <div><dt>SS와 탁도</dt><dd>SS는 입자 무게(mg/L), 탁도는 흐린 정도(NTU). 같은 값이 아니며 정수장 기준은 탁도.</dd></div>
+        <div><dt>복류수 유입 전 하천수 (가정)</dt><dd>이 SS를 고사취수장 복류수로 들어가기 전 하천수 수질로 봅니다.</dd></div>
+        <div><dt>기준 이상 가능성</dt><dd>내일 SS가 기준값 이상일 확률(과거 예측 오차로 계산).</dd></div>
+        <div><dt>참고 단계</dt><dd>평상·관심(10.2)·대응 검토(25 또는 호우특보). 임시 구간.</dd></div>
+        <div><dt>예보강우 확보</dt><dd>예측에 필요한 날 중 기상청 예보를 받은 날 수(예: 4/5일).</dd></div>
+        <div><dt>학습 범위 밖 입력</dt><dd>과거에 없던 조건이라 예측을 덜 믿어야 합니다.</dd></div>
+        <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023 실측 상위 10% 경계(임시 기준).</dd></div>
     </dl>
   </section>
   </div>
@@ -572,7 +562,7 @@ $('sfU').textContent = D.meta.updated || '–';
 const WX_ICON = { '맑음': '☀️', '구름많음': '⛅', '흐림': '☁️', '비': '🌧️', '비/눈': '🌨️', '눈': '❄️', '소나기': '🌦️', '빗방울': '🌦️', '빗방울눈날림': '🌨️', '눈날림': '🌨️' };
 function renderWx() {
   const W = D.meta.wx, el = $('wx');
-  if (!W || !W.days || !W.days.length) { el.innerHTML = '<p class="hint">기상청 단기예보를 아직 받지 못했습니다. 다음 자동 갱신 때 채워집니다.</p>'; $('wxNote').textContent = ''; return; }
+  if (!W || !W.days || !W.days.length) { el.innerHTML = '<p class="hint keep">기상청 단기예보를 아직 받지 못했습니다. 다음 자동 갱신 때 채워집니다.</p>'; $('wxNote').textContent = ''; return; }
   const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), dn = '일월화수목금토';
   const worse = (a, b) => { const r = k => ['맑음', '구름많음', '흐림', '빗방울', '눈날림', '빗방울눈날림', '소나기', '비', '비/눈', '눈'].indexOf(k); return r(b) > r(a) ? b : a; };
   el.innerHTML = W.days.map(d => {
@@ -587,8 +577,8 @@ function renderWx() {
   }).join('');
   $('wxTag').textContent = W.example ? '예시 화면 · 실제 예보 아님' : '기상청 단기예보';
   $('wxTag').className = W.example ? 'tag warnTag' : 'tag';
-  if (W.example) { $('wxNote').textContent = '칸 모양을 보여주기 위한 예시 값입니다. 실제 기상청 예보는 다음 자동 갱신(매일 07:30)부터 채워집니다.'; return; }
-  $('wxNote').textContent = W.base + ' 발표 단기예보 · 날씨·기온·강수확률은 ' + (W.point || '기린면') + ' 격자, 유역 강수는 원통·기린·내면 티센 가중 합계입니다. 예측 카드의 "기상청 예보" 강우와 같은 자료입니다.';
+  if (W.example) { $('wxNote').textContent = '예시 값입니다. 다음 자동 갱신부터 실제 예보가 들어갑니다.'; return; }
+  $('wxNote').textContent = W.base + ' 발표 · 강수는 유역 티센 합계';
 }
 function renderGrade() {
   const LIM = 25, ok = v => v <= LIM;
@@ -603,7 +593,7 @@ function renderGrade() {
     + (fmax != null ? '<tr><td>1·3·5일 예측 최대</td><td>' + fmt(fmax) + '</td><td>' + badge(fmax) + '</td></tr>' : '')
     + '<tr><td>최근 1년 실측 ' + yr.length + '건</td><td>평균 ' + fmt(mean) + ' · 최대 ' + fmt(mx) + '</td><td>' + nOk + '건 달성 · ' + (yr.length - nOk) + '건 초과</td></tr>'
     + '</tbody></table>'
-    + '<div style="color:var(--ink-3);font-size:11.5px;margin-top:4px">목표등급: 강원도 수자원관리계획(2021) 상수원보호구역 지정 현황의 내린천2 = Ia (수원평가 생활용수). Ia의 SS 기준은 환경정책기본법 시행령 별표1 하천 생활환경기준 25 mg/L 이하입니다. 여기서는 SS 항목만 판정하며, 공식 등급 평가는 BOD·TOC·총인 등을 함께 봅니다.</div></div>';
+    + '<div class="helpnote" style="color:var(--ink-3);font-size:11.5px;margin-top:4px">목표등급: 강원도 수자원관리계획(2021) 상수원보호구역 지정 현황의 내린천2 = Ia (수원평가 생활용수). Ia의 SS 기준은 환경정책기본법 시행령 별표1 하천 생활환경기준 25 mg/L 이하입니다. 여기서는 SS 항목만 판정하며, 공식 등급 평가는 BOD·TOC·총인 등을 함께 봅니다.</div></div>';
 }
 renderGrade();
 renderWx();
@@ -636,9 +626,9 @@ function renderGap(ref, lastObs) {
   const endLab = atLatest ? '오늘 ' + iso(endI) : '기준일 ' + iso(endI);
   el.innerHTML = '<span class="gd">실측 공백 ' + gap + '일</span>'
     + '<span class="gt">' + (gap > 14
-      ? '마지막 SS 실측 이후 ' + gap + '일 동안 새 실측값이 없습니다. 이 기간의 SS는 모두 모델 추정값이니 판단할 때 참고하세요.'
-      : '최근 실측이 ' + gap + '일 전이라 추정값을 실측과 비교해 볼 수 있습니다.')
-    + (atLatest && tI > ref ? ' 유량·강우 자료는 ' + iso(ref) + '까지 반영되었습니다.' : '') + '</span>'
+      ? gap + '일째 새 실측 없음 · 이 기간 SS는 모두 추정값'
+      : '최근 실측 ' + gap + '일 전')
+    + (atLatest && tI > ref ? ' · 유량·강우는 ' + iso(ref) + '까지' : '') + '</span>'
     + '<span class="gaptrack"><span>최근 실측 ' + lastObs.d + ' (' + fmt(lastObs.v) + ' mg/L)</span><span class="ln"></span><span>' + endLab + '</span></span>';
 }
 
@@ -750,7 +740,7 @@ function render() {
   $('alert').innerHTML = (hot || wet)
     ? `<div class="alert warn"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 v4 M8 11.6 v.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>주의 · SS 상승 가능</b><p>${hot ? '추정 SS ' + fmt(e) + ', 5일 내 예측 최대 ' + fmt(fmax) + (fmaxR ? ' (예보강우 반영 ' + fmt(fmaxR) + ')' : '') + ' mg/L 중 임시 기준 ' + fmt(th) + ' mg/L 이상인 값이 있습니다. ' : ''}${wet ? '당일 강우 ' + fmt(p) + ' mm. ' : ''}직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`
     : `<div class="alert ok"><b><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 8.2 l2 2 l4 -4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>보통</b><p>추정 SS ${fmt(e)} mg/L, 5일 내 예측 최대 ${fmt(Math.max(fmax, fmaxR))} mg/L, 당일 강우 ${fmt(p)} mm, 직전 3일 강우 ${fmt(ap3, 0)} mm.</p></div>`;
-  $('alertRule').textContent = '주의 조건: 추정 SS 또는 1·3·5일 예측 ≥ ' + fmt(th) + ' mg/L (2014–2023 실측 상위 10%) 또는 당일 강우 ≥ 30 mm. 둘 다 임시 기준입니다.';
+  $('alertRule').textContent = '주의: SS 추정·예측 ≥ ' + fmt(th) + ' mg/L 또는 당일 강우 ≥ 30 mm (임시 기준)';
   renderExplain(ref, FCS, e);
   save();
 }
@@ -813,21 +803,18 @@ function renderOutlook(ref, FCS, lastObs) {
 let shM = 'est', lvSel = null;
 // 관리자 참고 단계 (임시 구간). 근거는 stageEval에서 계산. 시설 공식 기준(원수 탁도 등)이 확인되면 교체한다.
 const LV = [
-  { k: '평상', c: 'ok', d: '평소 범위. 하천 SS가 통계 기준(2014–23 실측 상위 10%) 아래이고 특보·초과 가능성 신호가 없음', it: [
-    ['최신 원수 수질(탁도 등) 확인', '시설 자체 측정값 기준. 이 화면의 SS는 복류수 유입 전 하천수(가정)'],
-    ['기존 관측·시설 운영 유지', ''],
-    ['자료 갱신 상태 확인', '종합 탭 「자료 최신성」 표에서 늦음·실패 항목 확인']] },
-  { k: '관심', c: 'note', d: '하천 SS가 평소보다 높거나 높아질 신호(통계 기준 이상, 호우 특보 등)가 있음', it: [
-    ['원수 탁도·SS 확인 권고', '하상여과 후 원수는 하천수와 다를 수 있음'],
-    ['강우예보와 원대교 수위·유량 증가 추세 점검', '기상청 단기예보, WAMIS 1012650 시간수위'],
-    ['원수 관측 빈도 증가 검토', ''],
-    ['취수시설 상태 확인', '취수구 주변, 스크린 등'],
-    ['과거 유사 강우사상의 실측 SS 확인', '「예측 · 원인」 탭의 표']] },
-  { k: '대응 검토', c: 'warn', d: '하천 SS가 25 mg/L(하천 Ia 참고값) 이상으로 추정·예측되거나 호우 경보 등 강한 신호가 있음', it: [
-    ['현장 실측자료 확인', '원수 탁도·SS 현장 측정'],
-    ['취수시설 및 처리공정 대응능력 점검', '시설별 운영절차 기준'],
-    ['시설별 운영절차(고탁도 대응 등) 확인', ''],
-    ['필요 시 관계자에게 상황 공유', '지자체 상수도 부서 등']] },
+  { k: '평상', c: 'ok', d: 'SS 10.2 mg/L 미만, 특보 없음', it: [
+    ['원수 수질(탁도) 확인', ''],
+    ['자료 갱신 상태 확인', '']] },
+  { k: '관심', c: 'note', d: 'SS 10.2 mg/L 이상 또는 호우 특보', it: [
+    ['원수 탁도·SS 확인', ''],
+    ['강우예보·원대교 수위 추세 점검', ''],
+    ['취수시설 상태 확인', ''],
+    ['과거 유사 강우사상 확인', '']] },
+  { k: '대응 검토', c: 'warn', d: 'SS 25 mg/L 이상 또는 호우 경보', it: [
+    ['현장 원수 탁도·SS 측정', ''],
+    ['처리공정 대응능력 점검', ''],
+    ['고탁도 대응 절차 확인·관계자 공유', '']] },
 ];
 let ckState = {};
 try { ckState = JSON.parse(localStorage.getItem('ssdashCk') || '{}'); } catch (e) {}
@@ -885,7 +872,7 @@ function renderExplain(ref, FCS, e) {
   const top = Q0 == null ? [] : cand.map(v => [v, tr.reduce((s, f, j) => s + wt[j] * ((f(v) - q[j]) / sd[j]) ** 2, 0)]).sort((p, r) => p[1] - r[1]).slice(0, 5).map(p => p[0]);
   $('evTbl').innerHTML = top.map(v => `<tr><td>${v[0]}</td><td>${fmt(v[1], 0)} mm</td><td>${fmt(v[2], 0)} mm</td><td>${fmt(v[3])}</td><td>${v[6] == null ? '–' : fmt(v[6])}</td><td>${v[7] == null ? '–' : fmt(v[7], 2) + ' m'}</td><td><b>${fmt(v[4])}</b> mg/L</td><td>${v[8] == null ? '–' : fmt(v[8])}</td></tr>`).join('');
   const ss = top.map(v => v[4]).sort((p, r) => p - r);
-  $('evNote').textContent = top.length ? `향후 3일 강우는 ${src} 기준. 비슷한 ${top.length}건의 실측 SS 중앙값 ${fmt(ss[Math.floor(ss.length / 2)])}, 범위 ${fmt(ss[0])}–${fmt(ss[ss.length - 1])} mg/L. 실측일 기준 3일 강우(그날 포함), 그 전 7일 강우, 사상 전 유량을 로그 척도로, 계절(월)을 함께 비교했고 강우량에 가중치 2를 줬습니다. 유량은 m³/s(사전 = 3일 전), 수위 변동은 원대교 그날 최고−최저, ±3일 최대는 그 앞뒤 3일 안 실측 SS 최대입니다. 비슷한 조건이었다고 같은 SS가 나온다는 뜻은 아닙니다. 당시 원수 탁도와 시설 조치 기록은 아직 확보하지 못해 넣지 못했습니다.` + (ref === lastI ? '' : ' 과거 기준일은 그 이전 사례만 찾습니다.') : '유량 자료가 없어 찾지 않았습니다.';
+  $('evNote').textContent = top.length ? `향후 3일 강우는 ${src} 기준. 비슷한 ${top.length}건의 실측 SS 중앙값 ${fmt(ss[Math.floor(ss.length / 2)])}, 범위 ${fmt(ss[0])}–${fmt(ss[ss.length - 1])} mg/L. 비슷한 조건이어도 SS는 다를 수 있습니다.` + (ref === lastI ? '' : ' 과거 기준일은 그 이전 사례만 찾습니다.') : '유량 자료가 없어 찾지 않았습니다.';
   // 관리자 참고 점검사항
   const SE = stageEval(ref, FCS, e), cur = SE.lv;
   const sel = lvSel == null ? cur : lvSel;
@@ -953,13 +940,13 @@ function renderOps(ref, FCS, e, SE) {
   else if (SE.p10 == null) { $('opP').textContent = '–'; $('opPs').textContent = '계산에 필요한 과거 예측 기록이 부족합니다.'; }
   else {
     $('opP').innerHTML = '10.2↑ ' + pct(SE.p10) + ' · 25↑ ' + pct(SE.p25);
-    $('opPs').textContent = '내일(' + iso(ref + 1).slice(5) + ') 하천 SS가 그 값(mg/L) 이상일 가능성. 과거 예측 오차로 계산했고, 2020–26 검증에서 25 이상 10건 중 5건을 20% 이상으로 미리 잡았습니다. 3일 이후는 판별력이 낮아 표시하지 않습니다.';
+    $('opPs').textContent = '내일(' + iso(ref + 1).slice(5) + ') SS가 그 값(mg/L) 이상일 가능성';
   }
   const C = MG && MG.cover;
   if (C) {
     const hs = Object.keys(C).map(Number).sort((a, b) => a - b), part = hs.filter(h => !C[h].full);
     $('opCov').innerHTML = hs.map(h => h + '일 ' + C[h].have + '/' + C[h].need).join(' · ');
-    $('opCovS').textContent = part.length ? part.join('·') + '일 예측은 예보가 모자라 예보 반영값을 참고로만 봅니다. 기상청 단기예보는 보통 D+5까지 나옵니다.' : '필요한 날짜의 기상청 예보를 모두 받았습니다.';
+    $('opCovS').textContent = part.length ? part.join('·') + '일은 예보 부족 · 참고만' : '모두 받음';
     hs.forEach(h => {
       const r = $('kF' + h + 'R'); if (!r) return;
       let b = $('kF' + h + 'C'); if (!b) { b = document.createElement('div'); b.id = 'kF' + h + 'C'; r.after(b); }
@@ -982,7 +969,7 @@ function renderFresh() {
   $('frTbl').innerHTML = F.map(([n, last, age, st, note]) => '<tr><td>' + n + '</td><td>' + (last || '–') + '</td><td>' + (age == null ? '–' : (age < 1 && age > 0 ? fmt(age * 24, 0) + '시간' : age + '일')) + '</td><td><span class="bdg ' + st + '">' + lab[st] + '</span></td><td>' + (note || '') + '</td></tr>').join('');
   const nb = F.filter(r => r[3] !== 'ok').length;
   $('frTag').textContent = nb ? '확인 필요 ' + nb + '건' : '모두 정상'; $('frTag').className = 'tag' + (nb ? ' warnTag' : ' real');
-  $('frNote').textContent = '경과는 오늘(' + new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10) + ') 기준. 강우·유량·수위·기온은 2일, 예보는 1.5일, SS 실측은 14일을 넘으면 「늦음」입니다. SS는 약 8일 간격으로 채수하고 검증 후 공개되므로 수주–2개월 늦는 것이 보통이며, 그동안의 SS는 모두 모델 추정값입니다.';
+  $('frNote').textContent = '경과는 오늘(' + new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10) + ') 기준. SS 실측은 보통 수주–2개월 늦게 공개됩니다.';
 }
 function renderStatus() {
   const M = D.meta, W = M.warnings, L = M.locked, st = M.sources || {};
@@ -1021,7 +1008,7 @@ function renderFc(ref) {
     const rl = $('kF' + z.h + 'R'); let hm = $('kF' + z.h + 'H');
     if (!hm) { hm = document.createElement('div'); hm.id = 'kF' + z.h + 'H'; hm.className = 'himode'; rl.after(hm); }
     hm.hidden = !z.high;
-    if (z.high) hm.innerHTML = '<b>⚠ 고농도 모드 모델 적용</b><br>예보강우 반영값이 6 mg/L 이상이라 고농도 모드로 계산했습니다. 높으면 <b>' + fmt(z.high) + ' mg/L</b>까지 (5번 중 4번은 이 아래)';
+    if (z.high) hm.innerHTML = '<b>⚠ 고농도 모드 모델 적용</b><br>높으면 <b>' + fmt(z.high) + ' mg/L</b>까지 (5번 중 4번은 이 아래)';
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
   $('scTag').textContent = '기준일 ' + S.issue;
@@ -1049,7 +1036,7 @@ function renderLock() {
   tb.innerHTML = '<tr><td colspan="5" style="color:var(--ink-3);font-size:11.5px">잠금 평가: 2025년까지 학습 → ' + L.since + ' 이후 실측</td></tr>'
     + '<tr class="mine"><td>운영 모델 (2025년까지 학습)</td><td>' + L.n + '</td><td>' + f3(L.logr2) + '</td><td>' + f3(L.r2) + '</td><td>' + fmt(L.mae, 2) + '</td></tr>'
     + '<tr><td>비교: 월별 기준값</td><td>' + L.n + '</td><td>' + f3(L.logr2_clim) + '</td><td>–</td><td>' + fmt(L.mae_clim, 2) + '</td></tr>';
-  $('lockHint').innerHTML = '잠금 평가는 실제 운영과 같은 방식으로 학습에 쓰지 않은 해를 맞춘 성적입니다. 실측이 공개될 때마다 매일 다시 계산합니다. 2026년 최고 실측은 ' + fmt(L.ymax) + ' mg/L 한 건이라 R²는 이 하루에 크게 좌우되니 로그 R²와 MAE를 함께 보세요. 2026년 자료는 모델 구성을 고를 때 전진검증에 포함됐으므로(학습에는 미사용) 완전한 미지 자료는 아닙니다.';
+  $('lockHint').innerHTML = '잠금 평가 = 2025년까지 학습한 모델로 2026년 이후 실측을 맞춘 성적(새 실측마다 갱신). 2026년 최고 ' + fmt(L.ymax) + ' mg/L 한 건이 R²를 좌우합니다.';
 }
 function renderTbl() {
   renderFscore(); renderLock();
@@ -1092,6 +1079,11 @@ function renderWt() {
 }
 
 // 오늘 자료는 하루가 끝나야 생기므로 기준일은 자료 마지막 날까지만 고를 수 있다는 안내
+(function () {   // 설명 켜기/끄기: 기본은 끔, 선택은 이 브라우저에 기억
+  const b = $('helpBtn'); let on = false; try { on = localStorage.getItem('ssdashHelp') === '1'; } catch (e) {}
+  const set = v => { on = v; document.body.classList.toggle('nohelp', !on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '설명 숨기기' : '설명 보기'; try { localStorage.setItem('ssdashHelp', on ? '1' : '0'); } catch (e) {} };
+  set(on); b.addEventListener('click', () => set(!on));
+})();
 const todayKST = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), refNote = $('refNote');
 const md = s => +s.slice(5, 7) + '/' + +s.slice(8, 10);
 if (todayKST > iso(lastI)) {
