@@ -28,7 +28,7 @@ LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(�
 LOCK_EVAL = pd.Timestamp('2025-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
-MODEL_TAG = 'blend+temp+chain13+obs1chain 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
+MODEL_TAG = 'blend+temp+chain13+obs1chain+flood075 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):
@@ -113,7 +113,7 @@ def locked_eval(df):
     F, _, _, _ = model.features(df)
     tr = (df.index <= LOCK_EVAL) & df.SS.notna() & (df.SS > 0)
     m, sm = model.fit_log(model.Daily, F[tr], df.SS[tr].values)
-    p = np.exp(m.predict(F.loc[newo]) + sm); y = df.SS[newo].values
+    p = np.exp(m.predict(F.loc[newo]) + sm + model.flood_shift(F.loc[newo], model.FLOOD_2025)); y = df.SS[newo].values
     med = np.log(df.SS[tr]).groupby(df.index[tr].month).median()
     c = np.exp(newo.month.map(med).values.astype(float))
     r2 = lambda a, b: None if len(a) < 2 else round(float(1 - np.sum((a - b) ** 2) / np.sum((a - a.mean()) ** 2)), 3)
@@ -160,7 +160,7 @@ def score_log(log, df):
 
 def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None, fscore=None, mgr=None):
     r = est.join(df[['P0', 'SS', 'Q_meas', 'TAMAX', 'TAMIN']])
-    wf = csv(BASE / 'ss_wf_blend_temp_hh_20261103.csv').ss_wf_mgL.reindex(r.index)   # 개선안 전진검증(2019–26)
+    wf = csv(BASE / 'ss_wf_e3mono_flood075_20261104.csv').ss_wf_mgL.reindex(r.index)   # 운영 모델 전진검증(2019–26, 2026-11-04)
     f = lambda v, n=2: [None if pd.isna(x) else round(float(x), n) for x in v]
     o = r[r.SS.notna()]
     p90 = float(o[o.index < '2024-01-01'].SS.quantile(.9))

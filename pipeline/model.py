@@ -14,7 +14,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 # 전진검증 잔차 10–90% (2019–26, n=295; 2026-11-04 사상변수·단조 반영. 이전 -0.720, 0.651; 시간수위 추가 전 -0.677, 0.611; 기온 추가 전 -0.763, 0.670; 이전 XGB+Duan은 -1.057, 0.553)
-LOG_LO, LOG_HI = -0.6948, 0.6352
+LOG_LO, LOG_HI = -0.6722, 0.6768   # 2026-11-04 홍수일 보정(¾) 반영 후 (보정 전 -0.6948, 0.6352)
 
 
 def XG(random_state=0, **kw):
@@ -108,6 +108,20 @@ MONO = ('Q', 'lQ', 'Qmax3', 'lQpk', 'Hrise', 'dHmax', 'P0', 'P2', 'Pmax3')
 
 
 def Daily(): return Blend(mono=MONO)
+
+
+# 2026-11-04 홍수일 보정(사용자 요청: 고농도 우선, 강도 ¾). 비·수위 상승일(P2≥10 mm 또는 24시간 수위 범위≥0.3 m)에는
+# 첨두유량(lQpk)에 따라 log 보정량을 Huber 선형으로, 그 밖의 날은 잔차 중앙값으로 옮긴다. 계수는 2016–26 전진검증 잔차로 적합.
+# 검증(그해 이전 잔차로만 적합, 2019–26): 로그R² 0.768→0.770, R² 0.578→0.663, MAE 2.86→2.79, 평상시(<10) MAE 0.82→0.79,
+# 물 불어난 날 ≥10 mg/L 예측/실측 중앙 0.73→0.92, 25 이상 경보 7/7→7/10 (capstone/perf_explore_20261104 p10.py)
+FLOOD = dict(a=-0.4684, b=0.1296, wet_med=0.0495, dry_med=-0.1238, fill=2.441, k=0.75)
+FLOOD_2025 = dict(a=-0.4694, b=0.1386, wet_med=0.0749, dry_med=-0.1123, fill=2.441, k=0.75)   # 잠금 평가용(2025년까지 잔차)
+
+
+def flood_shift(F, c=FLOOD):
+    wet = ((F.P2 >= 10) | (F.Hh_rng24 >= 0.3)).values
+    lin = c['a'] + c['b'] * F.lQpk.fillna(c['fill']).values
+    return np.where(wet, c['wet_med'] + c['k'] * (lin - c['wet_med']), c['dry_med'])
 
 
 
@@ -222,7 +236,9 @@ def estimate(df):
     F, qc, bad, qpk = features(df)
     tr = df.SS.notna() & (df.SS > 0)
     m, sm = fit_log(Daily, F[tr], df.SS[tr].values)
-    lp = m.predict(F) + sm
+    lp = m.predict(F) + sm + flood_shift(F)
     est = pd.DataFrame({'est': np.exp(lp), 'lo': np.exp(lp + LOG_LO), 'hi': np.exp(lp + LOG_HI), 'q_corr': qc,
                         'q_fix': bad.astype(int), 'partial': F.isna().any(axis=1).astype(int), 'qpk': qpk}, index=df.index)
-    return est, shap_groups(m, F, GROUPS, sm)
+    sh, base = shap_groups(m, F, GROUPS, sm)
+    sh['홍수일 보정'] = flood_shift(F)   # 보정량(log)을 따로 한 묶음으로 보여 합계가 추정값과 맞게
+    return est, (sh, base)
