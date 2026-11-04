@@ -453,6 +453,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
           <td>위 예보강우 모델과 <b>강우→유량→SS 연결 모델</b>을 log 값으로 반씩 평균</td>
           <td>(1) 유량 예측: 기준일 관측 + 앞으로 h일 일강우 → 목표일 유량·첨두유량·수위 변동(XGBoost, 유량 자료가 있는 모든 날 약 4,000일로 학습). (2) 목표일 강우·계절·기온 + 예측 유량을 일별 SS 모델 구조(XGB+Ridge)에 넣음</td>
           <td>기상청 예보는 과거 실제/예보 비율(0.63)로 줄여 연결 모델에만 넣음. 과거 예보로 검증: 1일 로그 R² 0.749→0.761, MAE 3.02→2.88 mg/L. 5일은 과거 예보 자료가 없어 적용 안 함</td></tr>
+        <tr><td><b>1일 예측 (예보강우 포함) 평상시/고농도 전환</b><br><span class="hint">2026-11-04 추가</span></td>
+          <td>1일 예보강우 예측값이 6 mg/L 이상이면 <b>고농도 모드</b>로 보고, 과거 고농도 모드 날의 잔차 중앙값의 절반만큼 올림. 6 mg/L 미만(평상시)은 그대로</td>
+          <td>운영 모델 자신의 1일 예측값(따로 만든 판별 모델보다 고농도일 구분이 나음: 과거 예보로 SS 10 이상 26일 중 23일이 모드 안)</td>
+          <td>고농도 모드일 때 <b>고농도 쪽 추정</b>(모드 날 잔차 90% 분위만큼 위, 과거 예보로 실측이 이 값 아래 80%)을 함께 표시. 과거 예보로 검증: 로그 R² 0.758→0.759, MAE 2.85→2.89 mg/L(차이 유의 아님), 25 mg/L 이상 예측 4번 중 4번 → 5번 중 5번 적중. 3일·5일·일별은 이득 없어 적용 안 함</td></tr>
         <tr><td><b>보조 장치</b></td>
           <td colspan="3">유량 품질보정: 연도별 수위–유량 관계식(log Q ~ 평균수위 2차식)과 0.7(log) 넘게 어긋나는 날은 수위 환산 유량으로 대체. 안전 Ridge: 입력을 학습 범위로 자르고 출력은 최대 실측의 2배로 제한해 큰 홍수일 폭주 방지.</td></tr>
         <tr><td><b>자료</b></td>
@@ -998,10 +1002,10 @@ function forecasts(ref) {
   const F = D.fc, k = ref - F.off, isLast = ref === lastI, mm = fcEl.value === 'kma' ? 'kma' : +fcEl.value;
   return [1, 3, 5].map(h => {
     const pick = (tag) => { const A = F[h + tag]; if (k < 0 || k >= A[0].length || A[0][k] == null) return null; return [A[0][k], A[1][k], A[2][k]]; };
-    let o = pick('obs'), r = null, rmm = null, part = null;
-    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; } else part = S.kma_partial || null; } else { r = S.rain[F.scen.grid_mm.indexOf(mm)]; rmm = mm; } }
+    let o = pick('obs'), r = null, rmm = null, part = null, high = null;
+    if (isLast) { const S = F.scen.h[h]; o = S.obs; if (mm === 'kma') { if (S.kma) { r = S.kma.v; rmm = S.kma.mm; high = S.kma.high || null; } else part = S.kma_partial || null; } else { const gi = F.scen.grid_mm.indexOf(mm); r = S.rain[gi]; rmm = mm; high = (S.rain_high || [])[gi] || null; } }
     else { r = pick('rain'); if (r) { rmm = 0; for (let i = ref + 1; i <= ref + h; i++) rmm += D.p[i] || 0; } }
-    return { h, o, r, mm: rmm, isLast, part };
+    return { h, o, r, mm: rmm, isLast, part, high };
   });
 }
 function renderFc(ref) {
@@ -1012,7 +1016,7 @@ function renderFc(ref) {
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
     $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) ;
-    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
+    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' + (z.high ? ' · 고농도 모드: 높으면 ' + fmt(z.high) + '까지 (5번 중 4번은 이 아래)' : '') : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
   $('scTag').textContent = '기준일 ' + S.issue;
