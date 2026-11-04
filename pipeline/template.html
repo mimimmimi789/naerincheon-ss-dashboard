@@ -63,6 +63,7 @@ h1{font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
 .kpi .lab{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.himode{margin-top:6px;padding:5px 9px;border-radius:8px;background:var(--warn-bg);color:var(--warn);font-size:12px;line-height:1.45;border:1px solid var(--warn)}.himode b{font-weight:700}
 .tag{font-size:10.5px;padding:2px 7px;border-radius:99px;background:var(--note-bg);color:var(--note);white-space:nowrap;letter-spacing:.02em}
 .tag.real{background:var(--ok-bg);color:var(--ok)}
 .tag.wait{background:transparent;border:1px dashed var(--ink-3);color:var(--ink-3)}
@@ -1013,10 +1014,14 @@ function renderFc(ref) {
   FCS.forEach(z => {
     $('kF' + z.h + 'L').textContent = z.h + '일 후 · ' + iso(ref + z.h).slice(5);
     $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 5 ? ' · 참고용' : '');
-    if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; return; }
+    if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; if ($('kF' + z.h + 'H')) $('kF' + z.h + 'H').hidden = true; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
     $('kF' + z.h + 'M').textContent = '80% 범위 ' + fmt(z.o[1]) + '–' + fmt(z.o[2]) ;
-    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' + (z.high ? ' · 고농도 모드: 높으면 ' + fmt(z.high) + '까지 (5번 중 4번은 이 아래)' : '') : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
+    $('kF' + z.h + 'R').textContent = z.r ? (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 넣으면 ' + fmt(z.r[0]) + ' (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')' : z.part ? '기상청 예보가 ' + z.part.need + '일 중 ' + z.part.days + '일치뿐이라 예보 반영값을 내지 않음' : '예보강우 반영값 없음';
+    const rl = $('kF' + z.h + 'R'); let hm = $('kF' + z.h + 'H');
+    if (!hm) { hm = document.createElement('div'); hm.id = 'kF' + z.h + 'H'; hm.className = 'himode'; rl.after(hm); }
+    hm.hidden = !z.high;
+    if (z.high) hm.innerHTML = '<b>⚠ 고농도 모드 모델 적용</b><br>예보강우 반영값이 6 mg/L 이상이라 고농도 모드로 계산했습니다. 높으면 <b>' + fmt(z.high) + ' mg/L</b>까지 (5번 중 4번은 이 아래)';
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
   $('scTag').textContent = '기준일 ' + S.issue;
