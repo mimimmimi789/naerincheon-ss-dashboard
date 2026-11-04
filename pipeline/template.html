@@ -329,7 +329,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     </div>
   </section>
 
-  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2026-08-26 이후 새 실측으로 잠금 평가할 예정입니다. 1·3·5일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
+  <details class="banner" id="banner" open><summary><b>초안 안내</b></summary><span>추정선은 <b>XGB(10개 평균)·Ridge 혼합 모델(log, 확장변수 + 유량보정 + 첨두수위)</b>을 지금까지의 실측 전체로 매일 재학습한 일별 사후복원입니다. 같은 날 강우·유량·수위를 쓰는 사후추정이라 예보가 아닙니다. 실측일의 추정선은 학습에 쓴 날이라 실제보다 잘 맞아 보이므로, 성능은 ◇ 전진검증 예측으로 보세요. 이 모델은 기존 실측(2019–26 전진검증)을 보며 고른 탐색적 모델이라 2025년까지 자료로만 학습한 모델로 2026년 이후 실측을 맞추는 잠금 평가를 모델 성능 탭에 함께 보여줍니다. 1·3·5일 예측은 기준일까지의 관측만 쓴 값이 큰 숫자이고, 예보강우를 넣은 값은 아래 줄에 따로 보여줍니다.</span></details>
   </div>
 
   <div class="tab" id="tab-fc" data-tab="fc" hidden>
@@ -413,7 +413,9 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
         <tbody>
           <tr class="mine"><td>운영 모델 (XGB·Ridge 혼합 + 기온 + 시간 수위 + 홍수 사상)</td><td>295</td><td>0.768</td><td>0.578</td><td>2.86</td></tr>
         </tbody>
+        <tbody id="lockTbl"></tbody>
       </table></div>
+      <p class="hint" id="lockHint"></p>
       <p class="hint">그래프 파란 선(일별 추정)의 성능입니다. 같은 날 강우·유량·수위를 쓰는 사후복원이라 예측이 아닙니다. 25 mg/L 이상 고농도는 실측의 약 35~40%로 낮게 추정합니다.</p>
       <h3 class="mini">내일 기준 이상 가능성 검증 <span class="tag">2020–26 · 실측일만</span></h3>
       <div class="tbl-wrap"><table>
@@ -986,7 +988,7 @@ function renderStatus() {
     const hh = W.hist.filter(r => r.cmd === '발표');
     if (hh.length) h += '<details><summary>올해 발표 이력 ' + hh.length + '건 (호우 ' + hh.filter(r => r.wrn === '호우').length + '건)</summary><ul class="wl">' + hh.slice(-40).reverse().map(r => '<li>' + esc(r.tm.slice(0, 10)) + ' ' + esc(fw(r)) + '</li>').join('') + '</ul></details>';
   }
-  if (L && L.n) h += '<h3 class="mini">잠금 평가 (2026-08-27 이후 새 실측)</h3><p class="hint">8/26까지 자료로만 학습한 모델로 새 실측 ' + L.n + '건을 맞춘 결과: 평균절대오차 ' + fmt(L.mae) + ' mg/L' + (L.n >= 10 ? ', R² ' + L.r2.toFixed(2) : ' (10건 미만이라 R²는 생략)') + '.</p>';
+  if (L && L.n) h += '<h3 class="mini">잠금 평가 (' + L.since + ' 이후 실측)</h3><p class="hint">2025년까지 자료로만 학습한 모델로 ' + L.n + '건을 맞춘 결과: 평균절대오차 ' + fmt(L.mae) + ' mg/L (월별 기준값 ' + fmt(L.mae_clim) + ')' + (L.n >= 10 && L.logr2 != null ? ', 로그 R² ' + L.logr2.toFixed(2) : ' (10건 미만이라 R²는 생략)') + '. 자세한 내용은 모델 성능 탭.</p>';
   if (Object.keys(st).length) h += '<h3 class="mini">오늘 자료 수집</h3><ul class="wl">' + Object.entries(st).map(([k, v]) => '<li>' + esc(k) + ': ' + esc(v) + '</li>').join('') + '</ul>';
   $('wrn').innerHTML = h;
 }
@@ -1030,8 +1032,16 @@ function renderFscore() {
   else t += '<p class="hint">아직 목표일 실측이 들어온 예측이 없어 채점 전입니다.</p>';
   el.innerHTML = t;
 }
+function renderLock() {
+  const L = D.meta.locked, tb = $('lockTbl'); if (!tb || !L || !L.n) return;
+  const f3 = v => v == null ? '–' : v.toFixed(3);
+  tb.innerHTML = '<tr><td colspan="5" style="color:var(--ink-3);font-size:11.5px">잠금 평가: 2025년까지 학습 → ' + L.since + ' 이후 실측</td></tr>'
+    + '<tr class="mine"><td>운영 모델 (2025년까지 학습)</td><td>' + L.n + '</td><td>' + f3(L.logr2) + '</td><td>' + f3(L.r2) + '</td><td>' + fmt(L.mae, 2) + '</td></tr>'
+    + '<tr><td>비교: 월별 기준값</td><td>' + L.n + '</td><td>' + f3(L.logr2_clim) + '</td><td>–</td><td>' + fmt(L.mae_clim, 2) + '</td></tr>';
+  $('lockHint').innerHTML = '잠금 평가는 실제 운영과 같은 방식으로 학습에 쓰지 않은 해를 맞춘 성적입니다. 실측이 공개될 때마다 매일 다시 계산합니다. 2026년 최고 실측은 ' + fmt(L.ymax) + ' mg/L 한 건이라 R²는 이 하루에 크게 좌우되니 로그 R²와 MAE를 함께 보세요. 2026년 자료는 모델 구성을 고를 때 전진검증에 포함됐으므로(학습에는 미사용) 완전한 미지 자료는 아닙니다.';
+}
 function renderTbl() {
-  renderFscore();
+  renderFscore(); renderLock();
   const R = D.fc.real || [], T = D.fc.tbl || [], f3 = v => v == null ? '–' : v.toFixed(3);
   const row = (lab, n, lr, r2, mae, mine) => `<tr${mine ? ' class="mine"' : ''}><td>${lab}</td><td>${n}</td><td>${f3(lr)}</td><td>${f3(r2)}</td><td>${mae == null ? '–' : mae.toFixed(2)}</td></tr>`;
   let h = '';

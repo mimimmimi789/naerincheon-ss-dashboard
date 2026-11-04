@@ -22,7 +22,10 @@ ROOT = src.ROOT
 BASE = ROOT / 'data' / 'base'
 AUX = ROOT / 'data' / 'auxdata'          # Windows에서 'aux'는 예약 이름이라 auxdata
 DOCS = ROOT / 'docs'
-LOCK = pd.Timestamp('2026-08-26')        # 잠금 평가 기준: 이 날까지 실측으로만 학습
+LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(수집 시작 기준)
+# 잠금 평가 기준(2026-11-04 사용자 요청으로 2026-08-26 → 2025-12-31): 이 날까지 실측으로만 학습한 모델로 2026년 이후 실측을 맞춘다.
+# 2026년 실측도 모델을 고를 때 전진검증에 포함됐으므로 완전한 미지 자료는 아니다(구성 선택만, 학습에는 미사용).
+LOCK_EVAL = pd.Timestamp('2025-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
 MODEL_TAG = 'blend+temp+chain13+obs1chain 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
@@ -104,15 +107,19 @@ def assemble():
 
 
 def locked_eval(df):
-    """8/26까지 실측으로만 학습한 고정 모델로 그 뒤 새 실측을 맞춘 성적."""
-    newo = df.index[(df.index > LOCK) & df.SS.notna() & (df.SS > 0)]
-    if not len(newo): return {'n': 0}
+    """LOCK_EVAL까지 실측으로만 학습한 고정 모델로 그 뒤 실측을 맞춘 성적(월별 기준값과 비교)."""
+    newo = df.index[(df.index > LOCK_EVAL) & df.SS.notna() & (df.SS > 0)]
+    if not len(newo): return {'n': 0, 'since': str((LOCK_EVAL + pd.Timedelta(days=1)).date())}
     F, _, _, _ = model.features(df)
-    tr = (df.index <= LOCK) & df.SS.notna() & (df.SS > 0)
+    tr = (df.index <= LOCK_EVAL) & df.SS.notna() & (df.SS > 0)
     m, sm = model.fit_log(model.Daily, F[tr], df.SS[tr].values)
     p = np.exp(m.predict(F.loc[newo]) + sm); y = df.SS[newo].values
-    r2 = 1 - np.sum((y - p) ** 2) / np.sum((y - y.mean()) ** 2) if len(y) > 1 else None
-    return {'n': int(len(y)), 'mae': round(float(np.mean(np.abs(y - p))), 2), 'r2': None if r2 is None else round(float(r2), 3),
+    med = np.log(df.SS[tr]).groupby(df.index[tr].month).median()
+    c = np.exp(newo.month.map(med).values.astype(float))
+    r2 = lambda a, b: None if len(a) < 2 else round(float(1 - np.sum((a - b) ** 2) / np.sum((a - a.mean()) ** 2)), 3)
+    return {'n': int(len(y)), 'since': str((LOCK_EVAL + pd.Timedelta(days=1)).date()), 'mae': round(float(np.mean(np.abs(y - p))), 2),
+            'r2': r2(y, p), 'logr2': r2(np.log(y), np.log(p)), 'mae_clim': round(float(np.mean(np.abs(y - c))), 2),
+            'logr2_clim': r2(np.log(y), np.log(c)), 'ymax': float(y.max()),
             'rows': [[str(d.date()), float(a), round(float(b), 2)] for d, a, b in zip(newo, y, p)]}
 
 
