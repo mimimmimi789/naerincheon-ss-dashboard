@@ -25,7 +25,7 @@ DOCS = ROOT / 'docs'
 LOCK = pd.Timestamp('2026-08-26')        # 잠금 평가 기준: 이 날까지 실측으로만 학습
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
-MODEL_TAG = 'blend+temp+chain13 2026-11-03'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
+MODEL_TAG = 'blend+temp+chain13+obs1chain 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):
@@ -109,7 +109,7 @@ def locked_eval(df):
     if not len(newo): return {'n': 0}
     F, _, _, _ = model.features(df)
     tr = (df.index <= LOCK) & df.SS.notna() & (df.SS > 0)
-    m, sm = model.fit_log(model.Blend, F[tr], df.SS[tr].values)
+    m, sm = model.fit_log(model.Daily, F[tr], df.SS[tr].values)
     p = np.exp(m.predict(F.loc[newo]) + sm); y = df.SS[newo].values
     r2 = 1 - np.sum((y - p) ** 2) / np.sum((y - y.mean()) ** 2) if len(y) > 1 else None
     return {'n': int(len(y)), 'mae': round(float(np.mean(np.abs(y - p))), 2), 'r2': None if r2 is None else round(float(r2), 3),

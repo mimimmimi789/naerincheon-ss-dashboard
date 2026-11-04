@@ -13,8 +13,8 @@ from sklearn.model_selection import KFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-# 전진검증 잔차 10–90% (2019–26, n=295, 포함률 79.7%; 시간수위 추가 전 -0.677, 0.611; 기온 추가 전 -0.763, 0.670; 이전 XGB+Duan은 -1.057, 0.553)
-LOG_LO, LOG_HI = -0.7198675791279654, 0.6506970000934704
+# 전진검증 잔차 10–90% (2019–26, n=295; 2026-11-04 사상변수·단조 반영. 이전 -0.720, 0.651; 시간수위 추가 전 -0.677, 0.611; 기온 추가 전 -0.763, 0.670; 이전 XGB+Duan은 -1.057, 0.553)
+LOG_LO, LOG_HI = -0.6948, 0.6352
 
 
 def XG(random_state=0, **kw):
@@ -56,7 +56,7 @@ class SafeRidge:
 
 
 class Blend:
-    """BagXGB와 SafeRidge의 log 예측 평균."""
+    """BagXGB와 SafeRidge의 log 예측 평균. mono: XGB에 증가 제약을 줄 열 이름."""
     def __init__(self, mono=()): self.mono = mono
 
     def fit(self, X, y):
@@ -94,20 +94,28 @@ def build(df):
     return f
 
 
-HCOLS = ['Hh', 'Hh_d3', 'Hh_d6', 'Hh_pk6', 'Hh_pk24', 'Hh_rng24', 'Hh_avg']
+HCOLS = ['Hh', 'Hh_d3', 'Hh_d6', 'Hh_pk6', 'Hh_pk24', 'Hh_rng24', 'Hh_avg', 'Hh_hpk', 'Hh_pk72']
 HH_AT = 10   # 채수 대표 시각 14시(실측 중앙 13:53) − 원대교→내린천2 흐름 지연 4시간
 
 
 COLS = ['P0', 'Pprev', 'P3prior', 'P7prior', 'API7', 'ADD_prior', 'Q', 'Qprev', 'Qdelta1', 'Qratio3', 'msin', 'mcos',
         'lQ', 'dlQ', 'dlQ2', 'Qmax3', 'Q_rel30', 'Q_rel90', 'Q_over_base', 'days_since_big', 'P2', 'Pmax3',
-        'P14prior', 'P30prior', 'lQpk', 'Hrise', 'dHmax', 'TA', 'TA7', 'TAmin'] + HCOLS
+        'P14prior', 'P30prior', 'lQpk', 'Hrise', 'dHmax', 'TA', 'TA7', 'TAmin', 'Pev'] + HCOLS
+
+# 2026-11-04 일별 모델 XGB 단조 제약: 유량·수위·강우가 커지면 SS 추정이 줄지 않게 한다.
+# 사상 변수(Hh_hpk·Hh_pk72·Pev)와 함께 전진검증 2019–26 로그R² 0.761→0.768, MAE 2.95→2.86 (capstone/perf_explore_20261104)
+MONO = ('Q', 'lQ', 'Qmax3', 'lQpk', 'Hrise', 'dHmax', 'P0', 'P2', 'Pmax3')
+
+
+def Daily(): return Blend(mono=MONO)
 
 
 
 
 def hourly_feats(h, days, havg=None):
     """원대교 시간 수위(색인 = 시각, 24시는 다음날 0시)로 날마다 HH_AT시 기준 변수(2026-11-03 추가).
-    Hh 수위, Hh_d3·Hh_d6 직전 3·6시간 변화, Hh_pk6·Hh_pk24 직전 6·24시간 최고−현재, Hh_rng24 24시간 범위, Hh_avg 그날 일평균 대비."""
+    Hh 수위, Hh_d3·Hh_d6 직전 3·6시간 변화, Hh_pk6·Hh_pk24 직전 6·24시간 최고−현재, Hh_rng24 24시간 범위, Hh_avg 그날 일평균 대비.
+    2026-11-04 홍수 사상 변수: Hh_hpk 직전 72시간 최고수위 이후 경과시간(상승부≈0), Hh_pk72 직전 72시간 최고−현재(하강량)."""
     h = h[(h > 0.5) & (h < 10)]
     h = h[~h.index.duplicated(keep='last')].sort_index().asfreq('h').interpolate(limit=6, limit_area='inside')
     t = days + pd.Timedelta(hours=HH_AT)
@@ -117,6 +125,9 @@ def hourly_feats(h, days, havg=None):
     out = pd.DataFrame({'Hh': H0, 'Hh_d3': H0 - at(3), 'Hh_d6': H0 - at(6), 'Hh_pk6': m6.reindex(t).values - H0,
                         'Hh_pk24': m24.reindex(t).values - H0, 'Hh_rng24': m24.reindex(t).values - n24.reindex(t).values}, index=days)
     out['Hh_avg'] = out.Hh - (havg.reindex(days).values if havg is not None else np.nan)
+    m72 = h.rolling(73, min_periods=36).max()
+    hpk = h.rolling(73, min_periods=36).apply(lambda a: len(a) - 1 - np.nanargmax(a) if np.isfinite(a).any() else np.nan, raw=True)
+    out['Hh_hpk'] = hpk.reindex(t).values; out['Hh_pk72'] = m72.reindex(t).values - H0
     return out
 
 
@@ -170,6 +181,8 @@ def features(df):
     F['Hrise'] = df.Hmax - df.Hmin
     F['dHmax'] = df.Hmax - df.Hmin.rolling(60, min_periods=10).quantile(0.1)
     F = F.join(temp_feats(df))
+    P = df.P0.fillna(0); wet = P >= 1
+    F['Pev'] = P.where(wet, 0).groupby((~wet).cumsum()).cumsum()   # 2026-11-04 연속강우(1 mm 이상 날이 이어지는 동안) 누적
     for c in HCOLS:
         F[c] = df[c] if c in df else np.nan
     return F[COLS], dfx.Q, bad, QPK
@@ -190,7 +203,8 @@ GROUPS = {'유량': ['Q', 'Qprev', 'Qdelta1', 'Qratio3', 'lQ', 'dlQ', 'dlQ2', 'Q
           '선행강우 (3–30일)': ['P3prior', 'P7prior', 'P14prior', 'P30prior', 'API7'],
           '무강우일수': ['ADD_prior'],
           '수위·첨두유량': ['lQpk', 'Hrise', 'dHmax'],
-          '계절': ['msin', 'mcos'], '기온': ['TA', 'TA7', 'TAmin'], '시간 수위 (오전)': HCOLS}
+          '계절': ['msin', 'mcos'], '기온': ['TA', 'TA7', 'TAmin'], '시간 수위 (오전)': HCOLS[:7],
+          '홍수 사상': ['Hh_hpk', 'Hh_pk72', 'Pev']}
 
 
 def shap_groups(m, X, groups, offset=0.0):
@@ -207,7 +221,7 @@ def estimate(df):
     반환: (DataFrame(est, lo, hi, q_corr, q_fix, partial, qpk), (SHAP 묶음별 기여 DataFrame, 기준값 log))"""
     F, qc, bad, qpk = features(df)
     tr = df.SS.notna() & (df.SS > 0)
-    m, sm = fit_log(Blend, F[tr], df.SS[tr].values)
+    m, sm = fit_log(Daily, F[tr], df.SS[tr].values)
     lp = m.predict(F) + sm
     est = pd.DataFrame({'est': np.exp(lp), 'lo': np.exp(lp + LOG_LO), 'hi': np.exp(lp + LOG_HI), 'q_corr': qc,
                         'q_fix': bad.astype(int), 'partial': F.isna().any(axis=1).astype(int), 'qpk': qpk}, index=df.index)

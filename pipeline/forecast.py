@@ -32,6 +32,9 @@ import model as _model
 # 검증(기상청 예보 보관본, capstone/highss_20261103 c3_fix.py): 1일 로그R² 0.749→0.759, MAE 3.02→2.85,
 # 3일(앞 2일 예보) 0.599→0.625, MAE 3.19→3.02, 유출형 고농도 예측/실측 0.24→0.35. 5일은 실제 예보 검증 불가라 제외.
 CHAIN_H = (1, 3)
+# 2026-11-04: 관측만 1일 예측에도 연결 모델(앞으로 비 0 mm)을 log 반반 혼합. 전진검증 2019–26 로그R² 0.703→0.718, MAE 3.51→3.45.
+# 3일은 효과 없음(0.448→0.446) (capstone/perf_explore_20261104 p4.py)
+CHAIN_OBS_H = (1,)
 FLV = ['lQ', 'lQpk', 'Hrise', 'dlQ']
 RS_RAIN = ['P0', 'Pprev', 'P3prior', 'P7prior', 'API7', 'ADD_prior', 'P2', 'Pmax3', 'P14prior', 'P30prior']
 
@@ -206,6 +209,8 @@ class Forecaster:
                 lp = self.predict(h, nm, days, fr)
                 if tag == 'rain' and self.chain is not None and h in CHAIN_H:
                     lp = (lp + self.chain.predict(h, days)) / 2
+                if tag == 'obs' and self.chain is not None and h in CHAIN_OBS_H:
+                    lp = (lp + self.chain.predict(h, days, np.zeros((len(days), h)))) / 2
                 if tag == 'rain': lp[days + pd.Timedelta(days=h) > last] = np.nan
                 for k, a in (('', 0), ('_lo', lo), ('_hi', hi)):
                     out[f'h{h}_{tag}{k}'] = np.exp(lp + a).round(2)
@@ -236,6 +241,8 @@ class Forecaster:
             nm_o, nm_r = self.pick[h]
             lo, hi, _ = self.static['bands'][f'h{h}_obs']
             lp = self.predict(h, nm_o, last, train_upto=D).iloc[0]
+            if self.chain is not None and h in CHAIN_OBS_H:
+                lp = (lp + self.chain.predict(h, last, np.zeros((1, h)), train_upto=D).iloc[0]) / 2
             e = {'target': str((D + pd.Timedelta(days=h)).date()), 'obs': [round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)], 'rain': []}
             lo, hi, _ = self.static['bands'][f'h{h}_rain']
             mix = self.chain is not None and h in CHAIN_H
