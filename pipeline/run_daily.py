@@ -23,11 +23,9 @@ BASE = ROOT / 'data' / 'base'
 AUX = ROOT / 'data' / 'auxdata'          # Windows에서 'aux'는 예약 이름이라 auxdata
 DOCS = ROOT / 'docs'
 LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(수집 시작 기준)
-# 잠금 평가 기준(2026-11-04 사용자 요청으로 2026-08-26 → 2025-12-31): 이 날까지 실측으로만 학습한 모델로 2026년 이후 실측을 맞춘다.
-# 2026년 실측도 모델을 고를 때 전진검증에 포함됐으므로 완전한 미지 자료는 아니다(구성 선택만, 학습에는 미사용).
-LOCK_EVAL = pd.Timestamp('2025-12-31')
-# 잠금 평가 2(2026-11-04 사용자 요청): 2024년까지 학습 → 2025–26년 실측. 한 해(2026)에만 기대지 않도록 두 해를 본다.
-LOCK_EVAL2 = pd.Timestamp('2024-12-31')
+# 잠금 평가 기준(2026-11-04 사용자 요청): 2023년까지 실측으로만 학습한 모델로 2024년 이후 실측을 맞춘다(학습:시험 약 8:2, 3년, 2024-07-23 90 mg/L 포함).
+# 이전 기준 2025-12-31(2026년만 26건)은 한 해에 기대 너무 짧았다. 2024–26 실측도 모델 구성을 고를 때 전진검증에 포함됐으므로 완전한 미지 자료는 아니다(학습에는 미사용).
+LOCK_EVAL = pd.Timestamp('2023-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
 MODEL_TAG = 'blend+temp+chain13+obs1chain+flood075+himode1 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
@@ -111,7 +109,7 @@ def assemble():
 def locked_eval(df, upto=LOCK_EVAL, flood=None):
     """upto까지 실측으로만 학습한 고정 모델로 그 뒤 실측을 맞춘 성적(월별 기준값과 비교).
     cov = 실측이 80% 범위 안에 든 비율. years = 연도별 성적."""
-    flood = flood or model.FLOOD_2025
+    flood = flood or model.FLOOD_2023
     since = str((upto + pd.Timedelta(days=1)).date())
     newo = df.index[(df.index > upto) & df.SS.notna() & (df.SS > 0)]
     if not len(newo): return {'n': 0, 'since': since, 'train': upto.year}
@@ -246,7 +244,7 @@ def main():
     live = fr.live(rain, full)
     wj = src.LIVE / 'kma_warnings.json'
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
-    locked = [locked_eval(df), locked_eval(df, LOCK_EVAL2, model.FLOOD_2024)]
+    locked = [locked_eval(df)]
     updated = now.strftime('%Y-%m-%d %H:%M KST')
     fscore = score_log(log_forecast(live, updated), df)
     o = df.SS[df.SS > 0].dropna()

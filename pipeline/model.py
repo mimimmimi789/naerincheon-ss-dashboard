@@ -119,7 +119,7 @@ def Daily(): return Blend(mono=MONO)
 # 물 불어난 날 ≥10 mg/L 예측/실측 중앙 0.73→0.92, 25 이상 경보 7/7→7/10 (capstone/perf_explore_20261104 p10.py)
 FLOOD = dict(a=-0.4684, b=0.1296, wet_med=0.0495, dry_med=-0.1238, fill=2.441, k=0.75)
 FLOOD_2025 = dict(a=-0.4694, b=0.1386, wet_med=0.0749, dry_med=-0.1123, fill=2.441, k=0.75)   # 잠금 평가용(2025년까지 잔차)
-FLOOD_2024 = dict(a=-0.5241, b=0.1510, wet_med=0.0780, dry_med=-0.1192, fill=2.441, k=0.75)   # 잠금 평가 2(2024년까지 잔차, 2016–24 전진검증)
+FLOOD_2023 = dict(a=-0.4821, b=0.1479, wet_med=0.0780, dry_med=-0.1376, fill=2.441, k=0.75)   # 잠금 평가 기준(2023년까지 잔차, 2016–23 전진검증)
 
 
 def wet_day(F):

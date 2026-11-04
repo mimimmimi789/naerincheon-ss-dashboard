@@ -1048,7 +1048,7 @@ function renderLock() {
       + '<tr><td>비교: 월별 기준값</td><td>' + L.n + '</td><td>' + f3(L.logr2_clim) + '</td><td>–</td><td>' + fmt(L.mae_clim, 2) + '</td><td>–</td></tr>';
   }).join('');
   const ym = Math.max(...LS.map(L => L.ymax));
-  $('lockHint').innerHTML = '잠금 평가 = 그해까지 자료로만 학습한 모델로 이후 실측을 맞춘 성적(새 실측마다 갱신). 범위 안 = 실측이 80% 범위에 든 비율(목표 80%). 2026년 최고 ' + fmt(ym) + ' mg/L 한 건이 R²를 좌우합니다.';
+  $('lockHint').innerHTML = '잠금 평가 = 2023년까지 자료로만 학습한 모델로 2024년 이후 실측을 맞춘 성적(학습:시험 약 8:2, 새 실측마다 갱신). 범위 안 = 실측이 80% 범위에 든 비율(목표 80%). 최고 ' + fmt(ym) + ' mg/L 같은 큰 홍수 몇 건이 R²를 좌우합니다.';
 }
 function renderTbl() {
   renderFscore(); renderLock();
