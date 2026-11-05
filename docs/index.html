@@ -100,6 +100,20 @@ body.nohelp p.hint:not(.keep),body.nohelp .disc,body.nohelp #banner,body.nohelp 
 #outlook h2 .sub2{font-weight:400;font-size:12.5px;color:var(--ink-3)}
 .sw-fbar{width:7px;height:14px;border-radius:2px;background:var(--ink-3)}
 .sw-zn{width:14px;height:10px;border-radius:2px}.sw-zn.n{background:var(--note-bg);border:1px solid var(--note)}.sw-zn.w{background:var(--warn-bg);border:1px solid var(--warn)}
+.sw-sq{width:9px;height:9px;border-radius:2px;background:linear-gradient(90deg,var(--ok) 0 34%,var(--note) 34% 67%,var(--warn) 67%)}
+.sw-fbar{background:linear-gradient(180deg,var(--warn),var(--note),var(--ok));opacity:.45}
+.sw-dash{width:18px;height:0;border-top:2px dotted var(--ink-3)}
+.sw-vl{width:0;height:12px;border-left:1.5px solid var(--ink-3)}
+.sw-gap{width:14px;height:10px;border-radius:2px;background:var(--warn-bg);border:1px solid var(--line)}
+.sw-box{width:14px;height:10px;border:1px dotted var(--ink-3);border-radius:2px}
+.sw-bar{width:6px;height:12px;border-radius:1px;background:var(--rain)}
+.sw-hb{width:16px;height:9px;border-radius:2px;background:var(--est)}
+.sw-up{width:12px;height:9px;border-radius:2px;background:var(--warn)}.sw-dn{width:12px;height:9px;border-radius:2px;background:var(--note)}
+.sw-star{font-style:normal;font-size:13px;line-height:1;color:var(--ink-2)}
+.sw-hl{width:18px;height:0;border-top:1.5px dotted var(--warn)}
+.sw-ws{width:18px;height:0;border-top:2px solid var(--ink)}.sw-riv{width:18px;height:0;border-top:2px solid var(--water)}
+.sw-cell{width:14px;height:10px;border-radius:2px;background:var(--rain);opacity:.4}
+@media (max-width:600px){.legend{font-size:11.5px;gap:3px 10px}}
 .lvp{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;margin-left:8px;letter-spacing:0;vertical-align:middle}.lvp i{width:8px;height:8px;border-radius:50%}
 .kpi{border-top:3px solid var(--line)}.r2g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.r2g>div{background:var(--note-bg);border-radius:8px;padding:10px 12px}.r2g b{color:var(--ink)}.r2g>div>b:first-child{display:block;font-size:14px;color:var(--note);margin-bottom:2px}.r2g p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.6}@media (max-width:820px){.r2g{grid-template-columns:minmax(0,1fr)}}
 .kpi.lv-note{border-top:3px solid var(--note)}.kpi.lv-warn{border-top:3px solid var(--warn)}.kpi.lv-ok{border-top:3px solid var(--ok)}
@@ -370,6 +384,13 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .waf i{aspect-ratio:1;border-radius:2px;background:var(--low);opacity:0;transform:scale(.3);transition:opacity .25s var(--d),transform .3s var(--d)}
 .waf i.c1{background:var(--hi1)}.waf i.c2{background:var(--hi2)}.waf i.c3{background:var(--mid)}
 .in .waf i{opacity:1;transform:none}
+.ab-lg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px;color:var(--ink-2)}
+.ab-lg i{display:inline-block;vertical-align:middle;margin-right:5px}
+.ab-lg .d{width:8px;height:8px;border-radius:50%;background:var(--est)}
+.ab-lg .l{width:18px;height:0;border-top:3px solid var(--est)}
+.ab-lg .bd{width:18px;height:10px;border-radius:2px;background:var(--band)}
+.ab-lg .dl{width:18px;height:0;border-top:2px dashed var(--ly)}
+.ab-lg .dg{width:18px;height:0;border-top:1.5px dashed var(--ink-3)}
 .waf-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12px;color:var(--ink-2)}
 .waf-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;background:var(--low)}
 .waf-leg .c1{background:var(--hi1)}.waf-leg .c2{background:var(--hi2)}.waf-leg .c3{background:var(--mid)}
@@ -450,7 +471,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span></h2>
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
     <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
-    <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위</span><span><i class="sw-fbar"></i>예측 80% 범위 (점 = 중앙값, 색 = 참고 단계)</span><span><i class="sw-fcr"></i>기상청 예보강우 반영</span><span><i class="sw-zn n"></i>관심 (실측 상위 10% 이상)</span><span><i class="sw-zn w"></i>대응 검토 (25 mg/L 이상)</span></div>
+    <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-sq"></i>1·3·5일 예측 (색 = 참고 단계)</span><span><i class="sw-fbar"></i>예측 80% 범위</span><span><i class="sw-dash"></i>추정→예측 연결</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-vl"></i>기준일</span><span><i class="sw-zn n"></i>관심 구간 (상위 10%)</span><span><i class="sw-zn w"></i>대응 검토 구간 (25 이상)</span></div>
     <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
   </section>
   <section class="card" id="opsum" aria-label="운영 요약">
@@ -503,13 +524,13 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card" id="ss">
       <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
-      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 범위 (10–90%)</span><span><i class="sw-wf"></i>전진검증 예측 (실측일, 2019–26)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span></div>
+      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-wf"></i>전진검증 예측 (실측일)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 세로선 = 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-gap"></i>실측 없는 기간</span><span><i class="sw-box"></i>예측 1–5일 구간</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
     <div class="card" id="hydro">
       <h2>강우 · 유량</h2>
       <div class="stack">
-        <p class="hint keep">티센 일강우 P0 (원통·기린·내면, mm)</p>
+        <div class="legend"><span><i class="sw-bar"></i>티센 일강우 (원통·기린·내면, mm)</span></div>
         <div id="pRain" class="plot" style="height:140px" role="img" aria-label="일강우"></div>
         <div class="legend"><span><i class="sw-line" style="background:var(--flow)"></i>보정 면적비 일유량 (m³/s)</span><span><i class="sw-dot" style="background:var(--flow)"></i>실측 유량</span><span><i class="sw-fix"></i>수위로 보정한 날</span></div>
         <div id="pFlow" class="plot" style="height:140px" role="img" aria-label="일유량"></div>
@@ -524,9 +545,9 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section id="forecast">
     <div class="card">
       <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
-      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span></div>
+      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span><span><i class="sw-star">★</i>기상청 예보 강우일 때</span><span><i class="sw-hl"></i>관심 기준선</span></div>
       <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
-      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과. ★ = 기상청 예보.</p>
+      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과.</p>
     </div>
   </section>
 
@@ -536,9 +557,10 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><button class="btn c-latest" type="button">자료 마지막 날로</button></div>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
       <div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
+      <div class="legend"><span><i class="sw-up"></i>SS를 올린 요인</span><span><i class="sw-dn"></i>SS를 내린 요인</span></div>
       <div class="bars" id="shBars"></div>
       <p class="shtxt" id="shTxt"></p>
-      <p class="hint">평소 예측값에 항목별 배수를 곱하면 최종 예측입니다. 주황 = 올림, 파랑 = 내림.</p>
+      <p class="hint">평소 예측값에 항목별 배수를 곱하면 최종 예측입니다.</p>
     </div>
     <div class="card">
       <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
@@ -568,6 +590,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card">
       <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
       <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
+      <div class="legend"><span><i class="sw-hb"></i>상관계수 ρ (길수록 관계 강함)</span></div>
       <div class="bars" id="bars"></div>
       <p class="hint">Spearman ρ, 강우 X(t)와 SS(t+h), 2014–2024.</p>
     </div>
@@ -649,7 +672,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card">
       <h2>내린천2 유역도</h2>
       <div class="mapwrap"><svg id="map" role="img" aria-label="내린천2 유역 경계, 티센 분할, 강우관측소와 수질측정 지점"></svg></div>
-      <div class="legend"><span><i class="sw-dot" style="background:var(--warn)"></i>내린천2 수질측정 지점</span><span><i class="sw-dot" style="background:var(--rain)"></i>강우관측소 (AWS)</span><span><i class="sw-zone"></i>티센 분할</span></div>
+      <div class="legend"><span><i class="sw-dot" style="background:var(--warn)"></i>내린천2 수질측정 지점</span><span><i class="sw-dot" style="background:var(--rain)"></i>강우관측소 (AWS)</span><span><i class="sw-cell"></i>티센 분할 (진할수록 가중치 큼)</span><span><i class="sw-ws"></i>유역 경계</span><span><i class="sw-riv"></i>하천</span></div>
       <div class="wt" id="wt"></div>
       <dl class="facts">
         <dt>대상 지점</dt><dd>내린천2 (소양A, 1012A20)</dd>
@@ -751,6 +774,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="sub2">
       <h3>실측 SS: 평소엔 낮고, 큰 비 때 튑니다</h3>
       <svg class="obsplot" id="abObs" viewBox="0 0 720 220" role="img" aria-label="2014년 이후 실측 SS 점 그래프(로그 축)"></svg>
+      <div class="ab-lg rv" style="--d:.3s"><span><i class="d" style="opacity:.6"></i>실측 SS</span><span><i class="d" style="background:var(--hi2)"></i>25 mg/L 이상</span></div>
     </div>
     <p class="hint">유량은 원대교 일유량에 유역면적비 1.0414를 곱해 쓰고(기간별 R² 0.91–0.95), 원대교 유량이 수위와 크게 어긋난 73일은 2023년 수위–유량식으로 다시 계산했습니다. 강우는 1 mm 넘게 틀린 6일을 고치고, 기린 결빙 0값은 결측으로 처리했습니다.</p>
   </section>
@@ -778,6 +802,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <h2 class="as-h">로그 R² <span class="icount" data-from="0.630" data-v="0.770" data-d="3">0.770</span>, 오차 <span class="icount" data-from="3.51" data-v="2.79" data-d="2">2.79</span> mg/L</h2>
     <p class="as-lead">같은 2019–26 전진검증(295건) 기준, 단계마다 이전 단계 위에 더함</p>
     <svg class="prog" id="abProg" viewBox="0 0 720 300" role="img" aria-label="모델 개선 과정 선 그래프: 0.630에서 0.770"></svg>
+    <div class="ab-lg rv" style="--d:.4s"><span><i class="l"></i>단계별 로그 R²</span><span><i class="dl"></i>월별 평균만 쓴 값</span></div>
     <div class="tried">
       <h3><span class="icount" data-v="26" data-d="0">26</span>가지를 시험해 <b>2</b>가지만 남겼습니다</h3>
       <div class="chips" id="abChips"></div>
@@ -804,9 +829,11 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section class="as ia" id="a-lock">
     <p class="as-k">06 · 검증</p>
     <h2 class="as-h">2023년까지 배운 모델로, 처음 보는 2024–26년을 맞혀 봤습니다</h2>
-    <div class="lts-wrap"><h3>2024–26 실측(점)과 추정(선·80% 범위)</h3><svg class="lts" id="abLockTs" viewBox="0 0 720 220" role="img" aria-label="잠금평가 기간 실측과 추정 시계열"></svg></div>
+    <div class="lts-wrap"><h3>2024–26 실측과 추정</h3><svg class="lts" id="abLockTs" viewBox="0 0 720 220" role="img" aria-label="잠금평가 기간 실측과 추정 시계열"></svg>
+      <div class="ab-lg rv" style="--d:.4s"><span><i class="d" style="background:var(--obs)"></i>실측</span><span><i class="d" style="background:var(--hi2)"></i>80% 범위 밖 실측</span><span><i class="l" style="border-top-width:2px"></i>추정</span><span><i class="bd"></i>추정 80% 범위</span></div></div>
     <div class="lockg">
-      <svg class="lockplot" id="abLock" viewBox="0 0 400 400" role="img" aria-label="잠금평가 실측 대 추정 산점도"></svg>
+      <div><svg class="lockplot" id="abLock" viewBox="0 0 400 400" role="img" aria-label="잠금평가 실측 대 추정 산점도"></svg>
+      <div class="ab-lg rv" style="--d:.5s"><span><i class="d"></i>2024</span><span><i class="d" style="background:var(--rain)"></i>2025</span><span><i class="d" style="background:var(--ly)"></i>2026</span><span><i class="dg"></i>추정 = 실측</span></div></div>
       <div class="lockside">
         <div class="hbars" id="abLockYrs"></div>
         <p class="lockcov" id="abLockCov"></p>
@@ -1512,7 +1539,7 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     [1, 10, 100].forEach(v => { el('line', { x1: l, x2: W - r, y1: Y(v), y2: Y(v), class: 'gl' }, s); txt(s, l - 6, Y(v) + 4, v, { 'text-anchor': 'end' }); });
     for (let yr = 2014; yr <= 2026; yr += (W < 500 ? 4 : 2)) txt(s, X(yr + '-01-01'), H - 6, yr, { 'text-anchor': 'middle' });
     pts.forEach((o, i) => { el('circle', { cx: X(o[0]).toFixed(1), cy: Y(o[1]).toFixed(1), r: o[1] >= 25 ? 4 : 2.6, class: o[1] >= 25 ? 'hi' : '', style: 'transition-delay:' + (i * 2.2) + 'ms' }, s); });
-    txt(s, l + 4, t + 12, 'SS (mg/L, 로그 축) · 빨간 점 = 25 이상', {});
+    txt(s, l + 4, t + 12, 'SS (mg/L, 로그 축)', {});
   };
 
   // 개선 과정 선 그래프
