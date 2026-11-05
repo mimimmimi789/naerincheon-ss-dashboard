@@ -226,25 +226,162 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .hl-sub{margin:0;font-size:12.5px;color:var(--ink-2)}
 .cctl label{white-space:nowrap}
 @media (max-width:820px){.cctl label{flex:1 1 45%;flex-direction:column;align-items:stretch;gap:2px}.cctl .btn{flex:1 1 100%}.cctl select,.cctl input{width:100%}.headline{padding:13px 14px}}
-.isec{display:flex;flex-direction:column;gap:8px;margin-top:18px}
-.isec-h{font-size:17px;margin:0}
-.isec-lead{margin:0;font-size:13px;color:var(--ink-2)}
-.iintro-p{margin:0;font-size:14px}
-.ijump{display:flex;flex-wrap:wrap;gap:6px}
-.ijump a{font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2);text-decoration:none}
-.ijump a:hover{color:var(--ink);border-color:var(--ink-3)}
-.ifig{margin:0}
-.ifig img{display:block;width:100%;height:auto;border-radius:6px;background:#fff;border:1px solid var(--line)}
-.ifig figcaption{font-size:13px;color:var(--ink-2)}
-.ikpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.ikpi{border:1px solid var(--line);border-left:4px solid var(--est);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
-.ikpi span{font-size:12px;color:var(--ink-2)}.ikpi b{font-size:28px;font-variant-numeric:tabular-nums;line-height:1.15}.ikpi small{font-size:11.5px;color:var(--ink-3)}
-@media (max-width:820px){.ikpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.anim .ifig,.anim .ikpi{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
-.anim .ifig.in,.anim .ikpi.in{opacity:1;transform:none}
-.anim .ifig img{transform:scale(.97);transition:transform .8s ease .1s}
-.anim .ifig.in img{transform:none}
-@media (prefers-reduced-motion:reduce){.anim .ifig,.anim .ikpi,.anim .ifig img{opacity:1!important;transform:none!important;transition:none!important}}
+/* ── 상세 소개 탭 ── */
+.ab{--hi1:#e8622c;--hi2:#d23c3c;--mid:#f2b13a;--low:#cfe0f5;--b2:#8db8ee}
+:root[data-theme="dark"] .ab{--low:#26394f;--b2:#2f5f95}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ab{--low:#26394f;--b2:#2f5f95}}
+.ab-sub-tabs{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px;width:fit-content;max-width:100%;position:sticky;top:8px;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.ab-sub-tabs button{font:inherit;font-size:13.5px;border:0;background:none;color:var(--ink-2);padding:7px 15px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+.ab-sub-tabs button:hover{color:var(--ink)}
+.ab-sub-tabs button.on{background:var(--est);color:#fff;font-weight:600}
+@media (max-width:820px){.ab-sub-tabs{width:100%;justify-content:space-between;top:52px}.ab-sub-tabs button{flex:1;padding:7px 4px;font-size:13px}}
+.ab-pane{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.ab-pane[hidden]{display:none}
+.ab-pane.enter{animation:abFade .45s ease}
+@keyframes abFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ab-hero{position:relative;overflow:hidden;border-radius:var(--r);padding:26px 22px 22px;background:linear-gradient(135deg,var(--side) 0%,var(--side-2) 100%);color:var(--side-ink);display:flex;flex-direction:column;gap:10px}
+.ab-wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:120px;opacity:.35;pointer-events:none}
+.ab-wave path{fill:none;stroke:var(--side-ink-2);stroke-width:2;stroke-dasharray:1400;stroke-dashoffset:1400}
+.ab-wave .w2{stroke-width:1.4;opacity:.7}
+.ab-hero.in .ab-wave .w1{animation:abDraw 2.4s ease forwards,abDrift 9s ease-in-out 2.4s infinite alternate}
+.ab-hero.in .ab-wave .w2{animation:abDraw 2.8s ease .3s forwards,abDrift 11s ease-in-out 3s infinite alternate-reverse}
+@keyframes abDraw{to{stroke-dashoffset:0}}
+@keyframes abDrift{from{transform:translateX(0)}to{transform:translateX(-40px)}}
+.ab-kick{margin:0;font-size:12.5px;color:var(--side-ink-2);letter-spacing:.02em;position:relative}
+.ab-title{margin:0;font-size:24px;line-height:1.4;position:relative}
+.ab-sub{margin:0;font-size:13.5px;color:var(--side-ink-2);max-width:640px;position:relative}
+.ab-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px;position:relative}
+.ab-kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;backdrop-filter:blur(2px)}
+.ab-kpi span{font-size:12px;color:var(--side-ink-2)}
+.ab-kpi b{font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums;color:#fff}
+.ab-kpi small{font-size:11.5px;color:var(--side-ink-2)}
+@media (max-width:820px){.ab-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.ab-title{font-size:19px}.ab-kpi b{font-size:26px}}
+.as{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 20px 18px;display:flex;flex-direction:column;gap:12px}
+.as-k{margin:0;font-size:12px;font-weight:600;color:var(--est);letter-spacing:.04em}
+.as-h{margin:0;font-size:19px;line-height:1.4}
+.as-lead{margin:0;font-size:13px;color:var(--ink-2)}
+.as .hint{font-size:12px;color:var(--ink-3);margin:0}
+.as h3{font-size:14px;margin:0 0 8px}
+.as h3 small{font-weight:400;color:var(--ink-3);font-size:12px}
+.sub2{margin-top:6px}
+.icount{font-variant-numeric:tabular-nums}
+/* 나타나기 */
+.ab .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease var(--d,0s),transform .6s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.ab .in .rv,.ab .rv.in{opacity:1;transform:none}
+/* 흐름도 */
+.flow{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr 34px 1fr;align-items:stretch}
+.fcol{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.fcol h3{font-size:13px;margin:0 0 2px;color:var(--ink-2)}
+.fn{margin:0;font-size:13px;padding:6px 9px;border-radius:7px;background:var(--panel);border:1px solid var(--line)}
+.fn em{font-style:normal;color:var(--ink-3);font-size:12px;margin-left:4px}
+.fout{border-color:var(--est);background:var(--note-bg)}
+.fout .fn{border-color:transparent;font-weight:600;color:var(--note)}
+.farr{position:relative;display:flex;align-items:center;justify-content:center}
+.farr::before{content:"";position:absolute;left:4px;right:4px;top:50%;height:2px;background:var(--line)}
+.farr::after{content:"";position:absolute;right:2px;top:calc(50% - 5px);border:5px solid transparent;border-left-color:var(--ink-3);border-right:0}
+.farr i{position:absolute;left:4px;top:calc(50% - 4px);width:8px;height:8px;border-radius:50%;background:var(--est);opacity:0}
+.in .farr i{animation:abFlow 1.6s linear infinite}
+.in .farr:nth-of-type(4) i{animation-delay:.5s}.in .farr:nth-of-type(6) i{animation-delay:1s}
+@keyframes abFlow{0%{left:4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 12px);opacity:0}}
+@media (max-width:820px){.flow{grid-template-columns:1fr}.farr{height:30px}.farr::before{left:50%;right:auto;top:4px;bottom:4px;width:2px;height:auto}.farr::after{right:auto;left:calc(50% - 5px);top:auto;bottom:2px;border:5px solid transparent;border-top-color:var(--ink-3);border-bottom:0}
+  .farr i{left:calc(50% - 4px);top:4px}@keyframes abFlow{0%{top:4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 12px);opacity:0}}}
+/* 자료 카드 */
+.dcards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.dc{border:1px solid var(--line);border-top:3px solid var(--est);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.dc b{font-size:14px}.dc span{font-size:12px;color:var(--ink-2);line-height:1.5}
+.dc:nth-child(2){border-top-color:var(--rain)}.dc:nth-child(3){border-top-color:var(--flow)}.dc:nth-child(4){border-top-color:var(--ly)}.dc:nth-child(5){border-top-color:var(--water)}
+@media (max-width:820px){.dcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tstack{display:flex;height:34px;border-radius:8px;overflow:hidden;background:var(--bg)}
+.tstack i{display:flex;align-items:center;padding-left:10px;width:calc(var(--w)*1%);color:#fff;font-style:normal;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.tstack .s1{background:var(--est)}.tstack .s2{background:var(--ly)}.tstack .s3{background:var(--rain)}
+.in .tstack i{transform:none}
+.tstack-note{margin:4px 0 0;font-size:12px;color:var(--ink-3);text-align:right}
+.obsplot,.prog,.lockplot{width:100%;height:auto;display:block;overflow:visible}
+.obsplot text,.prog text,.lockplot text{fill:var(--ink-3);font-size:12px;font-family:var(--f-body)}
+.ab .gl{stroke:var(--line);stroke-width:1}
+.obsplot circle{fill:var(--est);opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:opacity .3s,transform .4s}
+.obsplot circle.hi{fill:var(--hi2)}
+.in .obsplot circle{opacity:.55;transform:none}.in .obsplot circle.hi{opacity:.95}
+/* 가로 막대 */
+.hbars{display:flex;flex-direction:column;gap:9px;position:relative}
+.hb{display:grid;grid-template-columns:150px minmax(0,1fr) 92px;align-items:center;gap:10px}
+.hb-l{font-size:13px;display:flex;flex-direction:column;line-height:1.3}
+.hb-l small{font-size:11px;color:var(--ink-3)}
+.hb-t{display:flex;flex-direction:column;gap:3px}
+.hb-t i{display:block;height:13px;border-radius:0 4px 4px 0;background:var(--est);width:calc(var(--w)*100%);transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.hb-t i.b2{background:var(--b2)}.hb-t i.warm{background:var(--hi1)}
+.hb-t:only-child i,.hb-t i:only-child{height:20px}
+.in .hb-t i{transform:none}
+.hb b{font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hb.dim .hb-l{color:var(--ink-3)}.hb.dim .hb-t i{background:var(--ink-3);opacity:.45}
+.hb.best .hb-l{font-weight:700;color:var(--est)}.hb.best b{color:var(--est)}
+.hb-leg{display:flex;gap:14px;font-size:12px;color:var(--ink-2);padding-left:160px}
+.hb-leg i{display:inline-block;width:12px;height:10px;border-radius:2px;background:var(--est);margin-right:5px}.hb-leg i.b2{background:var(--b2)}
+.ratio{padding-bottom:16px}
+.hb-one{position:absolute;top:-4px;bottom:0;left:calc(160px + (100% - 160px - 102px) * .909);border-left:2px dashed var(--ink-3);pointer-events:none}
+.hb-one span{position:absolute;bottom:-4px;left:4px;font-size:11px;color:var(--ink-3)}
+@media (max-width:820px){.hb{grid-template-columns:96px minmax(0,1fr) 70px;gap:6px}.hb-l{font-size:12px}.hb b{font-size:12px}.hb-leg{padding-left:0}.hb-one{left:calc(102px + (100% - 102px - 76px) * .909)}}
+/* 개선 과정 */
+.prog .pl{fill:none;stroke:var(--est);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1)}
+.prog .pt{fill:var(--panel);stroke:var(--est);stroke-width:3;opacity:0;transition:opacity .3s}
+.prog .pv{fill:var(--ink);font-size:15px;font-weight:700;opacity:0;transition:opacity .4s}
+.prog .px{font-size:11.5px}.prog .px.sm{font-size:10px}.prog .pv{font-size:14px}
+.prog .base{stroke:var(--ly);stroke-dasharray:6 5;stroke-width:1.5}
+.prog .bl{fill:var(--ly)}
+.in .prog .pt,.in .prog .pv{opacity:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);background:var(--bg);opacity:0;transform:scale(.6);transition:opacity .35s ease var(--d),transform .45s cubic-bezier(.3,1.6,.5,1) var(--d)}
+.chips span.ok{border-color:var(--ok);color:var(--ok);background:var(--ok-bg);font-weight:600}
+.chips span.ok::before{content:"✓ "}
+.in .chips span{opacity:1;transform:none}
+.in .chips span:not(.ok){opacity:.75}
+/* 세로 막대 */
+.vbars{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;height:260px;padding-top:20px;padding-left:4px}
+.vb{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.vb-c{flex:1;width:100%;max-width:110px;display:flex;align-items:flex-end;position:relative}
+.vb-c i{display:block;width:100%;height:calc(var(--h)*100%/.85);background:linear-gradient(180deg,var(--est),color-mix(in srgb,var(--est) 70%,transparent));border-radius:6px 6px 0 0;position:relative;transform:scaleY(0);transform-origin:bottom;transition:transform 1.1s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.vb.ref .vb-c i{background:var(--b2)}
+.vb-c i b{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:14px;font-variant-numeric:tabular-nums;opacity:0;transition:opacity .4s calc(var(--d,0s) + .8s)}
+.in .vb-c i{transform:none}.in .vb-c i b{opacity:1}
+.vb>span{font-size:13px;font-weight:600;white-space:nowrap}.vb-c i{font-style:normal}.vb>small{font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+.vb-base{position:absolute;left:0;right:0;bottom:calc(42px + (100% - 62px) * var(--y) / .85);border-top:2px dashed var(--ly);z-index:1;transform:scaleX(0);transform-origin:left;transition:transform .9s ease .9s}
+.vb-base span{position:absolute;right:0;top:-18px;font-size:11.5px;color:var(--ly);background:var(--panel);padding:0 4px}
+.in .vb-base{transform:none}
+/* 잠금평가 */
+.lockplot{max-width:400px}.lockg{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:20px;align-items:center}
+@media (max-width:820px){.lockg{grid-template-columns:1fr}}
+.lockplot .dg{stroke:var(--ink-3);stroke-dasharray:4 4}
+.lockplot circle{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:opacity .3s,transform .45s cubic-bezier(.3,1.6,.5,1)}
+.in .lockplot circle{opacity:.8;transform:none}
+.lockcov{margin:4px 0 0;font-size:13px;color:var(--ink-2)}
+.lockside .hb{grid-template-columns:72px minmax(0,1fr) 54px}
+.lockside .hb-one{left:calc(82px + (100% - 82px - 64px) * var(--x))}.lockside .hb-one span{bottom:auto;top:-16px;white-space:nowrap}
+/* 와플 */
+.highg{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:center}
+@media (max-width:820px){.highg{grid-template-columns:1fr}}
+.waf{max-width:520px;display:grid;grid-template-columns:repeat(25,1fr);gap:3px}
+.waf i{aspect-ratio:1;border-radius:2px;background:var(--low);opacity:0;transform:scale(.3);transition:opacity .25s var(--d),transform .3s var(--d)}
+.waf i.c1{background:var(--hi1)}.waf i.c2{background:var(--hi2)}.waf i.c3{background:var(--mid)}
+.in .waf i{opacity:1;transform:none}
+.waf-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12px;color:var(--ink-2)}
+.waf-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;background:var(--low)}
+.waf-leg .c1{background:var(--hi1)}.waf-leg .c2{background:var(--hi2)}.waf-leg .c3{background:var(--mid)}
+.reasons{display:flex;flex-direction:column;gap:10px}
+.rs{display:flex;gap:12px;align-items:flex-start}
+.rs b{flex:none;width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--panel);display:grid;place-items:center;font-size:14px}
+.rs p{margin:0;font-size:14px;font-weight:600;display:flex;flex-direction:column;gap:2px}
+.rs small{font-weight:400;font-size:12px;color:var(--ink-3)}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:820px){.ba{grid-template-columns:1fr}}
+.ba-c{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.ba-c h3{font-size:13px;color:var(--ink-2)}
+.ba-c p{margin:0;display:grid;grid-template-columns:1fr 60px 70px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
+.ba-c s{color:var(--ink-3);text-decoration:none;text-align:right;font-variant-numeric:tabular-nums}
+.ba-c s::after{content:" →";color:var(--ink-3)}
+.ba-c p b{text-align:right;font-size:18px;color:var(--ok);font-variant-numeric:tabular-nums}
+.ab-end{background:var(--note-bg);border-color:transparent;text-align:center;align-items:center}
+.ab-end .as-h{font-size:16px;color:var(--note)}
+@media (prefers-reduced-motion:reduce){.ab *,.ab *::before,.ab *::after{transition:none!important;animation:none!important}.ab .rv,.ab .chips span,.ab .waf i,.ab circle,.ab .pt,.ab .pv{opacity:1!important;transform:none!important}.ab .hb-t i,.ab .tstack i,.ab .vb-c i,.ab .vb-base{transform:none!important}.ab-wave path{stroke-dashoffset:0!important}}
 </style>
 
 <div class="app">
@@ -538,65 +675,165 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   </section>
   </div>
 
-  <div class="tab" id="tab-about" data-tab="about" hidden>
-  <section class="card iintro">
-    <h2>이 대시보드는</h2>
-    <p class="iintro-p">내린천2(1012A20) SS를 매일 추정하고 1·3·5일 뒤를 예측해, 고사취수장 취수원 관리에 참고하도록 만든 화면입니다.</p>
-    <p class="hint">실측 SS는 약 8일 간격으로 채수되고 약 2달 늦게 공개됩니다. 그 사이를 매일 있는 강우·수위·유량·기온으로 채우고, 기상청 예보 강우로 앞날을 예측합니다. 이 SS는 고사취수장 복류수로 들어가기 전 하천수 수질로 가정합니다. 그림을 누르면 크게 볼 수 있습니다.</p>
-    <div class="ikpis">
-      <div class="ikpi"><span>일별 추정 로그 R²</span><b class="icount" data-v="0.770" data-d="3">0.770</b><small>월별 평균만 쓰면 0.368</small></div>
-      <div class="ikpi"><span>1일 예측 로그 R²</span><b class="icount" data-v="0.759" data-d="3">0.759</b><small>기상청 예보 사용 · 257건</small></div>
-      <div class="ikpi"><span>잠금평가 로그 R²</span><b class="icount" data-v="0.794" data-d="3">0.794</b><small>2024–26 실측 106건</small></div>
-      <div class="ikpi"><span>일별 추정 MAE</span><b class="icount" data-v="2.79" data-d="2">2.79</b><small>mg/L · 월별 평균 4.54</small></div>
-    </div>
-    <div class="ijump" role="navigation" aria-label="상세소개 목차"><a href="#i-sum">한눈에</a><a href="#i-data">자료</a><a href="#i-model">모델</a><a href="#i-perf">검증</a><a href="#i-high">고농도</a></div>
-  </section>
-  <section class="isec" id="i-sum">
-    <h2 class="isec-h">1. 한눈에</h2>
-    <p class="isec-lead">핵심 수치와 모델이 돌아가는 흐름.</p>
-    <div class="grid g-2">
-    <figure class="card ifig"><h2>핵심 성과</h2><a href="intro/01_summary.webp" target="_blank" rel="noopener"><img src="intro/01_summary.webp" alt="핵심 성과" loading="lazy" width="1600" height="900"></a><figcaption>일별 추정 로그 R² 0.770, 1일 예측 0.759.</figcaption></figure>
-    <figure class="card ifig"><h2>모델 작동 모식도</h2><a href="intro/13_schematic.webp" target="_blank" rel="noopener"><img src="intro/13_schematic.webp" alt="모델 작동 모식도" loading="lazy" width="1600" height="900"></a><figcaption>입력 → 변수 → 일별 추정·1·3·5일 예측 → 대시보드.</figcaption><p class="hint">홍수일로 판정된 날(전체의 약 25%)에만 홍수 보정을 적용하고, 1일 예측이 6 mg/L 이상이면 고농도 모드로 보정합니다.</p></figure>
+  <div class="tab ab" id="tab-about" data-tab="about" hidden>
+  <div class="ab-sub-tabs" role="tablist" aria-label="상세 소개 세부 탭"><button type="button" role="tab" data-sub="sum" class="on">한눈에</button><button type="button" role="tab" data-sub="data">자료</button><button type="button" role="tab" data-sub="model">모델</button><button type="button" role="tab" data-sub="perf">검증</button><button type="button" role="tab" data-sub="high">고농도</button></div>
+  <div class="ab-pane" data-sub="sum">
+  <section class="ab-hero ia">
+    <svg class="ab-wave" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 110 C150 70 300 150 450 105 S750 60 900 100 S1100 140 1200 95"/><path class="w2" d="M0 128 C200 98 330 160 520 124 S820 92 980 122 S1120 146 1200 120"/></svg>
+    <p class="ab-kick rv">캡스톤디자인2 · 내린천2 총량측정망</p>
+    <h2 class="ab-title rv" style="--d:.1s">비가 오면 흙탕물이 얼마나 될까?<br>매일 추정하고, 1·3·5일 앞을 봅니다.</h2>
+    <p class="ab-sub rv" style="--d:.2s">실측 SS는 약 8일에 한 번뿐이라, 매일 있는 강우·수위·기온으로 빈 날을 채우고 기상청 예보로 앞날을 예측합니다.</p>
+    <div class="ab-kpis">
+      <div class="ab-kpi rv" style="--d:.25s"><span>일별 추정 로그 R²</span><b class="icount" data-v="0.770" data-d="3">0.770</b><small>월별 평균만 쓰면 0.368</small></div>
+      <div class="ab-kpi rv" style="--d:.35s"><span>1일 예측 로그 R²</span><b class="icount" data-v="0.759" data-d="3">0.759</b><small>기상청 예보 사용</small></div>
+      <div class="ab-kpi rv" style="--d:.45s"><span>처음 보는 자료 로그 R²</span><b class="icount" id="abLockKpi" data-v="0.794" data-d="3">0.794</b><small id="abLockKpiS">2024–26 실측 106건</small></div>
+      <div class="ab-kpi rv" style="--d:.55s"><span>일별 평균 오차</span><b class="icount" data-v="2.79" data-d="2">2.79</b><small>mg/L · 월별 평균 4.54</small></div>
     </div>
   </section>
-  <section class="isec" id="i-data">
-    <h2 class="isec-h">2. 사용한 자료</h2>
-    <p class="isec-lead">매일 있는 강우·수위·유량·기온과 실측 SS 493건.</p>
-    <div class="grid g-2">
-    <figure class="card ifig"><h2>사용한 자료</h2><a href="intro/11_data.webp" target="_blank" rel="noopener"><img src="intro/11_data.webp" alt="사용한 자료" loading="lazy" width="1600" height="900"></a><figcaption>자료 5종과 정리 방법.</figcaption></figure>
-    <figure class="card ifig"><h2>SS 실측 현황</h2><a href="intro/12_ss_obs.webp" target="_blank" rel="noopener"><img src="intro/12_ss_obs.webp" alt="SS 실측 현황" loading="lazy" width="1600" height="900"></a><figcaption>2014–26 실측, 대부분 10 mg/L 아래.</figcaption></figure>
-    <figure class="card ifig"><h2>티센 유역 강우</h2><a href="intro/14_thiessen.webp" target="_blank" rel="noopener"><img src="intro/14_thiessen.webp" alt="티센 유역 강우" loading="lazy" width="1600" height="900"></a><figcaption>원통 4.9% · 기린 51.1% · 내면 44.0%.</figcaption></figure>
-    <figure class="card ifig"><h2>유량: 유역면적비율법</h2><a href="intro/16_arearatio.webp" target="_blank" rel="noopener"><img src="intro/16_arearatio.webp" alt="유량: 유역면적비율법" loading="lazy" width="1600" height="900"></a><figcaption>내린천2 유량 = 원대교 × 1.0414.</figcaption></figure>
-    <figure class="card ifig"><h2>유량: 수위로 보정</h2><a href="intro/17_stagefix.webp" target="_blank" rel="noopener"><img src="intro/17_stagefix.webp" alt="유량: 수위로 보정" loading="lazy" width="1600" height="900"></a><figcaption>수위와 어긋난 73일을 수위로 다시 계산.</figcaption></figure>
+
+  <section class="as ia" id="a-flow">
+    <p class="as-k">01 · 작동 방식</p>
+    <h2 class="as-h">매일 아침 07:30, 자료가 모델을 지나 화면이 됩니다</h2>
+    <div class="flow">
+      <div class="fcol rv" style="--d:0s"><h3>입력 자료</h3><p class="fn">강우 <em>AWS 3곳</em></p><p class="fn">수위·유량 <em>원대교</em></p><p class="fn">기온 <em>인제 ASOS</em></p><p class="fn">예보 강우 <em>기상청</em></p></div>
+      <div class="farr" aria-hidden="true"><i></i></div>
+      <div class="fcol rv" style="--d:.25s"><h3>변수 만들기</h3><p class="fn">누적 강우</p><p class="fn">첨두 수위·상승</p><p class="fn">기온</p><p class="fn">홍수 사상</p></div>
+      <div class="farr" aria-hidden="true"><i></i></div>
+      <div class="fcol rv" style="--d:.5s"><h3>모델</h3><p class="fn">XGB + Ridge 혼합</p><p class="fn">홍수일 보정</p><p class="fn">1일 고농도 모드</p></div>
+      <div class="farr" aria-hidden="true"><i></i></div>
+      <div class="fcol fout rv" style="--d:.75s"><h3>결과</h3><p class="fn">일별 SS 추정</p><p class="fn">1·3·5일 예측</p><p class="fn">80% 범위·참고 단계</p></div>
     </div>
+    <p class="hint">홍수일로 판정된 날(전체의 약 25%)에만 홍수 보정을 켜고, 1일 예측이 6 mg/L 이상이면 고농도 모드로 보정합니다. 사용자 PC 작업 스케줄러가 매일 07:30에 실행해 사이트를 갱신합니다.</p>
   </section>
-  <section class="isec" id="i-model">
-    <h2 class="isec-h">3. 모델과 개선 과정</h2>
-    <p class="isec-lead">빈 날을 채우는 방법을 비교하고, 변수를 하나씩 더해 개선.</p>
-    <div class="grid g-2">
-    <figure class="card ifig"><h2>수질 보간 vs 강우·유량 모델</h2><a href="intro/15_interp.webp" target="_blank" rel="noopener"><img src="intro/15_interp.webp" alt="수질 보간 vs 강우·유량 모델" loading="lazy" width="1600" height="900"></a><figcaption>수질 보간은 측정한 날만 가능, 현재 모델은 매일 추정.</figcaption><p class="hint">같은 분할(≤2023 학습) 기준 원래 단위 R²: 수질 5항목 RF 0.93/0.86, 현재 모델 0.82/0.81(2024–25/2026).</p></figure>
-    <figure class="card ifig"><h2>모델 개선 과정</h2><a href="intro/02_progress.webp" target="_blank" rel="noopener"><img src="intro/02_progress.webp" alt="모델 개선 과정" loading="lazy" width="1600" height="900"></a><figcaption>로그 R² 0.630 → 0.770, MAE 3.51 → 2.79.</figcaption></figure>
-    <figure class="card ifig"><h2>시도했지만 효과 없던 방법</h2><a href="intro/08_tried.webp" target="_blank" rel="noopener"><img src="intro/08_tried.webp" alt="시도했지만 효과 없던 방법" loading="lazy" width="1600" height="900"></a><figcaption>24가지 시험, 채택은 2가지.</figcaption><p class="hint">GRU·TCN·SARIMAX·PINN 등 일부 값은 11/02 모델(0.722) 기준입니다.</p></figure>
+
+  </div>
+
+  <div class="ab-pane" data-sub="data" hidden>
+  <section class="as ia" id="a-data">
+    <p class="as-k">02 · 자료</p>
+    <h2 class="as-h">정답은 실측 SS <span class="icount" data-v="493" data-d="0">493</span>건, 나머지는 매일 있는 자료</h2>
+    <div class="dcards">
+      <div class="dc rv" style="--d:0s"><b>SS 실측</b><span>약 8일에 1번 채수<br>약 2달 늦게 공개</span></div>
+      <div class="dc rv" style="--d:.1s"><b>강우</b><span>원통·기린·내면<br>티센 가중 평균</span></div>
+      <div class="dc rv" style="--d:.2s"><b>수위·유량</b><span>원대교 일·시간<br>유량 × 1.0414</span></div>
+      <div class="dc rv" style="--d:.3s"><b>기온</b><span>인제 ASOS<br>최고·최저·평균</span></div>
+      <div class="dc rv" style="--d:.4s"><b>예보 강우</b><span>기상청 단기예보<br>매일 07:30</span></div>
     </div>
+    <div class="sub2">
+      <h3>유역 강우는 면적 비율로 섞습니다 (티센)</h3>
+      <div class="tstack"><i class="s1" style="--w:51.1;--d:.1s"><span>기린 51.1%</span></i><i class="s2" style="--w:44.0;--d:.4s"><span>내면 44.0%</span></i><i class="s3" style="--w:4.9;--d:.7s"></i></div>
+      <p class="tstack-note">원통 4.9%</p>
+    </div>
+    <div class="sub2">
+      <h3>실측 SS: 평소엔 낮고, 큰 비 때 튑니다</h3>
+      <svg class="obsplot" id="abObs" viewBox="0 0 720 220" role="img" aria-label="2014년 이후 실측 SS 점 그래프(로그 축)"></svg>
+    </div>
+    <p class="hint">유량은 원대교 일유량에 유역면적비 1.0414를 곱해 쓰고(기간별 R² 0.91–0.95), 원대교 유량이 수위와 크게 어긋난 73일은 2023년 수위–유량식으로 다시 계산했습니다. 강우는 1 mm 넘게 틀린 6일을 고치고, 기린 결빙 0값은 결측으로 처리했습니다.</p>
   </section>
-  <section class="isec" id="i-perf">
-    <h2 class="isec-h">4. 성능 검증</h2>
-    <p class="isec-lead">학습에 쓰지 않은 기간으로만 평가.</p>
-    <div class="grid g-2">
-    <figure class="card ifig"><h2>예측 기간별 성능</h2><a href="intro/03_horizon.webp" target="_blank" rel="noopener"><img src="intro/03_horizon.webp" alt="예측 기간별 성능" loading="lazy" width="1600" height="900"></a><figcaption>1일은 일별 추정과 비슷, 3·5일은 예보 강우 오차로 떨어짐.</figcaption></figure>
-    <figure class="card ifig"><h2>전진검증 (2019–26)</h2><a href="intro/06_walkforward.webp" target="_blank" rel="noopener"><img src="intro/06_walkforward.webp" alt="전진검증 (2019–26)" loading="lazy" width="1600" height="900"></a><figcaption>그해 이전 자료로만 학습해 맞힌 295건.</figcaption></figure>
-    <figure class="card ifig"><h2>잠금평가 시계열</h2><a href="intro/04_lock_ts.webp" target="_blank" rel="noopener"><img src="intro/04_lock_ts.webp" alt="잠금평가 시계열" loading="lazy" width="1600" height="900"></a><figcaption>2023년까지 학습 → 2024–26 실측 106건.</figcaption></figure>
-    <figure class="card ifig"><h2>잠금평가 연도별</h2><a href="intro/05_lock_scatter.webp" target="_blank" rel="noopener"><img src="intro/05_lock_scatter.webp" alt="잠금평가 연도별" loading="lazy" width="1600" height="900"></a><figcaption>로그 R² 0.794, MAE 1.67 mg/L.</figcaption></figure>
-    <figure class="card ifig"><h2>1·3일 예측 vs 실측</h2><a href="intro/07_fc13.webp" target="_blank" rel="noopener"><img src="intro/07_fc13.webp" alt="1·3일 예측 vs 실측" loading="lazy" width="1600" height="900"></a><figcaption>기상청 예보 보관본으로 예측한 값.</figcaption><p class="hint">고농도 모드 반영 전 값입니다(1일 로그 R² 0.761, 현재 0.759).</p></figure>
+
+  </div>
+
+  <div class="ab-pane" data-sub="model" hidden>
+  <section class="as ia" id="a-fill">
+    <p class="as-k">03 · 빈 날 채우기</p>
+    <h2 class="as-h">수질 보간은 측정한 날만, 현재 모델은 매일</h2>
+    <p class="as-lead">2023년까지 학습 → 2024–25 / 2026 실측으로 시험한 R²</p>
+    <div class="hbars" id="abFill">
+      <div class="hb dim"><span class="hb-l">수질 5항목 RF<small>수질 측정한 날만</small></span><div class="hb-t"><i style="--w:.93;--d:0s"></i><i class="b2" style="--w:.86;--d:.1s"></i></div><b>0.93 · 0.86</b></div>
+      <div class="hb"><span class="hb-l">강우·유량 RF<small>초기 12입력</small></span><div class="hb-t"><i style="--w:.61;--d:.15s"></i><i class="b2" style="--w:.71;--d:.25s"></i></div><b>0.61 · 0.71</b></div>
+      <div class="hb"><span class="hb-l">SVR<small>2026년 불안정</small></span><div class="hb-t"><i style="--w:.91;--d:.3s"></i><i class="b2" style="--w:.04;--d:.4s"></i></div><b>0.91 · 0.04</b></div>
+      <div class="hb"><span class="hb-l">유량 거듭제곱식</span><div class="hb-t"><i style="--w:.19;--d:.45s"></i><i class="b2" style="--w:.16;--d:.55s"></i></div><b>0.19 · 0.16</b></div>
+      <div class="hb best"><span class="hb-l">현재 모델<small>강우·수위·기온</small></span><div class="hb-t"><i style="--w:.82;--d:.6s"></i><i class="b2" style="--w:.81;--d:.7s"></i></div><b>0.82 · 0.81</b></div>
+      <div class="hb-leg"><span><i></i>2024–25 (80건)</span><span><i class="b2"></i>2026 (26건)</span></div>
     </div>
+    <p class="hint">수질 5항목(pH·BOD·DO·T-P·TOC) RF는 정확하지만 수질도 SS와 같은 날만 측정해 빈 4,107일에는 쓸 수 없습니다. 실측 사이를 선으로 잇는 보간은 로그 R² 0.14에 그쳤습니다. 출처: 팀 문서 「내린천2 SS 분석 발표 핵심 요약」(2026-10-29), 현재 모델은 같은 분할의 잠금평가.</p>
   </section>
-  <section class="isec" id="i-high">
-    <h2 class="isec-h">5. 고농도 SS</h2>
-    <p class="isec-lead">큰 비 날은 아직 낮게 예측하는 경향이 있습니다.</p>
-    <div class="grid g-2">
-    <figure class="card ifig"><h2>고농도 예측의 한계</h2><a href="intro/09_highss_limit.webp" target="_blank" rel="noopener"><img src="intro/09_highss_limit.webp" alt="고농도 예측의 한계" loading="lazy" width="1600" height="900"></a><figcaption>25 mg/L 이상 13건 중 4건은 비 없이 발생.</figcaption></figure>
-    <figure class="card ifig"><h2>고농도 대응 효과</h2><a href="intro/10_highss_fix.webp" target="_blank" rel="noopener"><img src="intro/10_highss_fix.webp" alt="고농도 대응 효과" loading="lazy" width="1600" height="900"></a><figcaption>홍수일 보정과 1일 고농도 모드 전후 비교.</figcaption></figure>
+
+  <section class="as ia" id="a-prog">
+    <p class="as-k">04 · 개선 과정</p>
+    <h2 class="as-h">로그 R² <span class="icount" data-from="0.630" data-v="0.770" data-d="3">0.770</span>, 오차 <span class="icount" data-from="3.51" data-v="2.79" data-d="2">2.79</span> mg/L</h2>
+    <p class="as-lead">같은 2019–26 전진검증(295건) 기준, 단계마다 이전 단계 위에 더함</p>
+    <svg class="prog" id="abProg" viewBox="0 0 720 300" role="img" aria-label="모델 개선 과정 선 그래프: 0.630에서 0.770"></svg>
+    <div class="tried">
+      <h3><span class="icount" data-v="26" data-d="0">26</span>가지를 시험해 <b>2</b>가지만 남겼습니다</h3>
+      <div class="chips" id="abChips"></div>
     </div>
+    <p class="hint">시험한 방법은 같은 전진검증으로 로그 R² 변화를 비교했고, ±0.006 안쪽은 시드·표본 차이 수준으로 봤습니다. GRU·TCN·SARIMAX·PINN 값은 11/02 모델(0.722) 기준입니다.</p>
+  </section>
+
+  </div>
+
+  <div class="ab-pane" data-sub="perf" hidden>
+  <section class="as ia" id="a-hz">
+    <p class="as-k">05 · 예측 기간</p>
+    <h2 class="as-h">1일 뒤는 오늘 추정만큼, 3일부터는 예보 비 때문에 떨어집니다</h2>
+    <div class="vbars">
+      <div class="vb-base" style="--y:.368"><span>월별 평균 0.368</span></div>
+      <div class="vb"><div class="vb-c"><i style="--h:.770;--d:0s"><b>0.770</b></i></div><span>오늘 추정</span><small>MAE 2.79</small></div>
+      <div class="vb"><div class="vb-c"><i style="--h:.759;--d:.15s"><b>0.759</b></i></div><span>1일 뒤</span><small>MAE 2.89</small></div>
+      <div class="vb"><div class="vb-c"><i style="--h:.612;--d:.3s"><b>0.612</b></i></div><span>3일 뒤</span><small>MAE 3.08</small></div>
+      <div class="vb ref"><div class="vb-c"><i style="--h:.433;--d:.45s"><b>0.433</b></i></div><span>5일 뒤</span><small>MAE 4.47 · 참고</small></div>
+    </div>
+    <p class="hint">1·3일은 기상청 단기예보 보관본이 있는 2019–25 채수일(1일 257건, 3일 219건)로 평가했습니다. 5일은 예보 보관본이 없어 관측 자료만 쓴 참고값(295건)입니다.</p>
+  </section>
+
+  <section class="as ia" id="a-lock">
+    <p class="as-k">06 · 검증</p>
+    <h2 class="as-h">2023년까지 배운 모델로, 처음 보는 2024–26년을 맞혀 봤습니다</h2>
+    <div class="lockg">
+      <svg class="lockplot" id="abLock" viewBox="0 0 400 400" role="img" aria-label="잠금평가 실측 대 추정 산점도"></svg>
+      <div class="lockside">
+        <div class="hbars" id="abLockYrs"></div>
+        <p class="lockcov" id="abLockCov"></p>
+      </div>
+    </div>
+    <p class="hint">잠금평가는 2023년까지의 실측으로만 학습한 모델을 고정해 두고 2024년 이후 실측을 맞힌 결과입니다(약 8:2 분할). 새 실측이 공개되면 매일 갱신 때 자동으로 다시 계산되어, 이 숫자는 발표 자료와 조금 다를 수 있습니다.</p>
+  </section>
+
+  </div>
+
+  <div class="ab-pane" data-sub="high" hidden>
+  <section class="as ia" id="a-high">
+    <p class="as-k">07 · 고농도</p>
+    <h2 class="as-h">25 mg/L 넘는 날은 295건 중 13건, 그중 4건은 비가 없었습니다</h2>
+    <div class="highg">
+      <div>
+        <div class="waf" id="abWaf" role="img" aria-label="2019–26 실측 295건: 비 없는 고농도 4, 유출형 고농도 9, 10–25 mg/L 17, 10 미만 265"></div>
+        <div class="waf-leg"><span><i class="c1"></i>비 없는 고농도 4</span><span><i class="c2"></i>유출형 고농도 9</span><span><i class="c3"></i>10–25 mg/L 17</span><span><i class="c4"></i>10 미만 265</span></div>
+      </div>
+      <div class="reasons">
+        <div class="rs rv" style="--d:.1s"><b>1</b><p>홍수 중 채수는 13–20건뿐<small>큰 비 날을 배울 자료가 적음</small></p></div>
+        <div class="rs rv" style="--d:.25s"><b>2</b><p>비 없는 고농도는 원인 신호가 없음<small>강우·수위로 설명 불가</small></p></div>
+        <div class="rs rv" style="--d:.4s"><b>3</b><p>채수는 약 8일에 1번<small>첨두를 놓치기 쉬움</small></p></div>
+      </div>
+    </div>
+    <div class="sub2">
+      <h3>그래도 비 온 날 고농도는 거의 따라잡았습니다 <small>(예측 ÷ 실측, 1에 가까울수록 좋음)</small></h3>
+      <div class="hbars ratio">
+        <div class="hb"><span class="hb-l">비 없는 고농도</span><div class="hb-t"><i class="warm" style="--w:.12;--d:0s"></i></div><b>0.13</b></div>
+        <div class="hb"><span class="hb-l">유출형, 보정 전</span><div class="hb-t"><i class="b2" style="--w:.66;--d:.15s"></i></div><b>0.73</b></div>
+        <div class="hb best"><span class="hb-l">유출형, 홍수일 보정 후</span><div class="hb-t"><i style="--w:.84;--d:.3s"></i></div><b>0.92</b></div>
+        <div class="hb-one" aria-hidden="true"><span>1.0</span></div>
+      </div>
+    </div>
+    <div class="ba">
+      <div class="ba-c rv" style="--d:0s"><h3>일별 추정 · 홍수일 보정</h3>
+        <p><span>R² (원래 단위)</span><s>0.578</s><b class="icount" data-from="0.578" data-v="0.663" data-d="3">0.663</b></p>
+        <p><span>평균 오차 MAE</span><s>2.86</s><b class="icount" data-from="2.86" data-v="2.79" data-d="2">2.79</b></p>
+      </div>
+      <div class="ba-c rv" style="--d:.15s"><h3>1일 예측 · 고농도 모드</h3>
+        <p><span>25 경보 맞음/낸 수</span><s>4/4</s><b>5/5</b></p>
+        <p><span>10.2 경보 맞음/낸 수</span><s>16/18</s><b>19/22</b></p>
+      </div>
+    </div>
+    <p class="hint">유출형은 비·수위 상승과 함께 생긴 고농도, 비 없는 고농도는 수위 변화 없이 T-P·TOC가 높았던 4일(2019-06-18, 2021-03-03, 2023-06-13, 2024-06-25)입니다. 홍수일 보정은 비 온 날(약 23–25%)에만 켜지고, 일별 추정의 25 경보는 7/7에서 7/10이 되었습니다(헛경보 3건은 실측 17–23 mg/L). 1일 고농도 모드는 1일 예측이 6 mg/L 이상일 때만 켭니다.</p>
+  </section>
+
+  </div>
+
+  <section class="as ab-end ia">
+    <h2 class="as-h rv">새 실측이 나오면 잠금평가와 운영 예측 기록으로 계속 확인합니다</h2>
+    <p class="as-lead rv" style="--d:.1s">이 SS는 고사취수장 복류수로 들어가기 전 하천수 수질로 가정한 참고값입니다.</p>
   </section>
   </div>
 
@@ -1209,19 +1446,130 @@ function showTab(t, push) {
 }
 document.querySelectorAll('nav a[data-tab]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.tab, true); }));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
-(function introAnim() {
+(function aboutTab() {
   const tab = document.getElementById('tab-about'); if (!tab) return;
-  document.querySelectorAll('.ijump a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+  const txt = (p, x, y, s, a) => { const t = el('text', Object.assign({ x, y }, a || {}), p); t.textContent = s; return t; };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce || !('IntersectionObserver' in window)) return;
-  tab.classList.add('anim');
-  const count = el => { const v = +el.dataset.v, d = +el.dataset.d, t0 = performance.now(), dur = 1200;
-    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = (v * e).toFixed(d); if (k < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step); };
-  const io = new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; const el = en.target; el.classList.add('in');
-    const c = el.querySelector('.icount'); if (c) count(c); io.unobserve(el); }), { threshold: 0.15 });
-  tab.querySelectorAll('.ifig,.ikpi').forEach((el, i) => { el.style.transitionDelay = (el.classList.contains('ikpi') ? i * 0.12 : 0) + 's'; io.observe(el); });
+
+  // 잠금평가: 매일 갱신되는 값으로 표시
+  const L = [].concat(D.meta.locked || []).find(x => x && x.n && x.rows);
+  if (L) {
+    const k = document.getElementById('abLockKpi'); k.dataset.v = L.logr2.toFixed(3); k.textContent = L.logr2.toFixed(3);
+    document.getElementById('abLockKpiS').textContent = (L.since || '').slice(0, 4) + '–26 실측 ' + L.n + '건';
+  }
+
+  // 실측 SS 점 그래프 (로그 축)
+  const drawObs = () => {
+    const s = document.getElementById('abObs'); if (!s || !D.obs || s.dataset.done) return;
+    const W = Math.max(300, Math.round(s.getBoundingClientRect().width)) || 720, H = W < 500 ? 200 : 240; if (!s.getBoundingClientRect().width) return; s.dataset.done = 1; s.setAttribute('viewBox', '0 0 ' + W + ' ' + H); const _u = 0, l = 34, r = 8, t = 8, b = 24, y0 = Math.log10(0.3), y1 = Math.log10(300);
+    const pts = D.obs.filter(o => o[1] > 0), t0 = Date.parse('2014-01-01'), t1 = Date.parse(pts[pts.length - 1][0]);
+    const X = d => l + (Date.parse(d) - t0) / (t1 - t0) * (W - l - r), Y = v => t + (y1 - Math.log10(Math.min(300, Math.max(.3, v)))) / (y1 - y0) * (H - t - b);
+    [1, 10, 100].forEach(v => { el('line', { x1: l, x2: W - r, y1: Y(v), y2: Y(v), class: 'gl' }, s); txt(s, l - 6, Y(v) + 4, v, { 'text-anchor': 'end' }); });
+    for (let yr = 2014; yr <= 2026; yr += (W < 500 ? 4 : 2)) txt(s, X(yr + '-01-01'), H - 6, yr, { 'text-anchor': 'middle' });
+    pts.forEach((o, i) => { el('circle', { cx: X(o[0]).toFixed(1), cy: Y(o[1]).toFixed(1), r: o[1] >= 25 ? 4 : 2.6, class: o[1] >= 25 ? 'hi' : '', style: 'transition-delay:' + (i * 2.2) + 'ms' }, s); });
+    txt(s, l + 4, t + 12, 'SS (mg/L, 로그 축) · 빨간 점 = 25 이상', {});
+  };
+
+  // 개선 과정 선 그래프
+  const drawProg = () => {
+    const s = document.getElementById('abProg'); if (!s || s.dataset.done || !s.getBoundingClientRect().width) return; s.dataset.done = 1;
+    const Wr = Math.max(300, Math.round(s.getBoundingClientRect().width)), small = Wr < 560;
+    const P = [['10/30', 'XGB(log)', '+유량 보정', .630], ['11/02', 'XGB+Ridge', '혼합', .722], ['11/03', '기온', '3변수', .754], ['11/03', '채수 전', '수위', .761], ['11/04', '홍수 사상', '+단조 제약', .768], ['11/04', '홍수일', '보정 ¾', .770]];
+    const W = Wr, H = small ? 280 : 300, l = 34, r = 14, t = 30, b = 66, v0 = .3, v1 = .8; s.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const X = i => l + (small ? 22 : 40) + i * (W - l - r - (small ? 44 : 80)) / (P.length - 1), Y = v => t + (v1 - v) / (v1 - v0) * (H - t - b);
+    [.4, .5, .6, .7, .8].forEach(v => { el('line', { x1: l, x2: W - r, y1: Y(v), y2: Y(v), class: 'gl' }, s); txt(s, l - 6, Y(v) + 4, v.toFixed(1), { 'text-anchor': 'end' }); });
+    el('line', { x1: l, x2: W - r, y1: Y(.368), y2: Y(.368), class: 'base' }, s); txt(s, W - r, Y(.368) - 6, '월별 평균 0.368', { 'text-anchor': 'end', class: 'bl' });
+    const d = P.map((p, i) => (i ? 'L' : 'M') + X(i) + ' ' + Y(p[3])).join(' ');
+    const path = el('path', { d, class: 'pl' }, s);
+    P.forEach((p, i) => {
+      const dl = (0.3 + i * 0.3) + 's';
+      el('circle', { cx: X(i), cy: Y(p[3]), r: 6, class: 'pt', style: 'transition-delay:' + dl }, s);
+      txt(s, X(i), Y(p[3]) + (small && i % 2 ? 24 : -14), p[3].toFixed(3), { 'text-anchor': 'middle', class: 'pv', style: 'transition-delay:' + dl });
+      txt(s, X(i), H - b + 20, p[0], { 'text-anchor': 'middle', class: 'px' + (small ? ' sm' : '') });
+      if (small) txt(s, X(i), H - b + 36, ['XGB', '혼합', '기온', '수위', '사상', '홍수일'][i], { 'text-anchor': 'middle', class: 'px sm' });
+      else { txt(s, X(i), H - b + 36, p[1], { 'text-anchor': 'middle', class: 'px' }); txt(s, X(i), H - b + 51, p[2], { 'text-anchor': 'middle', class: 'px' }); }
+    });
+    const len = path.getTotalLength ? path.getTotalLength() || 800 : 800;
+    path.style.strokeDasharray = len; path.style.strokeDashoffset = len; path.dataset.len = len;
+  };
+
+  // 시도한 방법 24가지 + 채택 2가지
+  (function chips() {
+    const c = document.getElementById('abChips'); if (!c) return;
+    const ok = ['홍수 사상 변수 + 단조 제약', '홍수일 보정 ¾'];
+    const no = ['CatBoost', 'PINN', '시간 강우', '동결융해·적설', '유사 소진', 'LightGBM', '관측소별 강우', 'Ridge 곡선항', '트리 깊이 조정', '결빙·해빙 변수', '고농도 가중 학습', '목표 변환 y^0.25', 'MAE·Huber 손실', 'ExtraTrees', '최근 연도 가중', '주변 지점 SS', '혼합비 최적화', 'GRU', '1일 판별 전환', 'XGB만 / Ridge만', '1일 고농도 보정 ¾', 'TCN', '목표 변환 y^0.5', 'SARIMAX'];
+    ok.concat(no).forEach((n, i) => { const sp = document.createElement('span'); sp.textContent = n; if (i < ok.length) sp.className = 'ok'; sp.style.setProperty('--d', (i * 45) + 'ms'); c.appendChild(sp); });
+  })();
+
+  // 잠금평가 산점도 + 연도별 막대
+  (function lock() {
+    const s = document.getElementById('abLock'); if (!s || !L) return;
+    const W = 400, H = 400, l = 44, r = 10, t = 10, b = 40, a0 = Math.log10(0.2), a1 = Math.log10(120);
+    const X = v => l + (Math.log10(Math.max(.2, v)) - a0) / (a1 - a0) * (W - l - r), Y = v => t + (a1 - Math.log10(Math.max(.2, v))) / (a1 - a0) * (H - t - b);
+    [1, 10, 100].forEach(v => { el('line', { x1: l, x2: W - r, y1: Y(v), y2: Y(v), class: 'gl' }, s); el('line', { x1: X(v), x2: X(v), y1: t, y2: H - b, class: 'gl' }, s);
+      txt(s, l - 6, Y(v) + 4, v, { 'text-anchor': 'end' }); txt(s, X(v), H - b + 16, v, { 'text-anchor': 'middle' }); });
+    el('line', { x1: X(.2), y1: Y(.2), x2: X(120), y2: Y(120), class: 'dg' }, s);
+    txt(s, (l + W - r) / 2, H - 4, '실측 SS (mg/L)', { 'text-anchor': 'middle' });
+    txt(s, 12, (t + H - b) / 2, '추정 SS (mg/L)', { 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + (t + H - b) / 2 + ')' });
+    const col = { 2024: 'var(--est)', 2025: 'var(--rain)', 2026: 'var(--ly)' };
+    L.rows.forEach((rw, i) => el('circle', { cx: X(rw[1]).toFixed(1), cy: Y(rw[2]).toFixed(1), r: 4.2, fill: col[rw[0].slice(0, 4)] || 'var(--flow)', style: 'transition-delay:' + (i * 14) + 'ms' }, s));
+    const yb = document.getElementById('abLockYrs'), rows = [];
+    const Y_ = L.years || {};
+    Object.keys(Y_).forEach(y => rows.push([y + '년', Y_[y].logr2, Y_[y].n, col[y]]));
+    rows.push(['전체', L.logr2, L.n, null]);
+    yb.innerHTML = '<h3>연도별 로그 R²</h3>' + rows.map((x, i) => '<div class="hb' + (x[3] ? '' : ' best') + '"><span class="hb-l">' + x[0] + '<small>' + x[2] + '건</small></span><div class="hb-t"><i style="--w:' + Math.max(0, x[1]).toFixed(3) + ';--d:' + (0.6 + i * .15) + 's' + (x[3] ? ';background:' + x[3] : '') + '"></i></div><b>' + (x[1] == null ? '–' : x[1].toFixed(3)) + '</b></div>').join('') +
+      '<div class="hb-one" style="--x:' + (L.logr2_clim || .403) + ';top:28px"><span>월별 ' + (L.logr2_clim || .403).toFixed(3) + '</span></div>';
+    document.getElementById('abLockCov').textContent = '평균 오차 ' + L.mae.toFixed(2) + ' mg/L (월별 평균 ' + L.mae_clim.toFixed(2) + ') · 80% 범위 안에 든 비율 ' + Math.round(L.cov * 100) + '%';
+  })();
+
+  // 와플 295칸
+  (function waf() {
+    const w = document.getElementById('abWaf'); if (!w) return;
+    const g = [['c1', 4], ['c2', 9], ['c3', 17], ['c4', 265]]; let i = 0, h = '';
+    g.forEach(([c, n]) => { for (let k = 0; k < n; k++, i++) h += '<i class="' + c + '" style="--d:' + (i * 4) + 'ms"></i>'; });
+    w.innerHTML = h;
+  })();
+
+  // 숫자 올라가기
+  const count = c => {
+    const v = +c.dataset.v, f = c.dataset.from != null ? +c.dataset.from : 0, d = +c.dataset.d;
+    if (reduce) { c.textContent = v.toFixed(d); return; }
+    const t0 = performance.now(), dur = 1300;
+    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); c.textContent = (f + (v - f) * e).toFixed(d); if (k < 1) requestAnimationFrame(step); };
+    c.textContent = f.toFixed(d); requestAnimationFrame(step);
+  };
+  const play = sec => {
+    sec.classList.add('in');
+    sec.querySelectorAll('.icount').forEach(count);
+    const p = sec.querySelector('.pl'); if (p) { reset(sec, true); requestAnimationFrame(() => requestAnimationFrame(() => { p.style.strokeDashoffset = 0; })); }
+  };
+  const reset = (sec, keep) => {
+    if (!keep) sec.classList.remove('in');
+    const p = sec.querySelector('.pl'); if (p) { const len = (p.getTotalLength && p.getTotalLength()) || +p.dataset.len || 800; p.style.transition = 'none'; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.getBoundingClientRect(); p.style.transition = ''; }
+  };
+  const io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { play(en.target); io.unobserve(en.target); } }), { threshold: 0.2 }) : null;
+  const arm = pane => { drawObs(); drawProg(); armSecs(pane); };
+  const armSecs = pane => pane.querySelectorAll('.ia').forEach(sec => { if (io) { reset(sec); io.observe(sec); } else play(sec); });
+  // 탭 자체가 처음 보일 때 그래프 그리기
+  new MutationObserver(() => { if (!tab.hidden) { const p = tab.querySelector('.ab-pane:not([hidden])'); if (p) arm(p); } }).observe(tab, { attributes: true, attributeFilter: ['hidden'] });
+
+  // 세부 탭
+  const btns = tab.querySelectorAll('.ab-sub-tabs button'), panes = tab.querySelectorAll('.ab-pane');
+  const showSub = (k, scroll) => {
+    btns.forEach(b => { const on = b.dataset.sub === k; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+    panes.forEach(p => { const on = p.dataset.sub === k; p.hidden = !on; if (on) { p.classList.remove('enter'); void p.offsetWidth; p.classList.add('enter'); arm(p); } });
+    if (scroll) tab.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    try { localStorage.setItem('ssdashAboutSub', k); } catch (e) {}
+  };
+  btns.forEach(b => b.addEventListener('click', () => showSub(b.dataset.sub, window.scrollY > tab.offsetTop)));
+  let first = 'sum'; try { first = localStorage.getItem('ssdashAboutSub') || 'sum'; } catch (e) {}
+  if (![...btns].some(b => b.dataset.sub === first)) first = 'sum';
+  showSub(first, false);
+  tab.querySelectorAll(':scope > .ia').forEach(sec => io ? io.observe(sec) : play(sec));
 })();
+
 showTab(location.hash.slice(1) || 'home');
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
 new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
