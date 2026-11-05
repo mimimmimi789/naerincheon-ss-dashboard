@@ -265,6 +265,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .as h3 small{font-weight:400;color:var(--ink-3);font-size:12px}
 .sub2{margin-top:6px}
 .icount{font-variant-numeric:tabular-nums}
+.ab .noanim,.ab .noanim *{transition:none!important}
 /* 나타나기 */
 .ab .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease var(--d,0s),transform .6s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
 .ab .in .rv,.ab .rv.in{opacity:1;transform:none}
@@ -1595,13 +1596,14 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); c.textContent = (f + (v - f) * e).toFixed(d); if (k < 1) requestAnimationFrame(step); };
     c.textContent = f.toFixed(d); requestAnimationFrame(step);
   };
-  const play = sec => {
+  const play = sec => requestAnimationFrame(() => requestAnimationFrame(() => play2(sec)));
+  const play2 = sec => {
     sec.classList.add('in');
     sec.querySelectorAll('.icount').forEach(count);
     const p = sec.querySelector('.pl'); if (p) { reset(sec, true); requestAnimationFrame(() => requestAnimationFrame(() => { p.style.strokeDashoffset = 0; })); }
   };
   const reset = (sec, keep) => {
-    if (!keep) sec.classList.remove('in');
+    if (!keep) { sec.classList.add('noanim'); sec.classList.remove('in'); void sec.offsetWidth; sec.classList.remove('noanim'); }
     const p = sec.querySelector('.pl'); if (p) { const len = (p.getTotalLength && p.getTotalLength()) || +p.dataset.len || 800; p.style.transition = 'none'; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.getBoundingClientRect(); p.style.transition = ''; }
   };
   const io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { play(en.target); io.unobserve(en.target); } }), { threshold: 0.2 }) : null;
