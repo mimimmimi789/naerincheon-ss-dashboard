@@ -381,6 +381,23 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .ab-end{background:var(--note-bg);border-color:transparent;text-align:center;align-items:center}
 .ab-end .as-h{font-size:16px;color:var(--note)}
 @media (prefers-reduced-motion:reduce){.ab *,.ab *::before,.ab *::after{transition:none!important;animation:none!important}.ab .rv,.ab .chips span,.ab .waf i,.ab circle,.ab .pt,.ab .pv{opacity:1!important;transform:none!important}.ab .hb-t i,.ab .tstack i,.ab .vb-c i,.ab .vb-base{transform:none!important}.ab-wave path{stroke-dashoffset:0!important}}
+/* ── 탭 열 때 애니메이션 ── */
+@keyframes tUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes tReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes tRow{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@keyframes tPop{0%{transform:scale(.96)}60%{transform:scale(1.015)}100%{transform:none}}
+.tab.tenter>section,.tab.tenter>.card,.tab.tenter>div:not(.ab-pane){animation:tUp .55s cubic-bezier(.2,.8,.2,1) both}
+.tab.tenter>*:nth-child(2){animation-delay:.08s}.tab.tenter>*:nth-child(3){animation-delay:.16s}.tab.tenter>*:nth-child(4){animation-delay:.24s}.tab.tenter>*:nth-child(5){animation-delay:.32s}.tab.tenter>*:nth-child(n+6){animation-delay:.4s}
+.tab.tenter .grid>.card,.tab.tenter .kpis>.kpi{animation:tUp .55s cubic-bezier(.2,.8,.2,1) both}
+.tab.tenter .grid>.card:nth-child(2),.tab.tenter .kpis>.kpi:nth-child(2){animation-delay:.1s}
+.tab.tenter .grid>.card:nth-child(3),.tab.tenter .kpis>.kpi:nth-child(3){animation-delay:.2s}
+.tab.tenter .kpis>.kpi:nth-child(4){animation-delay:.3s}.tab.tenter .kpis>.kpi:nth-child(5){animation-delay:.4s}
+.tab.tenter .plot{animation:tReveal 1.2s cubic-bezier(.4,0,.2,1) .25s both}
+.tab.tenter #map{animation:tUp .8s ease .2s both}
+.tab.tenter tbody tr{animation:tRow .4s ease both}
+.tab.tenter tbody tr:nth-child(2){animation-delay:.04s}.tab.tenter tbody tr:nth-child(3){animation-delay:.08s}.tab.tenter tbody tr:nth-child(4){animation-delay:.12s}.tab.tenter tbody tr:nth-child(5){animation-delay:.16s}.tab.tenter tbody tr:nth-child(6){animation-delay:.2s}.tab.tenter tbody tr:nth-child(7){animation-delay:.24s}.tab.tenter tbody tr:nth-child(n+8){animation-delay:.28s}
+.tab.tenter .headline{animation:tUp .5s ease both,tPop .7s ease .5s}
+@media (prefers-reduced-motion:reduce){.tab.tenter *,.tab.tenter>*{animation:none!important}}
 </style>
 
 <div class="app">
@@ -1438,6 +1455,25 @@ function showTab(t, push) {
 }
 document.querySelectorAll('nav a[data-tab]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.tab, true); }));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+(function tabAnim() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const numRe = /^(\s*)(-?\d+(?:\.\d+)?)/;
+  const countKpis = root => root.querySelectorAll('.kpi .val').forEach(v => {
+    const n = [...v.childNodes].find(x => x.nodeType === 3 && numRe.test(x.nodeValue)); if (!n) return;
+    const m = n.nodeValue.match(numRe), end = +m[2], dec = (m[2].split('.')[1] || '').length, rest = n.nodeValue.slice(m[0].length), t0 = performance.now();
+    const step = now => { if (!n.isConnected) return; const k = Math.min(1, (now - t0) / 900), e = 1 - Math.pow(1 - k, 3); n.nodeValue = m[1] + (end * e).toFixed(dec) + rest; if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  let timer;
+  const enter = t => {
+    const el = document.getElementById('tab-' + t); if (!el || t === 'about') return;
+    el.classList.remove('tenter'); void el.offsetWidth; el.classList.add('tenter');
+    setTimeout(() => countKpis(el), 30); clearTimeout(timer); timer = setTimeout(() => el.classList.remove('tenter'), 1800);
+  };
+  const orig = showTab;
+  showTab = function (t, push) { orig(t, push); enter(TABS.includes(t) ? t : 'home'); };
+})();
+
 (function aboutTab() {
   const tab = document.getElementById('tab-about'); if (!tab) return;
   const NS = 'http://www.w3.org/2000/svg';
