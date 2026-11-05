@@ -195,7 +195,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   .bar-row{grid-template-columns:96px minmax(0,1fr) 44px}
   th,td{padding:6px 5px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*:not(.ab):not(.ab *){transition:none!important}}
 /* 취수원 관리자용 (2026-11-03) */
 .ops{display:grid;grid-template-columns:minmax(0,1.1fr) repeat(3,minmax(0,1fr));gap:10px}
 .ops>div{background:var(--bg);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -388,7 +388,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .ba-c p b{text-align:right;font-size:18px;color:var(--ok);font-variant-numeric:tabular-nums}
 .ab-end{background:var(--note-bg);border-color:transparent;text-align:center;align-items:center}
 .ab-end .as-h{font-size:16px;color:var(--note)}
-@media (prefers-reduced-motion:reduce){.ab *,.ab *::before,.ab *::after{transition:none!important;animation:none!important}.ab .rv,.ab .chips span,.ab .waf i,.ab circle,.ab .pt,.ab .pv,.ab .vb-c i b,.ab .dg{opacity:1!important;transform:none!important}.ab .hb-t i,.ab .tstack i,.ab .vb-c i,.ab .vb-base{transform:none!important}.ab .lts .rev{clip-path:none!important}.ab-wave path{stroke-dashoffset:0!important}}
+@media (prefers-reduced-motion:reduce){.in .farr i,.ab-hero.in .ab-wave .w1,.ab-hero.in .ab-wave .w2{animation:none!important}.ab-wave path{stroke-dashoffset:0!important}}
 /* ── 탭 열 때 애니메이션 ── */
 @keyframes tUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes tReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
@@ -405,7 +405,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .tab.tenter tbody tr{animation:tRow .4s ease both}
 .tab.tenter tbody tr:nth-child(2){animation-delay:.04s}.tab.tenter tbody tr:nth-child(3){animation-delay:.08s}.tab.tenter tbody tr:nth-child(4){animation-delay:.12s}.tab.tenter tbody tr:nth-child(5){animation-delay:.16s}.tab.tenter tbody tr:nth-child(6){animation-delay:.2s}.tab.tenter tbody tr:nth-child(7){animation-delay:.24s}.tab.tenter tbody tr:nth-child(n+8){animation-delay:.28s}
 .tab.tenter .headline{animation:tUp .5s ease both,tPop .7s ease .5s}
-@media (prefers-reduced-motion:reduce){.tab.tenter *,.tab.tenter>*{animation:none!important}}
+
 </style>
 
 <div class="app">
@@ -1472,7 +1472,6 @@ function showTab(t, push) {
 document.querySelectorAll('nav a[data-tab]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.tab, true); }));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
 (function tabAnim() {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const numRe = /^(\s*)(-?\d+(?:\.\d+)?)/;
   const countKpis = root => root.querySelectorAll('.kpi .val').forEach(v => {
     const n = [...v.childNodes].find(x => x.nodeType === 3 && numRe.test(x.nodeValue)); if (!n) return;
@@ -1495,7 +1494,7 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
   const NS = 'http://www.w3.org/2000/svg';
   const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
   const txt = (p, x, y, s, a) => { const t = el('text', Object.assign({ x, y }, a || {}), p); t.textContent = s; return t; };
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = false; // 사용자 요청: 휴대폰 '동작 줄이기'·절전 모드에서도 애니메이션 표시(반복 움직임만 끔)
 
   // 잠금평가: 매일 갱신되는 값으로 표시
   const L = [].concat(D.meta.locked || []).find(x => x && x.n && x.rows);
@@ -1606,7 +1605,7 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     if (!keep) { sec.classList.add('noanim'); sec.classList.remove('in'); void sec.offsetWidth; sec.classList.remove('noanim'); }
     const p = sec.querySelector('.pl'); if (p) { const len = (p.getTotalLength && p.getTotalLength()) || +p.dataset.len || 800; p.style.transition = 'none'; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.getBoundingClientRect(); p.style.transition = ''; }
   };
-  const io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { play(en.target); io.unobserve(en.target); } }), { threshold: 0.2 }) : null;
+  const io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { play(en.target); io.unobserve(en.target); } }), { threshold: 0.05, rootMargin: '0px 0px -10% 0px' }) : null;
   const arm = pane => { drawObs(); drawProg(); drawLockTs(); armSecs(pane); };
   const armSecs = pane => pane.querySelectorAll('.ia').forEach(sec => { if (io) { reset(sec); io.observe(sec); } else play(sec); });
   // 탭 자체가 처음 보일 때 그래프 그리기
