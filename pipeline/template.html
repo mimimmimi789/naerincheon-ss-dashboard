@@ -703,6 +703,7 @@ footer{border-top-color:var(--line)}
       <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
       <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span><span><i class="sw-star">★</i>기상청 예보 강우일 때</span><span><i class="sw-hl"></i>관심 기준선</span></div>
       <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
+      <p class="rnote" id="scNote"></p>
       <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과.</p>
     </div>
   </section>
@@ -1596,6 +1597,11 @@ function renderFc(ref) {
   });
   const S = D.fc.scen, g = S.grid_mm, cols = [css('--est'), css('--ly'), css('--rain')];
   $('scTag').textContent = '기준일 ' + S.issue;
+  // 기준일이 왜 오늘이 아닌지: 오늘 강우·유량은 하루가 끝나야 다 모이므로, 어제까지 실제 자료로 계산하고 '1일 후'가 오늘이 된다
+  { const si = idx(S.issue), dl = h => relDay(si + h) + '(' + mdx(iso(si + h)) + ')';
+    $('scNote').textContent = si < tdI
+      ? '기준일이 ' + (si === tdI - 1 ? '어제' : mdx(S.issue)) + '인 이유: 오늘 강우·유량은 하루가 끝나야 다 모여서, ' + mdx(S.issue) + '까지의 실제 자료로 계산합니다. 1일 후 = ' + dl(1) + ', 3일 후 = ' + dl(3) + ', 5일 후 = ' + dl(5) + '.'
+      : ''; $('scNote').hidden = !(si < tdI); }
   Plotly.react('pScen', [1, 3, 5].map((h, j) => ({ x: g, y: S.h[h].rain.map(v => v[0]), mode: 'lines+markers', name: h + '일 후', line: { color: cols[j], width: 2 }, marker: { size: 7, color: cols[j], line: { color: css('--panel'), width: 2 } }, hovertemplate: h + '일 후 %{y:.1f} mg/L' })).concat([1, 3, 5].filter(h => S.h[h].kma).map((h, j) => ({ x: [S.h[h].kma.mm], y: [S.h[h].kma.v[0]], mode: 'markers', name: h + '일 후 · 기상청 예보', marker: { size: 12, symbol: 'star', color: cols[[1, 3, 5].indexOf(h)], line: { color: css('--panel'), width: 1.5 } }, hovertemplate: h + '일 후 기상청 예보 %{x:.0f} mm → %{y:.1f} mg/L<extra></extra>' }))),
     baseLayout(240, { hovermode: 'x unified', xaxis: { type: 'linear', title: { text: '향후 강우 합계 (mm)', font: { size: 11 } }, gridcolor: 'rgba(0,0,0,0)', linecolor: css('--line'), fixedrange: true, tickvals: innerWidth < 600 ? [0, 20, 50, 80, 120] : g },
       yaxis: Object.assign(baseLayout(0).yaxis, { title: { text: 'SS (mg/L)', font: { size: 11 } } }),
