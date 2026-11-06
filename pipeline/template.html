@@ -388,13 +388,13 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
 .lockplot{max-width:400px}.lockg{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:20px;align-items:center}
 @media (max-width:820px){.lockg{grid-template-columns:1fr}}
 .lockplot .dg{stroke:var(--ink-3);stroke-dasharray:4 4}
-.lockplot circle{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:opacity .3s,transform .45s cubic-bezier(.3,1.6,.5,1)}
-.in .lockplot circle{opacity:.8;transform:none}
+.lockplot circle{opacity:.8}
+.lockplot .dots{clip-path:inset(100% 100% 0 0);transition:clip-path 1.4s cubic-bezier(.3,.7,.2,1) .2s}.in .lockplot .dots{clip-path:inset(0 0 0 0)}
 .lts-wrap{margin-bottom:8px}.lts{width:100%;height:auto;display:block;overflow:visible}.lts text{fill:var(--ink-3);font-size:12px;font-family:var(--f-body)}
 .lts .rev{clip-path:inset(0 100% 0 0);transition:clip-path 2.2s cubic-bezier(.4,0,.2,1)}.in .lts .rev{clip-path:inset(0 0 0 0)}
 .lts .band{fill:var(--band)}.lts .pline{fill:none;stroke:var(--est);stroke-width:1.8}
-.lts circle{fill:var(--obs);opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:opacity .3s,transform .4s cubic-bezier(.3,1.6,.5,1)}.lts circle.out{fill:var(--hi2,#d23c3c)}
-.in .lts circle{opacity:.85;transform:none}
+.lts circle{fill:var(--obs);opacity:.85}.lts circle.out{fill:var(--hi2,#d23c3c)}
+
 .lockplot .dg{opacity:0;transition:opacity .8s ease .1s}.in .lockplot .dg{opacity:1}
 .lockcov{margin:4px 0 0;font-size:13px;color:var(--ink-2)}
 .lockside .hb{grid-template-columns:72px minmax(0,1fr) 54px}
@@ -1768,7 +1768,7 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     const g = el('g', { class: 'rev' }, s);
     el('path', { d: 'M' + R.map(x => X(x[0]) + ' ' + Y(x[4])).join(' L') + ' L' + R.slice().reverse().map(x => X(x[0]) + ' ' + Y(x[3])).join(' L') + 'Z', class: 'band' }, g);
     el('path', { d: 'M' + R.map(x => X(x[0]) + ' ' + Y(x[2])).join(' L'), class: 'pline' }, g);
-    R.forEach((x, i) => el('circle', { cx: X(x[0]), cy: Y(x[1]), r: x[1] >= 25 ? 4 : 2.8, class: (x[1] < x[3] || x[1] > x[4]) ? 'out' : '', style: 'transition-delay:' + (200 + i * 18) + 'ms' }, s));
+    R.forEach(x => el('circle', { cx: X(x[0]), cy: Y(x[1]), r: x[1] >= 25 ? 4 : 2.8, class: (x[1] < x[3] || x[1] > x[4]) ? 'out' : '' }, g));   // 점도 선과 같은 묶음으로 왼쪽부터
   };
   const drawProg = () => {
     const s = document.getElementById('abProg'); if (!s || s.dataset.done || !s.getBoundingClientRect().width) return; s.dataset.done = 1;
@@ -1811,7 +1811,8 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     txt(s, (l + W - r) / 2, H - 4, '실측 SS (mg/L)', { 'text-anchor': 'middle' });
     txt(s, 12, (t + H - b) / 2, '추정 SS (mg/L)', { 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + (t + H - b) / 2 + ')' });
     const col = { 2024: 'var(--est)', 2025: 'var(--rain)', 2026: 'var(--ly)' };
-    L.rows.forEach((rw, i) => el('circle', { cx: X(rw[1]).toFixed(1), cy: Y(rw[2]).toFixed(1), r: 4.2, fill: col[rw[0].slice(0, 4)] || 'var(--flow)', style: 'transition-delay:' + (300 + i * 22) + 'ms' }, s));
+    const dots = el('g', { class: 'dots' }, s);   // 점 106개를 묶음 하나로 왼쪽 아래부터 드러냄(점마다 따로 움직이면 끊김)
+    L.rows.forEach(rw => el('circle', { cx: X(rw[1]).toFixed(1), cy: Y(rw[2]).toFixed(1), r: 4.2, fill: col[rw[0].slice(0, 4)] || 'var(--flow)' }, dots));
     const yb = document.getElementById('abLockYrs'), rows = [];
     const Y_ = L.years || {};
     Object.keys(Y_).forEach(y => rows.push([y + '년', Y_[y].logr2, Y_[y].n, col[y]]));
