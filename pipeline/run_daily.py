@@ -209,7 +209,11 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
     head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
             '<meta name="theme-color" content="#e8f1fb"><meta name="apple-mobile-web-app-capable" content="yes">'
-            '<meta name="apple-mobile-web-app-title" content="내린천 SS"></head><body>\n')
+            '<meta name="apple-mobile-web-app-title" content="내린천 SS">'
+            '<meta name="mobile-web-app-capable" content="yes">'
+            '<link rel="manifest" href="manifest.webmanifest">'   # 홈 화면·바탕화면에 추가(docs/manifest.webmanifest, docs/icons, docs/sw.js)
+            '<link rel="icon" href="icons/favicon-32.png" sizes="32x32">'
+            '<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"></head><body>\n')
     (DOCS / 'index.html').write_text(head + html + '\n</body></html>', encoding='utf-8')
     (DOCS.parent / 'build').mkdir(exist_ok=True)
     (DOCS.parent / 'build' / 'artifact.html').write_text(html, encoding='utf-8')   # Claude 아티팩트용(문서 틀은 아티팩트가 씌움)
