@@ -68,6 +68,11 @@ body.nohelp p.hint:not(.keep),body.nohelp .disc,body.nohelp #banner,body.nohelp 
 .intro .acts{display:flex;gap:8px;flex-wrap:wrap}.intro .acts .btn{flex:1 1 160px}
 .intro .btn.pri{background:var(--side);border-color:var(--side);color:#fff;font-weight:600}
 @media (max-width:640px){.dates{display:block;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 10px}.dates li{flex-direction:row;justify-content:space-between;align-items:baseline;gap:8px;border:0;border-radius:0;padding:5px 0;min-width:0;background:none}.dates li+li{border-top:1px solid var(--line)}.dates li small{flex:none}.dates li b{font-size:13px;text-align:right}.dates li b em{display:none}}
+.rtag{display:inline-block;font-size:11.5px;font-weight:500;color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin-left:8px;vertical-align:middle;letter-spacing:0;white-space:nowrap}
+.hl-main .rtag{font-size:12px;margin:0 12px 0 -2px;vertical-align:.25em}
+.rnote{font-size:12px;color:var(--ink-2);margin:6px 0 0;line-height:1.5}.rnote::before{content:"ⓘ ";color:var(--ink-3)}
+.olkey{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0 0;padding:8px 10px;background:var(--bg);border-radius:8px;font-size:12.5px;color:var(--ink-2)}
+.olkey b{color:var(--ink);font-weight:600}.olkey i{display:inline-block;margin-right:6px;vertical-align:middle}
 .linkbtn{font:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer}
 .banner{background:var(--note-bg);color:var(--note);border-radius:var(--r);padding:10px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
 .banner b{white-space:nowrap}
@@ -503,30 +508,33 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
   <section class="headline" id="headline" aria-live="polite">
     <p class="hl-main" id="hlMain">–</p>
     <p class="hl-sub" id="hlSub">–</p>
+    <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
   </section>
   <section class="card" id="outlook" aria-label="SS 전망 그래프">
     <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span></h2>
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
     <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
-    <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-sq"></i>1·3·5일 예측 (색 = 참고 단계)</span><span><i class="sw-fbar"></i>예측 80% 범위</span><span><i class="sw-dash"></i>추정→예측 연결</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-vl"></i>기준일</span><span><i class="sw-zn n"></i>관심 구간 (상위 10%)</span><span><i class="sw-zn w"></i>대응 검토 구간 (25 이상)</span></div>
+    <div class="olkey" aria-label="그래프 읽는 법"><span><i class="sw-dot"></i><b>검은 점</b> = 실제 측정값</span><span><i class="sw-line"></i><b>파란 선</b> = 과거 날짜의 사후추정값 (실측 아님)</span><span><i class="sw-sq"></i><b>오른쪽 점과 막대</b> = 미래예측값</span></div>
+    <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-sq"></i>1·3·5일 미래예측 (색 = 참고 단계)</span><span><i class="sw-fbar"></i>예측 80% 범위</span><span><i class="sw-dash"></i>추정→예측 연결</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-vl"></i>기준일</span><span><i class="sw-zn n"></i>관심 구간 (상위 10%)</span><span><i class="sw-zn w"></i>대응 검토 구간 (25 이상)</span></div>
     <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
   </section>
   <section class="card" id="opsum" aria-label="운영 요약">
-    <h2>운영 요약 <span class="tag">관리자 참고용</span><span class="tag" id="opRef">–</span></h2>
+    <h2>운영 요약 <span class="tag">연구용 참고</span><span class="tag" id="opRef">–</span></h2>
     <div class="ops">
-      <div><span class="lb">참고 단계 (임시 구간)</span><span id="opStage">–</span><ul id="opWhy"></ul></div>
+      <div><span class="lb">참고 단계</span><span id="opStage">–</span><ul id="opWhy"></ul></div>
       <div><span class="lb">내일 SS 기준 이상 가능성</span><span class="v" id="opP">–</span><span class="s" id="opPs">–</span></div>
       <div><span class="lb">예보강우 확보</span><span class="v" id="opCov">–</span><span class="s" id="opCovS">–</span></div>
       <div><span class="lb">자료 상태</span><span class="v" id="opData">–</span><span class="s" id="opDataS">–</span></div>
     </div>
+    <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
     <p class="disc">내린천2 하천 SS(복류수 유입 전 하천수로 가정)이며 원수 탁도와 다를 수 있습니다. 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
   </section>
   <section class="kpis" aria-label="요약">
-    <div class="kpi"><div class="lab">기준일 추정 SS<span class="tag">모델 추정</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
-    <div class="kpi"><div class="lab">최근 실측 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF1L">1일 후 예측</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF3L">3일 후 예측</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF5L">5일 후 예측</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
+    <div class="kpi"><div class="lab">기준일 SS 사후추정<span class="tag">실측 아님</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
+    <div class="kpi"><div class="lab">최근 실제 측정 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF1L">SS 미래예측 · 1일 후</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF3L">SS 미래예측 · 3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF5L">SS 미래예측 · 5일 후 (참고용)</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
   </section>
   <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
   <section class="card" id="fresh">
@@ -549,7 +557,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
       <div id="wrn"></div>
     </div>
     <div class="card" id="manage">
-      <h2>관리자 참고 점검사항 <span class="tag">임시 구간 · 자동 조치 아님</span></h2>
+      <h2>관리자 참고 점검사항 <span class="tag">연구용 참고 단계 · 취수 판단 아님</span></h2>
       <div id="grade"></div>
       <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
       <div id="lvBox"></div>
@@ -561,7 +569,7 @@ details.banner summary b::after{content:' ▾';font-weight:400}details.banner[op
     <div class="card" id="ss">
       <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
-      <div class="legend"><span><i class="sw-dot"></i>실측 SS</span><span><i class="sw-line"></i>일 추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-wf"></i>전진검증 예측 (실측일)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 세로선 = 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-gap"></i>실측 없는 기간</span><span><i class="sw-box"></i>예측 1–5일 구간</span></div>
+      <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS (실측 아님)</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-wf"></i>전진검증 예측 (실측일)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 세로선 = 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-gap"></i>실측 없는 기간</span><span><i class="sw-box"></i>예측 1–5일 구간</span></div>
       <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
     </div>
     <div class="card" id="hydro">
@@ -1052,15 +1060,15 @@ function series(a, b, arr) { const x = [], y = []; for (let i = a; i <= b; i++) 
 function renderGap(ref, lastObs) {
   const el = $('gapbar'); if (!el) return;
   if (!lastObs) { el.hidden = true; return; }
-  const today = new Date(); const tI = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - t0) / DAY);
-  const atLatest = ref === lastI, endI = atLatest ? Math.max(tI, ref) : ref, gap = endI - lastObs.i;
+  // 실측 공백은 항상 입력자료 기준일(최신이면 자료 마지막 날 = 보통 어제)까지로 센다. 다른 카드와 같은 기준.
+  const atLatest = ref === lastI, endI = ref, gap = endI - lastObs.i;
   el.hidden = false; el.classList.toggle('warn', gap > 14);
-  const endLab = atLatest ? '오늘 ' + iso(endI) : '기준일 ' + iso(endI);
+  const endLab = (atLatest ? '입력자료 기준일 ' : '기준일 ') + iso(endI);
   el.innerHTML = '<span class="gd">실측 공백 ' + gap + '일</span>'
     + '<span class="gt">' + (gap > 14
       ? gap + '일째 새 실측 없음 · 이 기간 SS는 모두 추정값'
       : '최근 실측 ' + gap + '일 전')
-    + (atLatest && tI > ref ? ' · 유량·강우는 ' + iso(ref) + '까지' : '') + '</span>'
+    + ' · ' + iso(endI).slice(5).replace('-', '/') + ' 기준' + '</span>'
     + '<span class="gaptrack"><span>최근 실측 ' + lastObs.d + ' (' + fmt(lastObs.v) + ' mg/L)</span><span class="ln"></span><span>' + endLab + '</span></span>';
 }
 
@@ -1321,6 +1329,8 @@ document.querySelectorAll('#explain .seg[data-m]').forEach(b => b.addEventListen
 
 // ---- 취수원 관리자용 (2026-11-03): 참고 단계 근거, 운영 요약, 자료 최신성, 예보 확보 배지 ----
 const MG = D.meta.mgr || null;
+// SS 실측 경과일은 오늘이 아니라 입력자료 기준일(lastI) 기준으로 맞춘다(날짜 띠·실측 공백·요약 카드와 같은 값).
+if (MG && MG.fresh) MG.fresh.forEach(r => { if (/^SS/.test(r[0]) && r[1]) { const i = idx(r[1]); if (!isNaN(i)) r[2] = lastI - i; } });
 const pct = p => p == null ? '–' : p < .05 ? '5% 미만' : p > .95 ? '95% 초과' : Math.round(p * 100) + '%';
 function stageEval(ref, FCS, e) {
   const isLast = ref === lastI, why = [], p90 = D.meta.p90, add = (l, t) => why.push([l, t]);
@@ -1351,7 +1361,7 @@ function renderHeadline(ref, FCS, e, SE) {
   const dl = d => (d === todayKST ? '오늘 ' : d === tmr ? '내일 ' : '') + md(d);
   const fo = FCS.filter(z => z.o);
   const tail = ['평소 범위 유지 전망', '평소보다 높아질 수 있어 관심', '25 mg/L 이상 가능, 대응 검토'][SE.lv];
-  let h = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span>';
+  let h = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="rtag">연구용 참고 단계</span>';
   if (fo.length) {
     h += fo.map((z, j) => '<span class="it"><span class="ref">' + dl(iso(ref + z.h)) + '</span> ' + (j ? '' : 'SS ') + fmt(z.o[0]) + (j ? '' : '<span class="u">mg/L</span>') + '<span class="rr">(' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + ')</span>' + (z.h === 5 ? '<span class="ref">(참고)</span>' : '') + '</span>').join(' <span class="sep">·</span> ');
   } else h += '<span class="ref">' + md(iso(ref)) + '</span> 추정 SS ' + fmt(e) + '<span class="u">mg/L</span>' + (D.lo[ref] == null ? '' : '<span class="rr">(' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + ')</span>');
@@ -1361,13 +1371,13 @@ function renderHeadline(ref, FCS, e, SE) {
   const r1 = FCS.find(z => z.h === 1 && z.r && z.isLast && fcEl.value === 'kma');
   $('hlSub').textContent = (isLast ? '' : '과거 날짜 보기 · ') + md(iso(ref)) + '까지 자료로 낸 예측 중앙값, 괄호는 80% 범위(관측 자료만 입력)'
     + (r1 ? ' · 기상청 예보강우 ' + fmt(r1.mm, 0) + ' mm 반영 시 ' + md(iso(ref + 1)) + ' ' + fmt(r1.r[0]) + ' (' + fmt(r1.r[1]) + '–' + fmt(r1.r[2]) + ') mg/L' : '')
-    + ' · 단계는 임시 참고 구간, 근거는 아래 운영 요약';
+    + ' · 근거는 아래 운영 요약';
 }
 function renderOps(ref, FCS, e, SE) {
   const isLast = ref === lastI, L = LV[SE.lv];
   renderHeadline(ref, FCS, e, SE);
   $('opRef').textContent = '기준일 ' + iso(ref) + (isLast ? '' : ' · 과거 날짜 보기');
-  $('opStage').innerHTML = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span>';
+  $('opStage').innerHTML = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="rtag">연구용 참고 단계</span>';
   $('opWhy').innerHTML = SE.why.length ? SE.why.map(w => '<li>' + w[1] + '</li>').join('') : '<li>올라갈 신호 없음</li>';
   if (!isLast) { $('opP').textContent = '–'; $('opPs').textContent = '자료 마지막 날에만 계산합니다.'; }
   else if (SE.p10 == null) { $('opP').textContent = '–'; $('opPs').textContent = '계산에 필요한 과거 예측 기록이 부족합니다.'; }
@@ -1402,7 +1412,7 @@ function renderFresh() {
   $('frTbl').innerHTML = F.map(([n, last, age, st, note]) => '<tr><td>' + n + '</td><td>' + (last || '–') + '</td><td>' + (age == null ? '–' : (age < 1 && age > 0 ? fmt(age * 24, 0) + '시간' : age + '일')) + '</td><td><span class="bdg ' + st + '">' + lab[st] + '</span></td><td>' + (note || '') + '</td></tr>').join('');
   const nb = F.filter(r => r[3] !== 'ok').length;
   $('frTag').textContent = nb ? '확인 필요 ' + nb + '건' : '모두 정상'; $('frTag').className = 'tag' + (nb ? ' warnTag' : ' real');
-  $('frNote').textContent = '경과는 오늘(' + new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10) + ') 기준. SS 실측은 보통 수주–2개월 늦게 공개됩니다.';
+  $('frNote').textContent = 'SS 실측 경과는 입력자료 기준일(' + iso(lastI) + '), 나머지 자료는 오늘(' + new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10) + ') 기준. SS 실측은 보통 수주–2개월 늦게 공개됩니다.';
 }
 function renderStatus() {
   const M = D.meta, W = M.warnings, LS = [].concat(M.locked || []), st = M.sources || {};
@@ -1434,7 +1444,7 @@ const rngTxt = (lo, hi) => '<small>80% 범위</small>' + fmt(lo) + '–' + fmt(h
 function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
-    $('kF' + z.h + 'L').textContent = z.h + '일 후 · ' + iso(ref + z.h).slice(5);
+    $('kF' + z.h + 'L').textContent = 'SS 미래예측 · ' + z.h + '일 후 ' + iso(ref + z.h).slice(5) + (z.h === 5 ? ' (참고용)' : '');
     $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 5 ? ' · 참고용' : '');
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; if ($('kF' + z.h + 'H')) $('kF' + z.h + 'H').hidden = true; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
