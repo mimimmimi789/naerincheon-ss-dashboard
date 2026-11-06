@@ -518,7 +518,15 @@ footer{border-top-color:var(--line)}
   .card,.headline{border-radius:20px}.card{padding:16px}
   .kpi .val{font-size:25px}.kpi .ki{width:34px;height:34px}
 }
-.side-foot span:last-child{flex-direction:column;gap:1px;margin-top:4px;padding-top:8px;border-top:1px solid rgba(255,255,255,.3)}
+.side-foot span:has(#sfU){flex-direction:column;gap:1px;margin-top:4px;padding-top:8px;border-top:1px solid rgba(255,255,255,.3)}
+.side-foot span:has(.linkbtn){justify-content:center;margin-top:2px;color:#fff}
+/* 첫 방문 안내 상자 (I안) */
+.intro{background:rgba(20,40,80,.35);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.intro .box{background:rgba(255,255,255,.94);border:1px solid var(--glass-b);border-radius:22px;box-shadow:0 20px 50px rgba(30,70,150,.25)}
+.intro .btn.pri{background:linear-gradient(135deg,var(--indigo),var(--violet));color:#fff;border:0}
+.intro .btn:not(.pri){background:transparent;color:var(--indigo);border:1px solid var(--indigo);box-shadow:none}
+:root[data-theme="dark"] .intro .box{background:rgba(18,30,50,.96)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .intro .box{background:rgba(18,30,50,.96)}}
 
 /* I안 + 상세 소개 탭: 히어로는 보라 그라데이션 유리 카드 */
 .ab-hero{background:linear-gradient(140deg,#2f6fe0,#3fa9f5 60%,#5cc4f5);color:#fff;--side-ink:#fff;--side-ink-2:rgba(255,255,255,.82);border-radius:22px;box-shadow:0 14px 30px rgba(50,120,230,.3)}
