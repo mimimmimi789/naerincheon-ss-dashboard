@@ -663,6 +663,9 @@ footer{border-top-color:var(--line)}
 .chip-info dt{font-weight:700;color:var(--est)}
 .chip-info dd{margin:0;color:var(--ink-2)}
 @media (max-width:820px){.chip-info dl{grid-template-columns:minmax(0,1fr);gap:2px}.chip-info dd{margin-bottom:6px}}
+
+.sw-sq{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--est)}
+.sw-tri{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid var(--flow)}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -970,13 +973,15 @@ footer{border-top-color:var(--line)}
   <section class="grid" id="basin">
     <div class="card">
       <h2>내린천2 유역도</h2>
-      <div class="mapwrap"><svg id="map" role="img" aria-label="내린천2 유역 경계, 티센 분할, 강우관측소와 수질측정 지점"></svg></div>
-      <div class="legend"><span><i class="sw-dot" style="background:var(--warn)"></i>내린천2 수질측정 지점</span><span><i class="sw-dot" style="background:var(--rain)"></i>강우관측소 (AWS)</span><span><i class="sw-cell"></i>티센 분할 (진할수록 가중치 큼)</span><span><i class="sw-ws"></i>유역 경계</span><span><i class="sw-riv"></i>하천</span></div>
+      <div class="mapwrap"><svg id="map" role="img" aria-label="내린천2 유역 경계, 티센 분할, 강우관측소, 수질측정 지점, 원대교 관측소와 고사취수구 위치"></svg></div>
+      <div class="legend"><span><i class="sw-dot" style="background:var(--warn)"></i>내린천2 수질측정 지점</span><span><i class="sw-sq"></i>고사취수구 (0.33 km)</span><span><i class="sw-tri"></i>원대교 유량·수위 관측소 (7.46 km)</span><span><i class="sw-dot" style="background:var(--rain)"></i>강우관측소 (AWS)</span><span><i class="sw-cell"></i>티센 분할 (진할수록 가중치 큼)</span><span><i class="sw-ws"></i>유역 경계</span><span><i class="sw-riv"></i>하천</span></div>
       <div class="wt" id="wt"></div>
       <dl class="facts">
         <dt>대상 지점</dt><dd>내린천2 (소양A, 1012A20)</dd>
         <dt>유역면적</dt><dd>1,082.1 km² (잠정)</dd>
         <dt>유량 보완</dt><dd>원대교 일유량 × 1.0414 (면적비)</dd>
+        <dt>원대교 관측소</dt><dd>내린천2에서 상류로 직선 7.46 km (WAMIS 1012650, 유량·수위)</dd>
+        <dt>고사취수구</dt><dd>내린천2에서 직선 0.33 km (인제읍 고사리, 덕산정수장 원수)</dd>
         <dt>강우</dt><dd>티센 가중 일강우, 강우일 1 mm 이상</dd>
       </dl>
     </div>
@@ -1854,14 +1859,23 @@ function renderMap() {
   h += `<path class="ws" d="${g.ws}"/>`;
   h += g.cells.map(c => `<g><circle cx="${c.sx}" cy="${c.sy}" r="6" fill="var(--rain)" stroke="var(--panel)" stroke-width="2"><title>AWS ${c.id} ${c.nm}</title></circle><text x="${c.sx + 10}" y="${c.sy + 4}" font-size="12" font-weight="600">${c.nm} ${c.id}</text><text class="sub" x="${c.sx + 10}" y="${c.sy + 18}">티센 ${(c.w * 100).toFixed(1)}%</text></g>`).join('');
   const [nx, ny] = g.nr;
-  h += `<circle cx="${nx}" cy="${ny}" r="7" fill="var(--warn)" stroke="var(--panel)" stroke-width="2"><title>내린천2 (1012A20)</title></circle><text x="${nx + 10}" y="${ny + 18}" font-size="12" font-weight="600">내린천2 1012A20</text><text class="sub" x="${nx + 10}" y="${ny + 32}">유역 출구 · 수질측정</text>`;
+  // 원대교(유량·수위 관측소)와 고사취수구: 내린천2에서 직선거리 표시
+  if (g.wd) { const [wx, wy, wk] = g.wd;
+    h += `<path d="M${nx},${ny} L${wx},${wy}" stroke="var(--flow)" stroke-width="1.6" stroke-dasharray="5 4" fill="none"/>`
+      + `<path d="M${wx},${wy - 8} L${wx + 7.5},${wy + 5} L${wx - 7.5},${wy + 5} Z" fill="var(--flow)" stroke="var(--panel)" stroke-width="2"><title>원대교 수위·유량 관측소 (WAMIS 1012650) · 내린천2에서 직선 ${wk.toFixed(2)} km</title></path>`
+      + `<text x="${wx + 11}" y="${wy + 4}" font-size="12" font-weight="600">원대교 1012650</text><text class="sub" x="${wx + 11}" y="${wy + 18}">유량·수위 · 내린천2에서 ${wk.toFixed(2)} km</text>`; }
+  h += `<circle cx="${nx}" cy="${ny}" r="7" fill="var(--warn)" stroke="var(--panel)" stroke-width="2"><title>내린천2 (1012A20)</title></circle><text x="${nx + 10}" y="${ny + 20}" font-size="12" font-weight="600">내린천2 1012A20</text><text class="sub" x="${nx + 10}" y="${ny + 34}">유역 출구 · 수질측정</text>`;
+  if (g.gosa) { const [gx, gy, gk] = g.gosa;
+    h += `<path d="M${gx + 3},${gy - 3} L${gx + 18},${gy - 14} h4" stroke="var(--ink-2)" stroke-width="1" fill="none"/>`
+      + `<rect x="${gx - 4}" y="${gy - 4}" width="8" height="8" rx="1.5" fill="var(--est)" stroke="var(--panel)" stroke-width="1.6"><title>고사취수구 · 내린천2에서 직선 ${gk.toFixed(2)} km (지번 주소 기준 위치)</title></rect>`
+      + `<text x="${gx + 24}" y="${gy - 10}" font-size="12" font-weight="600">고사취수구<tspan class="sub" font-weight="400" dx="5">내린천2에서 ${gk.toFixed(2)} km</tspan></text>`; }
   const bx = g.W - 24 - g.km10, by = g.H - 16;
   h += `<path d="M${bx},${by} h${g.km10}" stroke="var(--ink)" stroke-width="2"/><path d="M${bx},${by - 4} v8 M${bx + g.km10},${by - 4} v8" stroke="var(--ink)" stroke-width="1.5"/><text class="sub" x="${bx + g.km10 / 2}" y="${by - 7}" text-anchor="middle">10 km</text>`;
   h += `<g transform="translate(${g.W - 30},34)"><path d="M0,-14 L6,4 L0,0 L-6,4 Z" fill="var(--ink)"/><text class="sub" x="0" y="18" text-anchor="middle">N</text></g>`;
   svg.innerHTML = h;
 }
 function renderWt() {
-  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km². 하천망(파란 선, 굵은 선은 본류)은 © OpenStreetMap 기여자(ODbL) 자료입니다.</p>';
+  $('wt').innerHTML = W.map(([k, v]) => `<div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 84px"><span>${k}</span><div class="tr"><div class="fi" style="width:${(v * 100).toFixed(1)}%;background:var(--rain)"></div></div><span class="n">${v.toFixed(3)}</span></div>`).join('') + '<p class="hint">티센 가중치 (잠정, 현재 좌표 기준, 신남 585 제외). 유역 경계는 Copernicus DEM 30 m로 추출한 1,081.5 km². 하천망(파란 선, 굵은 선은 본류)은 © OpenStreetMap 기여자(ODbL) 자료입니다. 고사취수구는 원수측정망 주소(인제읍 고사리 365-16) 위치라 실제 취수 구조물과 조금 다를 수 있고, 원대교는 내린천 본류에서 내린천2와 직선 7.46 km인 곳에 표시했습니다. 거리는 모두 직선거리입니다.</p>';
 }
 
 // 오늘 자료는 하루가 끝나야 생기므로 기준일은 자료 마지막 날까지만 고를 수 있다는 안내
