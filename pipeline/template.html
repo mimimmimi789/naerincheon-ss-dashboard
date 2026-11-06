@@ -824,7 +824,7 @@ footer{border-top-color:var(--line)}
   </div>
 
   <div class="tab" id="tab-info" data-tab="info" hidden>
-  <section class="grid g-2" id="basin">
+  <section class="grid" id="basin">
     <div class="card">
       <h2>내린천2 유역도</h2>
       <div class="mapwrap"><svg id="map" role="img" aria-label="내린천2 유역 경계, 티센 분할, 강우관측소와 수질측정 지점"></svg></div>
@@ -835,15 +835,6 @@ footer{border-top-color:var(--line)}
         <dt>유역면적</dt><dd>1,082.1 km² (잠정)</dd>
         <dt>유량 보완</dt><dd>원대교 일유량 × 1.0414 (면적비)</dd>
         <dt>강우</dt><dd>티센 가중 일강우, 강우일 1 mm 이상</dd>
-      </dl>
-    </div>
-    <div class="card">
-      <h2>자료와 다음 단계</h2>
-      <dl class="facts">
-        <dt>실측 SS</dt><dd id="fObs">–</dd>
-        <dt>일 추정 SS</dt><dd id="fEst">–</dd>
-        <dt>유량</dt><dd>원대교 일유량 × 1.0414, 수위와 어긋난 73일은 수위로 보정</dd>
-        <dt>1·3·5일 예측</dt><dd>2019-01-01 이후 기준일마다 표본외 예측, 과거 예보 원본은 미확보</dd>
       </dl>
     </div>
   </section>
@@ -1179,8 +1170,6 @@ function renderGrade() {
 renderGrade();
 renderWx();
 renderStatus();
-$('fObs').textContent = obs[0].d + ' – ' + obs[obs.length - 1].d + ', ' + obs.length + '건';
-$('fEst').textContent = N.toLocaleString('ko-KR') + '일 중 ' + D.meta.n_est.toLocaleString('ko-KR') + '일 모델 추정';
 const QFIX = new Set(D.qfix);
 const PART = new Set(D.part);
 
