@@ -559,12 +559,36 @@ footer{border-top-color:var(--line)}
 .ab-end{background:linear-gradient(140deg,rgba(47,111,224,.12),rgba(63,169,245,.12))}
 .ab-end .as-h{color:var(--indigo)}
 
+/* 앱처럼 쓰기 카드: 홈 화면 추가·알림 받기 (휴대폰에서도 맨 위에 크게) */
+.appcard{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 16px;padding:14px 16px 14px 20px;border-radius:20px;color:#fff;
+  background:linear-gradient(135deg,#2f6fe0,#3fa9f5 62%,#5cc4f5);box-shadow:0 12px 28px rgba(50,120,230,.32)}
+.appcard[hidden]{display:none}
+.ac-h{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ac-h b{font-size:16px;font-weight:800;letter-spacing:-.01em}.ac-h span{font-size:13px;color:rgba(255,255,255,.88);line-height:1.45}
+.ac-btns{display:flex;gap:10px;flex:0 1 auto}
+.ac-btn{font:inherit;display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 16px 8px 12px;border:0;border-radius:14px;cursor:pointer;text-align:left;
+  background:#fff;color:#1d4fb8;box-shadow:0 4px 12px rgba(10,40,110,.18);transition:transform .15s,box-shadow .15s}
+.ac-btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(10,40,110,.24)}.ac-btn:active{transform:translateY(0)}
+.ac-btn:focus-visible{outline:3px solid #ffe08a;outline-offset:2px}
+.ac-btn .ico{width:30px;height:30px;flex:none;padding:5px;border-radius:9px;background:rgba(47,111,224,.12);color:#2f6fe0}
+.ac-t{display:flex;flex-direction:column;line-height:1.25}.ac-t b{font-size:15px;font-weight:700;white-space:nowrap}.ac-t small{font-size:11.5px;color:#5b74a0;white-space:nowrap}
+.ac-btn.pushbtn[aria-pressed="true"]{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7)}
+.ac-btn.pushbtn[aria-pressed="true"] .ico{background:rgba(255,255,255,.22);color:#fff}.ac-btn.pushbtn[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+.ac-btn[hidden]{display:none!important}
+.appcard.solo .ac-h{flex-basis:200px}
+@media (max-width:820px){.appcard{margin:12px 0 14px;padding:16px;gap:12px;border-radius:22px}.ac-h{flex-basis:100%}.ac-h b{font-size:17px}
+  .ac-btns{flex:1 1 100%}.ac-btn{flex:1 1 0;min-width:0;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:12px 8px;min-height:84px}
+  .ac-btn .ico{width:36px;height:36px;padding:6px}.ac-t{align-items:center}.ac-t b{font-size:15.5px}}
+@media (max-width:360px){.ac-t small{white-space:normal}}
+@media (display-mode: standalone){.appcard .instbtn{display:none!important}}
+
 /* 홈 화면(바탕화면)에 추가 */
 .topbtns{margin-left:auto;align-self:center;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.topbtns .helpbtn{margin-left:0}
 .btn .ico,.side-inst .ico,.intro-inst .ico{width:18px;height:18px;flex:none}
 .instbtn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.instbtn[hidden],.side-inst[hidden],.intro-inst[hidden],.instbar[hidden]{display:none!important}
 .helpbtn{background:var(--panel);color:var(--indigo);border:1px solid var(--indigo);box-shadow:none}
 .side-inst{font:inherit;display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;border:1px dashed var(--indigo);background:rgba(47,111,224,.08);color:var(--indigo);border-radius:14px;padding:11px 12px;margin-top:auto}
+.side-inst{display:none!important}   /* 맨 위 카드로 옮김 */
 .side-inst:hover{background:rgba(47,111,224,.14)}.side-inst b{display:block;font-size:14px}.side-inst small{display:block;font-size:11.5px;color:var(--ink-3)}
 .side-inst .ico{width:24px;height:24px}.side-inst+.side-foot{margin-top:0}
 .intro-inst{font:inherit;font-size:13px;display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;margin:0 0 14px;padding:10px 12px;border-radius:12px;border:1px solid rgba(47,111,224,.3);background:rgba(47,111,224,.08);color:var(--ink-2)}
@@ -662,6 +686,13 @@ footer{border-top-color:var(--line)}
 
 <main>
   <nav class="mob-nav" aria-label="탭"><a href="#about" data-tab="about">상세 소개</a><a href="#home" data-tab="home" class="on">종합</a><a href="#fc" data-tab="fc">예측·원인</a><a href="#cmp" data-tab="cmp">작년 비교</a><a href="#perf" data-tab="perf">모델 성능</a><a href="#info" data-tab="info">유역·자료</a></nav>
+  <section class="appcard" id="appCard" aria-label="앱처럼 쓰기">
+    <div class="ac-h"><b>앱처럼 쓰기</b><span>홈 화면에 두고, 매일 아침 SS 예측을 알림으로 받아 보세요</span></div>
+    <div class="ac-btns">
+      <button class="ac-btn instbtn" id="instBtn" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ac-t"><b class="instLab">홈 화면에 추가</b><small>아이콘으로 바로 열기</small></span></button>
+      <button class="ac-btn pushbtn" id="pushBtn" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2H4.5z M10 20.5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg><span class="ac-t"><b id="pushLab">알림 받기</b><small id="pushSub">매일 07:30 예측 요약</small></span></button>
+    </div>
+  </section>
   <header class="top" id="overview">
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
@@ -674,8 +705,6 @@ footer{border-top-color:var(--line)}
     </div>
     <p class="refnote" id="refNote" hidden></p>
     <div class="topbtns">
-      <button class="btn instbtn" id="instBtn" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="instLab">홈 화면에 추가</span></button>
-      <button class="btn instbtn pushbtn" id="pushBtn" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2H4.5z M10 20.5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg><span id="pushLab">알림 받기</span></button>
       <button class="btn helpbtn" id="helpBtn" type="button" aria-pressed="false">설명 보기</button>
     </div>
   </header>
@@ -1754,7 +1783,10 @@ function renderWt() {
   const hideAll = () => { btns.forEach(b => { b.hidden = true; }); bar.hidden = true; document.body.classList.remove('has-ib'); };
   if (standalone()) { hideAll(); return; }
   btns.forEach(b => { b.hidden = false; });
-  const showBar = () => { if (dismissed() || standalone() || !$('intro').hidden) return; bar.hidden = false; document.body.classList.add('has-ib'); };
+  let cardSeen = false;   // 맨 위 '앱처럼 쓰기' 카드가 보이는 동안은 아래 띠를 띄우지 않음 (스크롤해 내려가면 띄움)
+  const showBar = () => { if (dismissed() || standalone() || !$('intro').hidden || cardSeen) { bar.hidden = true; document.body.classList.remove('has-ib'); return; } bar.hidden = false; document.body.classList.add('has-ib'); };
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { cardSeen = es[0].isIntersecting && !$('appCard').hidden; if (barReady) showBar(); }).observe($('appCard'));
+  let barReady = false;
   const closeBar = () => { bar.hidden = true; document.body.classList.remove('has-ib'); try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
   const I = {
     share: '<span class="kbd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M6 11H5v10h14V11h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>공유</span>',
@@ -1801,7 +1833,7 @@ function renderWt() {
   addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; });
   addEventListener('appinstalled', hideAll);
   // 첫 안내 상자를 닫은 뒤 잠깐 있다가 아래쪽 안내 띠를 보여 줌 (닫으면 14일 동안 안 보임)
-  const later = () => setTimeout(showBar, 1500);
+  const later = () => setTimeout(() => { barReady = true; showBar(); }, 1500);
   if ($('intro').hidden) later(); else new MutationObserver((m, o) => { if ($('intro').hidden) { o.disconnect(); later(); } }).observe($('intro'), { attributes: true, attributeFilter: ['hidden'] });
   if ('serviceWorker' in navigator && location.protocol === 'https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
@@ -1822,7 +1854,7 @@ function renderWt() {
   };
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.hidden = true; });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlg.hidden) dlg.hidden = true; });
-  const setOn = on => { btn.setAttribute('aria-pressed', String(on)); lab.textContent = on ? '알림 켜짐' : '알림 받기'; };
+  const setOn = on => { btn.setAttribute('aria-pressed', String(on)); lab.textContent = on ? '알림 켜짐' : '알림 받기'; const sb = $('pushSub'); if (sb) sb.textContent = on ? '매일 07:30 · 눌러서 관리' : '매일 07:30 예측 요약'; };
   // 알림 문구: pipeline/notify.py summary()와 같은 규칙
   const summary = () => {
     const H = (D.fc && D.fc.scen && D.fc.scen.h) || {}, p90 = D.meta.p90 || 10.2, LVK = ['평상', '관심', '대응 검토'];
@@ -1874,7 +1906,7 @@ function renderWt() {
       return show('알림이 켜져 있어요', '<p>매일 아침 07:30 갱신 뒤 이런 알림이 와요.</p><div class="pv"><b>' + s.title + '</b>' + s.body + '</div>', [['알림 끄기', false, off], ['지금 알림 보기', true, async () => notifyNow(await reg())]]);
     }
     if (Notification.permission === 'denied') return show('알림이 차단되어 있어요', '<p>' + (/Android/.test(ua) ? '휴대폰 <b>설정 → 애플리케이션 → ' + (/SamsungBrowser/.test(ua) ? '삼성 인터넷' : 'Chrome') + ' → 알림</b>을 켜고, 브라우저의 <b>사이트 설정 → 알림</b>에서 이 주소를 허용해 주세요.' : iOS ? '<b>설정 → 알림 → 내린천 SS</b>에서 알림 허용을 켜 주세요.' : '주소창 왼쪽 <b>자물쇠 아이콘 → 알림 → 허용</b>으로 바꾼 뒤 다시 눌러 주세요.') + '</p>');
-    lab.textContent = '설정 중…';
+    lab.textContent = '설정 중…'; if ($('pushSub')) $('pushSub').textContent = '허용을 눌러 주세요';
     try {
       if ((await Notification.requestPermission()) !== 'granted') { setOn(false); return show('알림 허용이 필요해요', '<p>창이 뜨면 <b>허용</b>을 눌러 주세요.</p>'); }
       const R = await subscribe(); setOn(true);
@@ -1885,6 +1917,11 @@ function renderWt() {
       show('알림을 켜지 못했어요', '<p>' + (e && e.message === 'nokey' ? '알림 발송 설정이 아직 준비되지 않았어요. 관리자에게 알려 주세요.' : '인터넷 연결을 확인하고 다시 눌러 주세요.') + '</p>');
     }
   });
+})();
+(function appCard() {   // 앱처럼 쓰기 카드: 보일 버튼이 없으면 카드를 숨기고, 하나만 있으면 좁게
+  const c = $('appCard'), B = [$('instBtn'), $('pushBtn')];
+  const up = () => { const v = B.filter(b => !b.hidden && getComputedStyle(b).display !== 'none').length; c.hidden = !v; c.classList.toggle('solo', v === 1); };
+  B.forEach(b => new MutationObserver(up).observe(b, { attributes: true, attributeFilter: ['hidden'] })); up();
 })();
 (function () {   // 설명 켜기/끄기: 기본은 끔, 선택은 이 브라우저에 기억
   const b = $('helpBtn'); let on = false; try { on = localStorage.getItem('ssdashHelp') === '1'; } catch (e) {}
