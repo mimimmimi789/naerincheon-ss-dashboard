@@ -1,0 +1,52 @@
+# 휴대폰 알림센터로 SS 예측 요약 보내기 (pipeline/notify.py)
+# - PC가 매일 갱신을 올리면(docs/latest.json 변경) 등록된 모든 기기에 1·3·5일 요약 발송
+# - 10분마다 우편함 확인: 대시보드에서 '알림 받기'를 누른 새 기기 등록 + '등록 완료' 알림
+# 필요한 비밀값: 저장소 Settings → Secrets and variables → Actions → PUSH_SECRET
+name: 알림 보내기
+on:
+  push:
+    branches: [main]
+    paths: [docs/latest.json]
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'send = 지금 요약 보내기, poll = 새 등록만 확인, test = 시험 알림'
+        default: send
+        type: choice
+        options: [send, poll, test]
+permissions:
+  contents: write
+concurrency:
+  group: notify
+  cancel-in-progress: false
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet requests cryptography
+      - name: 알림
+        env:
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+        run: |
+          if [ -z "$PUSH_SECRET" ]; then echo "PUSH_SECRET 비밀값이 아직 없어 건너뜀"; exit 0; fi
+          MODE="${{ github.event.inputs.mode }}"
+          if [ -z "$MODE" ]; then
+            if [ "${{ github.event_name }}" = "push" ]; then MODE=send; else MODE=poll; fi
+          fi
+          python pipeline/notify.py "$MODE"
+      - name: 공개 열쇠·등록 목록(암호화) 저장
+        run: |
+          git add docs/push_key.json data/push 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "알림 등록 정보 갱신 [skip ci]"
+          for i in 1 2 3 4; do git pull --rebase --quiet origin main && git push --quiet origin HEAD:main && exit 0; sleep $((i*3)); done
+          exit 1

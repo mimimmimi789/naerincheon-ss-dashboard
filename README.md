@@ -44,3 +44,9 @@ powershell -ExecutionPolicy Bypass -File register_task.ps1
 - 예보강우 모델은 학습 때 실제 내린 비를 예보 자리에 넣었다(사후 계산). 예보가 틀리는 오차는 반영되지 않는다.
 - 2026-11-03 감사(`audit/model_audit_20261103/`): 과거 기상청 발표 예보로 다시 계산한 성능을 `forecast_static.json`의 `tbl_real`에 두고 대시보드에 함께 표시한다. 기상청 예보가 예측 기간(h일)을 다 채우지 못하면(끝날 일부 시간만 있는 날 포함) 예보 반영값을 내지 않는다.
 - 기본 입력의 2026년 최저수위는 수집된 WAMIS 시간수위로 채운다. 그래서 2026년 추정값은 2026-10-30 고정본과 조금 다를 수 있다.
+
+## 홈 화면 추가 · 휴대폰 알림 (2026-11-06)
+- 대시보드의 **홈 화면에 추가**(PC는 바탕화면에 추가) 버튼: 가능하면 브라우저 설치 창, 아니면 기기별 안내(아이폰·삼성·Chrome·Edge·카카오톡). 파일: `docs/manifest.webmanifest`, `docs/icons/`, `docs/sw.js`.
+- **알림 받기**: 누르면 그 자리에서 오늘 요약 알림이 뜨고, 등록 정보가 암호화되어 ntfy.sh 우편함으로 갑니다. GitHub Actions(`.github/workflows/notify.yml`, `pipeline/notify.py`)가 10분마다 새 등록을 확인해 '등록 완료' 알림을 보내고, PC가 매일 갱신을 올리면(docs/latest.json 변경) 모든 기기에 1·3·5일 요약을 보냅니다. 알림 발송에는 PC가 필요 없습니다.
+- 처음 한 번: 저장소 Settings → Secrets and variables → Actions → New repository secret, 이름 `PUSH_SECRET`, 값은 긴 임의 문자열. 그다음 Actions → 알림 보내기 → Run workflow(poll)로 `docs/push_key.json`을 만듭니다.
+- 아이폰은 iOS 16.4 이상에서 홈 화면에 추가한 앱으로 열어야 알림을 받을 수 있습니다. 안드로이드(삼성 인터넷·Chrome)는 브라우저에서도 됩니다.

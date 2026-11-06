@@ -558,6 +558,40 @@ footer{border-top-color:var(--line)}
 .ab-sub-tabs button.on{background:var(--indigo)}
 .ab-end{background:linear-gradient(140deg,rgba(47,111,224,.12),rgba(63,169,245,.12))}
 .ab-end .as-h{color:var(--indigo)}
+
+/* 홈 화면(바탕화면)에 추가 */
+.topbtns{margin-left:auto;align-self:center;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.topbtns .helpbtn{margin-left:0}
+.btn .ico,.side-inst .ico,.intro-inst .ico{width:18px;height:18px;flex:none}
+.instbtn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.instbtn[hidden],.side-inst[hidden],.intro-inst[hidden],.instbar[hidden]{display:none!important}
+.helpbtn{background:var(--panel);color:var(--indigo);border:1px solid var(--indigo);box-shadow:none}
+.side-inst{font:inherit;display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;border:1px dashed var(--indigo);background:rgba(47,111,224,.08);color:var(--indigo);border-radius:14px;padding:11px 12px;margin-top:auto}
+.side-inst:hover{background:rgba(47,111,224,.14)}.side-inst b{display:block;font-size:14px}.side-inst small{display:block;font-size:11.5px;color:var(--ink-3)}
+.side-inst .ico{width:24px;height:24px}.side-inst+.side-foot{margin-top:0}
+.intro-inst{font:inherit;font-size:13px;display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;margin:0 0 14px;padding:10px 12px;border-radius:12px;border:1px solid rgba(47,111,224,.3);background:rgba(47,111,224,.08);color:var(--ink-2)}
+.intro-inst b{color:var(--indigo)}.intro-inst .ico{color:var(--indigo)}
+.instbar{position:fixed;z-index:40;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom,0px));width:min(560px,calc(100% - 24px));display:flex;align-items:center;gap:12px;padding:10px 10px 10px 12px;border-radius:18px;
+  background:rgba(255,255,255,.92);border:1px solid var(--glass-b);box-shadow:0 14px 36px rgba(30,70,150,.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);animation:ibUp .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes ibUp{from{opacity:0;transform:translate(-50%,24px)}to{opacity:1;transform:translate(-50%,0)}}
+.ib-ic{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--indigo),var(--violet))}.ib-ic svg{width:28px;height:28px}
+.ib-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}.ib-t b{font-size:14.5px;color:var(--ink)}.ib-t small{font-size:12px;color:var(--ink-2)}
+.ib-go{flex:none;padding:8px 16px}
+.ib-x{flex:none;width:32px;height:32px;border:0;background:transparent;color:var(--ink-3);font-size:22px;line-height:1;cursor:pointer;border-radius:8px}.ib-x:hover{background:rgba(110,150,200,.14)}
+:root[data-theme="dark"] .instbar{background:rgba(18,30,50,.94)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .instbar{background:rgba(18,30,50,.94)}}
+.isteps{margin:4px 0 18px;padding:0;list-style:none;counter-reset:st;display:grid;gap:10px}
+.isteps li{counter-increment:st;display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.55}
+.isteps li::before{content:counter(st);flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--indigo),var(--violet));margin-top:1px}
+.isteps .kbd{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:7px;background:rgba(47,111,224,.10);color:var(--indigo);font-weight:600;white-space:nowrap}
+.isteps .kbd svg{width:15px;height:15px}
+.ib-t small{word-break:keep-all}
+@media (max-width:440px){.ib-t b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ib-t small{font-size:11.5px}.instbar{gap:9px}.ib-ic{width:36px;height:36px}.ib-ic svg{width:24px;height:24px}.ib-go{padding:8px 12px}}
+@media (max-width:820px){.side-inst{display:none!important}body.has-ib main{padding-bottom:96px}}
+@media (max-width:640px){header.top .topbtns{width:100%;justify-content:stretch}.topbtns .btn{flex:1 1 0;justify-content:center}}
+.pushbtn[aria-pressed="true"]{background:var(--ok-bg);color:var(--ok);box-shadow:none;border:1px solid var(--ok)}
+#pushBody p{margin:0 0 14px;font-size:14px;line-height:1.6;color:var(--ink-2)}#pushBody p b{color:var(--ink)}
+#pushBody .pv{margin:0 0 16px;padding:12px 14px;border-radius:14px;background:rgba(47,111,224,.08);border:1px solid rgba(47,111,224,.18);font-size:13.5px;line-height:1.5;white-space:pre-line}
+#pushBody .pv b{display:block;font-size:14px;color:var(--ink)}
+@media (display-mode: standalone){.instbtn,.side-inst,.intro-inst,.instbar{display:none!important}}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -570,10 +604,36 @@ footer{border-top-color:var(--line)}
       <li><i style="background:var(--est)"></i>파란 선: 측정이 없는 날의 사후추정 SS</li>
       <li><i style="background:var(--ok);border-radius:2px;height:12px;width:7px"></i>오른쪽 막대: 1·3·5일 뒤 예측 (색 = 참고 단계, 5일은 참고용)</li>
     </ul>
+    <button class="intro-inst" id="introInst" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b class="instLab">홈 화면에 추가</b>하면 다음부터 앱처럼 바로 열려요</span></button>
     <div class="acts">
       <button class="btn pri" id="introGo" type="button">대시보드 바로 보기</button>
       <button class="btn" id="introAbout" type="button">연구 과정 자세히 보기</button>
     </div>
+  </div>
+</div>
+<div class="instbar" id="instBar" role="region" aria-label="홈 화면에 추가" hidden>
+  <span class="ib-ic"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M3 22 L11 11 L16 17 L21 9 L31 22 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M3 26 q4 -3 8 0 t8 0 t8 0 t5 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+  <span class="ib-t"><b><span class="instLab">홈 화면에 추가</span>하기</b><small>매일 SS를 앱처럼 바로 확인</small></span>
+  <button class="btn ib-go" id="instBarGo" type="button">추가</button>
+  <button class="ib-x" id="instBarX" type="button" aria-label="닫기">×</button>
+</div>
+<div class="intro" id="instDlg" role="dialog" aria-modal="true" aria-labelledby="instT" hidden>
+  <div class="box">
+    <h2 id="instT"><span class="instLab">홈 화면에 추가</span></h2>
+    <p class="k" id="instEnv">–</p>
+    <ol class="isteps" id="instSteps"></ol>
+    <div class="acts">
+      <button class="btn" id="instCopy" type="button">주소 복사</button>
+      <button class="btn pri" id="instOk" type="button">확인</button>
+    </div>
+  </div>
+</div>
+<div class="intro" id="pushDlg" role="dialog" aria-modal="true" aria-labelledby="pushT" hidden>
+  <div class="box">
+    <h2 id="pushT">알림 받기</h2>
+    <p class="k" id="pushEnv">매일 아침 07:30 갱신 후 1·3·5일 SS 요약이 알림센터에 와요</p>
+    <div id="pushBody"></div>
+    <div class="acts" id="pushActs"></div>
   </div>
 </div>
 <div class="app">
@@ -590,6 +650,7 @@ footer{border-top-color:var(--line)}
     <a href="#perf" data-tab="perf">모델 성능</a>
     <a href="#info" data-tab="info">유역 · 자료 · 용어</a>
   </nav>
+  <button class="side-inst" id="instSide" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b class="instLab">바탕화면에 추가</b><small>앱처럼 바로 열기</small></span></button>
   <div class="side-foot">
     <span>지점 <code>1012A20</code></span>
     <span>실측 SS <code id="sfN">–</code></span>
@@ -612,7 +673,11 @@ footer{border-top-color:var(--line)}
       </ul>
     </div>
     <p class="refnote" id="refNote" hidden></p>
-    <button class="btn helpbtn" id="helpBtn" type="button" aria-pressed="false">설명 보기</button>
+    <div class="topbtns">
+      <button class="btn instbtn" id="instBtn" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="instLab">홈 화면에 추가</span></button>
+      <button class="btn instbtn pushbtn" id="pushBtn" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2H4.5z M10 20.5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg><span id="pushLab">알림 받기</span></button>
+      <button class="btn helpbtn" id="helpBtn" type="button" aria-pressed="false">설명 보기</button>
+    </div>
   </header>
 
   <div class="tab" id="tab-home" data-tab="home">
@@ -1675,6 +1740,152 @@ function renderWt() {
 }
 
 // 오늘 자료는 하루가 끝나야 생기므로 기준일은 자료 마지막 날까지만 고를 수 있다는 안내
+(function install() {   // 홈 화면(휴대폰)·바탕화면(PC)에 추가: 가능하면 브라우저 설치 창, 아니면 기기별 안내
+  const ua = navigator.userAgent || '', $$ = s => document.querySelectorAll(s);
+  const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const iOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const android = /Android/.test(ua), mobile = iOS || android || /Mobi/.test(ua);
+  const kakao = /KAKAOTALK/i.test(ua), inApp = kakao || /NAVER\(|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp/i.test(ua);
+  const label = mobile ? '홈 화면에 추가' : '바탕화면에 추가';
+  const btns = [$('instBtn'), $('instSide'), $('introInst')], bar = $('instBar'), dlg = $('instDlg');
+  let deferred = null;
+  $$('.instLab').forEach(e => { e.textContent = label; });
+  const KEY = 'ssdashInstX', dismissed = () => { try { return Date.now() - (+localStorage.getItem(KEY) || 0) < 14 * 864e5; } catch (e) { return false; } };
+  const hideAll = () => { btns.forEach(b => { b.hidden = true; }); bar.hidden = true; document.body.classList.remove('has-ib'); };
+  if (standalone()) { hideAll(); return; }
+  btns.forEach(b => { b.hidden = false; });
+  const showBar = () => { if (dismissed() || standalone() || !$('intro').hidden) return; bar.hidden = false; document.body.classList.add('has-ib'); };
+  const closeBar = () => { bar.hidden = true; document.body.classList.remove('has-ib'); try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
+  const I = {
+    share: '<span class="kbd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M6 11H5v10h14V11h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>공유</span>',
+    dots: '<span class="kbd">⋮</span>', k: t => '<span class="kbd">' + t + '</span>'
+  };
+  const guide = () => {
+    let env, st;
+    if (inApp) {
+      env = (kakao ? '카카오톡' : '앱') + ' 안의 브라우저에서는 바로 추가할 수 없어요.';
+      st = [(iOS ? '오른쪽 아래 ' + I.share + ' 또는 ' + I.k('…') : '오른쪽 위 ' + I.dots) + ' 를 누르고 ' + I.k(iOS ? 'Safari로 열기' : '다른 브라우저로 열기'),
+        '열린 화면에서 ' + I.k(label) + ' 버튼을 다시 누르기'];
+    } else if (iOS) {
+      env = '아이폰·아이패드 (Safari)';
+      st = [(/iPad/.test(ua) || !/iPhone|iPod/.test(ua) ? '주소창 오른쪽' : '화면 아래(또는 주소창)') + '의 ' + I.share + ' 버튼 누르기',
+        '목록을 내려 ' + I.k('홈 화면에 추가') + ' 누르기', '오른쪽 위 ' + I.k('추가') + ' 누르기'];
+    } else if (android) {
+      env = /SamsungBrowser/.test(ua) ? '삼성 인터넷' : '안드로이드 (Chrome)';
+      st = /SamsungBrowser/.test(ua)
+        ? ['아래 ' + I.k('≡') + ' 메뉴 누르기', I.k('현재 페이지 추가') + ' → ' + I.k('홈 화면') + ' 고르기']
+        : ['오른쪽 위 ' + I.dots + ' 메뉴 누르기', I.k('홈 화면에 추가') + ' 또는 ' + I.k('앱 설치') + ' 누르기', I.k('설치') + '(또는 ' + I.k('추가') + ') 누르기'];
+    } else if (/Edg\//.test(ua)) {
+      env = 'PC (Edge)'; st = ['오른쪽 위 ' + I.k('…') + ' 메뉴 → ' + I.k('앱') + ' → ' + I.k('이 사이트를 앱으로 설치'), '바탕화면·시작 메뉴에 아이콘이 생겨요'];
+    } else if (/Chrome\//.test(ua)) {
+      env = 'PC (Chrome)'; st = ['주소창 오른쪽 끝의 ' + I.k('설치 아이콘') + ' 누르기', '안 보이면 ' + I.dots + ' 메뉴 → ' + I.k('전송, 저장, 공유') + ' → ' + I.k('바로가기 만들기') + ' (창으로 열기 체크)'];
+    } else if (/Safari\//.test(ua)) {
+      env = 'Mac (Safari)'; st = ['위쪽 메뉴 ' + I.k('파일') + ' → ' + I.k('Dock에 추가'), '이름 확인 후 ' + I.k('추가')];
+    } else {
+      env = 'PC 브라우저'; st = ['주소창 왼쪽 ' + I.k('🔒 자물쇠') + ' 아이콘을 바탕화면으로 끌어다 놓기', '또는 ' + I.k('Ctrl + D') + ' 로 즐겨찾기에 추가'];
+    }
+    $('instEnv').textContent = env; $('instSteps').innerHTML = st.map(x => '<li><span>' + x + '</span></li>').join('');
+    dlg.hidden = false; $('instOk').focus();
+  };
+  const go = async () => {
+    if (deferred) { deferred.prompt(); const r = await deferred.userChoice.catch(() => null); deferred = null; if (r && r.outcome === 'accepted') hideAll(); return; }
+    if (kakao) { guide(); location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href.split('#')[0]); return; }   // 카카오톡: 기본 브라우저로 열기
+    guide();
+  };
+  btns.forEach(b => b.addEventListener('click', () => { if (b.id === 'introInst') $('intro').hidden = true, (() => { try { localStorage.setItem('ssdashIntro', '1'); } catch (e) {} })(); go(); }));
+  $('instBarGo').addEventListener('click', go); $('instBarX').addEventListener('click', closeBar);
+  $('instOk').addEventListener('click', () => { dlg.hidden = true; });
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.hidden = true; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlg.hidden) dlg.hidden = true; });
+  $('instCopy').addEventListener('click', async () => { const b = $('instCopy'); try { await navigator.clipboard.writeText(location.href.split('#')[0]); b.textContent = '복사했어요'; } catch (e) { b.textContent = '복사 안 됨'; } setTimeout(() => { b.textContent = '주소 복사'; }, 1800); });
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; });
+  addEventListener('appinstalled', hideAll);
+  // 첫 안내 상자를 닫은 뒤 잠깐 있다가 아래쪽 안내 띠를 보여 줌 (닫으면 14일 동안 안 보임)
+  const later = () => setTimeout(showBar, 1500);
+  if ($('intro').hidden) later(); else new MutationObserver((m, o) => { if ($('intro').hidden) { o.disconnect(); later(); } }).observe($('intro'), { attributes: true, attributeFilter: ['hidden'] });
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+(function push() {   // 알림 받기: 웹 푸시 등록 → 그 자리에서 오늘 요약 알림 + 등록 정보를 암호화해 우편함(ntfy)에 넣으면 GitHub Actions가 매일 발송
+  const btn = $('pushBtn'), dlg = $('pushDlg'), lab = $('pushLab'), ua = navigator.userAgent || '';
+  const iOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const live = /github\.io$/.test(location.hostname);
+  const can = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  if (!can && !iOS) return;
+  btn.hidden = false;
+  const b64e = b => btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const b64d = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
+  const show = (title, body, acts) => {
+    $('pushT').textContent = title; $('pushBody').innerHTML = body; const A = $('pushActs'); A.innerHTML = '';
+    (acts || [['확인', true, null]]).forEach(([t, pri, f]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn' + (pri ? ' pri' : ''); b.textContent = t; b.onclick = () => { dlg.hidden = true; if (f) f(); }; A.appendChild(b); });
+    dlg.hidden = false; A.lastChild.focus();
+  };
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.hidden = true; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlg.hidden) dlg.hidden = true; });
+  const setOn = on => { btn.setAttribute('aria-pressed', String(on)); lab.textContent = on ? '알림 켜짐' : '알림 받기'; };
+  // 알림 문구: pipeline/notify.py summary()와 같은 규칙
+  const summary = () => {
+    const H = (D.fc && D.fc.scen && D.fc.scen.h) || {}, p90 = D.meta.p90 || 10.2, LVK = ['평상', '관심', '대응 검토'];
+    const TL = ['평소 범위 유지 전망', '평소보다 높아질 수 있어 관심', '25 mg/L 이상 가능, 대응 검토'];
+    let lv = 0; const parts = [];
+    [1, 3, 5].forEach(h => {
+      const z = H[h]; if (!z || !z.obs) return;
+      const d = z.target || iso(lastI + h), v = z.obs[0];
+      parts.push((d === todayKST ? '오늘 ' : '') + md(d) + ' ' + fmt(v) + (parts.length ? '' : ' mg/L') + (h === 5 ? ' (참고)' : ''));
+      const m = Math.max(v, z.kma && z.kma.v ? z.kma.v[0] : 0);
+      if (h === 1 && m >= 25) lv = 2; else if (m >= p90) lv = Math.max(lv, 1);
+    });
+    return { title: '내린천2 SS · ' + LVK[lv], body: parts.join(' · ') + '\n' + TL[lv] };
+  };
+  const notifyNow = async (reg, pre) => { const s = summary(); try { await reg.showNotification((pre || '') + s.title, { body: s.body, icon: 'icons/icon-192.png', badge: 'icons/badge-96.png', tag: 'ss-daily', data: { url: location.href.split('#')[0] } }); } catch (e) {} };
+  const seal = async (key, obj) => {   // ECDH P-256 + HKDF-SHA256 + AES-GCM (notify.py open_box와 짝)
+    const eph = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+    const pub = await crypto.subtle.importKey('raw', b64d(key), { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+    const bits = await crypto.subtle.deriveBits({ name: 'ECDH', public: pub }, eph.privateKey, 256);
+    const hk = await crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']);
+    const k = await crypto.subtle.deriveKey({ name: 'HKDF', hash: 'SHA-256', salt: new TextEncoder().encode('naerincheon-ss-box'), info: new TextEncoder().encode('subscription') }, hk, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+    const n = crypto.getRandomValues(new Uint8Array(12));
+    const c = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: n }, k, new TextEncoder().encode(JSON.stringify(obj)));
+    return JSON.stringify({ k: b64e(await crypto.subtle.exportKey('raw', eph.publicKey)), n: b64e(n), c: b64e(c) });
+  };
+  const getKey = async () => { const r = await fetch('push_key.json', { cache: 'no-store' }); if (!r.ok) throw new Error('nokey'); return r.json(); };
+  const device = () => (iOS ? '아이폰' : /SamsungBrowser/.test(ua) ? '삼성 인터넷' : /Android/.test(ua) ? '안드로이드' : /Edg\//.test(ua) ? 'PC Edge' : /Chrome\//.test(ua) ? 'PC Chrome' : 'PC') + (standalone ? ' 앱' : '');
+  const reg = () => navigator.serviceWorker.getRegistration().then(r => r || navigator.serviceWorker.register('sw.js')).then(() => navigator.serviceWorker.ready);
+  if (can && live) reg().then(r => r.pushManager.getSubscription()).then(s => setOn(!!s)).catch(() => {});
+  const subscribe = async () => {
+    const K = await getKey(), R = await reg();
+    let s = await R.pushManager.getSubscription();
+    if (s && s.options && s.options.applicationServerKey && b64e(s.options.applicationServerKey) !== K.vapid) { await s.unsubscribe(); s = null; }
+    s = s || await R.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64d(K.vapid) });
+    const j = s.toJSON();
+    await fetch(K.relay, { method: 'POST', body: await seal(K.box, { endpoint: j.endpoint, keys: j.keys, device: device() }) });
+    return R;
+  };
+  const off = async () => {
+    try { const R = await reg(), s = await R.pushManager.getSubscription(); if (s) { const K = await getKey().catch(() => null); if (K) await fetch(K.relay, { method: 'POST', body: await seal(K.box, { op: 'off', endpoint: s.endpoint }) }).catch(() => {}); await s.unsubscribe(); } } catch (e) {}
+    setOn(false); show('알림을 껐어요', '<p>다시 받으려면 <b>알림 받기</b>를 누르세요.</p>');
+  };
+  btn.addEventListener('click', async () => {
+    if (iOS && !standalone) return show('먼저 홈 화면에 추가해 주세요', '<p>아이폰은 <b>홈 화면에 추가한 앱</b>에서만 알림을 받을 수 있어요 (iOS 16.4 이상).</p><p>추가한 뒤 홈 화면의 <b>내린천 SS</b> 아이콘으로 열고 <b>알림 받기</b>를 누르세요.</p>', [['닫기', false, null], ['홈 화면에 추가', true, () => $('instBtn').click()]]);
+    if (!can) return show('이 브라우저는 알림을 지원하지 않아요', '<p>Chrome, 삼성 인터넷, Edge, Safari(홈 화면 앱)에서 열어 주세요.</p>');
+    if (!live) return show('알림 받기', '<p>알림은 공개 대시보드 주소(github.io)에서 켤 수 있어요.</p>');
+    if (btn.getAttribute('aria-pressed') === 'true') {
+      const s = summary();
+      return show('알림이 켜져 있어요', '<p>매일 아침 07:30 갱신 뒤 이런 알림이 와요.</p><div class="pv"><b>' + s.title + '</b>' + s.body + '</div>', [['알림 끄기', false, off], ['지금 알림 보기', true, async () => notifyNow(await reg())]]);
+    }
+    if (Notification.permission === 'denied') return show('알림이 차단되어 있어요', '<p>' + (/Android/.test(ua) ? '휴대폰 <b>설정 → 애플리케이션 → ' + (/SamsungBrowser/.test(ua) ? '삼성 인터넷' : 'Chrome') + ' → 알림</b>을 켜고, 브라우저의 <b>사이트 설정 → 알림</b>에서 이 주소를 허용해 주세요.' : iOS ? '<b>설정 → 알림 → 내린천 SS</b>에서 알림 허용을 켜 주세요.' : '주소창 왼쪽 <b>자물쇠 아이콘 → 알림 → 허용</b>으로 바꾼 뒤 다시 눌러 주세요.') + '</p>');
+    lab.textContent = '설정 중…';
+    try {
+      if ((await Notification.requestPermission()) !== 'granted') { setOn(false); return show('알림 허용이 필요해요', '<p>창이 뜨면 <b>허용</b>을 눌러 주세요.</p>'); }
+      const R = await subscribe(); setOn(true);
+      await notifyNow(R);   // 설정한 그 순간 바로 오늘 요약 알림
+      show('알림을 켰어요', '<p>방금 알림센터에 오늘 요약을 보냈어요. 몇 분 안에 <b>등록 완료</b> 알림이 오고, 그 뒤로 <b>매일 아침 07:30</b> 갱신 때마다 와요.</p>');
+    } catch (e) {
+      setOn(false);
+      show('알림을 켜지 못했어요', '<p>' + (e && e.message === 'nokey' ? '알림 발송 설정이 아직 준비되지 않았어요. 관리자에게 알려 주세요.' : '인터넷 연결을 확인하고 다시 눌러 주세요.') + '</p>');
+    }
+  });
+})();
 (function () {   // 설명 켜기/끄기: 기본은 끔, 선택은 이 브라우저에 기억
   const b = $('helpBtn'); let on = false; try { on = localStorage.getItem('ssdashHelp') === '1'; } catch (e) {}
   const set = v => { on = v; document.body.classList.toggle('nohelp', !on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '설명 숨기기' : '설명 보기'; try { localStorage.setItem('ssdashHelp', on ? '1' : '0'); } catch (e) {} };
