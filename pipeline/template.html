@@ -693,8 +693,8 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 :root{--soil:#d8c9ab;--soil-l:#b49e76;--grass:#8fb57a;--rock:#a39d92;--road:#7f868d}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--soil:#3d3529;--soil-l:#6b5c45;--grass:#4f7046;--rock:#6f6b64;--road:#565c63}}
 :root[data-theme="dark"]{--soil:#3d3529;--soil-l:#6b5c45;--grass:#4f7046;--rock:#6f6b64;--road:#565c63}
-.rv{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:16px;align-items:center}
-.rv svg{width:100%;height:auto;display:block}
+#river .rv{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:16px;align-items:center}
+#river .rv svg{width:100%;height:auto;display:block}
 #rvSvg .rv-wg{transition:transform .45s cubic-bezier(.3,.7,.3,1)}
 #rvSvg .rv-wr{transition:fill .45s ease}
 #rvSvg .rv-p circle{transition:opacity .45s ease}
@@ -721,7 +721,404 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 .rv-track svg{position:absolute;inset:0 0 14px 0;width:100%;height:30px}
 .rv-track input{position:absolute;left:0;right:0;bottom:0;width:100%;margin:0;accent-color:var(--est)}
 .rv-grad{width:44px;height:9px;border-radius:3px;background:linear-gradient(90deg,#4f93d8,#79a59a,#a88a55,#7b5a33)}
-@media (max-width:820px){.rv{grid-template-columns:minmax(0,1fr)}.rv-info{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}.rv-d,#rvLv{grid-column:1/-1}}
+@media (max-width:820px){#river .rv{grid-template-columns:minmax(0,1fr)}.rv-info{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}.rv-d,#rvLv{grid-column:1/-1}}
+/* ── 2026-11-09 종합 탭 실무자용 재설계 시안: 단계·이유 → 예측 3장 → 전망 → 비 소식·할 일 → 더 보기 ── */
+.dline{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 0;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.dline b{color:var(--ink);font-weight:600}
+body.nohelp .refnote:not(.flash){display:none}
+.headline.now{gap:8px;padding:18px 22px}
+.now .hl-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font-size:clamp(22px,2.6vw,30px)}
+.now .hl-main .stg{margin:0}
+.now .hl-main .tl{font-weight:500;color:var(--ink-2);font-size:.72em}
+.now-why{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.now-why li{font-size:12.5px;padding:3px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2)}
+.now .hl-sub{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.now .hl-sub span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink-3);margin-right:6px;vertical-align:1px}
+.now .hl-sub span.ok::before{background:var(--ok)}.now .hl-sub span.w::before{background:var(--warn)}
+.now .hl-sub a{color:var(--est);text-decoration:none;font-weight:600;margin-left:auto}.now .hl-sub a::after{content:" →"}
+.kpis.k3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.k3 .kpi .lab b{font-weight:600;color:var(--ink)}
+.k3 .kpi:last-child{opacity:.78}
+.k3 .cov:not(.part){display:none}
+.k3 .pex{font-size:12px;color:var(--ink-2)}.k3 .pex b{font-weight:600;color:var(--ink)}
+.k3 .pex:empty{display:none}
+.home2{align-items:start}
+.wxwrn{font-size:12.5px;color:var(--ink-2);margin:-2px 0 10px}
+.wxwrn span{display:inline-block;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink);margin-right:6px}
+.wxwrn span.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+#todo .todo-d{margin:0 0 8px;font-size:13px;color:var(--ink-2)}
+#todo .ck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+#todo .ck label{font-size:14px}
+#todo .todo-n{margin:10px 0 0;font-size:12px;color:var(--ink-3)}
+.more{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.more a{display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:16px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.more a b{font-size:14px;font-weight:600}.more a b::after{content:" →";color:var(--est)}
+.more a small{font-size:12px;color:var(--ink-3)}
+.more a:hover{border-color:var(--est)}
+.tabh{font-size:15px;font-weight:600;margin:4px 0 -4px;color:var(--ink-2)}
+#tab-home>.rnote{margin-top:-2px}
+@media (max-width:820px){.more{grid-template-columns:repeat(2,minmax(0,1fr))}.now .hl-sub a{margin-left:0}}
+@media (max-width:640px){.kpis.k3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.appcard{padding:8px 12px 8px 16px;margin-bottom:12px}.appcard .ac-h span,.appcard .ac-btn small{display:none}.appcard .ac-h b{font-size:14px}
+.appcard .ac-btn{padding:6px 12px}
+.k3 .kpi .ki{display:none}
+@media (max-width:820px){.appcard{flex-wrap:nowrap;padding:8px 10px;margin:10px 0}.appcard .ac-h{flex-basis:auto}.appcard .ac-btns{gap:6px}.appcard .ac-btn{flex-direction:row;padding:6px 10px}.appcard .ac-btn .ico{width:18px;height:18px}.appcard .ac-h b{font-size:14px}}
+@media (max-width:640px){.k3 .kpi .rainline,.k3 .kpi:not(:first-child) .cov{display:none}}
+
+@media (max-width:640px){.appcard .ac-h{display:none}.appcard .ac-btns{flex:1}}
+
+/* ── 2차: 더 촘촘하게 (2026-11-09) ── */
+#tab-home:not([hidden]){display:flex;flex-direction:column;gap:12px}
+.top{padding-bottom:0}
+@media (min-width:821px){h1{font-size:24px}.top .sub{font-size:13px;margin-top:2px}.dline{margin-top:4px}main{padding-top:18px;gap:12px}}
+.headline.now{padding:14px 18px;gap:8px}
+.now .hl-main{font-size:22px}
+.now-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.now-why li{font-size:12px;padding:2px 9px}
+.now .hl-sub{font-size:12px;flex:1}
+.now .kpis.k3{gap:8px;margin-top:2px}
+.now .k3 .kpi{background:var(--bg);border:1px solid var(--line);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-radius:12px;padding:8px 12px;gap:1px}
+.now .k3 .kpi.lv-note{background:var(--note-bg)}.now .k3 .kpi.lv-warn{background:var(--warn-bg)}
+.now .k3 .kpi .lab{font-size:12.5px}.now .k3 .kpi .lab .tag{display:none}
+.now .k3 .kpi .val{font-size:22px;line-height:1.2}.now .k3 .kpi .val small{font-size:12px}
+.now .k3 .kpi .rng{font-size:12.5px;margin:0}.now .k3 .kpi .rng small{font-size:11px}
+.now .k3 .kpi .meta{font-size:11.5px}
+.now .k3 .kpi .rainline,.now .k3 .kpi .cov{display:none}
+.now .k3 .kpi:first-child .rainline{display:block}
+.now .k3 .kpi:last-child{opacity:.75}
+.home2{grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);gap:12px;align-items:stretch}
+.home2 .card{padding:14px 16px;gap:6px}
+.home2 .card h2{font-size:14.5px}
+.hside{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hside .card{flex:0 0 auto}
+.home2 .wxwrn{margin:0 0 2px;font-size:12px}.home2 .wxwrn span{padding:1px 8px;font-size:12px}
+.home2 .wx{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr;gap:4px;overflow:visible}
+.home2 .wxd{display:grid;grid-template-columns:104px 48px minmax(0,1fr) auto;align-items:center;gap:6px;padding:5px 10px;border-radius:8px}
+.home2 .wxd .dt{font-size:12px;grid-row:1/3}.home2 .wxd .ic{font-size:0;gap:2px;grid-row:1/3}.home2 .wxd .ic svg{width:20px;height:20px}.home2 .wxd .ic small{display:none}
+.home2 .wxd .lb{font-size:12px}.home2 .wxd .tp{font-size:12.5px;text-align:right}
+.home2 .wxd .rn{grid-column:3/5;font-size:11.5px}
+.home2 .wxd.today{outline-width:1.5px}
+#todo .todo-d{margin:0 0 4px;font-size:12px}
+#todo .ck{gap:4px}#todo .ck label{font-size:13px}
+#todo .todo-n{margin:4px 0 0;font-size:11.5px}
+.more{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.more a{flex-direction:row;align-items:baseline;gap:8px;padding:8px 12px;border-radius:12px}
+.more a b{font-size:13px;white-space:nowrap}.more a small{font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tab-home>.rnote{font-size:11.5px;margin:0}
+@media (max-width:1100px){.home2{grid-template-columns:minmax(0,1fr)}.hside{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:820px){.hside{display:flex}.more{grid-template-columns:repeat(2,minmax(0,1fr))}.more a small{display:none}.headline.now{padding:12px 14px}.now .hl-main{font-size:20px}}
+@media (max-width:640px){.now .kpis.k3{grid-template-columns:repeat(3,minmax(0,1fr))}.now .k3 .kpi{padding:6px 8px}.now .k3 .kpi:first-child{grid-column:auto}.now .k3 .kpi .val{font-size:18px}.now .k3 .kpi .rng small{display:none}.now .k3 .kpi .rainline,.now .k3 .kpi .pex{display:none!important}.now .k3 .lvp{display:none}.home2 .wxd{grid-template-columns:86px 44px minmax(0,1fr) auto}}
+
+/* ── 3차: 날씨 위로, SS 전망 맨 아래 ── */
+.home2{grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);align-items:stretch}
+.home2 .wx{grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-columns:none;gap:6px}
+.home2 .wxd{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto auto;gap:2px 8px;padding:7px 10px}
+.home2 .wxd .dt{grid-row:auto;grid-column:1/-1}
+.home2 .wxd .ic{grid-row:2/4;grid-column:1}.home2 .wxd .ic svg{width:24px;height:24px}
+.home2 .wxd .lb{grid-column:2;grid-row:2;display:flex;justify-content:space-between;gap:6px}
+.home2 .wxd .tp{grid-column:2;grid-row:2;text-align:right}
+.home2 .wxd .rn{grid-column:2;grid-row:3}
+#outlook{padding:14px 16px;gap:6px}#outlook h2{font-size:14.5px}
+@media (max-width:1100px){.home2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.home2 .wx{grid-auto-columns:minmax(104px,1fr);overflow-x:auto}}
+
+/* ── 4차: 예측 3개 세로(한 줄씩), 휴대폰 정리 ── */
+.now .kpis.k3{grid-template-columns:minmax(0,1fr)!important;gap:4px}
+.now .k3 .kpi{display:grid;grid-template-columns:130px 150px 170px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;column-gap:12px;padding:6px 12px}
+.now .k3 .kpi .lab{grid-column:1;grid-row:1/3;font-size:13.5px}
+.now .k3 .kpi .val{grid-column:2;grid-row:1/3;font-size:21px;white-space:nowrap}
+.now .k3 .kpi .rng{grid-column:3;grid-row:1/3}
+.now .k3 .kpi .pex{grid-column:4;grid-row:1}
+.now .k3 .kpi .rainline{grid-column:4;grid-row:2}
+.now .k3 .kpi .himode{grid-column:4;grid-row:1/3}
+.now .k3 .kpi:last-child{opacity:.75}
+@media (max-width:820px){.now-meta{flex-direction:column;align-items:flex-start;gap:6px}.now .hl-sub{flex:none}}
+@media (max-width:640px){
+  .now .k3 .kpi{grid-template-columns:76px auto minmax(0,1fr);column-gap:8px;padding:6px 10px}
+  .now .k3 .kpi .lab{font-size:12.5px}.now .k3 .kpi .val{font-size:18px}.now .k3 .lvp{display:inline-flex}
+  .now .k3 .kpi .rng{text-align:right}.now .k3 .kpi .pex{display:block!important;grid-column:1/-1;grid-row:3}
+  .home2 .wx{grid-auto-flow:row;grid-template-columns:1fr;overflow:visible}
+  .home2 .wxd{grid-template-columns:96px 30px minmax(0,1fr) auto;grid-template-rows:auto;padding:5px 10px}
+  .home2 .wxd .dt,.home2 .wxd .ic,.home2 .wxd .lb,.home2 .wxd .tp,.home2 .wxd .rn{grid-row:1;grid-column:auto}
+  .home2 .wxd .ic svg:nth-child(n+2),.home2 .wxd .ic span:nth-child(n+2){display:none}.home2 .wxd .ic svg{width:20px;height:20px}
+  .home2 .wxd .ic{display:flex;gap:2px}.home2 .wxd .ic span:nth-child(n+2){display:flex}.home2 .wxd .ic svg{width:20px;height:20px}.home2 .wxd{grid-template-columns:88px 44px minmax(0,1fr) auto}
+  .appcard{padding:6px}.appcard .ac-btn{min-height:0;flex-direction:row;padding:8px 10px;gap:6px}
+}
+
+/* 상세 소개 07 · 하이브리드 */
+.hyb3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hy{position:relative;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--bg);display:flex;flex-direction:column;gap:6px}
+.hy-n{position:absolute;top:12px;right:14px;width:26px;height:26px;border-radius:8px;background:var(--est);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:600}
+.hy h3{margin:0;font-size:15px;padding-right:32px}.hy h3 em{display:block;font-style:normal;font-weight:400;font-size:12px;color:var(--ink-3);margin-top:2px}
+.hy p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.55}
+.hy .hy-r{margin-top:auto;padding-top:6px;border-top:1px solid var(--line);font-size:12.5px}.hy .hy-r b{color:var(--ok);font-weight:600;margin-right:6px}
+.hyflow .fcol .fn{font-size:12.5px}
+.ba-c h3 small{font-weight:400;color:var(--ink-3)}
+.ba-c p span{font-size:12.5px}
+@media (max-width:820px){.hyb3{grid-template-columns:minmax(0,1fr)}}
+
+/* ── 5차: 예측 3칸 가로, 앱 버튼 작게, PC 한 화면 ── */
+.now .kpis.k3{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px}
+.now .k3 .kpi{display:grid;grid-template-columns:auto 1fr;grid-template-rows:none;align-items:baseline;column-gap:10px;row-gap:0;padding:7px 12px}
+.now .k3 .kpi .lab{grid-column:1/-1;grid-row:auto;font-size:12.5px}
+.now .k3 .kpi .val{grid-column:1;grid-row:auto;font-size:22px}
+.now .k3 .kpi .rng{grid-column:2;grid-row:auto;text-align:right;font-size:12px}
+.now .k3 .kpi .pex,.now .k3 .kpi .rainline,.now .k3 .kpi .himode{grid-column:1/-1;grid-row:auto;font-size:11.5px}
+.now .k3 .kpi:first-child .rainline{display:none}
+.appcard{background:none!important;box-shadow:none!important;padding:0!important;margin:0 0 -6px!important;justify-content:flex-end;min-height:0;border:0}
+.appcard::before,.appcard::after{display:none!important}
+.appcard .ac-h{display:none}
+.appcard .ac-btn{min-height:0!important;padding:4px 10px 4px 6px!important;border-radius:999px;font-size:12.5px;gap:6px;flex-direction:row!important;box-shadow:none;border:1px solid var(--line);background:var(--panel)}
+.appcard .ac-btn .ico{width:20px!important;height:20px!important;padding:3px;border-radius:6px}
+.appcard .ac-t b{font-size:12.5px}
+@media (min-width:821px){
+  .top{margin-top:-4px}h1{font-size:21px}.top .sub{display:none}.dline{margin-top:2px}
+  .headline.now{padding:10px 16px;gap:6px}.now .hl-main{font-size:20px}
+  .home2 .card,#outlook{padding:10px 14px;gap:4px}
+  .home2 .wxd{padding:5px 9px}
+  #tab-home:not([hidden]){gap:10px}
+}
+@media (max-width:640px){.now .kpis.k3{gap:4px}.now .k3 .kpi{grid-template-columns:1fr;padding:6px 8px}.now .k3 .kpi .rng{grid-column:1;text-align:left;font-size:11px}.now .k3 .kpi .val{font-size:18px}.now .k3 .lvp{display:none}.now .k3 .kpi .lab{font-size:11.5px}}
+
+@media (max-width:640px){.top .sub{display:none}.now .k3 .kpi .pex{display:none!important}.home2 .wxd .tp{white-space:nowrap}.home2 .wxd{grid-template-columns:92px 52px minmax(0,1fr) auto}}
+
+.ci-kind{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2);margin-right:8px;white-space:nowrap}
+
+/* 하이브리드 모식도 */
+.hd-wrap{margin:4px 0 6px}
+.hd{width:100%;height:auto;display:block}
+.hd-band{fill:var(--bg);stroke:var(--line)}
+.hd .hd-h{font-size:13px;font-weight:600;fill:var(--ink-2)}
+.hd text{font-family:inherit}
+.hd-n rect{stroke-width:1.6}
+.hd-n .hd-t{font-size:15px;font-weight:600;text-anchor:middle;fill:var(--ink)}
+.hd-n .hd-s{font-size:11.5px;text-anchor:middle;fill:var(--ink-2)}
+.hd-n.in rect{fill:var(--panel);stroke:var(--line)}
+.hd-n.tree rect{fill:rgba(47,111,224,.13);stroke:#2f6fe0}
+.hd-n.lin rect{fill:rgba(26,163,184,.14);stroke:#1aa3b8}
+.hd-n.chain rect{fill:rgba(240,138,60,.15);stroke:#f08a3c}
+.hd-n.fix rect{fill:rgba(23,103,63,.12);stroke:var(--ok)}
+.hd-n.calm rect{fill:var(--panel);stroke:var(--line);stroke-dasharray:4 3}
+.hd-n.out rect{fill:#2f6fe0;stroke:#2f6fe0}.hd-n.out text{fill:#fff}
+.hd-m circle{fill:var(--ink-2)}.hd-m .hd-w{font-size:12px;font-weight:600;fill:var(--est);text-anchor:middle}.hd-m text{font-size:13px;font-weight:600;text-anchor:middle;fill:var(--ink)}
+.hd-q path{fill:var(--panel);stroke:var(--ink-3);stroke-width:1.4}.hd-q text{font-size:11.5px;text-anchor:middle;fill:var(--ink)}
+.hd-a{fill:none;stroke:var(--ink-3);stroke-width:1.6}.hd-a.dim{stroke-dasharray:4 4;opacity:.7}
+.hd-l{font-size:11px;fill:var(--ink-3)}
+.hd-c{font-size:11.5px;fill:var(--ink-3);text-anchor:middle}
+.ab .in .hd-a{stroke-dasharray:6 5;animation:hdFlow 1.2s linear infinite}.ab .in .hd-a.dim{animation:none}
+@keyframes hdFlow{to{stroke-dashoffset:-22}}
+.hd-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink-2);margin-top:6px}
+.hd-key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px;border:1.5px solid}
+.hd-key .k-tree{background:rgba(47,111,224,.13);border-color:#2f6fe0}.hd-key .k-lin{background:rgba(26,163,184,.14);border-color:#1aa3b8}.hd-key .k-chain{background:rgba(240,138,60,.15);border-color:#f08a3c}.hd-key .k-fix{background:rgba(23,103,63,.12);border-color:var(--ok)}
+.hd-v{display:none}.hd-dot{fill:var(--ink-2)}.hd-v .hd-w{font-size:11.5px;font-weight:600;fill:var(--est)}.hd-v .hd-n .hd-t{font-size:14px}.hd-v .hd-n .hd-s{font-size:11px}
+@media (max-width:820px){.hd-x{display:none}.hd-v{display:block;max-width:420px;margin:0 auto}}
+
+/* 한눈에 · 작동 방식 흐름도 */
+.f2top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12.5px;color:var(--ink-2);margin-bottom:10px}
+.f2clk{font-weight:600;color:#fff;background:var(--est);border-radius:999px;padding:3px 10px}
+.flow2{display:grid;grid-template-columns:1fr 40px 1fr 40px 1.15fr 40px 1fr;align-items:stretch}
+.f2{border-radius:14px;border:1.5px solid var(--c);background:var(--cb);display:flex;flex-direction:column;overflow:hidden}
+.f2.c1{--c:#8aa4c4;--cb:rgba(138,164,196,.10)}.f2.c2{--c:#1aa3b8;--cb:rgba(26,163,184,.10)}.f2.c3{--c:#2f6fe0;--cb:rgba(47,111,224,.10)}.f2.c4{--c:#17673f;--cb:rgba(23,103,63,.10)}
+.f2h{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--c);color:#fff}
+.f2h b{font-size:14.5px;font-weight:600}
+.f2i{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.22);display:grid;place-items:center}.f2i svg{width:16px;height:16px}
+.f2n{font-size:11px;font-weight:600;opacity:.85;order:3;margin-left:auto}
+.f2b{display:flex;flex-direction:column;gap:6px;padding:10px 12px}
+.f2b span{font-size:13px;font-weight:600;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px;display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+.f2b small{font-size:11.5px;font-weight:400;color:var(--ink-3);white-space:nowrap}
+.f2.c4 .f2b span{color:var(--ok)}
+.f2a{position:relative}
+.f2a::before{content:"";position:absolute;left:6px;right:8px;top:50%;height:3px;border-radius:2px;background:var(--line)}
+.f2a::after{content:"";position:absolute;right:2px;top:calc(50% - 6px);border:7.5px solid transparent;border-left-color:var(--ink-3);border-right:0}
+.f2a i{position:absolute;left:6px;top:calc(50% - 4px);width:10px;height:10px;border-radius:50%;background:var(--est);opacity:0}
+.in .f2a i{animation:abFlow 1.6s linear infinite}
+@media (max-width:820px){
+  .flow2{grid-template-columns:minmax(0,1fr)}
+  .f2{flex-direction:row;align-items:stretch}
+  .f2h{flex-direction:column;justify-content:center;gap:4px;width:92px;flex:none;padding:8px 6px;text-align:center}
+  .f2h b{font-size:12.5px;line-height:1.25;word-break:keep-all}.f2n{display:none}
+  .f2b{flex-direction:row;flex-wrap:wrap;gap:4px;padding:8px;align-content:center}
+  .f2b span{font-size:12px;padding:3px 7px;display:inline-flex}
+  .f2b small{font-size:10.5px}
+  .f2a{height:16px}.f2a::before{left:50%;right:auto;top:2px;bottom:5px;width:3px;height:auto;transform:translateX(-50%)}
+  .f2a::after{right:auto;left:calc(50% - 6px);top:auto;bottom:0;border:6px solid transparent;border-top-color:var(--ink-3);border-bottom:0}
+  .f2a i{display:none}
+  .f2top{font-size:11.5px;margin-bottom:8px}
+}
+
+.chip-info dt.ci-why{color:var(--warn)}.chip-info dt.ci-why.ok{color:var(--ok)}.chip-info dd.ci-why{font-weight:600;color:var(--ink)}
+
+/* 추이 탭: SS 시계열 전체 폭, 강우·유량 같은 폭으로 아래에 */
+.trg{grid-template-columns:minmax(0,1fr)}
+.hy2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 16px}
+.hy2>.legend{grid-row:1}.hy2>.plot{grid-row:2}
+.cly{flex-direction:row!important;align-items:center;gap:6px!important;font-weight:600;color:var(--ly)}.cly input{accent-color:var(--ly);width:16px;height:16px}
+.lyk{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}.lyk i{margin-left:4px}
+#cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 14px}#cmp[hidden]{display:none}
+@media (max-width:820px){.hy2{grid-template-columns:minmax(0,1fr)}.hy2>.legend,.hy2>.plot{grid-row:auto}#cmp{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+@media (min-width:821px){#river .rv{grid-template-columns:minmax(0,1fr) 240px}}
+
+/* 모델 성능 인포그래픽 */
+.pig{gap:14px}
+.pig-k{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pk{border-radius:14px;background:var(--bg);border:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.pk span{font-size:12.5px;color:var(--ink-2)}.pk b{font-size:30px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}.pk b em{font-style:normal;font-size:13px;font-weight:400;color:var(--ink-3);margin-left:3px}
+.pk small{font-size:11.5px;color:var(--ink-3)}
+.pk.main{background:#2f6fe0;border-color:#2f6fe0}.pk.main span,.pk.main b,.pk.main small{color:#fff}.pk.main small{opacity:.85}
+.pig-r{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
+.pig-b,.pig-a{border-radius:14px;border:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.pig-b h3,.pig-a h3{margin:0;font-size:14px}.pig-b h3 small,.pig-a h3 small{font-weight:400;font-size:11.5px;color:var(--ink-3);margin-left:6px}
+.pz{display:grid;grid-template-columns:96px minmax(0,1fr) 52px 70px;align-items:center;gap:10px}
+.pz-l{font-size:13px;font-weight:600}.pz b{font-size:15px;font-variant-numeric:tabular-nums;text-align:right}.pz small{font-size:11.5px;color:var(--ink-3)}
+.pz-t{position:relative;height:16px;border-radius:8px;background:var(--bg)}
+.pz-t i{position:absolute;left:0;top:0;bottom:0;width:calc(var(--w)*100%);border-radius:8px;background:linear-gradient(90deg,#6fa3f5,#2f6fe0)}
+.pz-t em{position:absolute;top:-4px;bottom:-4px;left:calc(var(--b)*100%);border-left:2px dashed var(--ly)}
+.pz.ref{opacity:.6}
+.rgs{display:flex;flex-direction:column;gap:10px}
+.rgc p{margin:0 0 4px;font-size:13px;font-weight:600}
+.rgp{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rg{display:grid;grid-template-columns:52px 1fr;grid-template-rows:auto auto;align-items:center;column-gap:8px}
+.rg svg{grid-row:1/3;width:52px;height:52px;transform:rotate(-90deg)}
+.rg-bg{fill:none;stroke:var(--line);stroke-width:8}.rg-v{fill:none;stroke-width:8;stroke-linecap:round;stroke-dasharray:var(--p) 100}
+.rg b{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}.rg span{font-size:11.5px;color:var(--ink-3);line-height:1.3}
+.pdet{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:10px 14px}
+.pdet>summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--est)}
+.pdet[open]>summary{margin-bottom:10px}
+.pdet>section{margin-top:10px}
+@media (max-width:820px){.pig-k{grid-template-columns:repeat(2,minmax(0,1fr))}.pig-r{grid-template-columns:minmax(0,1fr)}.pk b{font-size:24px}.pz{grid-template-columns:78px minmax(0,1fr) 46px;}.pz small{display:none}}
+/* 유역도 확대 */
+.mapwrap{position:relative;overflow:hidden;touch-action:none}
+.mapwrap svg{cursor:grab}.mapwrap.drag svg{cursor:grabbing}
+.mz{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px;z-index:2}
+.mz button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:18px;line-height:1;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mz button.wide{font-size:12px}
+.mapwrap.full{position:fixed;inset:0;z-index:300;border-radius:0;padding:12px;background:var(--panel)}
+.mapwrap.full svg{width:100%;height:100%;max-height:none}
+.mzh{position:absolute;left:12px;bottom:10px;font-size:11.5px;color:var(--ink-3);background:var(--panel);border-radius:6px;padding:2px 6px}
+
+.mapwrap.full{background:#f5f8fc!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mapwrap.full{background:#0e1622!important}}
+:root[data-theme="dark"] .mapwrap.full{background:#0e1622!important}
+.mz button.wide{width:auto;padding:0 8px;white-space:nowrap}
+
+
+/* 휴대폰 화면 맞춤 */
+@media (max-width:820px){
+  main{padding:8px 12px 28px!important;gap:10px!important}
+  .appcard{margin:2px 0 0!important;padding:0!important;justify-content:flex-end}
+  .appcard .ac-btn{padding:3px 9px 3px 4px!important;font-size:12px}
+  .appcard .ac-btn .ico{width:18px!important;height:18px!important}
+  .appcard .ac-t b{font-size:12px}
+  header.top{display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 8px}
+  header.top>div:first-child{display:contents}
+  header.top h1{grid-column:1/-1}
+  header.top .refnote{grid-column:1/-1}
+  .topbtns{grid-column:2;grid-row:2;margin:0!important}
+  h1{font-size:17.5px!important;line-height:1.3;letter-spacing:-.02em}
+  .top .sub{display:none}
+  .dline{font-size:12px;margin-top:2px}
+  .topbtns{align-self:center}
+  .helpbtn{padding:5px 10px!important;font-size:12px!important;min-height:0!important;border-radius:999px}
+  .card{padding:12px!important;gap:6px!important;border-radius:16px}
+  .card h2,.card>h3:first-child{font-size:15.5px}
+  .headline.now{padding:11px 12px!important}
+  .now .hl-main{font-size:18px!important}
+  .now .k3{gap:6px}
+  .now .k3 .kpi{padding:6px 8px!important}
+  .now .k3 .kpi .lab{font-size:11.5px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .now .k3 .kpi .val{font-size:20px}
+  .now .k3 .kpi .rng{font-size:11px}
+  .ref5{display:none}
+  .home2 .wxd{padding:6px 8px;font-size:12.5px;grid-template-columns:78px 24px minmax(0,1fr) auto!important;gap:4px 6px!important}
+  .home2 .wxd .ic span:nth-child(n+2){display:none!important}
+  .home2 .wxd .lb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+  .home2 .wxd .dt{font-size:11.5px;white-space:nowrap}
+  .cctl{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 8px!important}
+  .cctl label{min-width:0;font-size:12px}
+  .cctl label.cly{grid-column:1/-1;order:5;font-size:12.5px}
+  .cctl .btn{grid-column:1/-1;order:6}
+  .cctl select,.cctl input[type=date]{padding:6px 8px;font-size:13px;min-height:34px}
+  .cctl .btn{padding:7px 10px;font-size:13px;min-height:0}
+  #pSS{height:260px!important}
+  #pRain,#pFlow{height:130px!important}
+  #pScen{height:220px!important}
+  .legend{font-size:11px!important;gap:2px 9px!important}
+  table{font-size:11.5px}
+  th,td{padding:6px 5px}
+  .pig-k{gap:8px}.pk{padding:10px 12px}.pk b{font-size:22px!important}
+  .pz{grid-template-columns:72px minmax(0,1fr) 44px!important;gap:6px}
+  .ab-hero{padding:18px 16px}
+  .ab-kpi b{font-size:22px!important}
+  .rnote,footer{font-size:11.5px}
+  /* 단면: 휴대폰에서 세로 1.45배 과장(하천 단면도 관례), 글자는 원래 비율 */
+  #rvSvg{width:100%!important;height:auto!important;max-width:none!important;aspect-ratio:640/300}
+  #rvSvg text{transform-box:fill-box;transform-origin:center;transform:scaleY(.687)}
+}
+
+/* ── 2단계 다듬기: 파랑 강조색은 유지, 바탕은 조용하게 ──
+   배경 번짐·유리 흐림 효과 제거, 면은 흰색+얇은 선, 그라데이션은 SS 그래프와 상세 소개 첫 화면에만 */
+:root{--page:#f3f6fa;--bg:#f6f8fb;--panel:#fff;--line:rgba(18,38,63,.09);--glass-b:rgba(18,38,63,.09);--glass-s:0 1px 2px rgba(18,38,63,.05)}
+:root[data-theme="dark"]{--page:#0f1722;--bg:#16202d;--panel:#18232f;--line:rgba(234,242,252,.08);--glass-b:rgba(234,242,252,.08);--glass-s:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0f1722;--bg:#16202d;--panel:#18232f;--line:rgba(234,242,252,.08);--glass-b:rgba(234,242,252,.08);--glass-s:none}}
+body::before{display:none}
+.card,.kpi,.gapbar,.headline,aside,.hinfo span,.ab-sub-tabs,.mob-nav{-webkit-backdrop-filter:none;backdrop-filter:none}
+.card,.gapbar,.headline{border-radius:14px}.kpi{border-radius:12px}aside{border-radius:16px}
+.ops>div,.kv2>div,.kv3>div,.wxd,.grade,.shtxt,.r2g>div,.mapwrap{border-radius:10px}
+.brand svg{background:var(--indigo)}
+aside nav a{border-radius:8px;padding:9px 12px}
+aside nav a.on{background:rgba(47,111,224,.08);box-shadow:none}
+.side-foot,.side-foot code{background:var(--bg);color:var(--ink-2);box-shadow:none;border:1px solid var(--line)}
+.side-foot code{background:none;border:0;color:var(--ink)}
+.side-foot::before{color:var(--ink)}
+.side-foot span:has(#sfU){border-top-color:var(--line)}.side-foot span:has(.linkbtn){color:var(--indigo)}
+.side-foot .linkbtn{color:var(--indigo)}
+.appcard{background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:none;border-radius:14px}
+.ac-h span{color:var(--ink-2)}
+.ac-btn{background:var(--bg);color:var(--ink);border:1px solid var(--line);box-shadow:none;border-radius:10px}
+.ac-btn:hover{box-shadow:none;background:rgba(47,111,224,.06)}
+.ac-btn .ico{background:rgba(47,111,224,.10);color:var(--indigo)}.ac-t small{color:var(--ink-3)}
+.ac-btn.pushbtn[aria-pressed="true"]{background:var(--indigo);color:#fff;box-shadow:none}
+.btn,.intro .btn.pri{background:var(--indigo);box-shadow:none;border-radius:8px}
+.btn:hover{filter:none;background:#2860c8}
+.seg[aria-pressed="true"]{box-shadow:none}
+.controls input,.controls select,.cctl select,.cctl input{background:var(--panel);border-color:var(--line);border-radius:8px}
+.chip{background:var(--panel);border-color:var(--line)}
+.ib-ic{background:var(--indigo)}
+.ab-end{background:var(--bg)}
+.kpi .lvp{background:var(--bg)}
+@media (max-width:820px){.card,.headline{border-radius:12px}.appcard{border-radius:14px}}
+.btn.helpbtn,.intro .btn:not(.pri){background:var(--panel);color:var(--indigo);border:1px solid var(--line)}
+.btn.helpbtn:hover,.intro .btn:not(.pri):hover{background:rgba(47,111,224,.06)}
+
+/* unslop 2차 점검(2026-11-09): 새로 넣은 화면도 같은 기준 — 강조색 하나, 그라데이션·색 면 줄이기, 배지 조용하게 */
+h2 .tag,h2 .tag.real,.card>h2 .tag{background:var(--bg);color:var(--ink-3);border:1px solid var(--line);font-weight:500}
+.pz i,.pz .bar i,.pz-b i{background:var(--indigo)!important}
+.vb-c i{background:var(--est)}
+.bar-row .fi{background:var(--indigo)}
+.f2{--cb:var(--panel)!important;box-shadow:none}
+.ab-hero{background:#2f6fe0!important;box-shadow:none}
+.ab-hero .ab-kpi{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.18)}
+.pk{box-shadow:none}.pk.main{background:var(--indigo);border-color:var(--indigo)}
+.hy,.ba>div{box-shadow:none}
+.isteps li::before,.ib-ic{background:var(--indigo)}
+.appcard{background:none!important;border:0!important}
+.f2{border:1px solid var(--line)}.f2.c3{border-color:var(--indigo)}
+.f2h{background:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.f2i{background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
+.f2n{color:var(--ink-3)}
+.f2.c4 .f2b span{color:var(--ink)}
+
+/* 예측 원인 원그래프 */
+.shpie{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:center}
+.shpie svg{width:100%;max-width:480px;margin:0 auto;display:block;overflow:visible}
+.shp-t{font-size:11.5px;font-weight:600;fill:var(--ink)}
+.shp-v{font-size:22px;font-weight:600;fill:var(--ink);font-variant-numeric:tabular-nums}.shp-u{font-size:10.5px;fill:var(--ink-3)}
+.shp-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.shp-l li{display:grid;grid-template-columns:12px minmax(0,1fr) 38px 62px;align-items:center;gap:7px;font-size:12.5px}
+.shp-l i{width:12px;height:12px;border-radius:3px}.shp-l b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.shp-l em{font-style:normal;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:1100px){.shpie{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -775,10 +1172,12 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
   <nav aria-label="탭">
     <a href="#about" data-tab="about">상세 소개</a>
     <a href="#home" data-tab="home" class="on">종합 대시보드</a>
-    <a href="#fc" data-tab="fc">1·3·5일 예측 · 원인</a>
-    <a href="#cmp" data-tab="cmp">작년 비교 · 강우 상관</a>
+    <a href="#fc" data-tab="fc">예측</a>
+    <a href="#tr" data-tab="tr">추이</a>
+    <a href="#why" data-tab="why">원인</a>
+    <a href="#cmp" data-tab="cmp">강우 상관</a>
     <a href="#perf" data-tab="perf">모델 성능</a>
-    <a href="#info" data-tab="info">유역 · 자료 · 용어</a>
+    <a href="#info" data-tab="info">자료 상태 · 유역</a>
     <a href="#faq" data-tab="faq">자주 묻는 질문</a>
   </nav>
   <button class="side-inst" id="instSide" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b class="instLab">바탕화면에 추가</b><small>앱처럼 바로 열기</small></span></button>
@@ -792,7 +1191,7 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 </aside>
 
 <main>
-  <nav class="mob-nav" aria-label="탭"><a href="#about" data-tab="about">상세 소개</a><a href="#home" data-tab="home" class="on">종합</a><a href="#fc" data-tab="fc">예측·원인</a><a href="#cmp" data-tab="cmp">작년 비교</a><a href="#perf" data-tab="perf">모델 성능</a><a href="#info" data-tab="info">유역·자료</a><a href="#faq" data-tab="faq">자주 묻는 질문</a></nav>
+  <nav class="mob-nav" aria-label="탭"><a href="#about" data-tab="about">상세 소개</a><a href="#home" data-tab="home" class="on">종합</a><a href="#fc" data-tab="fc">예측</a><a href="#tr" data-tab="tr">추이</a><a href="#why" data-tab="why">원인</a><a href="#cmp" data-tab="cmp">강우 상관</a><a href="#perf" data-tab="perf">모델 성능</a><a href="#info" data-tab="info">자료 상태</a><a href="#faq" data-tab="faq">자주 묻는 질문</a></nav>
   <section class="appcard" id="appCard" aria-label="앱처럼 쓰기">
     <div class="ac-h"><b>앱처럼 쓰기</b><span>홈 화면에 두고, 매일 아침 SS 예측을 알림으로 받아 보세요</span></div>
     <div class="ac-btns">
@@ -804,31 +1203,99 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
       <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·5일 예측</p>
-      <ul class="dates" aria-label="날짜 기준">
-        <li class="obs"><small>최근 실제 SS 측정일</small><b id="dObs">–</b></li>
-        <li><small>마지막 입력자료 기준일</small><b id="dIn">–</b></li>
-        <li><small>대시보드 생성·갱신</small><b id="dUp">–</b></li>
-      </ul>
+      <p class="dline" id="dLine">–</p>
     </div>
     <p class="refnote" id="refNote" hidden></p>
     <div class="topbtns">
-      <button class="btn helpbtn" id="helpBtn" type="button" aria-pressed="false">설명 보기</button>
     </div>
   </header>
 
   <div class="tab" id="tab-home" data-tab="home">
-  <section class="headline" id="headline" aria-live="polite">
+  <section class="headline now" id="headline" aria-live="polite">
     <p class="hl-main" id="hlMain">–</p>
-    <p class="hl-sub" id="hlSub">–</p>
-    <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
+    <div class="now-meta"><ul class="now-why" id="hlWhy"></ul><p class="hl-sub" id="hlSub">–</p></div>
+    <div class="kpis k3" aria-label="1·3·5일 예측">
+    <div class="kpi"><div class="lab"><span id="kF1L">SS 미래예측 · 1일 후</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta pex" id="kF1P"></div><div class="meta rainline" id="kF1R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF3L">SS 미래예측 · 3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF5L">SS 미래예측 · 5일 후 (참고용)</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
+    </div>
+  </section>
+  <section class="grid home2">
+    <div class="card" id="weather">
+      <h2>비 소식 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
+      <div class="wxwrn" id="wxWrn"></div>
+      <div class="wx" id="wx"></div>
+      <p class="hint" id="wxNote">–</p>
+      </div>
+    <div class="card" id="todo">
+      <h2>지금 할 일 <span class="tag" id="todoTag">–</span></h2>
+      <div id="todoBox"></div>
+      
+    </div>
   </section>
   <section class="card" id="outlook" aria-label="SS 전망 그래프">
-    <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span></h2>
-      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
-    <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
-    <div class="olkey" aria-label="그래프 읽는 법"><span><i class="sw-dot"></i><b>검은 점</b> = 실제 측정값</span><span><i class="sw-line"></i><b>파란 선</b> = 과거 날짜의 사후추정값 (실측 아님)</span><span><i class="sw-sq"></i><b>오른쪽 점과 막대</b> = 미래예측값</span></div>
-    <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-sq"></i>1·3·5일 미래예측 (색 = 참고 단계)</span><span><i class="sw-fbar"></i>예측 80% 범위</span><span><i class="sw-dash"></i>추정→예측 연결</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-vl"></i>기준일</span><span><i class="sw-zn n"></i>관심 구간 (상위 10%)</span><span><i class="sw-zn w"></i>대응 검토 구간 (25 이상)</span></div>
-    <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
+    <h2>SS 전망 <span class="sub2" id="olSub">최근 2주와 앞으로 5일</span></h2>
+    <div id="pOut" class="plot" style="height:200px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
+    <div class="legend"><span><i class="sw-dot"></i>실제 측정</span><span><i class="sw-line"></i>사후추정 (실측 아님)</span><span><i class="sw-sq"></i>예측 · 막대 = 80% 범위</span><span><i class="sw-fcr"></i>기상청 예보강우 반영</span><span><i class="sw-zn n"></i>관심 10.2</span><span><i class="sw-zn w"></i>대응 검토 25</span></div>
+  </section>
+  <nav class="more" aria-label="더 자세히">
+    <a href="#tr" data-go="tr" data-at="ss"><b>SS·강우·유량 추이</b><small>90일 그래프, 작년 비교</small></a>
+    <a href="#tr" data-go="tr" data-at="river"><b>하천 단면</b><small>원대교 수위와 SS 애니메이션</small></a>
+    <a href="#why" data-go="why"><b>예측 원인</b><small>요인 분석, 비슷했던 비</small></a>
+    <a href="#info" data-go="info" data-at="dstat"><b>자료 상태</b><small>최신성 표, 특보 이력, 단계 기준</small></a>
+  </nav>
+  <p class="rnote">내린천2 하천 SS 기준의 연구용 참고 단계입니다. 취수장 운영이나 취수 중단 판단이 아니며, 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
+  <div id="legacy" hidden>
+  <section class="card" id="opsum" aria-label="운영 요약">
+    <h2>운영 요약 <span class="tag">연구용 참고</span><span class="tag" id="opRef">–</span></h2>
+    <div class="ops">
+      <div><span class="lb">참고 단계</span><span id="opStage">–</span><ul id="opWhy"></ul></div>
+      <div><span class="lb">내일 SS 기준 이상 가능성</span><span class="v" id="opP">–</span><span class="s" id="opPs">–</span></div>
+      <div><span class="lb">예보강우 확보</span><span class="v" id="opCov">–</span><span class="s" id="opCovS">–</span></div>
+      <div><span class="lb">자료 상태</span><span class="v" id="opData">–</span><span class="s" id="opDataS">–</span></div>
+    </div>
+    <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
+  </section>
+  <section class="kpis-x">
+    <div class="kpi"><div class="lab"><span id="kEstL">기준일 SS 사후추정</span><span class="tag">실측 아님</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
+    <div class="kpi"><div class="lab">최근 실제 측정 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
+  </section>
+    <div id="alert"></div><p id="alertRule"></p>
+  <details class="banner" id="banner" hidden><summary><b>읽는 법</b></summary><span>파란 선은 그날 강우·유량·수위로 채운 사후 추정(예보 아님)입니다. 실력은 ◇ 전진검증 예측과 모델 성능 탭에서 보세요. 예측 카드의 큰 숫자는 관측만 쓴 값, 아래 줄은 예보강우 반영값입니다.</span></details>
+  </div>
+  </div>
+
+  <div class="tab" id="tab-fc" data-tab="fc" hidden>
+  <section id="forecast">
+    <div class="card">
+      <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
+      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span><span><i class="sw-star">★</i>기상청 예보 강우일 때</span><span><i class="sw-hl"></i>관심 기준선</span></div>
+      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
+      <p class="rnote" id="scNote"></p>
+    </div>
+  </section>
+
+
+  </div>
+
+  <div class="tab" id="tab-tr" data-tab="tr" hidden>
+  <section class="grid trg">
+    <div class="card" id="ss">
+      <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
+      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><label class="cly"><input type="checkbox" class="c-ly">작년 같은 기간 겹쳐 보기</label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
+      <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS (실측 아님)</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-wf"></i>전진검증 예측 (실측일)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 세로선 = 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-gap"></i>실측 없는 기간</span><span><i class="sw-box"></i>예측 1–5일 구간</span></div>
+      <span id="lyKey" hidden><span class="lyk"><i class="sw-dash" style="border-color:var(--ly)"></i><span id="lyKeyT">작년</span> 추정 · <i class="sw-ring" style="border-color:var(--ly)"></i>실측</span></span><div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
+      <div class="cmp" id="cmp" hidden></div>
+    </div>
+    <div class="card" id="hydro">
+      <h2>강우 · 유량 <span class="sub2">SS 시계열과 같은 기간</span></h2>
+      <div class="stack hy2">
+        <div class="legend"><span><i class="sw-bar"></i>티센 일강우 (원통·기린·내면, mm)</span></div>
+        <div id="pRain" class="plot" style="height:150px" role="img" aria-label="일강우"></div>
+        <div class="legend"><span><i class="sw-line" style="background:var(--flow)"></i>보정 면적비 일유량 (m³/s)</span><span><i class="sw-dot" style="background:var(--flow)"></i>실측 유량</span><span><i class="sw-fix"></i>수위로 보정한 날</span></div>
+        <div id="pFlow" class="plot" style="height:150px" role="img" aria-label="일유량"></div>
+      </div>
+    </div>
   </section>
   <section class="card" id="river" aria-label="하천 단면 애니메이션">
     <h2>하천 단면 · 원대교 수위와 SS</h2>
@@ -847,97 +1314,19 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
       <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
     </div>
     <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
-    <p class="hint">수위는 원대교 일평균(WAMIS), 물색과 알갱이 수는 그날 SS 사후추정(로그 눈금, 실측일은 실측값). 탁도는 자료에 없어 쓰지 않음. 단면 모양은 그림이며 실제 측량 단면이 아님. 아래 띠의 막대 높이 = 수위, 색 = SS.</p>
   </section>
-  <section class="card" id="opsum" aria-label="운영 요약">
-    <h2>운영 요약 <span class="tag">연구용 참고</span><span class="tag" id="opRef">–</span></h2>
-    <div class="ops">
-      <div><span class="lb">참고 단계</span><span id="opStage">–</span><ul id="opWhy"></ul></div>
-      <div><span class="lb">내일 SS 기준 이상 가능성</span><span class="v" id="opP">–</span><span class="s" id="opPs">–</span></div>
-      <div><span class="lb">예보강우 확보</span><span class="v" id="opCov">–</span><span class="s" id="opCovS">–</span></div>
-      <div><span class="lb">자료 상태</span><span class="v" id="opData">–</span><span class="s" id="opDataS">–</span></div>
-    </div>
-    <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
-    <p class="disc">내린천2 하천 SS(복류수 유입 전 하천수로 가정)이며 원수 탁도와 다를 수 있습니다. 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
-  </section>
-  <section class="kpis" aria-label="요약">
-    <div class="kpi"><div class="lab"><span id="kEstL">기준일 SS 사후추정</span><span class="tag">실측 아님</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
-    <div class="kpi"><div class="lab">최근 실제 측정 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF1L">SS 미래예측 · 1일 후</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF3L">SS 미래예측 · 3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF5L">SS 미래예측 · 5일 후 (참고용)</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
-  </section>
-  <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
-  <section class="card" id="fresh">
-    <h2>자료 최신성 <span class="tag" id="frTag">–</span></h2>
-    <div class="tbl-wrap"><table class="fr"><thead><tr><th>자료</th><th>마지막 관측·발표</th><th>경과</th><th>상태</th><th>비고</th></tr></thead><tbody id="frTbl"></tbody></table></div>
-    <p class="hint" id="frNote">–</p>
-  </section>
-
-  <section class="card" id="weather">
-    <h2>기상 예보 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
-    <div class="wx" id="wx"></div>
-    <p class="hint" id="wxNote">–</p>
-  </section>
-
-  <section class="grid g-2">
-    <div class="card">
-      <h2>수질 알림 · 기상특보</h2>
-      <div id="alert"></div>
-      <p class="hint" id="alertRule">–</p>
-      <div id="wrn"></div>
-    </div>
-    <div class="card" id="manage">
-      <h2>관리자 참고 점검사항 <span class="tag">연구용 참고 단계 · 취수 판단 아님</span></h2>
-      <div id="grade"></div>
-      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
-      <div id="lvBox"></div>
-      <p class="hint">임시 구간: 10.2 mg/L = 이 지점 실측 상위 10%, 25 mg/L = 하천 Ia 기준. 취수 운영기준(원수 탁도) 확인 시 교체.</p>
-    </div>
-  </section>
-
-  <section class="grid g-main">
-    <div class="card" id="ss">
-      <h2>SS 시계열 <span class="tag">XGB·Ridge 혼합 사후복원</span></h2>
-      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
-      <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS (실측 아님)</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-wf"></i>전진검증 예측 (실측일)</span><span><i class="sw-fc"></i>1·3·5일 예측 (관측만, 세로선 = 80% 범위)</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-gap"></i>실측 없는 기간</span><span><i class="sw-box"></i>예측 1–5일 구간</span></div>
-      <div id="pSS" class="plot" style="height:330px" role="img" aria-label="기준일까지의 실측 SS와 일 추정 SS"></div>
-    </div>
-    <div class="card" id="hydro">
-      <h2>강우 · 유량</h2>
-      <div class="stack">
-        <div class="legend"><span><i class="sw-bar"></i>티센 일강우 (원통·기린·내면, mm)</span></div>
-        <div id="pRain" class="plot" style="height:140px" role="img" aria-label="일강우"></div>
-        <div class="legend"><span><i class="sw-line" style="background:var(--flow)"></i>보정 면적비 일유량 (m³/s)</span><span><i class="sw-dot" style="background:var(--flow)"></i>실측 유량</span><span><i class="sw-fix"></i>수위로 보정한 날</span></div>
-        <div id="pFlow" class="plot" style="height:140px" role="img" aria-label="일유량"></div>
-      </div>
-    </div>
-  </section>
-
-  <details class="banner" id="banner"><summary><b>읽는 법</b></summary><span>파란 선은 그날 강우·유량·수위로 채운 사후 추정(예보 아님)입니다. 실력은 ◇ 전진검증 예측과 모델 성능 탭에서 보세요. 예측 카드의 큰 숫자는 관측만 쓴 값, 아래 줄은 예보강우 반영값입니다.</span></details>
   </div>
 
-  <div class="tab" id="tab-fc" data-tab="fc" hidden>
-  <section id="forecast">
-    <div class="card">
-      <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
-      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span><span><i class="sw-star">★</i>기상청 예보 강우일 때</span><span><i class="sw-hl"></i>관심 기준선</span></div>
-      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
-      <p class="rnote" id="scNote"></p>
-      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과.</p>
-    </div>
-  </section>
-
+  <div class="tab" id="tab-why" data-tab="why" hidden>
   <section class="grid g-2" id="explain">
     <div class="card">
       <h2>예측 원인 분석 <span class="tag real">SHAP</span></h2>
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
       <div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
-      <div class="legend"><span><i class="sw-up"></i>SS를 올린 요인</span><span><i class="sw-dn"></i>SS를 내린 요인</span></div>
+      <div class="legend"><span><i class="sw-up"></i>▲ SS를 올린 요인</span><span><i class="sw-dn"></i>▼ SS를 내린 요인</span><span>% = 영향 크기 비율</span></div>
       <div class="bars" id="shBars"></div>
       <p class="shtxt" id="shTxt"></p>
-      <p class="hint">평소 예측값에 항목별 배수를 곱하면 최종 예측입니다.</p>
     </div>
     <div class="card">
       <h2>과거 유사 강우사상 <span class="tag real">실측 비교</span></h2>
@@ -953,36 +1342,38 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
   </div>
 
   <div class="tab" id="tab-cmp" data-tab="cmp" hidden>
-  <section class="card" id="compare">
-    <h2>작년 동기 비교</h2>
-      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>표시 기간<select class="c-win"><option value="60">60일</option><option value="90" selected>90일</option><option value="180">180일</option><option value="365">1년</option></select></label><label>y축<select class="c-log"><option value="lin">선형</option><option value="log">로그</option></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
-    <div class="legend"><span><i class="sw-line"></i><span id="lyA">올해</span> 추정</span><span><i class="sw-ly"></i><span id="lyB">작년</span> 추정</span><span><i class="sw-dot"></i><span id="lyOA">올해</span> 실측</span><span><i class="sw-ring"></i><span id="lyOB">작년</span> 실측</span></div>
-    <div class="grid g-2" style="align-items:start">
-      <div id="pLY" class="plot" style="height:240px" role="img" aria-label="올해와 작년 같은 기간의 SS 추정 비교"></div>
-      <div class="cmp" id="cmp"></div>
-    </div>
-  </section>
 
-  <section class="grid g-2">
+  <section class="grid">
     <div class="card">
       <h2>강우변수와 SS의 상관 <span class="tag real">실제 분석값</span></h2>
       <div class="chips" role="group" aria-label="선행기간"><button class="chip" data-h="1" aria-pressed="true">1일 뒤 SS</button><button class="chip" data-h="3" aria-pressed="false">3일 뒤</button><button class="chip" data-h="7" aria-pressed="false">7일 뒤</button></div>
       <div class="legend"><span><i class="sw-hb"></i>상관계수 ρ (길수록 관계 강함)</span></div>
       <div class="bars" id="bars"></div>
-      <p class="hint">Spearman ρ, 강우 X(t)와 SS(t+h), 2014–2024.</p>
     </div>
   </section>
   </div>
 
   <div class="tab" id="tab-perf" data-tab="perf" hidden>
-  <section class="card r2guide" aria-label="R² 읽는 법">
-    <h2>성능 숫자 읽는 법 · 로그 R²와 R²</h2>
-    <div class="r2g">
-      <div><b>R²</b><p>mg/L 그대로 오차를 잽니다. <b>큰 홍수 날을 얼마나 맞히는지</b>에 민감합니다.</p></div>
-      <div><b>로그 R²</b><p>몇 배 틀렸는지를 잽니다. <b>평상시부터 고농도까지 전체 흐름</b>을 봅니다 (운영 모델 0.770).</p></div>
+  <section class="card pig" aria-label="한눈에 보는 성능">
+    <h2>한눈에 보는 성능 <span class="tag real">과거 실측과 비교한 값</span></h2>
+    <div class="pig-k">
+      <div class="pk main"><span>일별 SS 추정</span><b>0.770</b><small>로그 R² · 2019–26 실측 295건</small></div>
+      <div class="pk"><span>처음 보는 자료</span><b>0.794</b><small>2023년까지 학습 → 2024–26 106건</small></div>
+      <div class="pk"><span>내일 예측</span><b>0.759</b><small>기상청 예보 넣은 값 · 257건</small></div>
+      <div class="pk"><span>평균 오차</span><b>2.79<em>mg/L</em></b><small>월별 평균만 쓰면 4.54</small></div>
     </div>
-    <p class="hint">둘 다 1에 가까울수록 좋습니다. 예측은 고농도를 낮게 잡는 경향이 있어 비 오는 날은 <b>범위 위쪽 값</b>도 함께 보세요.</p>
+    <div class="pig-r">
+      <div class="pig-b">
+        <h3>예측 기간별 정확도 <small>로그 R² · 점선 = 월별 평균만 쓴 값 0.368</small></h3>
+<div class="pz "><span class="pz-l">오늘 추정</span><div class="pz-t"><i style="--w:0.77"></i><em style="--b:.368"></em></div><b>0.770</b><small>MAE 2.79</small></div><div class="pz "><span class="pz-l">1일 뒤</span><div class="pz-t"><i style="--w:0.759"></i><em style="--b:.368"></em></div><b>0.759</b><small>MAE 2.89</small></div><div class="pz "><span class="pz-l">3일 뒤</span><div class="pz-t"><i style="--w:0.612"></i><em style="--b:.368"></em></div><b>0.612</b><small>MAE 3.08</small></div><div class="pz ref"><span class="pz-l">5일 뒤 · 참고</span><div class="pz-t"><i style="--w:0.433"></i><em style="--b:.368"></em></div><b>0.433</b><small>MAE 4.47</small></div>      </div>
+      <div class="pig-a">
+        <h3>내일 기준 넘음 알림 <small>가능성 20% 이상일 때, 2020–26</small></h3>
+        <div class="rgs"><div class="rgc"><p>10.2 mg/L 이상 (관심)</p><div class="rgp"><div class="rg"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-v" style="--p:70;stroke:#2f6fe0" pathLength="100"/></svg><b>70%</b><span>실제 넘은 날 중 미리 잡음</span></div><div class="rg"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-v" style="--p:84;stroke:#17673f" pathLength="100"/></svg><b>84%</b><span>알림이 맞음</span></div></div></div>
+        <div class="rgc"><p>25 mg/L 이상 (대응 검토)</p><div class="rgp"><div class="rg"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-v" style="--p:50;stroke:#2f6fe0" pathLength="100"/></svg><b>50%</b><span>실제 넘은 날 중 미리 잡음</span></div><div class="rg"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-v" style="--p:56;stroke:#17673f" pathLength="100"/></svg><b>56%</b><span>알림이 맞음</span></div></div></div></div>
+      </div>
+    </div>
   </section>
+  <details class="pdet"><summary>자세한 표 보기 · 예측 성능표, 잠금평가, 모델 구성</summary>
   <section class="grid g-2">
     <div class="card">
       <h2>1·3·5일 예측 성능 <span class="tag real">과거 기상청 예보로 채점</span></h2>
@@ -990,11 +1381,10 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
         <thead><tr><th>선행 · 방법</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th></tr></thead>
         <tbody id="fcTbl"></tbody>
       </table></div>
-      <p class="hint">2019–26 전진검증(그해 이전 자료로만 학습), MAE mg/L. 기상청 예보 반영 = 그날 발표된 예보를 넣은 값(3일은 앞 2일치만). 5일은 참고용.</p>
       <h3 class="mini">실제 운영 예측 성적 <span class="tag">매일 기록</span></h3>
       <div id="fscore"></div>
     </div>
-    <div class="card" id="perf">
+    <div class="card" id="perfTable">
       <h2>일별 SS 추정 성능 <span class="tag real">전진검증 2019–26</span></h2>
       <div class="tbl-wrap"><table>
         <thead><tr><th>모형</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th><th>범위 안</th></tr></thead>
@@ -1004,7 +1394,6 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
         <tbody id="lockTbl"></tbody>
       </table></div>
       <p class="hint" id="lockHint"></p>
-      <p class="hint">파란 선(사후 추정)의 성능. 비 없이 생긴 고농도 4일은 맞히지 못합니다.</p>
       <h3 class="mini">내일 기준 이상 가능성 검증 <span class="tag">2020–26 · 실측일만</span></h3>
       <div class="tbl-wrap"><table>
         <thead><tr><th>내일 SS 기준</th><th>표본·초과</th><th>PR-AUC (우연)</th><th>잡은 비율</th><th>맞은 비율</th></tr></thead>
@@ -1013,7 +1402,6 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
           <tr class="mine"><td>25 mg/L 이상 (대응 검토)</td><td>237 · 10</td><td>0.57 (0.04)</td><td>50%</td><td>56%</td></tr>
         </tbody>
       </table></div>
-      <p class="hint">잡은 비율 = 실제 초과일 중 가능성 20% 이상이던 비율, 맞은 비율 = 20% 이상이라 한 날 중 실제 초과 비율.</p>
     </div>
   </section>
   <section class="card" id="modelcfg">
@@ -1042,9 +1430,30 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
       </tbody>
     </table></div>
   </section>
+  </details>
   </div>
 
   <div class="tab" id="tab-info" data-tab="info" hidden>
+  <h2 class="tabh" id="dstat">자료 상태</h2>
+  <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
+  <section class="card" id="fresh">
+    <h2>자료 최신성 <span class="tag" id="frTag">–</span></h2>
+    <div class="tbl-wrap"><table class="fr"><thead><tr><th>자료</th><th>마지막 관측·발표</th><th>경과</th><th>상태</th><th>비고</th></tr></thead><tbody id="frTbl"></tbody></table></div>
+    <p class="hint" id="frNote">–</p>
+  </section>
+  <section class="grid g-2">
+    <div class="card" id="manage">
+      <h2>관리자 참고 점검사항 <span class="tag">연구용 참고 단계 · 취수 판단 아님</span></h2>
+      <div id="grade"></div>
+      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
+      <div id="lvBox"></div>
+    </div>
+    <div class="card">
+      <h2>기상특보 · 오늘 자료 수집</h2>
+      <div id="wrn"></div>
+    </div>
+  </section>
+  <h2 class="tabh">유역 · 용어</h2>
   <section class="grid" id="basin">
     <div class="card">
       <h2>내린천2 유역도</h2>
@@ -1106,7 +1515,6 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <details class="faq-q" data-g="start"><summary><span class="qn">Q</span><span class="qt">SS가 무엇인가요? 탁도와 같은가요?</span></summary><div class="fa"><p>물에 떠 있는 흙·모래 입자의 양(mg/L)입니다. 평소 0.5–3 mg/L이고 큰비에는 수백 mg/L까지 오릅니다. 탁도(NTU)는 물이 흐린 정도라 같은 값이 아니며, 정수장 기준은 보통 탁도입니다.</p></div></details>
     <details class="faq-q" data-g="start"><summary><span class="qn">Q</span><span class="qt">처음이면 어디부터 보면 되나요?</span></summary><div class="fa"><p><a href="#home">종합</a> 탭 맨 위 한 줄 결론(단계와 1·3·5일 예측) → SS 전망 그래프 → 운영 요약 순서로 보세요. 왜 오르내리는지는 <a href="#fc">예측·원인</a> 탭, 전체 흐름은 <a href="#about">상세 소개</a> 탭에 있습니다.</p></div></details>
     <details class="faq-q" data-g="start"><summary><span class="qn">Q</span><span class="qt">화면은 언제 바뀌나요?</span></summary><div class="fa"><p>매일 아침 <b>07:30</b>에 자동으로 갱신됩니다. 화면 위 날짜 3개(최근 실제 SS 측정일 · 마지막 입력자료 기준일 · 갱신 시각)로 자료가 얼마나 새것인지 확인하세요.</p></div></details>
-    <details class="faq-q" data-g="start"><summary><span class="qn">Q</span><span class="qt">설명 문구가 거의 안 보여요.</span></summary><div class="fa"><p>제목 오른쪽 <b>설명 보기</b>를 누르면 그래프마다 자세한 설명이 나옵니다. 기본은 숨김입니다.</p></div></details>
     <h3 class="faq-gh" data-g="read">값 읽기</h3>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">화면의 SS는 실제로 잰 값인가요?</span></summary><div class="fa"><p>검은 점(●)과 <b>최근 실측</b> 카드만 실제로 잰 값입니다. 파란 선과 1·3·5일 카드는 모두 모델이 계산한 값입니다.</p></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">실측·일 추정·예측은 어떻게 다른가요?</span></summary><div class="fa"><ul><li><b>실측</b>: 약 8일에 한 번 물을 떠서 잰 값</li><li><b>일 추정(사후)</b>: 실측이 없는 날을 그날 강우·유량·수위로 채운 값. 예측이 아닙니다</li><li><b>1·3·5일 예측</b>: 기준일까지의 자료와 기상청 예보로 앞날을 계산한 값</li></ul></div></details>
@@ -1134,18 +1542,18 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <details class="faq-q" data-g="app"><summary><span class="qn">Q</span><span class="qt">매일 알림을 받을 수 있나요?</span></summary><div class="fa"><p><b>알림 받기</b>를 누르고 허용하면, 매일 07:30 갱신 뒤 1·3·5일 SS 요약이 알림센터로 옵니다. 아이폰은 <b>홈 화면에 추가한 앱</b>에서만 알림을 켤 수 있습니다(iOS 16.4 이상). 끄려면 버튼을 다시 눌러 '알림 끄기'를 고르세요.</p></div></details>
     <details class="faq-q" data-g="app"><summary><span class="qn">Q</span><span class="qt">알림이 오지 않아요.</span></summary><div class="fa"><p>휴대폰 설정과 브라우저 사이트 설정에서 알림이 허용됐는지, 방해 금지·절전 모드가 아닌지 확인하세요. 아이폰은 홈 화면 아이콘으로 연 화면에서 켰는지 확인하세요.</p></div></details>
     <p class="faq-none" id="faqNone" hidden>찾는 질문이 없습니다. 다른 말로 찾아보세요.</p>
-    <div class="faq-foot"><span>더 궁금한 점은 설명 보기를 켜거나 처음 안내를 다시 보세요.</span><button type="button" class="btn" id="faqIntro">처음 안내 다시 보기</button></div>
+    <div class="faq-foot"><span>더 궁금한 점은 처음 안내를 다시 보세요.</span><button type="button" class="btn" id="faqIntro">처음 안내 다시 보기</button></div>
   </section>
   </div>
 
   <div class="tab ab" id="tab-about" data-tab="about" hidden>
-  <div class="ab-sub-tabs" role="tablist" aria-label="상세 소개 세부 탭"><button type="button" role="tab" data-sub="sum" class="on">한눈에</button><button type="button" role="tab" data-sub="data">자료</button><button type="button" role="tab" data-sub="model">모델</button><button type="button" role="tab" data-sub="perf">검증</button><button type="button" role="tab" data-sub="high">고농도</button></div>
+  <div class="ab-sub-tabs" role="tablist" aria-label="상세 소개 세부 탭"><button type="button" role="tab" data-sub="sum" class="on">한눈에</button><button type="button" role="tab" data-sub="data">자료</button><button type="button" role="tab" data-sub="model">모델</button><button type="button" role="tab" data-sub="perf">검증</button><button type="button" role="tab" data-sub="high">하이브리드</button></div>
   <div class="ab-pane" data-sub="sum">
   <section class="ab-hero ia">
     <svg class="ab-wave" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 110 C150 70 300 150 450 105 S750 60 900 100 S1100 140 1200 95"/><path class="w2" d="M0 128 C200 98 330 160 520 124 S820 92 980 122 S1120 146 1200 120"/></svg>
     <p class="ab-kick rv">캡스톤디자인2 · 내린천2 총량측정망</p>
-    <h2 class="ab-title rv" style="--d:.1s">비가 오면 흙탕물이 얼마나 될까?<br>매일 추정하고, 1·3·5일 앞을 봅니다.</h2>
-    <p class="ab-sub rv" style="--d:.2s">실측 SS는 약 8일에 한 번뿐이라, 매일 있는 강우·수위·기온으로 빈 날을 채우고 기상청 예보로 앞날을 예측합니다.</p>
+    <h2 class="ab-title rv" style="--d:.1s">비 온 뒤 흙탕물 농도<br>매일 추정, 1·3·5일 예측</h2>
+    <p class="ab-sub rv" style="--d:.2s">실측 SS는 약 8일에 1번 · 빈 날은 강우·수위·기온으로 추정 · 앞날은 기상청 예보로 예측</p>
     <div class="ab-kpis">
       <div class="ab-kpi rv" style="--d:.25s"><span>일별 추정 로그 R²</span><b class="icount" data-v="0.770" data-d="3">0.770</b><small>월별 평균만 쓰면 0.368</small></div>
       <div class="ab-kpi rv" style="--d:.35s"><span>1일 예측 로그 R²</span><b class="icount" data-v="0.759" data-d="3">0.759</b><small>기상청 예보 사용</small></div>
@@ -1156,17 +1564,17 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 
   <section class="as ia" id="a-flow">
     <p class="as-k">01 · 작동 방식</p>
-    <h2 class="as-h">매일 아침 07:30, 자료가 모델을 지나 화면이 됩니다</h2>
-    <div class="flow">
-      <div class="fcol rv" style="--d:0s"><h3>입력 자료</h3><p class="fn">강우 <em>AWS 3곳</em></p><p class="fn">수위·유량 <em>원대교</em></p><p class="fn">기온 <em>인제 ASOS</em></p><p class="fn">예보 강우 <em>기상청</em></p></div>
-      <div class="farr" aria-hidden="true"><i></i></div>
-      <div class="fcol rv" style="--d:.25s"><h3>변수 만들기</h3><p class="fn">누적 강우</p><p class="fn">첨두 수위·상승</p><p class="fn">기온</p><p class="fn">홍수 사상</p></div>
-      <div class="farr" aria-hidden="true"><i></i></div>
-      <div class="fcol rv" style="--d:.5s"><h3>모델</h3><p class="fn">XGB + Ridge 혼합</p><p class="fn">홍수일 보정</p><p class="fn">1일 고농도 모드</p></div>
-      <div class="farr" aria-hidden="true"><i></i></div>
-      <div class="fcol fout rv" style="--d:.75s"><h3>결과</h3><p class="fn">일별 SS 추정</p><p class="fn">1·3·5일 예측</p><p class="fn">80% 범위·참고 단계</p></div>
+    <h2 class="as-h">매일 07:30 자동 갱신 흐름</h2>
+    <div class="f2top rv"><span class="f2clk">매일 07:30 자동 실행</span><span>PC 작업 스케줄러 → 자료 수집 → 계산 → 사이트 갱신</span></div>
+    <div class="flow2">
+      <div class="f2 c1 rv" style="--d:0s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></span><span class="f2n">1</span><b>입력 자료</b></div><div class="f2b"><span>강우<small>AWS 3곳</small></span><span>수위·유량<small>원대교</small></span><span>기온<small>인제</small></span><span>예보 강우<small>기상청</small></span></div></div>
+      <div class="f2a" aria-hidden="true"><i></i></div>
+      <div class="f2 c2 rv" style="--d:0.2s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="15" r="3"/></svg></span><span class="f2n">2</span><b>변수 만들기</b></div><div class="f2b"><span>누적 강우</span><span>첨두 수위·상승</span><span>기온</span><span>홍수 사상</span></div></div>
+      <div class="f2a" aria-hidden="true"><i></i></div>
+      <div class="f2 c3 rv" style="--d:0.4s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg></span><span class="f2n">3</span><b>하이브리드 모델</b></div><div class="f2b"><span>나무 + 선형<small>50%씩</small></span><span>홍수일 보정<small>비·수위 상승일</small></span><span>1일 고농도 모드<small>6 mg/L 이상</small></span></div></div>
+      <div class="f2a" aria-hidden="true"><i></i></div>
+      <div class="f2 c4 rv" style="--d:0.6s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="f2n">4</span><b>결과</b></div><div class="f2b"><span>일별 SS 추정</span><span>1·3·5일 예측</span><span>80% 범위·단계</span></div></div>
     </div>
-    <p class="hint">홍수일로 판정된 날(전체의 약 25%)에만 홍수 보정을 켜고, 1일 예측이 6 mg/L 이상이면 고농도 모드로 보정합니다. 사용자 PC 작업 스케줄러가 매일 07:30에 실행해 사이트를 갱신합니다.</p>
   </section>
 
   </div>
@@ -1183,49 +1591,42 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
       <div class="dc rv" style="--d:.4s"><b>예보 강우</b><span>기상청 단기예보<br>매일 07:30</span></div>
     </div>
     <div class="sub2">
-      <h3>유역 강우는 면적 비율로 섞습니다 (티센)</h3>
+      <h3>유역 강우 = 관측소별 면적 비율 가중 (티센)</h3>
       <div class="tstack"><i class="s1" style="--w:51.1;--d:.1s"><span>기린 51.1%</span></i><i class="s2" style="--w:44.0;--d:.4s"><span>내면 44.0%</span></i><i class="s3" style="--w:4.9;--d:.7s"></i></div>
       <p class="tstack-note">원통 4.9%</p>
     </div>
     <div class="sub2">
-      <h3>실측 SS: 평소엔 낮고, 큰 비 때 튑니다</h3>
+      <h3>실측 SS: 평소 낮음, 큰 비 때 급증</h3>
       <svg class="obsplot" id="abObs" viewBox="0 0 720 220" role="img" aria-label="2014년 이후 실측 SS 점 그래프(로그 축)"></svg>
       <div class="ab-lg rv" style="--d:.3s"><span><i class="d" style="opacity:.6"></i>실측 SS</span><span><i class="d" style="background:var(--hi2)"></i>25 mg/L 이상</span></div>
     </div>
-    <p class="hint">유량은 원대교 일유량에 유역면적비 1.0414를 곱해 쓰고(기간별 R² 0.91–0.95), 원대교 유량이 수위와 크게 어긋난 73일은 2023년 수위–유량식으로 다시 계산했습니다. 강우는 1 mm 넘게 틀린 6일을 고치고, 기린 결빙 0값은 결측으로 처리했습니다.</p>
   </section>
 
   </div>
 
   <div class="ab-pane" data-sub="model" hidden>
   <section class="as ia" id="a-fill">
-    <p class="as-k">03 · 빈 날 채우기</p>
-    <h2 class="as-h">수질 보간은 측정한 날만, 현재 모델은 매일</h2>
-    <p class="as-lead">2023년까지 학습 → 2024–25 / 2026 실측으로 시험한 R²</p>
+    <p class="as-k">03 · 미관측 자료 보간</p>
+    <h2 class="as-h">실측 없는 날의 SS 추정: 초기 모델 → 현재 모델</h2>
+    <p class="as-lead">2023년까지 학습 → 처음 보는 2024–25 · 2026 실측으로 시험한 R²</p>
     <div class="hbars" id="abFill">
-      <div class="hb dim"><span class="hb-l">수질 5항목 RF<small>수질 측정한 날만</small></span><div class="hb-t"><i style="--w:.93;--d:0s"></i><i class="b2" style="--w:.86;--d:.1s"></i></div><b>0.93 · 0.86</b></div>
-      <div class="hb"><span class="hb-l">강우·유량 RF<small>초기 12입력</small></span><div class="hb-t"><i style="--w:.61;--d:.15s"></i><i class="b2" style="--w:.71;--d:.25s"></i></div><b>0.61 · 0.71</b></div>
-      <div class="hb"><span class="hb-l">SVR<small>2026년 불안정</small></span><div class="hb-t"><i style="--w:.91;--d:.3s"></i><i class="b2" style="--w:.04;--d:.4s"></i></div><b>0.91 · 0.04</b></div>
-      <div class="hb"><span class="hb-l">유량 거듭제곱식</span><div class="hb-t"><i style="--w:.19;--d:.45s"></i><i class="b2" style="--w:.16;--d:.55s"></i></div><b>0.19 · 0.16</b></div>
-      <div class="hb best"><span class="hb-l">현재 모델<small>강우·수위·기온</small></span><div class="hb-t"><i style="--w:.82;--d:.6s"></i><i class="b2" style="--w:.81;--d:.7s"></i></div><b>0.82 · 0.81</b></div>
+      <div class="hb"><span class="hb-l">강우·유량 RF<small>초기 12입력</small></span><div class="hb-t"><i style="--w:.61;--d:0s"></i><i class="b2" style="--w:.71;--d:.1s"></i></div><b>0.61 · 0.71</b></div>
+      <div class="hb best"><span class="hb-l">현재 모델<small>하이브리드 · 40입력</small></span><div class="hb-t"><i style="--w:.82;--d:.2s"></i><i class="b2" style="--w:.81;--d:.3s"></i></div><b>0.82 · 0.81</b></div>
       <div class="hb-leg"><span><i></i>2024–25 (80건)</span><span><i class="b2"></i>2026 (26건)</span></div>
     </div>
-    <p class="hint">수질 5항목(pH·BOD·DO·T-P·TOC) RF는 정확하지만 수질도 SS와 같은 날만 측정해 빈 4,107일에는 쓸 수 없습니다. 실측 사이를 선으로 잇는 보간은 로그 R² 0.14에 그쳤습니다. 출처: 팀 문서 「내린천2 SS 분석 발표 핵심 요약」(2026-10-29), 현재 모델은 같은 분할의 잠금평가.</p>
   </section>
 
   <section class="as ia" id="a-prog">
     <p class="as-k">04 · 개선 과정</p>
     <h2 class="as-h">로그 R² <span class="icount" data-from="0.630" data-v="0.770" data-d="3">0.770</span>, 오차 <span class="icount" data-from="3.51" data-v="2.79" data-d="2">2.79</span> mg/L</h2>
-    <p class="as-lead">같은 2019–26 전진검증(295건) 기준, 단계마다 이전 단계 위에 더함</p>
     <svg class="prog" id="abProg" viewBox="0 0 720 300" role="img" aria-label="모델 개선 과정 선 그래프: 0.630에서 0.770"></svg>
     <div class="ab-lg rv" style="--d:.4s"><span><i class="l"></i>단계별 로그 R²</span><span><i class="dl"></i>월별 평균만 쓴 값</span></div>
     <div class="tried">
-      <h3><span class="icount" data-v="26" data-d="0">26</span>가지를 시험해 <b>2</b>가지만 남겼습니다</h3>
+      <h3><span class="icount" data-v="26" data-d="0">26</span>가지 모델 개선 실험, <b>2</b>가지 채택</h3>
       <div class="chips" id="abChips"></div>
-      <p class="ci-guide">이름을 누르면 어떤 방법이고 어떻게 시험했는지 아래에 나옵니다.</p>
+      <p class="ci-guide">종류: 모델 교체 8 · 변수 추가 7 · 결과 보정 3 · 학습 방법 7 · 자료 추가 1 · 이름 누르면 종류·방법·결과 표시</p>
       <div class="chip-info" id="abChipInfo" hidden aria-live="polite"></div>
     </div>
-    <p class="hint">시험한 방법은 같은 전진검증으로 로그 R² 변화를 비교했고, ±0.006 안쪽은 시드·표본 차이 수준으로 봤습니다. GRU·TCN·SARIMAX·PINN 값은 11/02 모델(0.722) 기준입니다.</p>
   </section>
 
   </div>
@@ -1233,7 +1634,7 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
   <div class="ab-pane" data-sub="perf" hidden>
   <section class="as ia" id="a-hz">
     <p class="as-k">05 · 예측 기간</p>
-    <h2 class="as-h">1일 뒤는 오늘 추정만큼, 3일부터는 예보 비 때문에 떨어집니다</h2>
+    <h2 class="as-h">1일 뒤 = 오늘 추정 수준, 3일부터 예보 강우 오차로 하락</h2>
     <div class="vbars">
       <div class="vb-base" style="--y:.368"><span>월별 평균 0.368</span></div>
       <div class="vb"><div class="vb-c"><i style="--h:.770;--d:0s"><b class="icount" data-v="0.770" data-d="3">0.770</b></i></div><span>오늘 추정</span><small>MAE 2.79</small></div>
@@ -1241,12 +1642,11 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
       <div class="vb"><div class="vb-c"><i style="--h:.612;--d:.3s"><b class="icount" data-v="0.612" data-d="3">0.612</b></i></div><span>3일 뒤</span><small>MAE 3.08</small></div>
       <div class="vb ref"><div class="vb-c"><i style="--h:.433;--d:.45s"><b class="icount" data-v="0.433" data-d="3">0.433</b></i></div><span>5일 뒤</span><small>MAE 4.47 · 참고</small></div>
     </div>
-    <p class="hint">1·3일은 기상청 단기예보 보관본이 있는 2019–25 채수일(1일 257건, 3일 219건)로 평가했습니다. 5일은 예보 보관본이 없어 관측 자료만 쓴 참고값(295건)입니다.</p>
   </section>
 
   <section class="as ia" id="a-lock">
     <p class="as-k">06 · 검증</p>
-    <h2 class="as-h">2023년까지 배운 모델로, 처음 보는 2024–26년을 맞혀 봤습니다</h2>
+    <h2 class="as-h">2023년까지 학습 → 처음 보는 2024–26년 시험</h2>
     <div class="lts-wrap"><h3>2024–26 실측과 추정</h3><svg class="lts" id="abLockTs" viewBox="0 0 720 220" role="img" aria-label="잠금평가 기간 실측과 추정 시계열"></svg>
       <div class="ab-lg rv" style="--d:.4s"><span><i class="d" style="background:var(--obs)"></i>실측</span><span><i class="d" style="background:var(--hi2)"></i>80% 범위 밖 실측</span><span><i class="l" style="border-top-width:2px"></i>추정</span><span><i class="bd"></i>추정 80% 범위</span></div></div>
     <div class="lockg">
@@ -1257,54 +1657,38 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
         <p class="lockcov" id="abLockCov"></p>
       </div>
     </div>
-    <p class="hint">잠금평가는 2023년까지의 실측으로만 학습한 모델을 고정해 두고 2024년 이후 실측을 맞힌 결과입니다(약 8:2 분할). 새 실측이 공개되면 매일 갱신 때 자동으로 다시 계산되어, 이 숫자는 발표 자료와 조금 다를 수 있습니다.</p>
   </section>
 
   </div>
 
   <div class="ab-pane" data-sub="high" hidden>
   <section class="as ia" id="a-high">
-    <p class="as-k">07 · 고농도</p>
-    <h2 class="as-h">25 mg/L 넘는 날은 295건 중 13건, 그중 4건은 비가 없었습니다</h2>
-    <div class="highg">
-      <div>
-        <div class="waf" id="abWaf" role="img" aria-label="2019–26 실측 295건: 비 없는 고농도 4, 유출형 고농도 9, 10–25 mg/L 17, 10 미만 265"></div>
-        <div class="waf-leg"><span><i class="c1"></i>비 없는 고농도 4</span><span><i class="c2"></i>유출형 고농도 9</span><span><i class="c3"></i>10–25 mg/L 17</span><span><i class="c4"></i>10 미만 265</span></div>
-      </div>
-      <div class="reasons">
-        <div class="rs rv" style="--d:.1s"><b>1</b><p>홍수 중 채수는 13–20건뿐<small>큰 비 날을 배울 자료가 적음</small></p></div>
-        <div class="rs rv" style="--d:.25s"><b>2</b><p>비 없는 고농도는 원인 신호가 없음<small>강우·수위로 설명 불가</small></p></div>
-        <div class="rs rv" style="--d:.4s"><b>3</b><p>채수는 약 8일에 1번<small>첨두를 놓치기 쉬움</small></p></div>
-      </div>
-    </div>
-    <div class="sub2">
-      <h3>그래도 비 온 날 고농도는 거의 따라잡았습니다 <small>(예측 ÷ 실측, 1에 가까울수록 좋음)</small></h3>
-      <div class="hbars ratio">
-        <div class="hb"><span class="hb-l">비 없는 고농도</span><div class="hb-t"><i class="warm" style="--w:.12;--d:0s"></i></div><b>0.13</b></div>
-        <div class="hb"><span class="hb-l">유출형, 보정 전</span><div class="hb-t"><i class="b2" style="--w:.66;--d:.15s"></i></div><b>0.73</b></div>
-        <div class="hb best"><span class="hb-l">유출형, 홍수일 보정 후</span><div class="hb-t"><i style="--w:.84;--d:.3s"></i></div><b>0.92</b></div>
-        <div class="hb-one" aria-hidden="true"><span>1.0</span></div>
-      </div>
+    <p class="as-k">07 · 하이브리드 모델</p>
+    <h2 class="as-h">성격 다른 모델 3개 + 상황별 보정</h2>
+    <p class="as-lead">평소 날과 큰 비 날을 한 모델로 맞히기 어려움 → 강점이 다른 모델 조합</p>
+    <figure class="hd-wrap"><svg class="hd hd-x" viewBox="0 0 980 496" role="img" aria-label="하이브리드 구조: 입력이 나무 모델과 선형 모델로 갈라졌다가 반씩 반영되어 합쳐지고, 비·수위 상승일이면 홍수일 보정, 아니면 평상시 보정을 거쳐 일별 SS 추정이 됨. 예측은 예측 모델과 강우→유량→SS 연결 모델을 반씩 반영해 섞고, 1일 예측이 6 mg/L 이상이면 고농도 모드."><defs><marker id="hdA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs><rect class="hd-band" x="8" y="8" width="964" height="232" rx="16"/><rect class="hd-band" x="8" y="256" width="964" height="232" rx="16"/><text class="hd-h" x="24" y="32">일별 SS 추정 · 오늘까지</text><text class="hd-h" x="24" y="280">1·3·5일 예측 · 앞으로</text><path class="hd-a " d="M150 124 C175 124 175 82 200 82" marker-end="url(#hdA)"/><path class="hd-a " d="M150 124 C175 124 175 168 200 168" marker-end="url(#hdA)"/><path class="hd-a " d="M370 82 C410 82 415 124 436 124" marker-end="url(#hdA)"/><path class="hd-a " d="M370 168 C410 168 415 124 436 124" marker-end="url(#hdA)"/><path class="hd-a " d="M454 124 L500 124" marker-end="url(#hdA)"/><path class="hd-a " d="M604 124 C625 124 625 78 650 78" marker-end="url(#hdA)"/><path class="hd-a dim" d="M604 124 C625 124 625 170 650 170" marker-end="url(#hdA)"/><text class="hd-l" x="612" y="92">예</text><text class="hd-l" x="596" y="176">아니오</text><path class="hd-a " d="M810 78 C832 78 832 124 846 124" marker-end="url(#hdA)"/><path class="hd-a dim" d="M810 170 C832 170 832 124 846 124" marker-end="url(#hdA)"/><g class="hd-n in rv" style="--d:0s"><rect x="24" y="84" width="126" height="80" rx="12"/><text class="hd-t" x="87.0" y="118.0">매일 관측</text><text class="hd-s" x="87.0" y="138.0">강우·수위·유량·기온</text></g><g class="hd-n tree rv" style="--d:0.15s"><rect x="200" y="52" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="76.0">나무 모델</text><text class="hd-s" x="285.0" y="96.0">XGBoost · 복잡한 조합</text></g><g class="hd-n lin rv" style="--d:0.25s"><rect x="200" y="138" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="162.0">선형 모델</text><text class="hd-s" x="285.0" y="182.0">Ridge · 큰 유량 외삽</text></g><g class="hd-m rv" style="--d:0.4s"><circle cx="445" cy="124" r="7"/><text class="hd-w" x="408" y="72">50% 반영</text><text class="hd-w" x="408" y="184">50% 반영</text></g><g class="hd-q rv" style="--d:0.5s"><path d="M552 84 L604 124 L552 164 L500 124 Z"/><text x="552" y="121">비·수위</text><text x="552" y="138">상승일?</text></g><g class="hd-n fix rv" style="--d:0.6s"><rect x="650" y="50" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="72.0">홍수일 보정</text><text class="hd-s" x="730.0" y="92.0">첨두유량만큼 상향</text></g><g class="hd-n calm rv" style="--d:0.65s"><rect x="650" y="142" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="164.0">평상시 보정</text><text class="hd-s" x="730.0" y="184.0">과대추정 조금 낮춤</text></g><g class="hd-n out rv" style="--d:0.75s"><rect x="846" y="94" width="116" height="60" rx="12"/><text class="hd-t" x="904.0" y="118.0">일별 SS</text><text class="hd-s" x="904.0" y="138.0">추정</text></g><text class="hd-c" x="552" y="186">전체의 약 25%가 '예'</text><path class="hd-a " d="M150 372 C175 372 175 330 200 330" marker-end="url(#hdA)"/><path class="hd-a " d="M150 372 C175 372 175 416 200 416" marker-end="url(#hdA)"/><path class="hd-a " d="M370 330 C410 330 415 372 436 372" marker-end="url(#hdA)"/><path class="hd-a " d="M370 416 C410 416 415 372 436 372" marker-end="url(#hdA)"/><path class="hd-a " d="M454 372 L500 372" marker-end="url(#hdA)"/><path class="hd-a " d="M604 372 C625 372 625 326 650 326" marker-end="url(#hdA)"/><path class="hd-a dim" d="M604 372 C625 372 625 418 650 418" marker-end="url(#hdA)"/><text class="hd-l" x="612" y="340">예</text><text class="hd-l" x="596" y="424">아니오</text><path class="hd-a " d="M810 326 C832 326 832 372 846 372" marker-end="url(#hdA)"/><path class="hd-a dim" d="M810 418 C832 418 832 372 846 372" marker-end="url(#hdA)"/><g class="hd-n in rv" style="--d:0.1s"><rect x="24" y="326" width="126" height="92" rx="12"/><text class="hd-t" x="87.0" y="366.0">기준일 관측</text><text class="hd-s" x="87.0" y="386.0">+ 기상청 예보 강우</text></g><g class="hd-n tree rv" style="--d:0.2s"><rect x="200" y="300" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="324.0">예측 모델</text><text class="hd-s" x="285.0" y="344.0">나무 + 선형 혼합</text></g><g class="hd-n chain rv" style="--d:0.3s"><rect x="200" y="386" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="410.0">연결 모델</text><text class="hd-s" x="285.0" y="430.0">강우 → 유량 → SS</text></g><g class="hd-m rv" style="--d:0.45s"><circle cx="445" cy="372" r="7"/><text class="hd-w" x="408" y="320">50% 반영</text><text class="hd-w" x="408" y="432">50% 반영</text></g><g class="hd-q rv" style="--d:0.55s"><path d="M552 332 L604 372 L552 412 L500 372 Z"/><text x="552" y="369">1일 예측</text><text x="552" y="386">6 mg/L↑?</text></g><g class="hd-n fix rv" style="--d:0.65s"><rect x="650" y="298" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="320.0">고농도 모드</text><text class="hd-s" x="730.0" y="340.0">1일 예측만 상향</text></g><g class="hd-n calm rv" style="--d:0.7s"><rect x="650" y="390" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="423.0">그대로</text></g><g class="hd-n out rv" style="--d:0.8s"><rect x="846" y="342" width="116" height="60" rx="12"/><text class="hd-t" x="904.0" y="366.0">1·3·5일</text><text class="hd-s" x="904.0" y="386.0">예측</text></g><text class="hd-c" x="445" y="470">연결 모델 혼합: 1·3일 (5일은 예측 모델만)</text></svg><svg class="hd hd-v" viewBox="0 0 360 830" role="img" aria-label="하이브리드 구조 세로 그림"><defs><marker id="hdA2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs><rect class="hd-band" x="2" y="2" width="356" height="406" rx="14"/><text class="hd-h" x="14" y="22">일별 SS 추정 · 오늘까지</text><path class="hd-a " d="M180 76 C180 90 92 86 92 102" marker-end="url(#hdA2)"/><path class="hd-a " d="M180 76 C180 90 268 86 268 102" marker-end="url(#hdA2)"/><path class="hd-a " d="M92 156 C92 180 170 178 174 196" marker-end="url(#hdA2)"/><path class="hd-a " d="M268 156 C268 180 190 178 186 196" marker-end="url(#hdA2)"/><circle class="hd-dot" cx="180" cy="202" r="6"/><text class="hd-w" x="60" y="184" text-anchor="middle">50% 반영</text><text class="hd-w" x="300" y="184" text-anchor="middle">50% 반영</text><path class="hd-a " d="M180 208 L180 218" marker-end="url(#hdA2)"/><g class="hd-q"><path d="M180 218 L246 250 L180 282 L114 250 Z"/><text x="180" y="247">비·수위</text><text x="180" y="263">상승일?</text></g><path class="hd-a " d="M114 250 C92 250 92 270 92 294" marker-end="url(#hdA2)"/><path class="hd-a dim" d="M246 250 C268 250 268 270 268 294" marker-end="url(#hdA2)"/><text class="hd-l" x="84" y="242" text-anchor="middle">예</text><text class="hd-l" x="278" y="242" text-anchor="middle">아니오</text><path class="hd-a " d="M92 342 C92 356 160 352 168 362" marker-end="url(#hdA2)"/><path class="hd-a dim" d="M268 342 C268 356 200 352 192 362" marker-end="url(#hdA2)"/><g class="hd-n in"><rect x="95" y="30" width="170" height="46" rx="10"/><text class="hd-t" x="180.0" y="48.0">매일 관측</text><text class="hd-s" x="180.0" y="66.0">강우·수위·유량·기온</text></g><g class="hd-n tree"><rect x="10" y="102" width="164" height="54" rx="10"/><text class="hd-t" x="92.0" y="124.0">나무 모델</text><text class="hd-s" x="92.0" y="142.0">XGBoost</text></g><g class="hd-n lin"><rect x="186" y="102" width="164" height="54" rx="10"/><text class="hd-t" x="268.0" y="124.0">선형 모델</text><text class="hd-s" x="268.0" y="142.0">Ridge</text></g><g class="hd-n fix"><rect x="10" y="294" width="164" height="48" rx="10"/><text class="hd-t" x="92.0" y="313.0">홍수일 보정</text><text class="hd-s" x="92.0" y="331.0">약 25% 날</text></g><g class="hd-n calm"><rect x="186" y="294" width="164" height="48" rx="10"/><text class="hd-t" x="268.0" y="323.0">평상시 보정</text></g><g class="hd-n out"><rect x="95" y="362" width="170" height="40" rx="10"/><text class="hd-t" x="180.0" y="387.0">일별 SS 추정</text></g><rect class="hd-band" x="2" y="422" width="356" height="406" rx="14"/><text class="hd-h" x="14" y="442">1·3·5일 예측 · 앞으로</text><path class="hd-a " d="M180 496 C180 510 92 506 92 522" marker-end="url(#hdA2)"/><path class="hd-a " d="M180 496 C180 510 268 506 268 522" marker-end="url(#hdA2)"/><path class="hd-a " d="M92 576 C92 600 170 598 174 616" marker-end="url(#hdA2)"/><path class="hd-a " d="M268 576 C268 600 190 598 186 616" marker-end="url(#hdA2)"/><circle class="hd-dot" cx="180" cy="622" r="6"/><text class="hd-w" x="60" y="604" text-anchor="middle">50% 반영</text><text class="hd-w" x="300" y="604" text-anchor="middle">50% 반영</text><path class="hd-a " d="M180 628 L180 638" marker-end="url(#hdA2)"/><g class="hd-q"><path d="M180 638 L246 670 L180 702 L114 670 Z"/><text x="180" y="667">1일 예측</text><text x="180" y="683">6 mg/L↑?</text></g><path class="hd-a " d="M114 670 C92 670 92 690 92 714" marker-end="url(#hdA2)"/><path class="hd-a dim" d="M246 670 C268 670 268 690 268 714" marker-end="url(#hdA2)"/><text class="hd-l" x="84" y="662" text-anchor="middle">예</text><text class="hd-l" x="278" y="662" text-anchor="middle">아니오</text><path class="hd-a " d="M92 762 C92 776 160 772 168 782" marker-end="url(#hdA2)"/><path class="hd-a dim" d="M268 762 C268 776 200 772 192 782" marker-end="url(#hdA2)"/><g class="hd-n in"><rect x="95" y="450" width="170" height="46" rx="10"/><text class="hd-t" x="180.0" y="468.0">기준일 관측</text><text class="hd-s" x="180.0" y="486.0">+ 기상청 예보 강우</text></g><g class="hd-n tree"><rect x="10" y="522" width="164" height="54" rx="10"/><text class="hd-t" x="92.0" y="544.0">예측 모델</text><text class="hd-s" x="92.0" y="562.0">나무 + 선형</text></g><g class="hd-n chain"><rect x="186" y="522" width="164" height="54" rx="10"/><text class="hd-t" x="268.0" y="544.0">연결 모델</text><text class="hd-s" x="268.0" y="562.0">강우→유량→SS</text></g><g class="hd-n fix"><rect x="10" y="714" width="164" height="48" rx="10"/><text class="hd-t" x="92.0" y="733.0">고농도 모드</text><text class="hd-s" x="92.0" y="751.0">1일만 상향</text></g><g class="hd-n calm"><rect x="186" y="714" width="164" height="48" rx="10"/><text class="hd-t" x="268.0" y="743.0">그대로</text></g><g class="hd-n out"><rect x="95" y="782" width="170" height="40" rx="10"/><text class="hd-t" x="180.0" y="807.0">1·3·5일 예측</text></g></svg>
+    <figcaption class="hd-key"><span><i class="k-tree"></i>나무 모델 (XGBoost)</span><span><i class="k-lin"></i>선형 모델 (Ridge)</span><span><i class="k-chain"></i>연결 모델 (강우→유량→SS)</span><span><i class="k-fix"></i>상황별 보정</span></figcaption></figure>
+    <div class="hyb3">
+      <div class="hy rv" style="--d:0s"><span class="hy-n">1</span><h3>나무 모델 <em>XGBoost 10개 평균</em></h3><p>비·유량·수위·기온의 복잡한 조합 학습 · 단조 제약: 비·유량 증가 시 SS 감소 없음</p><p class="hy-r"><b>잘함</b> 평소 날, 자주 본 조건</p></div>
+      <div class="hy rv" style="--d:.15s"><span class="hy-n">2</span><h3>선형 모델 <em>Ridge, 로그 단위</em></h3><p>유량 증가에 따라 SS도 계속 증가 (외삽) · 폭주 방지: 입력은 학습 범위 안, 결과는 최대 실측의 2배까지</p><p class="hy-r"><b>잘함</b> 배운 적 없는 큰 유량</p></div>
+      <div class="hy rv" style="--d:.3s"><span class="hy-n">3</span><h3>강우→유량→SS 연결 <em>예측용</em></h3><p>유량을 매일 자료(약 4,000일)로 먼저 예측 → 그 유량으로 SS 계산 · 적은 SS 실측을 매일 유량 자료로 보완</p><p class="hy-r"><b>잘함</b> 예보 비가 있는 1·3일 앞</p></div>
     </div>
     <div class="ba">
-      <div class="ba-c rv" style="--d:0s"><h3>일별 추정 · 홍수일 보정</h3>
-        <p><span>R² (원래 단위)</span><s>0.578</s><b class="icount" data-from="0.578" data-v="0.663" data-d="3">0.663</b></p>
-        <p><span>평균 오차 MAE</span><s>2.86</s><b class="icount" data-from="2.86" data-v="2.79" data-d="2">2.79</b></p>
+      <div class="ba-c rv" style="--d:0s"><h3>일별 추정 · 섞을수록 좋아짐 <small>(2019–26 전진검증 295건)</small></h3>
+        <p><span>로그 R² · 나무 단독 → 나무+선형</span><s>0.630</s><b class="icount" data-from="0.630" data-v="0.722" data-d="3">0.722</b></p>
+        <p><span>로그 R² · 현재 (기온·수위·홍수일 보정 포함)</span><s>0.722</s><b class="icount" data-from="0.722" data-v="0.770" data-d="3">0.770</b></p>
+        <p><span>R² · 홍수일 보정 전 → 후</span><s>0.578</s><b class="icount" data-from="0.578" data-v="0.663" data-d="3">0.663</b></p>
       </div>
-      <div class="ba-c rv" style="--d:.15s"><h3>1일 예측 · 고농도 모드</h3>
-        <p><span>25 경보 맞음/낸 수</span><s>4/4</s><b>5/5</b></p>
-        <p><span>10.2 경보 맞음/낸 수</span><s>16/18</s><b>19/22</b></p>
+      <div class="ba-c rv" style="--d:.15s"><h3>1·3일 예측 · 연결 모델 섞기 <small>(기상청 예보 보관본)</small></h3>
+        <p><span>1일 로그 R²</span><s>0.749</s><b class="icount" data-from="0.749" data-v="0.759" data-d="3">0.759</b></p>
+        <p><span>1일 평균 오차 MAE</span><s>3.02</s><b class="icount" data-from="3.02" data-v="2.85" data-d="2">2.85</b></p>
+        <p><span>3일 로그 R²</span><s>0.599</s><b class="icount" data-from="0.599" data-v="0.612" data-d="3">0.612</b></p>
       </div>
     </div>
-    <p class="hint">유출형은 비·수위 상승과 함께 생긴 고농도, 비 없는 고농도는 수위 변화 없이 T-P·TOC가 높았던 4일(2019-06-18, 2021-03-03, 2023-06-13, 2024-06-25)입니다. 홍수일 보정은 비 온 날(약 23–25%)에만 켜지고, 일별 추정의 25 경보는 7/7에서 7/10이 되었습니다(헛경보 3건은 실측 17–23 mg/L). 1일 고농도 모드는 1일 예측이 6 mg/L 이상일 때만 켭니다.</p>
   </section>
 
   </div>
 
-  <section class="as ab-end ia">
-    <h2 class="as-h rv">새 실측이 나오면 잠금평가와 운영 예측 기록으로 계속 확인합니다</h2>
-    <p class="as-lead rv" style="--d:.1s">이 SS는 고사취수장 복류수로 들어가기 전 하천수 수질로 가정한 참고값입니다.</p>
-  </section>
   </div>
 
   <footer>
@@ -1328,6 +1712,8 @@ function sty(data,layout){layout=Object.assign({},layout||{});layout.barcornerra
 for(const fn of['react','newPlot']){const o=P[fn].bind(P);P[fn]=function(id,data,layout,cfg){if(Array.isArray(data)){const r=sty(data,layout);return o(id,r[0],r[1],cfg);}return o(id,data,layout,cfg);};}
 const I={about:'<path d="M12 3l2.2 5.3L20 9l-4.3 3.8L17 18.5 12 15.6 7 18.5l1.3-5.7L4 9l5.8-.7z"/>',home:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
  fc:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ tr:'<path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/>',
+ why:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
  cmp:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
  perf:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
  info:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
@@ -1383,14 +1769,10 @@ if (state.ref === lastI && state.today !== false) state.today = true;
 $('sfN').textContent = obs.filter(o => o.v != null).length + '건';
 $('sfR').textContent = '~' + iso(lastI);
 $('sfU').textContent = D.meta.updated || '–';
-(function dateStrip() {
-  const ymd = s => { const [y, m, d] = s.split('-'); return y + '년 ' + (+m) + '월 ' + (+d) + '일'; };
-  const ago = s => tdI - idx(s);
-  const lo = [...obs].reverse().find(o => o.v != null);
-  if (lo) $('dObs').innerHTML = ymd(lo.d) + '<em>(' + (ago(lo.d) ? ago(lo.d) + '일 전 · ' : '') + fmt(lo.v) + ' mg/L)</em>';
-  $('dIn').innerHTML = ymd(iso(lastI)) + '<em>(강우·유량·수위)</em>';
+(function dateStrip() {   // 머리글 날짜는 한 줄: 오늘 · 자료 마지막 날 · 갱신 시각
+  const m = s => (+s.slice(5, 7)) + '/' + (+s.slice(8, 10));
   const u = (D.meta.updated || '').match(/(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d)/);
-  $('dUp').textContent = u ? (+u[2]) + '월 ' + (+u[3]) + '일 ' + (+u[4] < 12 ? '오전 ' : '오후 ') + ((+u[4] % 12) || 12) + '시 ' + u[5] + '분' : (D.meta.updated || '–');
+  $('dLine').innerHTML = '<b>오늘 ' + m(iso(tdI)) + '</b><span>자료 ' + m(iso(lastI)) + '까지</span><span>' + (u ? (+u[2]) + '/' + (+u[3]) + ' ' + u[4] + ':' + u[5] + ' 갱신' : '') + '</span>';
 })();
 (function intro() {
   const box = $('intro'), seen = () => { try { return localStorage.getItem('ssdashIntro') === '1'; } catch (e) { return true; } };
@@ -1429,12 +1811,12 @@ function renderWx() {
     return `<div class="wxd${d.date === today ? ' today' : ''}"><div class="dt"><b>${t.getMonth() + 1}/${t.getDate()} (${dn[t.getDay()]})</b>${lab ? ' · ' + lab : ''}</div>`
       + `<div class="ic">${ic(d.am, '오전')}${ic(d.pm, '오후')}</div><div class="lb">${main}</div>`
       + `<div class="tp"><span class="lo">${d.tmin == null ? '–' : d.tmin + '°'}</span> / <span class="hi">${d.tmax == null ? '–' : d.tmax + '°'}</span></div>`
-      + `<div class="rn">강수확률 ${d.pop == null ? '–' : d.pop + '%'}${rain ? '<br>' + rain : ''}</div></div>`;
+      + `<div class="rn">${d.pop == null ? '–' : d.pop + '%'}${d.rain_mm != null ? ' · <b>' + fmt(d.rain_mm, 1) + ' mm</b>' : ''}</div></div>`;
   }).join('');
   $('wxTag').textContent = W.example ? '예시 화면 · 실제 예보 아님' : '기상청 단기예보';
   $('wxTag').className = W.example ? 'tag warnTag' : 'tag';
   if (W.example) { $('wxNote').textContent = '예시 값입니다. 다음 자동 갱신부터 실제 예보가 들어갑니다.'; return; }
-  $('wxNote').textContent = W.base + ' 발표 · 강수는 유역 티센 합계';
+  $('wxNote').textContent = W.base + ' 발표 · 강수확률 · 유역 강수(티센 합계)';
 }
 function renderGrade() {
   const LIM = 25, ok = v => v <= LIM;
@@ -1525,6 +1907,18 @@ function render() {
   renderOutlook(ref, FCS, lastObs);
   if (RV) RV.set(ref);
 
+  // 작년 같은 기간 (SS 시계열에 겹쳐 보기)
+  const yr = new Date(t0 + ref * DAY).getUTCFullYear();
+  let md = iso(ref).slice(4); if (md === '-02-29') md = '-02-28';
+  const shift = ref - idx((yr - 1) + md);
+  const ya = a, la = ya - shift, lb = b - shift;
+  const lyEst = series(la, lb, D.est), yEst = series(ya, b, D.est), yOb = obs.filter(o => o.i >= ya && o.i <= b && o.v != null);
+  const lyOb = obs.filter(o => o.i >= la && o.i <= lb && o.v != null);
+  const lyTr = state.ly ? [
+    { x: yEst.x, y: lyEst.y, mode: 'lines', name: (yr - 1) + '년 추정', line: { color: css('--ly'), width: 2, dash: 'dot' }, hovertemplate: (yr - 1) + '년 같은 날 %{y:.1f} mg/L<extra></extra>' },
+    { x: lyOb.map(o => iso(o.i + shift)), y: lyOb.map(o => o.v), mode: 'markers', name: (yr - 1) + '년 실측', marker: { size: 9, color: panel, line: { color: css('--ly'), width: 2 } }, hovertemplate: (yr - 1) + '년 실측 %{y:.1f} mg/L<extra></extra>' }] : [];
+  ALL('c-ly').forEach(el => { el.checked = !!state.ly; });
+  $('lyKey').hidden = !state.ly; $('cmp').hidden = !state.ly; $('lyKeyT').textContent = (yr - 1) + '년 같은 기간';
   // SS chart
   const shapes = [
     { type: 'rect', xref: 'x', yref: 'paper', x0: iso(b), x1: iso(b + 7), y0: 0, y1: 1, fillcolor: 'rgba(0,0,0,0)', line: { color: css('--ink-3'), width: 1, dash: 'dot' } },
@@ -1552,7 +1946,7 @@ function render() {
     { x: wf.x, y: wf.y, mode: 'markers', name: '전진검증', marker: { symbol: 'diamond-open', size: 10, color: css('--ly'), line: { width: 2 } }, hovertemplate: '전진검증 %{y:.1f} mg/L' },
     { x: est.x, y: est.y, mode: 'lines', name: '추정', line: { color: est_c, width: 2 }, hovertemplate: '%{y:.1f} mg/L' },
     { x: ob.map(o => o.d), y: ob.map(o => o.v), mode: 'markers', name: '실측', marker: { size: 9, color: obs_c, line: { color: panel, width: 2 } }, hovertemplate: '%{y:.1f} mg/L' },
-    ...fcTr
+    ...fcTr, ...lyTr
   ], baseLayout(330, {
     margin: { l: 44, r: 10, t: 22, b: 30 }, shapes, annotations: ann,
     xaxis: Object.assign(baseLayout(0).xaxis, { range: xr }),
@@ -1570,21 +1964,6 @@ function render() {
     { x: fq.map(o => o.d), y: fq.map(o => o.q), mode: 'markers', name: '실측 유량', marker: { size: 8, color: css('--flow'), line: { color: panel, width: 2 } }, hovertemplate: '실측 %{y:.1f} m³/s' }
   ], baseLayout(140, { margin: { l: 44, r: 10, t: 4, b: 26 }, xaxis: Object.assign(baseLayout(0).xaxis, { range: xr }), yaxis: Object.assign(baseLayout(0).yaxis, log ? { type: 'log' } : {}) }), CFG);
 
-  // Last year
-  const yr = new Date(t0 + ref * DAY).getUTCFullYear();
-  let md = iso(ref).slice(4); if (md === '-02-29') md = '-02-28';
-  const shift = ref - idx((yr - 1) + md);
-  const ya = a, lyLog = log;
-  const la = ya - shift, lb = b - shift;
-  const lyEst = series(la, lb, D.est), yEst = series(ya, b, D.est), yOb = obs.filter(o => o.i >= ya && o.i <= b && o.v != null);
-  $('lyA').textContent = yr + '년'; $('lyB').textContent = (yr - 1) + '년'; $('lyOA').textContent = yr + '년'; $('lyOB').textContent = (yr - 1) + '년';
-  const lyOb = obs.filter(o => o.i >= la && o.i <= lb && o.v != null);
-  Plotly.react('pLY', [
-    { x: yEst.x, y: lyEst.y, mode: 'lines', name: (yr - 1) + '년 추정', line: { color: css('--ly'), width: 2 }, hovertemplate: '%{y:.1f}' },
-    { x: yEst.x, y: yEst.y, mode: 'lines', name: yr + '년 추정', line: { color: est_c, width: 2 }, hovertemplate: '%{y:.1f}' },
-    { x: lyOb.map(o => iso(o.i + shift)), y: lyOb.map(o => o.v), mode: 'markers', name: (yr - 1) + '년 실측', marker: { size: 9, color: panel, line: { color: obs_c, width: 2 } }, hovertemplate: '%{y:.1f}' },
-    { x: yOb.map(o => o.d), y: yOb.map(o => o.v), mode: 'markers', name: yr + '년 실측', marker: { size: 9, color: obs_c, line: { color: panel, width: 2 } }, hovertemplate: '%{y:.1f}' }
-  ], baseLayout(240, { xaxis: Object.assign(baseLayout(0).xaxis, { range: [iso(ya), iso(b)] }), yaxis: Object.assign(baseLayout(0).yaxis, lyLog ? { type: 'log' } : {}) }), CFG);
   const mean = arr => { const v = arr.filter(x => x != null); return v.length ? v.reduce((s, x) => s + x, 0) / v.length : null; };
   const sum = arr => { const v = arr.filter(x => x != null); return v.length ? v.reduce((s, x) => s + x, 0) : null; };
   const lyRain = series(la, lb, D.p), yRain = series(ya, b, D.p);
@@ -1618,6 +1997,7 @@ const lvPill = v => { const l = lvOf(v); return l == null ? '' : '<span class="l
 // ── 하천 단면 애니메이션: 원대교 일평균 수위(D.h) = 물 높이, 그날 SS(실측 있으면 실측, 없으면 사후추정) = 물색·알갱이 수 ──
 const RV = (() => {
   const svg = $('rvSvg'); if (!svg || !D.h) return null;
+  const rvMQ = matchMedia('(max-width:820px)'), rvPAR = () => svg.setAttribute('preserveAspectRatio', rvMQ.matches ? 'none' : 'xMidYMid meet'); rvPAR(); rvMQ.addEventListener && rvMQ.addEventListener('change', rvPAR);
   const NS = 'http://www.w3.org/2000/svg', W = 640, TOP = 58, BED = 228, H0 = 1.6, H1 = 7.0;
   const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
   const yOf = h => BED - (Math.min(H1, Math.max(H0, h)) - H0) / (H1 - H0) * (BED - TOP);
@@ -1724,8 +2104,8 @@ function renderOutlook(ref, FCS, lastObs) {
   const ann = [tl(p90, '관심 ' + fmt(p90), css('--note')), tl(25, '대응 검토 25', css('--warn')), tl(100, '100 mg/L', css('--warn')),
     { xref: 'x', x: isoT(ref + 0.5), yref: 'paper', y: 1, yanchor: 'bottom', xanchor: 'center', text: inToday() ? '사후추정 ◀ 자료 ' + iso(ref).slice(5) + ' · 오늘부터 ▶ 예측' : '추정 ◀ ' + (ref === lastI ? '기준일 ' : '') + iso(ref).slice(5) + ' ▶ 예측', showarrow: false, font: { size: 10.5, color: css('--ink-2') } }];
   const narrow = innerWidth < 600;
-  fo.forEach(z => ann.push({ xref: 'x', x: iso(ref + z.h), yref: 'y', y: L10(z.o[2]), yanchor: 'bottom', yshift: 2, showarrow: false,
-    text: '<b>' + fmt(z.o[0]) + '</b>' + (narrow ? '' : '<br><span style="font-size:10px">' + z.h + '일 후</span>'), font: { size: 12, color: css('--ink') } }));
+  if (!$('tab-home').contains($('pOut'))) fo.forEach(z => ann.push({ xref: 'x', x: iso(ref + z.h), yref: 'y', y: L10(z.o[2]), yanchor: 'bottom', yshift: 2, showarrow: false,
+    text: '<b>' + fmt(z.o[0]) + '</b>' + (narrow ? '' : '<br><span style="font-size:10px">' + (inToday() ? relDay(ref + z.h) : z.h + '일 후') + '</span>'), font: { size: 12, color: css('--ink') } }));
   const e = D.est[ref], chain = fo.map(z => [iso(ref + z.h), z.o[0]]);
   const tr = [
     { x: hi.x, y: hi.y, mode: 'lines', line: { width: 0 }, hoverinfo: 'skip' },
@@ -1740,16 +2120,16 @@ function renderOutlook(ref, FCS, lastObs) {
       hovertemplate: fr.map(z => (z.isLast ? (fcEl.value === 'kma' ? '기상청 예보강우 ' : '예보강우 ') : '실제 강우 ') + fmt(z.mm, 0) + ' mm 반영 %{y:.1f} mg/L (' + fmt(z.r[1]) + '–' + fmt(z.r[2]) + ')<extra></extra>') },
     { x: ob.map(o => o.d), y: ob.map(o => o.v), mode: 'markers', name: '실측', marker: { size: 9, color: css('--obs'), line: { color: css('--panel'), width: 2 } }, hovertemplate: '실측 %{y:.1f} mg/L<extra></extra>' }
   ];
-  Plotly.react('pOut', tr, baseLayout(narrow ? 240 : 270, {
+  Plotly.react('pOut', tr, baseLayout(narrow ? 200 : 200, {
     margin: { l: 40, r: 8, t: 22, b: 28 }, shapes, annotations: ann, hovermode: 'closest',
     xaxis: Object.assign(baseLayout(0).xaxis, { range: xr, dtick: narrow ? 3 * DAY : 2 * DAY }),
     yaxis: Object.assign(baseLayout(0).yaxis, { type: 'log', range: [L10(ymin), L10(ymax)], tickvals: [0.1, 0.3, 1, 3, 10, 25, 100], ticktext: ['0.1', '0.3', '1', '3', '10', '25', '100'], rangemode: 'normal' })
   }), CFG);
-  $('pOut').style.height = (narrow ? 240 : 270) + 'px';
+  $('pOut').style.height = '200px';
   const worst = Math.max(lvOf(e) || 0, ...fo.map(z => lvOf(z.o[0]) || 0), ...fr.map(z => lvOf(z.r[0]) || 0));
-  $('olTag').textContent = '예측 중앙값 기준 ' + LVK[worst][1]; $('olTag').className = 'tag' + (worst === 2 ? ' warnTag' : worst === 0 ? ' real' : '');
+  
   const up = fo.filter(z => z.o[2] >= 25).map(z => z.h + '일');
-  $('olSub').textContent = '최근 2주 추정·실측과 1·3·5일 후 예측' + (up.length ? ' · ' + up.join('·') + ' 후 80% 범위 위쪽이 25 mg/L 이상' : '');
+  $('olSub').textContent = '최근 2주와 앞으로 5일' + (up.length ? ' · ' + up.join('·') + ' 후 범위 위쪽이 25 이상' : '');
   // 요약 카드에 참고 단계 표시
   const mark = (id, v) => { const k = $(id).closest('.kpi'); k.classList.remove('lv-ok', 'lv-note', 'lv-warn'); const l = lvOf(v); if (l != null) k.classList.add('lv-' + LVK[l][0]); $(id).insertAdjacentHTML('beforeend', lvPill(v)); };
   mark('kEst', e); FCS.forEach(z => z.o ? mark('kF' + z.h, z.o[0]) : $('kF' + z.h).closest('.kpi').classList.remove('lv-ok', 'lv-note', 'lv-warn'));
@@ -1788,7 +2168,27 @@ function renderExplain(ref, FCS, e) {
     const tot = S.base + vals.reduce((s, [, v]) => s + v, 0), mx = Math.max(.3, ...vals.map(([, v]) => Math.abs(v)));
     $('shV').innerHTML = fmt(Math.exp(tot)) + '<small>mg/L</small>';
     vals.sort((p, q) => Math.abs(q[1]) - Math.abs(p[1]));
-    $('shBars').innerHTML = vals.map(([g, v]) => { const w = Math.abs(v) / mx * 50; return `<div class="shbar"><span>${g}</span><div class="tr"><i class="mid"></i><i style="${v >= 0 ? 'left:50%' : 'right:50%'};width:${w.toFixed(1)}%;background:var(${v >= 0 ? '--warn' : '--note'})"></i></div><span class="n" style="color:var(${v >= 0 ? '--warn' : '--note'})">×${Math.exp(v).toFixed(2)}</span></div>`; }).join('');
+    // 원그래프: 각 요인의 영향 크기(|로그 배수|) 비율. 조각 옆에는 이름만, %·배수는 옆 목록
+    const SUM = vals.reduce((t, [, v]) => t + Math.abs(v), 0) || 1;
+    const UPC = ['#b4561c', '#d0742f', '#e3955a', '#efb688', '#f6d3b5'], DNC = ['#1d4fa8', '#2f6fe0', '#5b8fe9', '#88b0f0', '#b6cef6'];
+    let nu = 0, nd = 0, cum = 0, etc = 0; const sl = [], lab = [];
+    vals.forEach(([g, v]) => { const pc = Math.abs(v) / SUM * 100; if (pc < 3) { etc += pc; return; } sl.push([g, v, pc, v >= 0 ? UPC[Math.min(nu++, 4)] : DNC[Math.min(nd++, 4)]]); });
+    if (etc >= 0.5) sl.push(['기타 (작은 요인)', 0, etc, '#c9d1dc']);
+    const CX = 200, CY = 110, R = 58, SW = 28, VW = 400, VH = 220;
+    const arcs = sl.map(([g, v, pc, c]) => {
+      const a = `<circle r="${R}" cx="${CX}" cy="${CY}" fill="none" stroke="${c}" stroke-width="${SW}" pathLength="100" stroke-dasharray="${Math.max(pc - .4, .1).toFixed(2)} ${(100 - Math.max(pc - .4, .1)).toFixed(2)}" stroke-dashoffset="${(-cum).toFixed(2)}" transform="rotate(-90 ${CX} ${CY})"><title>${g} ${pc.toFixed(0)}%</title></circle>`;
+      const ang = (cum + pc / 2) / 100 * 2 * Math.PI - Math.PI / 2; cum += pc;
+      lab.push({ g: g.replace(/ \(.*\)/, ''), right: Math.cos(ang) >= 0, x0: CX + (R + SW / 2 - 3) * Math.cos(ang), y0: CY + (R + SW / 2 - 3) * Math.sin(ang), y: CY + (R + SW / 2 + 12) * Math.sin(ang) });
+      return a; }).join('');
+    [true, false].forEach(side => { const L = lab.filter(l => l.right === side).sort((p, q) => p.y - q.y);
+      for (let k = 1; k < L.length; k++) L[k].y = Math.max(L[k].y, L[k - 1].y + 19);
+      const over = L.length ? L[L.length - 1].y - (VH - 8) : 0; if (over > 0) L.forEach(l => l.y -= over);
+      for (let k = L.length - 2; k >= 0; k--) L[k].y = Math.min(L[k].y, L[k + 1].y - 19); L.forEach(l => l.y = Math.max(12, l.y)); });
+    const lines = lab.map(l => { const xe = l.right ? CX + R + SW / 2 + 22 : CX - R - SW / 2 - 22, xt = l.right ? xe + 6 : xe - 6;
+      return `<polyline points="${l.x0.toFixed(1)},${l.y0.toFixed(1)} ${xe.toFixed(1)},${l.y.toFixed(1)} ${(l.right ? xe + 4 : xe - 4).toFixed(1)},${l.y.toFixed(1)}" fill="none" stroke="var(--ink-3)" stroke-width=".8"/><circle cx="${l.x0.toFixed(1)}" cy="${l.y0.toFixed(1)}" r="2" fill="var(--ink)"/>`
+        + `<text x="${xt.toFixed(1)}" y="${(l.y + 4).toFixed(1)}" text-anchor="${l.right ? 'start' : 'end'}" class="shp-t">${l.g}</text>`; }).join('');
+    $('shBars').innerHTML = `<div class="shpie"><svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="요인별 영향 비율 원그래프">${arcs}${lines}<text x="${CX}" y="${CY + 2}" text-anchor="middle" class="shp-v">${fmt(Math.exp(tot))}</text><text x="${CX}" y="${CY + 18}" text-anchor="middle" class="shp-u">mg/L</text></svg>`
+      + `<ul class="shp-l">${sl.map(([g, v, pc, c]) => `<li><i style="background:${c}"></i><span>${g}</span><b>${pc.toFixed(0)}%</b><em style="color:var(${v > 0 ? '--warn' : v < 0 ? '--note' : '--ink-3'})">${v === 0 ? '' : (v > 0 ? '▲ ' : '▼ ') + '×' + Math.exp(v).toFixed(2)}</em></li>`).join('')}</ul></div>`;
     const up = vals.filter(([, v]) => v >= 0.1).map(([g]) => g), dn = vals.filter(([, v]) => v <= -0.1).map(([g]) => g);
     // [올림: 이어쓰기, 끝맺기], [내림: 이어쓰기, 끝맺기]
     const WHY = { '유량': [['물이 평소보다 많고', '물이 평소보다 많아서'], ['물이 평소보다 적고', '물이 평소보다 적어서']],
@@ -1836,6 +2236,10 @@ function renderExplain(ref, FCS, e) {
   const L = LV[sel];
   $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k}</b><p>${L.d}.</p><p>현재 근거: ${SE.why.length ? SE.why.map(w => w[1]).join(' · ') : '해당 신호 없음'}</p></div>`
     + `<ul class="ck">${L.it.map(([a, b], j) => { const id = 'v2-' + sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
+  const C = LV[cur];
+  $('todoTag').textContent = C.k + ' 단계'; $('todoTag').className = 'tag' + (cur === 2 ? ' warnTag' : cur === 0 ? ' real' : '');
+  $('todoBox').innerHTML = '<p class="todo-d">' + C.d + '</p><ul class="ck">' + C.it.map(([a, b], j) => { const id = 'v2-' + cur + '-' + j; return '<li><label><input type="checkbox" data-ck="' + id + '"' + (ckState[id] ? ' checked' : '') + '><span>' + a + '</span></label></li>'; }).join('') + '</ul>'
+    + (cur < 2 ? '<p class="todo-n">' + LV[cur + 1].k + '(으)로 올라가는 경우: ' + LV[cur + 1].d + '</p>' : '');
   renderOps(ref, FCS, e, SE);
   document.querySelectorAll('#lvSegs .seg').forEach(b => b.addEventListener('click', () => { lvSel = +b.dataset.lv; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
   document.querySelectorAll('[data-ck]').forEach(c => c.addEventListener('change', () => { ckState[c.dataset.ck] = c.checked; try { localStorage.setItem('ssdashCk', JSON.stringify(ckState)); } catch (e) {} }));
@@ -1872,21 +2276,22 @@ function stageEval(ref, FCS, e) {
 }
 // 종합 탭 맨 위 한 줄 결론: 참고 단계 + 1·3·5일 예측 중앙값(관측만 입력, 요약 카드·SS 전망과 같은 값)
 function renderHeadline(ref, FCS, e, SE) {
-  const L = LV[SE.lv], isLast = ref === lastI, tmr = iso(idx(todayKST) + 1);
-  const dl = d => (d === todayKST ? '오늘 ' : d === tmr ? '내일 ' : '') + md(d);
-  const fo = FCS.filter(z => z.o);
+  const L = LV[SE.lv], isLast = ref === lastI;
   const tail = ['평소 범위 유지 전망', '평소보다 높아질 수 있어 관심', '25 mg/L 이상 가능, 대응 검토'][SE.lv];
-  let h = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="rtag">연구용 참고 단계</span>';
-  if (fo.length) {
-    h += fo.map((z, j) => '<span class="it"><span class="ref">' + dl(iso(ref + z.h)) + '</span> ' + (j ? '' : 'SS ') + fmt(z.o[0]) + (j ? '' : '<span class="u">mg/L</span>') + '<span class="rr">(' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + ')</span>' + (z.h === 5 ? '<span class="ref">(참고)</span>' : '') + '</span>').join(' <span class="sep">·</span> ');
-  } else h += '<span class="ref">' + md(iso(ref)) + '</span> 추정 SS ' + fmt(e) + '<span class="u">mg/L</span>' + (D.lo[ref] == null ? '' : '<span class="rr">(' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + ')</span>');
-  h += '<span class="sep">—</span><span class="it">' + tail + '</span>';
-  $('hlMain').innerHTML = h;
+  $('hlMain').innerHTML = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="tl">' + tail + '</span>';
   const hd = $('headline'); hd.classList.remove('lv-ok', 'lv-note', 'lv-warn'); hd.classList.add('lv-' + L.c);
-  const r1 = FCS.find(z => z.h === 1 && z.r && z.isLast && fcEl.value === 'kma');
-  $('hlSub').textContent = (isLast ? '' : '과거 날짜 보기 · ') + md(iso(ref)) + '까지 자료로 낸 예측 중앙값, 괄호는 80% 범위(관측 자료만 입력)'
-    + (r1 ? ' · 기상청 예보강우 ' + fmt(r1.mm, 0) + ' mm 반영 시 ' + md(iso(ref + 1)) + ' ' + fmt(r1.r[0]) + ' (' + fmt(r1.r[1]) + '–' + fmt(r1.r[2]) + ') mg/L' : '')
-    + ' · 근거는 아래 운영 요약';
+  const W = D.meta.warnings, wn = W && W.now && W.now.length;
+  const why = SE.why.length ? SE.why.map(w => w[1]) : ['올라갈 신호 없음'];
+  if (!SE.why.some(w => /호우/.test(w[1]))) why.push(wn ? '특보 ' + W.now.length + '건 발효 중' : '기상특보 없음');
+  $('hlWhy').innerHTML = why.map(w => '<li>' + w + '</li>').join('');
+  // 자료 상태 한 줄: 늦거나 실패한 자료만 이름을 적고, 누르면 자료 상태 탭
+  const F = (MG && MG.fresh) || [], bad = F.filter(r => r[3] !== 'ok');
+  const ssr = F.find(r => /^SS/.test(r[0])), rest = bad.filter(r => r !== ssr);
+  const lo = [...obs].reverse().find(o => o.v != null), ago = lo ? tdI - lo.i : null;
+  let s = (lo ? '<span class="' + (ago > 14 ? 'w' : '') + '">SS 실측 ' + ago + '일 전 (' + fmt(lo.v) + ' mg/L)</span>' : '')
+    + '<span class="' + (rest.length ? 'w' : 'ok') + '">' + (rest.length ? rest.map(r => r[0].replace(/ \(.*/, '')).join('·') + ' 확인 필요' : '강우·유량·수위·예보 정상') + '</span>';
+  if (!isLast) s = '<span class="w">과거 날짜 ' + md(iso(ref)) + ' 보기</span>' + s;
+  $('hlSub').innerHTML = s + '<a href="#info" data-go="info" data-at="dstat">자료 상태 보기</a>';
 }
 function renderOps(ref, FCS, e, SE) {
   const isLast = ref === lastI, L = LV[SE.lv];
@@ -1900,6 +2305,7 @@ function renderOps(ref, FCS, e, SE) {
     $('opP').innerHTML = '10.2↑ ' + pct(SE.p10) + ' · 25↑ ' + pct(SE.p25);
     $('opPs').textContent = '내일(' + iso(ref + 1).slice(5) + ') SS가 그 값(mg/L) 이상일 가능성';
   }
+  $('kF1P').innerHTML = isLast && SE.p10 != null ? '넘을 가능성 <b>10.2↑ ' + pct(SE.p10) + '</b> · <b>25↑ ' + pct(SE.p25) + '</b>' : '';
   const C = MG && MG.cover;
   if (C) {
     const hs = Object.keys(C).map(Number).sort((a, b) => a - b), part = hs.filter(h => !C[h].full);
@@ -1943,6 +2349,7 @@ function renderStatus() {
   LS.filter(L => L && L.n).forEach(L => { h += '<h3 class="mini">잠금 평가 (' + L.train + '년까지 학습 → ' + L.since.slice(0, 4) + '년~)</h3><p class="hint">' + L.n + '건: MAE ' + fmt(L.mae) + ' mg/L (월별 기준값 ' + fmt(L.mae_clim) + ')' + (L.n >= 10 && L.logr2 != null ? ', 로그 R² ' + L.logr2.toFixed(2) : '') + (L.cov != null ? ', 80% 범위 안 ' + Math.round(L.cov * 100) + '%' : '') + '. 자세한 내용은 모델 성능 탭.</p>'; });
   if (Object.keys(st).length) h += '<h3 class="mini">오늘 자료 수집</h3><ul class="wl">' + Object.entries(st).map(([k, v]) => '<li>' + esc(k) + ': ' + esc(v) + '</li>').join('') + '</ul>';
   $('wrn').innerHTML = h;
+  const ww = $('wxWrn'); if (ww) ww.innerHTML = !W ? '' : W.now.length ? '<span class="on">특보 발효 중</span> ' + W.now.map(r => esc(r.reg + ' ' + r.wrn + r.lvl)).join(', ') : '<span>특보 없음</span> 유역(' + esc(W.areas.join('·')) + ') · ' + esc(W.fetched) + ' 기준';
 }
 function forecasts(ref) {
   const F = D.fc, k = ref - F.off, isLast = ref === lastI, mm = fcEl.value === 'kma' ? 'kma' : +fcEl.value;
@@ -1959,7 +2366,7 @@ const rngTxt = (lo, hi) => '<small>80% 범위</small>' + fmt(lo) + '–' + fmt(h
 function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
-    $('kF' + z.h + 'L').textContent = 'SS 미래예측 · ' + (inToday() ? relDay(ref + z.h) : z.h + '일 후') + ' ' + iso(ref + z.h).slice(5) + (z.h === 5 ? ' (참고용)' : '');
+    $('kF' + z.h + 'L').innerHTML = '<b>' + (inToday() ? relDay(ref + z.h) : z.h + '일 후') + '</b> ' + md(iso(ref + z.h)) + (z.h === 5 ? '<small class="ref5"> · 참고용</small>' : '');
     $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 5 ? ' · 참고용' : '');
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; if ($('kF' + z.h + 'H')) $('kF' + z.h + 'H').hidden = true; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
@@ -2213,11 +2620,7 @@ function renderWt() {
   const up = () => { const v = B.filter(b => !b.hidden && getComputedStyle(b).display !== 'none').length; c.hidden = !v; c.classList.toggle('solo', v === 1); };
   B.forEach(b => new MutationObserver(up).observe(b, { attributes: true, attributeFilter: ['hidden'] })); up();
 })();
-(function () {   // 설명 켜기/끄기: 기본은 끔, 선택은 이 브라우저에 기억
-  const b = $('helpBtn'); let on = false; try { on = localStorage.getItem('ssdashHelp') === '1'; } catch (e) {}
-  const set = v => { on = v; document.body.classList.toggle('nohelp', !on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '설명 숨기기' : '설명 보기'; try { localStorage.setItem('ssdashHelp', on ? '1' : '0'); } catch (e) {} };
-  set(on); b.addEventListener('click', () => set(!on));
-})();
+document.body.classList.add('nohelp');   // 부가 설명은 두지 않음
 const todayKST = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), refNote = $('refNote');
 const md = s => +s.slice(5, 7) + '/' + +s.slice(8, 10);
 if (todayKST > iso(lastI)) {
@@ -2229,10 +2632,11 @@ if (todayKST > iso(lastI)) {
 refEls.forEach(el => el.addEventListener('change', () => { const i = idx(el.value); if (!isNaN(i)) { refNote.classList.toggle('flash', i > (TODAY_OK ? tdI : lastI)); state.today = TODAY_OK && i >= tdI; state.ref = Math.min(lastI, Math.max(firstI, i)); render(); } }));
 winEls.forEach(el => el.addEventListener('change', () => { state.win = +el.value; render(); }));
 logEls.forEach(el => el.addEventListener('change', () => { state.log = el.value; render(); }));
+ALL('c-ly').forEach(el => el.addEventListener('change', () => { state.ly = el.checked; render(); }));
 fcEls.forEach(el => el.addEventListener('change', () => { fcEls.forEach(o => { o.value = el.value; }); render(); }));
 ALL('c-latest').forEach(b => { if (TODAY_OK) b.textContent = '오늘로 이동'; b.addEventListener('click', () => { refNote.classList.remove('flash'); state.today = true; state.ref = lastI; render(); }); });
 document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { state.h = +b.dataset.h; renderBars(); save(); }));
-const TABS = ['home', 'fc', 'cmp', 'perf', 'info', 'faq', 'about'];
+const TABS = ['home', 'fc', 'tr', 'why', 'cmp', 'perf', 'info', 'faq', 'about'];
 function showTab(t, push) {
   if (!TABS.includes(t)) t = 'home';
   document.querySelectorAll('.tab').forEach(el => { el.hidden = el.dataset.tab !== t; });
@@ -2243,6 +2647,7 @@ function showTab(t, push) {
 }
 document.querySelectorAll('nav a[data-tab]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.tab, true); }));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+document.addEventListener('click', e => { const a = e.target.closest('[data-go]'); if (!a) return; e.preventDefault(); showTab(a.dataset.go, true); const at = a.dataset.at && $(a.dataset.at); if (at) setTimeout(() => at.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); });
 (function tabAnim() {
   const numRe = /^(\s*)(-?\d+(?:\.\d+)?)/;
   const countKpis = root => root.querySelectorAll('.kpi .val').forEach(v => {
@@ -2325,7 +2730,7 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     const s = document.getElementById('abProg'); if (!s || s.dataset.done || !s.getBoundingClientRect().width) return; s.dataset.done = 1;
     const Wr = Math.max(300, Math.round(s.getBoundingClientRect().width)), small = Wr < 560;
     const P = [['10/30', 'XGB(log)', '+유량 보정', .630], ['11/02', 'XGB+Ridge', '혼합', .722], ['11/03', '기온', '3변수', .754], ['11/03', '채수 전', '수위', .761], ['11/04', '홍수 사상', '+단조 제약', .768], ['11/04', '홍수일', '보정 ¾', .770]];
-    const W = Wr, H = small ? 280 : 300, l = 34, r = 14, t = 30, b = 66, v0 = .3, v1 = .8; s.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const W = Wr, H = small ? 264 : 284, l = 34, r = 14, t = 30, b = 50, v0 = .3, v1 = .8; s.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     const X = i => l + (small ? 22 : 40) + i * (W - l - r - (small ? 44 : 80)) / (P.length - 1), Y = v => t + (v1 - v) / (v1 - v0) * (H - t - b);
     [.4, .5, .6, .7, .8].forEach(v => { el('line', { x1: l, x2: W - r, y1: Y(v), y2: Y(v), class: 'gl' }, s); txt(s, l - 6, Y(v) + 4, v.toFixed(1), { 'text-anchor': 'end' }); });
     el('line', { x1: l, x2: W - r, y1: Y(.368), y2: Y(.368), class: 'base' }, s); txt(s, W - r, Y(.368) - 6, '월별 평균 0.368', { 'text-anchor': 'end', class: 'bl' });
@@ -2335,9 +2740,8 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
       const dl = (0.3 + i * 0.3) + 's';
       el('circle', { cx: X(i), cy: Y(p[3]), r: 6, class: 'pt', style: 'transition-delay:' + dl }, s);
       txt(s, X(i), Y(p[3]) + (small && i % 2 ? 24 : -14), p[3].toFixed(3), { 'text-anchor': 'middle', class: 'pv', style: 'transition-delay:' + dl });
-      txt(s, X(i), H - b + 20, p[0], { 'text-anchor': 'middle', class: 'px' + (small ? ' sm' : '') });
-      if (small) txt(s, X(i), H - b + 36, ['XGB', '혼합', '기온', '수위', '사상', '홍수일'][i], { 'text-anchor': 'middle', class: 'px sm' });
-      else { txt(s, X(i), H - b + 36, p[1], { 'text-anchor': 'middle', class: 'px' }); txt(s, X(i), H - b + 51, p[2], { 'text-anchor': 'middle', class: 'px' }); }
+      if (small) txt(s, X(i), H - b + 22, ['XGB', '혼합', '기온', '수위', '사상', '홍수일'][i], { 'text-anchor': 'middle', class: 'px sm' });
+      else { txt(s, X(i), H - b + 22, p[1], { 'text-anchor': 'middle', class: 'px' }); txt(s, X(i), H - b + 38, p[2], { 'text-anchor': 'middle', class: 'px' }); }
     });
     const len = path.getTotalLength ? path.getTotalLength() || 800 : 800;
     path.style.strokeDasharray = len; path.style.strokeDashoffset = len; path.dataset.len = len;
@@ -2348,15 +2752,17 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
     const c = document.getElementById('abChips'); if (!c) return;
     const ok = ['홍수 사상 변수 + 단조 제약', '홍수일 보정 ¾'];
     const no = ['CatBoost', 'PINN', '시간 강우', '동결융해·적설', '유사 소진', 'LightGBM', '관측소별 강우', 'Ridge 곡선항', '트리 깊이 조정', '결빙·해빙 변수', '고농도 가중 학습', '목표 변환 y^0.25', 'MAE·Huber 손실', 'ExtraTrees', '최근 연도 가중', '주변 지점 SS', '혼합비 최적화', 'GRU', '1일 판별 전환', 'XGB만 / Ridge만', '1일 고농도 보정 ¾', 'TCN', '목표 변환 y^0.5', 'SARIMAX'];
-    const M = {"홍수 사상 변수 + 단조 제약": ["같은 유량이라도 홍수 봉우리로 올라가는 중에는 흙이 많이 쓸려 오고, 봉우리가 지난 뒤에는 적게 옵니다(이력 현상). 단조 제약은 XGBoost에 \"유량·강우가 커지면 SS 추정이 줄지 않는다\"는 규칙을 걸어, 자료가 적은 큰 홍수 구간에서 값이 엉뚱하게 꺾이지 않게 합니다.", "72시간 최고수위 이후 경과시간, 최고수위 대비 하강량, 연속강우 누적 3개를 넣고, 유량·첨두유량·수위 상승폭·강우 등 9개 변수에 단조 제약을 걸어 2019–26 전진검증으로 비교했습니다.", "로그 R² 0.761 → 0.768, MAE 2.95 → 2.86. 앞 기간(2019–22)과 뒤 기간(2023–26) 모두 좋아졌고 우연 범위를 넘어 채택했습니다."], "홍수일 보정 ¾": ["나무 모델은 학습에서 본 범위 밖 값을 못 내서 큰 홍수 날을 낮게 봅니다. 과거에 첨두유량이 클수록 얼마나 낮게 봤는지를 직선 관계로 만들어, 큰 비 날 추정을 그만큼 올려 줍니다.", "비 10 mm 이상이거나 24시간 수위 변화 0.3 m 이상인 날(전체의 약 25%)에만 켭니다. 보정식은 그해 이전 연도 오차로만 Huber 회귀로 맞추고, 너무 올리지 않도록 ¾ 강도로 씁니다.", "로그 R² 0.768 → 0.770, R² 0.578 → 0.663, MAE 2.86 → 2.79. 큰 비 날 예측/실측 비가 0.73 → 0.92로 고농도를 덜 낮게 보게 되어 채택했습니다."], "CatBoost": ["XGBoost처럼 작은 판단 나무를 차례로 쌓는 부스팅 모델인데, 나무 모양을 좌우 대칭으로 고정해 과적합에 강한 편입니다.", "XGBoost 자리에 넣거나 XGBoost·Ridge와 셋을 섞어 같은 전진검증으로 비교했고, 1·3일 예측에도 바꿔 넣어 봤습니다.", "로그 R² 0.766 (당시 기준 0.761). 차이가 우연 범위 안이고 1·3일 예측도 나아지지 않아 쓰지 않았습니다."], "PINN": ["물리 정보 신경망(Physics-Informed Neural Network). 신경망이 자료만 외우지 않도록 \"유량이 늘면 SS도 는다\" 같은 물리 관계를 어기면 벌점을 주며 학습합니다.", "SS = a + b·log유량 + 이력 + 계절 관계식을 뼈대로 두고, 신경망이 나머지를 보정하게 했습니다. 가상의 유량 점들에서 단조 관계를 어기면 벌점을 줬습니다.", "로그 R² 0.723–0.728 (당시 운영 0.722)로 비슷하지만 R²는 0.38–0.41로 더 낮고, 고농도를 낮게 보는 문제도 그대로라 쓰지 않았습니다."], "시간 강우": ["같은 하루 비라도 짧고 세게 오면 흙이 더 많이 쓸려 옵니다. 하루 합 대신 시간 단위 강우로 세기를 보려는 시도입니다.", "인제 ASOS 시간강우로 채수 전 6·12·24·48시간 합과 최대 1·3시간 강도 등 9개 변수를 만들어 더했습니다.", "로그 R² 0.768 → 0.767–0.770으로 차이가 없었습니다. 이미 넣은 원대교 시간 수위가 비가 언제 얼마나 왔는지를 담고 있기 때문으로 봅니다."], "동결융해·적설": ["겨울·이른 봄에는 얼었다 녹은 흙이나 녹는 눈이 흙을 쓸어 올 수 있습니다.", "최근 14일 동결융해 일수, 기온으로 계산한 적설·융설량(도일법)을 변수로 넣어 기온 변수와 비교했습니다.", "로그 R² 0.722–0.726으로 기온 3개(0.754)보다 못해 기온만 남겼습니다."], "유사 소진": ["큰 홍수가 잇달아 오면 쓸려 갈 흙이 줄어 뒤 홍수의 SS가 낮아지는 현상입니다.", "최근 큰 유량이 얼마나 쌓였는지 등 소진 정도를 나타내는 변수를 더했습니다.", "효과가 없어 넣지 않았습니다. 실측이 약 8일 간격이라 연속 홍수 사례가 적습니다."], "LightGBM": ["XGBoost와 같은 부스팅 모델인데 나무를 잎 단위로 키워 빠르게 학습합니다.", "XGBoost 자리에 넣어 같은 전진검증으로 비교했습니다.", "로그 R² 0.761로 기준과 같아 바꿀 이유가 없었습니다."], "관측소별 강우": ["티센 평균은 유역 강우를 하나로 합칩니다. 원통·기린·내면 강우를 따로 넣으면 유역 어디에 비가 왔는지까지 볼 수 있습니다.", "세 관측소 강우를 따로 넣고, 결측이 적은 2016–23년만으로 비교했습니다.", "로그 R² 0.754 vs 기준 0.756으로 효과가 없었습니다."], "Ridge 곡선항": ["Ridge는 직선 모델이라 곡선이나 \"유량 × 강우\" 같은 함께 작용하는 효과를 못 그립니다. 그런 항을 직접 만들어 넣는 방법입니다.", "Ridge 쪽에 제곱항·상호작용항을 더하고 XGBoost와 같은 비율로 섞었습니다.", "로그 R² 0.768 vs 0.770, MAE −0.03으로 우연 범위라 넣지 않았습니다."], "트리 깊이 조정": ["나무 하나가 묻는 질문 단계(깊이)와 나무 개수를 바꾸면 모델이 얼마나 세밀하게 외울지가 달라집니다.", "깊이 3을 2·4로, 나무 300그루를 600그루로 바꿔 비교했습니다.", "깊이 2 0.758, 깊이 4 0.763, 600그루 0.761로 차이가 없어 깊이 3·300그루를 유지했습니다."], "결빙·해빙 변수": ["봄에 언 땅이 녹을 때 흙이 잘 쓸려 오는지 보려는 변수입니다.", "최근 7일 결빙-해빙 횟수, 봄 적산온도, 기온 변화량을 더했습니다.", "로그 R² 0.766 vs 0.770, MAE −0.04로 우연 범위라 넣지 않았습니다."], "고농도 가중 학습": ["고농도 실측이 적어서 모델이 평상시에 맞춰집니다. 고농도 날에 더 큰 무게를 줘 그 날을 더 신경 쓰게 하는 방법입니다.", "가중치 1 + log(SS/5), 또는 고농도 2배로 학습했습니다.", "로그 R² 0.766–0.767로 평상시 정확도만 조금 손해라 쓰지 않았습니다."], "목표 변환 y^0.25": ["SS는 값 차이가 수백 배라 로그로 바꿔 학습합니다. 로그 대신 네제곱근을 쓰면 큰 값의 비중이 조금 커집니다.", "학습 목표를 SS^0.25로 바꾸고 결과를 다시 mg/L로 되돌려 비교했습니다.", "로그 R² 0.764로 로그 변환(0.770)보다 낮았습니다."], "목표 변환 y^0.5": ["제곱근 변환은 네제곱근보다 큰 값의 비중이 더 큽니다.", "학습 목표를 SS^0.5로 바꿔 비교했습니다.", "로그 R² 0.708로 크게 낮아 쓰지 않았습니다. 큰 값 몇 개에 끌려가 평상시가 흐트러집니다."], "MAE·Huber 손실": ["보통은 오차 제곱을 줄이도록 학습합니다. 절댓값(MAE)이나 Huber 손실은 튀는 값 하나의 영향을 줄입니다.", "XGBoost의 학습 목표를 MAE, Huber로 바꿔 비교했습니다.", "로그 R² 0.755로 기준(0.761)보다 낮았습니다."], "ExtraTrees": ["나무 여러 그루를 따로 키워 평균하는 숲 모델인데, 나누는 기준을 무작위로 골라 더 단순하게 만듭니다.", "XGBoost 대신 넣어 비교했습니다.", "로그 R² 0.755로 기준보다 낮았습니다."], "최근 연도 가중": ["하천 상태가 해마다 조금씩 바뀐다면 최근 자료에 더 무게를 두는 편이 나을 수 있습니다.", "최근 1–3년 자료에 가중치를 주거나 1–2년마다 반씩 줄어드는 가중치로 보정했습니다.", "로그 R² 0.756–0.770, 변화 0 ~ −0.015로 나아지지 않았습니다."], "주변 지점 SS": ["내린천2는 고농도 실측이 적습니다. 가까운 인북천(인북A)·홍천강(홍천A) 실측 SS를 함께 배우면 고농도 사례를 늘릴 수 있습니다.", "주변 지점은 시간 수위·유량 이력이 없어 공통 변수(강우·계절·기온·유량)만 쓰는 축소 모델로 함께 학습했습니다. 주변 12지점 사전학습 후 미세조정(전이학습)도 시험했습니다.", "축소 모델 0.700–0.719, 운영 모델과 반반 섞어도 0.758 < 0.768. 전이학습도 최대 +0.007(우연 범위)이라 쓰지 않았습니다."], "혼합비 최적화": ["운영 모델은 XGBoost와 Ridge를 로그 값에서 5:5로 섞습니다. 비율을 바꾸면 더 나을지 본 것입니다.", "6:4, 4:6, 그리고 해마다 이전 자료로 고른 최적 비율을 비교했습니다.", "로그 R² 0.759–0.763으로 5:5보다 낫지 않았습니다."], "GRU": ["순환 신경망의 한 종류입니다. 최근 30일 강우·유량을 날짜 순서대로 읽으며 기억해 SS를 예측합니다.", "30일 시계열만, 또는 당일 변수를 더해 5번씩 학습해 평균했습니다.", "로그 R² 0.688 / 0.706 (당시 기준 0.722). 실측이 연 40건 정도라 신경망에는 자료가 너무 적습니다."], "1일 판별 전환": ["먼저 \"내일이 고농도일까?\"를 따로 판별하고, 고농도로 판별되면 보정 모드로 바꾸는 2단계 방식입니다.", "로지스틱 회귀로 1일 예측값·예보 강우·예측 첨두유량·계절 등을 써서 고농도 여부를 판별하고, 그 날만 보정했습니다.", "판별은 잘 됐지만(AUC 0.97) 값은 오히려 나빠졌습니다(MAE 2.85 → 3.08–3.41). 대신 \"1일 예측 ≥ 6 mg/L\"를 스위치로 쓰는 고농도 모드를 운영에 넣었습니다."], "XGB만 / Ridge만": ["혼합하지 않고 한 모델만 쓰면 어떤지 확인한 것입니다. XGBoost는 비·유량의 복잡한 조합을, Ridge는 본 적 없는 큰 홍수까지 직선으로 이어 주는 역할을 합니다.", "같은 변수로 XGBoost만, Ridge만 학습해 비교했습니다.", "로그 R² 0.748 / 0.747로 섞은 모델(0.770)보다 낮아, 둘이 서로 약점을 메운다는 것을 확인했습니다."], "1일 고농도 보정 ¾": ["일별 추정에 쓰는 홍수일 보정을 1·3일 예보 예측에도 그대로 써 보는 것입니다.", "예보 비가 10 mm 이상이거나 예측 수위 변화가 0.3 m 이상인 날, 이전 연도 오차로 맞춘 보정식을 ¾ 강도로 적용해 실제 기상청 예보로 채점했습니다.", "1일 고농도 예측/실측 비는 0.63 → 0.93이 됐지만 로그 R² 0.758 → 0.735, MAE 2.85 → 2.99로 평상시가 나빠졌고 3일은 효과가 없어 쓰지 않았습니다."], "TCN": ["시간 합성곱 신경망입니다. 최근 30일 시계열에서 시간 패턴을 필터로 찾아냅니다.", "GRU와 같은 방식으로 30일 시계열만, 또는 당일 변수를 더해 비교했습니다.", "로그 R² 0.634 / 0.698 (당시 기준 0.722)로 낮았습니다. 역시 자료가 너무 적습니다."], "SARIMAX": ["계절 자기회귀 이동평균 모델에 외부 변수(강우·유량)를 더한 전통적인 시계열 통계 모델입니다. 지난 값의 흐름으로 다음 값을 예측합니다.", "차수 4가지 조합으로, 실측이 없는 날은 칼만 필터로 건너뛰며 학습했습니다.", "로그 R² 0.605–0.610. SS가 약 8일에 한 번만 측정돼 \"지난 값\" 정보가 거의 없고, 홍수 때 급증을 못 잡습니다."]};
+    const M = {"홍수 사상 변수 + 단조 제약": ["이력 현상: 같은 유량이라도 홍수 상승부엔 흙 많음, 첨두 지난 뒤엔 적음 · 단조 제약: 유량·강우 증가 시 SS 추정 감소 금지 → 자료 적은 큰 홍수 구간에서 값 꺾임 방지", "변수 3개 추가 (72시간 최고수위 후 경과시간, 최고수위 대비 하강량, 연속강우 누적) · 유량·첨두유량·수위 상승폭·강우 등 9개 변수에 단조 제약 · 2019–26 전진검증 비교", "로그 R² 0.761 → 0.768, MAE 2.95 → 2.86 · 앞 기간(2019–22)·뒤 기간(2023–26) 모두 개선, 우연 범위 밖 → 채택"], "홍수일 보정 ¾": ["나무 모델은 학습 범위 밖 값 못 냄 → 큰 홍수 날 과소추정 · 첨두유량 클수록 낮게 본 정도를 직선 관계로 만들어 그만큼 상향", "적용: 비 10 mm 이상 또는 24시간 수위 변화 0.3 m 이상인 날 (전체의 약 25%) · 보정식: 그해 이전 연도 오차로만 Huber 회귀 · 과보정 방지 위해 ¾ 강도", "로그 R² 0.768 → 0.770, R² 0.578 → 0.663, MAE 2.86 → 2.79 · 큰 비 날 예측/실측 비 0.73 → 0.92 → 채택"], "CatBoost": ["XGBoost와 같은 부스팅 계열 · 좌우 대칭 나무 구조로 과적합에 강한 편", "XGBoost 자리 대체, XGBoost·Ridge와 3개 혼합 · 같은 전진검증 비교 · 1·3일 예측에도 대체 시험", "로그 R² 0.766 (당시 기준 0.761) · 차이 우연 범위, 1·3일 예측 개선 없음 → 미채택"], "PINN": ["물리 정보 신경망 (Physics-Informed Neural Network) · \"유량 증가 → SS 증가\" 같은 물리 관계 위반 시 벌점 주며 학습", "뼈대: SS = a + b·log유량 + 이력 + 계절 · 나머지는 신경망이 보정 · 가상 유량 점에서 단조 관계 위반 시 벌점", "로그 R² 0.723–0.728 (당시 운영 0.722)로 비슷, R² 0.38–0.41로 더 낮음, 고농도 과소추정 그대로 → 미채택"], "시간 강우": ["같은 하루 비라도 짧고 강하면 흙 더 많이 유출 · 하루 합 대신 시간 단위 강우 세기 반영 시도", "인제 ASOS 시간강우로 9개 변수 (채수 전 6·12·24·48시간 합, 최대 1·3시간 강도 등)", "로그 R² 0.768 → 0.767–0.770, 차이 없음 · 원대교 시간 수위가 이미 비의 시점·양을 담고 있는 것으로 판단"], "동결융해·적설": ["겨울·이른 봄 얼었다 녹은 흙, 녹는 눈에 의한 흙 유출 가능성", "변수: 최근 14일 동결융해 일수, 기온 기반 적설·융설량 (도일법) · 기온 변수와 비교", "로그 R² 0.722–0.726, 기온 3개(0.754)보다 낮음 → 기온만 유지"], "유사 소진": ["연속 홍수 시 쓸려 갈 흙 감소 → 뒤 홍수 SS 낮아지는 현상", "변수: 최근 큰 유량 누적 등 소진 정도", "효과 없음 → 미채택 · 실측 약 8일 간격이라 연속 홍수 사례 부족"], "LightGBM": ["XGBoost와 같은 부스팅 계열 · 잎 단위 성장으로 학습 빠름", "XGBoost 자리 대체, 같은 전진검증 비교", "로그 R² 0.761, 기준과 같음 → 교체 이유 없음"], "관측소별 강우": ["티센 평균은 유역 강우를 하나로 합침 · 원통·기린·내면을 따로 넣으면 비 온 위치까지 반영", "세 관측소 강우 개별 입력 · 결측 적은 2016–23년만 비교", "로그 R² 0.754 vs 기준 0.756 → 효과 없음"], "Ridge 곡선항": ["Ridge는 직선 모델 → 곡선, \"유량 × 강우\" 같은 상호작용 표현 못 함 · 해당 항을 직접 추가하는 방법", "Ridge에 제곱항·상호작용항 추가 · XGBoost와 같은 비율로 혼합", "로그 R² 0.768 vs 0.770, MAE −0.03, 우연 범위 → 미채택"], "트리 깊이 조정": ["나무 깊이·개수에 따라 학습 세밀도 변화", "깊이 3 → 2·4, 나무 300 → 600그루 비교", "깊이 2 0.758, 깊이 4 0.763, 600그루 0.761, 차이 없음 → 깊이 3·300그루 유지"], "결빙·해빙 변수": ["봄철 언 땅 녹을 때 흙 유출 증가 여부 확인용", "변수: 최근 7일 결빙-해빙 횟수, 봄 적산온도, 기온 변화량", "로그 R² 0.766 vs 0.770, MAE −0.04, 우연 범위 → 미채택"], "고농도 가중 학습": ["고농도 실측 적음 → 모델이 평상시에 맞춰짐 · 고농도 날에 가중치 부여", "가중치 1 + log(SS/5), 또는 고농도 2배", "로그 R² 0.766–0.767, 평상시 정확도만 소폭 손해 → 미채택"], "목표 변환 y^0.25": ["SS 값 차이 수백 배 → 로그 변환 학습 · 네제곱근은 로그보다 큰 값 비중 조금 큼", "학습 목표 SS^0.25, 결과는 mg/L로 역변환 후 비교", "로그 R² 0.764, 로그 변환(0.770)보다 낮음"], "목표 변환 y^0.5": ["제곱근 변환: 네제곱근보다 큰 값 비중 더 큼", "학습 목표 SS^0.5로 비교", "로그 R² 0.708, 크게 낮음 → 미채택 · 큰 값 몇 개에 끌려 평상시 흐트러짐"], "MAE·Huber 손실": ["기본은 오차 제곱 최소화 · MAE·Huber는 튀는 값 영향 축소", "XGBoost 학습 목표를 MAE, Huber로 교체", "로그 R² 0.755, 기준(0.761)보다 낮음"], "ExtraTrees": ["나무 여러 그루 평균 (숲 모델) · 분할 기준 무작위 선택으로 단순화", "XGBoost 대신 투입해 비교", "로그 R² 0.755, 기준보다 낮음"], "최근 연도 가중": ["하천 상태가 해마다 변한다면 최근 자료 비중 확대가 유리할 수 있음", "최근 1–3년 가중, 또는 1–2년마다 반감하는 가중치", "로그 R² 0.756–0.770, 변화 0 ~ −0.015, 개선 없음"], "주변 지점 SS": ["내린천2 고농도 실측 부족 · 인북천(인북A)·홍천강(홍천A) 실측 SS로 고농도 사례 보강 시도", "주변 지점은 시간 수위·유량 이력 없음 → 공통 변수(강우·계절·기온·유량)만 쓰는 축소 모델로 공동 학습 · 주변 12지점 사전학습 후 미세조정(전이학습)도 시험", "축소 모델 0.700–0.719, 운영 모델과 반반 혼합 0.758 < 0.768 · 전이학습 최대 +0.007 (우연 범위) → 미채택"], "혼합비 최적화": ["운영 모델: XGBoost·Ridge 로그 값 5:5 혼합 · 비율 변경 효과 확인", "6:4, 4:6, 해마다 이전 자료로 고른 최적 비율 비교", "로그 R² 0.759–0.763, 5:5보다 낫지 않음"], "GRU": ["순환 신경망 · 최근 30일 강우·유량을 순서대로 읽어 SS 예측", "30일 시계열만, 또는 당일 변수 추가 · 5회 학습 평균", "로그 R² 0.688 / 0.706 (당시 기준 0.722) · 실측 연 40건 정도로 신경망에 자료 부족"], "1일 판별 전환": ["2단계 방식: \"내일 고농도?\" 먼저 판별 → 고농도면 보정 모드", "로지스틱 회귀로 고농도 여부 판별 (1일 예측값·예보 강우·예측 첨두유량·계절 등) → 그날만 보정", "판별 AUC 0.97로 양호, 값은 악화 (MAE 2.85 → 3.08–3.41) → 대신 \"1일 예측 ≥ 6 mg/L\" 스위치 고농도 모드 운영 반영"], "XGB만 / Ridge만": ["혼합 없이 단일 모델만 쓸 때 확인 · XGBoost: 비·유량의 복잡한 조합 담당, Ridge: 처음 보는 큰 홍수까지 직선 외삽 담당", "같은 변수로 XGBoost만, Ridge만 학습해 비교", "로그 R² 0.748 / 0.747, 혼합(0.770)보다 낮음 → 두 모델이 서로 약점 보완 확인"], "1일 고농도 보정 ¾": ["일별 추정의 홍수일 보정을 1·3일 예보 예측에도 적용 시도", "예보 비 10 mm 이상 또는 예측 수위 변화 0.3 m 이상인 날, 이전 연도 오차 기반 보정식 ¾ 강도 · 실제 기상청 예보로 채점", "1일 고농도 예측/실측 비 0.63 → 0.93, 단 로그 R² 0.758 → 0.735, MAE 2.85 → 2.99로 평상시 악화 · 3일 효과 없음 → 미채택"], "TCN": ["시간 합성곱 신경망 · 최근 30일 시계열의 시간 패턴을 필터로 탐지", "GRU와 같은 방식 (30일 시계열만, 또는 당일 변수 추가)", "로그 R² 0.634 / 0.698 (당시 기준 0.722), 낮음 · 자료 부족"], "SARIMAX": ["계절 자기회귀 이동평균 + 외부 변수(강우·유량) · 전통적 시계열 통계 모델, 지난 값 흐름으로 다음 값 예측", "차수 4가지 조합 · 실측 없는 날은 칼만 필터로 건너뜀", "로그 R² 0.605–0.610 · SS 약 8일에 1번 측정 → \"지난 값\" 정보 부족, 홍수 때 급증 못 잡음"]};
+    const KIND = {"CatBoost": "모델 교체", "PINN": "모델 교체", "LightGBM": "모델 교체", "ExtraTrees": "모델 교체", "GRU": "모델 교체", "TCN": "모델 교체", "SARIMAX": "모델 교체", "XGB만 / Ridge만": "모델 교체", "홍수 사상 변수 + 단조 제약": "변수 추가", "시간 강우": "변수 추가", "동결융해·적설": "변수 추가", "유사 소진": "변수 추가", "관측소별 강우": "변수 추가", "Ridge 곡선항": "변수 추가", "결빙·해빙 변수": "변수 추가", "홍수일 보정 ¾": "결과 보정", "1일 고농도 보정 ¾": "결과 보정", "1일 판별 전환": "결과 보정", "고농도 가중 학습": "학습 방법", "목표 변환 y^0.25": "학습 방법", "목표 변환 y^0.5": "학습 방법", "MAE·Huber 손실": "학습 방법", "최근 연도 가중": "학습 방법", "트리 깊이 조정": "학습 방법", "혼합비 최적화": "학습 방법", "주변 지점 SS": "자료 추가"};
+    const WHY = {"홍수 사상 변수 + 단조 제약": "전체 로그 R²·MAE 동시 개선, 앞·뒤 기간 모두 개선 → 우연이 아닌 효과", "홍수일 보정 ¾": "평상시 성능 유지하면서 큰 비 날 과소추정 감소(예측/실측 0.73 → 0.92)", "CatBoost": "개선 폭 +0.005로 시드만 바꿔도 나는 차이 수준(±0.006) · 1·3일 예측 개선 없음 · 모델만 무거워짐", "PINN": "로그 R²는 비슷하나 R² 0.38–0.41로 운영(0.49)보다 낮음 → 큰 값 오차 큼 · 목표였던 고농도 과소추정 해결 못 함", "시간 강우": "변화 −0.001~0 · 원대교 시간 수위가 이미 같은 정보 반영 → 입력만 늘고 효과 없음 · 매일 수집 부담만 증가", "동결융해·적설": "기온 3개(0.754)보다 0.03 낮음 · 겨울철 고농도 사례 거의 없어 배울 신호 부족", "유사 소진": "연속 홍수 사례가 실측 간격(약 8일) 때문에 거의 안 잡힘 → 변수가 학습에 쓰일 자료 없음", "LightGBM": "성능 기준과 동일(0.761) → 바꿀 이점 없음", "관측소별 강우": "−0.002, 효과 없음 · 기린 결측·결빙 구간 때문에 학습 기간이 2016–23으로 줄어드는 손해", "Ridge 곡선항": "−0.002, 우연 범위 · 곡선·상호작용은 나무 모델이 이미 담당", "트리 깊이 조정": "모든 설정이 기준 ±0.005 이내 → 현재 설정(깊이 3·300그루)이 이미 적정", "결빙·해빙 변수": "−0.004, 우연 범위 · 봄철 해빙기 고농도 실측이 거의 없음", "고농도 가중 학습": "고농도 맞춤은 거의 그대로인데 평상시 오차만 커짐 → 전체 −0.003~−0.004", "목표 변환 y^0.25": "로그 변환보다 −0.006 · 큰 값 비중이 커져 평상시 정확도 하락", "목표 변환 y^0.5": "−0.062로 크게 나빠짐 · 큰 값 몇 개에 끌려 평상시 추정이 흐트러짐", "MAE·Huber 손실": "−0.006 · 튀는 값 영향을 줄이다 보니 정작 중요한 홍수 날을 덜 따라감", "ExtraTrees": "−0.006 · 무작위 분할이라 적은 자료(실측 약 500건)에서 정밀도 부족", "최근 연도 가중": "0 ~ −0.015, 개선 없음 · 하천 상태가 해마다 크게 변하지 않아 오래된 자료도 유효", "주변 지점 SS": "0.758로 운영(0.768)보다 낮음 · 주변 지점은 수위 시간자료가 없어 핵심 변수를 못 씀 · 전이학습 +0.007은 우연 범위", "혼합비 최적화": "어떤 비율도 5:5보다 낫지 않음 · 해마다 비율을 고르면 오히려 과적합", "GRU": "0.688–0.706으로 크게 낮음 · 실측 연 40건 정도라 신경망 학습에 자료 부족", "1일 판별 전환": "판별(AUC 0.97)은 좋았지만 보정값이 커서 MAE 2.85 → 3.08 이상으로 악화 · 더 단순한 '1일 예측 ≥ 6' 스위치가 나음", "XGB만 / Ridge만": "각각 0.748·0.747로 혼합(0.770)보다 낮음 → 혼합 유지의 근거", "1일 고농도 보정 ¾": "고농도는 잘 맞지만 평상시 MAE 2.85 → 2.99, 로그 R² −0.023 · 평상시가 대부분이라 손해가 더 큼", "TCN": "0.634–0.698로 크게 낮음 · GRU와 같은 이유(자료 부족)", "SARIMAX": "0.605–0.610로 크게 낮음 · 측정이 약 8일 간격이라 '지난 값' 정보가 거의 없고 홍수 급증을 못 따라감"};
     const box = document.getElementById('abChipInfo'); let cur = null;
     const show = (sp, n) => {
       const same = cur === sp; c.querySelectorAll('span').forEach(s => { s.classList.remove('on'); s.setAttribute('aria-expanded', 'false'); });
       if (same || !M[n]) { cur = null; box.hidden = true; return; }
       cur = sp; sp.classList.add('on'); sp.setAttribute('aria-expanded', 'true');
       const m = M[n], adopted = sp.classList.contains('ok');
-      box.innerHTML = '<div class="ci-h"><b>' + n + '</b><span class="ci-tag' + (adopted ? ' ok' : '') + '">' + (adopted ? '채택' : '쓰지 않음') + '</span><button type="button" class="ci-x" aria-label="닫기">×</button></div>'
-        + '<dl><dt>개념·원리</dt><dd>' + m[0] + '</dd><dt>어떻게 돌렸나</dt><dd>' + m[1] + '</dd><dt>결과</dt><dd>' + m[2] + '</dd></dl>';
+      box.innerHTML = '<div class="ci-h"><span class="ci-kind">' + (KIND[n] || '') + '</span><b>' + n + '</b><span class="ci-tag' + (adopted ? ' ok' : '') + '">' + (adopted ? '채택' : '쓰지 않음') + '</span><button type="button" class="ci-x" aria-label="닫기">×</button></div>'
+        + '<dl><dt>개념·원리</dt><dd>' + m[0] + '</dd><dt>어떻게 돌렸나</dt><dd>' + m[1] + '</dd><dt>결과</dt><dd>' + m[2] + '</dd><dt class="ci-why' + (adopted ? ' ok' : '') + '">' + (adopted ? '채택 이유' : '안 쓴 이유') + '</dt><dd class="ci-why">' + (WHY[n] || '') + '</dd></dl>';
       box.hidden = false; box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
       box.querySelector('.ci-x').addEventListener('click', () => show(sp, n));
       const r = box.getBoundingClientRect(); if (r.bottom > innerHeight) box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -2462,5 +2868,32 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
 new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
 renderBars(); renderWt(); renderMap(); renderTbl(); renderFresh();
+
+(function mapZoom() {   // 유역도: 버튼·휠·두 손가락으로 확대, 끌어서 이동, 전체 화면
+  const svg = $('map'), wrap = svg && svg.closest('.mapwrap'); if (!wrap) return;
+  const [x0, y0, W0, H0] = svg.getAttribute('viewBox').split(/\s+/).map(Number);
+  let v = { x: x0, y: y0, w: W0, h: H0 };
+  const set = () => svg.setAttribute('viewBox', [v.x, v.y, v.w, v.h].map(n => n.toFixed(1)).join(' '));
+  const zoom = (k, cx, cy) => { const nw = Math.min(W0, Math.max(W0 / 8, v.w / k)), f = nw / v.w; if (cx == null) { cx = v.x + v.w / 2; cy = v.y + v.h / 2; }
+    v = { x: cx - (cx - v.x) * f, y: cy - (cy - v.y) * f, w: nw, h: v.h * f }; clamp(); set(); };
+  const clamp = () => { v.x = Math.min(x0 + W0 - v.w, Math.max(x0, v.x)); v.y = Math.min(y0 + H0 - v.h, Math.max(y0, v.y)); };
+  const pt = (e) => { const r = svg.getBoundingClientRect(), s = Math.max(v.w / r.width, v.h / r.height); return [v.x + (e.clientX - r.left - (r.width - v.w / s) / 2) * s, v.y + (e.clientY - r.top - (r.height - v.h / s) / 2) * s, s]; };
+  const bar = document.createElement('div'); bar.className = 'mz';
+  bar.innerHTML = '<button type="button" aria-label="확대">+</button><button type="button" aria-label="축소">−</button><button type="button" class="wide" aria-label="처음 크기">처음</button><button type="button" class="wide" aria-label="크게 보기">크게</button>';
+  wrap.appendChild(bar); const hint = document.createElement('span'); hint.className = 'mzh'; hint.textContent = '휠·두 손가락으로 확대, 끌어서 이동'; wrap.appendChild(hint);
+  const [bi, bo, br, bf] = bar.querySelectorAll('button');
+  bi.onclick = () => zoom(1.5); bo.onclick = () => zoom(1 / 1.5); br.onclick = () => { v = { x: x0, y: y0, w: W0, h: H0 }; set(); };
+  const home = document.createComment('map'); wrap.before(home);
+  bf.onclick = () => { const on = wrap.classList.toggle('full'); (on ? document.body : home.parentNode).appendChild(wrap); if (!on) home.after(wrap); bf.textContent = on ? '닫기' : '크게'; document.body.style.overflow = on ? 'hidden' : ''; };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && wrap.classList.contains('full')) bf.onclick(); });
+  svg.addEventListener('wheel', e => { e.preventDefault(); const [cx, cy] = pt(e); zoom(e.deltaY < 0 ? 1.25 : 0.8, cx, cy); }, { passive: false });
+  const P = new Map(); let last = null, dist = null;
+  svg.addEventListener('pointerdown', e => { svg.setPointerCapture(e.pointerId); P.set(e.pointerId, e); wrap.classList.add('drag'); last = e; });
+  svg.addEventListener('pointermove', e => { if (!P.has(e.pointerId)) return; P.set(e.pointerId, e);
+    if (P.size === 2) { const [a, b] = [...P.values()], d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); if (dist) { const m = { clientX: (a.clientX + b.clientX) / 2, clientY: (a.clientY + b.clientY) / 2 }; const [cx, cy] = pt(m); zoom(d / dist, cx, cy); } dist = d; return; }
+    const s = pt(e)[2]; v.x -= (e.clientX - last.clientX) * s; v.y -= (e.clientY - last.clientY) * s; clamp(); set(); last = e; });
+  const up = e => { P.delete(e.pointerId); if (P.size < 2) dist = null; if (!P.size) wrap.classList.remove('drag'); else last = [...P.values()][0]; };
+  svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+})();
 if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
 </script>
