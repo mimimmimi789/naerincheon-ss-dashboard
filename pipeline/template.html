@@ -1110,10 +1110,15 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{background:var(--bg);color:var(--ink-3);borde
 .f2.c4 .f2b span{color:var(--ink)}
 
 /* 예측 원인 원그래프 */
-.shpie svg{width:100%;max-width:560px;display:block;margin:0 auto;overflow:visible}
-.shp-t{font-size:12.5px;font-weight:600;fill:var(--ink)}.shp-p{font-variant-numeric:tabular-nums}
-.shp-s{font-size:11px;font-variant-numeric:tabular-nums}
-.shp-v{font-size:24px;font-weight:600;fill:var(--ink);font-variant-numeric:tabular-nums}.shp-u{font-size:11px;fill:var(--ink-3)}
+.shpie{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:center}
+.shpie svg{width:100%;max-width:480px;margin:0 auto;display:block;overflow:visible}
+.shp-t{font-size:11.5px;font-weight:600;fill:var(--ink)}
+.shp-v{font-size:22px;font-weight:600;fill:var(--ink);font-variant-numeric:tabular-nums}.shp-u{font-size:10.5px;fill:var(--ink-3)}
+.shp-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.shp-l li{display:grid;grid-template-columns:12px minmax(0,1fr) 38px 62px;align-items:center;gap:7px;font-size:12.5px}
+.shp-l i{width:12px;height:12px;border-radius:3px}.shp-l b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.shp-l em{font-style:normal;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:1100px){.shpie{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -2163,28 +2168,27 @@ function renderExplain(ref, FCS, e) {
     const tot = S.base + vals.reduce((s, [, v]) => s + v, 0), mx = Math.max(.3, ...vals.map(([, v]) => Math.abs(v)));
     $('shV').innerHTML = fmt(Math.exp(tot)) + '<small>mg/L</small>';
     vals.sort((p, q) => Math.abs(q[1]) - Math.abs(p[1]));
-    // 원그래프: 각 요인의 영향 크기(|로그 배수|) 비율, 조각마다 옆에 이름·%·배수를 선으로 바로 표시
+    // 원그래프: 각 요인의 영향 크기(|로그 배수|) 비율. 조각 옆에는 이름만, %·배수는 옆 목록
     const SUM = vals.reduce((t, [, v]) => t + Math.abs(v), 0) || 1;
-    const UPC = ['#b4561c', '#d0742f', '#e3955a', '#efb688'], DNC = ['#1d4fa8', '#2f6fe0', '#5b8fe9', '#88b0f0', '#a9c5f3'];
-    let nu = 0, nd = 0, cum = 0; const sl = [], rest = [];
-    vals.forEach(([g, v], n) => { const pc = Math.abs(v) / SUM * 100; if (n < 5 && pc >= 4) sl.push([g, v, pc, v >= 0 ? UPC[Math.min(nu++, 3)] : DNC[Math.min(nd++, 4)]]); else rest.push([g, v, pc]); });
-    const rp = rest.reduce((t, r) => t + r[2], 0); if (rp >= 0.5) sl.push(['기타', 0, rp, '#c9d1dc']);
-    const CX = 230, CY = 118, R = 60, SW = 28, VW = 460, VH = 236, lab = [];
+    const UPC = ['#b4561c', '#d0742f', '#e3955a', '#efb688', '#f6d3b5'], DNC = ['#1d4fa8', '#2f6fe0', '#5b8fe9', '#88b0f0', '#b6cef6'];
+    let nu = 0, nd = 0, cum = 0, etc = 0; const sl = [], lab = [];
+    vals.forEach(([g, v]) => { const pc = Math.abs(v) / SUM * 100; if (pc < 3) { etc += pc; return; } sl.push([g, v, pc, v >= 0 ? UPC[Math.min(nu++, 4)] : DNC[Math.min(nd++, 4)]]); });
+    if (etc >= 0.5) sl.push(['기타 (작은 요인)', 0, etc, '#c9d1dc']);
+    const CX = 200, CY = 110, R = 58, SW = 28, VW = 400, VH = 220;
     const arcs = sl.map(([g, v, pc, c]) => {
       const a = `<circle r="${R}" cx="${CX}" cy="${CY}" fill="none" stroke="${c}" stroke-width="${SW}" pathLength="100" stroke-dasharray="${Math.max(pc - .4, .1).toFixed(2)} ${(100 - Math.max(pc - .4, .1)).toFixed(2)}" stroke-dashoffset="${(-cum).toFixed(2)}" transform="rotate(-90 ${CX} ${CY})"><title>${g} ${pc.toFixed(0)}%</title></circle>`;
       const ang = (cum + pc / 2) / 100 * 2 * Math.PI - Math.PI / 2; cum += pc;
-      lab.push({ g, v, pc, c, ang, right: Math.cos(ang) >= 0, x0: CX + (R + SW / 2 - 3) * Math.cos(ang), y0: CY + (R + SW / 2 - 3) * Math.sin(ang), y: CY + (R + SW / 2 + 14) * Math.sin(ang) });
+      lab.push({ g: g.replace(/ \(.*\)/, ''), right: Math.cos(ang) >= 0, x0: CX + (R + SW / 2 - 3) * Math.cos(ang), y0: CY + (R + SW / 2 - 3) * Math.sin(ang), y: CY + (R + SW / 2 + 12) * Math.sin(ang) });
       return a; }).join('');
     [true, false].forEach(side => { const L = lab.filter(l => l.right === side).sort((p, q) => p.y - q.y);
-      for (let k = 1; k < L.length; k++) L[k].y = Math.max(L[k].y, L[k - 1].y + 34);
-      const over = L.length ? L[L.length - 1].y - (VH - 18) : 0; if (over > 0) L.forEach(l => l.y -= over);
-      for (let k = L.length - 2; k >= 0; k--) L[k].y = Math.min(L[k].y, L[k + 1].y - 34); L.forEach(l => l.y = Math.max(16, l.y)); });
-    const lines = lab.map(l => { const xe = l.right ? CX + R + SW / 2 + 28 : CX - R - SW / 2 - 28, xt = l.right ? VW - 4 : 4, an = l.right ? 'end' : 'start';
-      const sub = l.v === 0 ? rest.map(r => r[0].replace(/ \(.*\)/, '')).slice(0, 2).join('·') + (rest.length > 2 ? ' 등' : '') : (l.v > 0 ? '▲ 올림 ×' : '▼ 내림 ×') + Math.exp(l.v).toFixed(2);
-      return `<polyline points="${l.x0.toFixed(1)},${l.y0.toFixed(1)} ${xe.toFixed(1)},${l.y.toFixed(1)} ${xt},${l.y.toFixed(1)}" fill="none" stroke="var(--ink-3)" stroke-width=".8"/><circle cx="${l.x0.toFixed(1)}" cy="${l.y0.toFixed(1)}" r="2.2" fill="var(--ink)"/>`
-        + `<text x="${xt}" y="${(l.y - 5).toFixed(1)}" text-anchor="${an}" class="shp-t"><tspan fill="${l.c === '#c9d1dc' ? 'var(--ink-3)' : l.c}">■</tspan> ${l.g.replace(/ \(.*\)/, '')} <tspan class="shp-p">${l.pc.toFixed(0)}%</tspan></text>`
-        + `<text x="${xt}" y="${(l.y + 12).toFixed(1)}" text-anchor="${an}" class="shp-s" fill="var(${l.v > 0 ? '--warn' : l.v < 0 ? '--note' : '--ink-3'})">${sub}</text>`; }).join('');
-    $('shBars').innerHTML = `<div class="shpie"><svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="요인별 영향 비율 원그래프">${arcs}${lines}<text x="${CX}" y="${CY + 2}" text-anchor="middle" class="shp-v">${fmt(Math.exp(tot))}</text><text x="${CX}" y="${CY + 18}" text-anchor="middle" class="shp-u">mg/L</text></svg></div>`;
+      for (let k = 1; k < L.length; k++) L[k].y = Math.max(L[k].y, L[k - 1].y + 19);
+      const over = L.length ? L[L.length - 1].y - (VH - 8) : 0; if (over > 0) L.forEach(l => l.y -= over);
+      for (let k = L.length - 2; k >= 0; k--) L[k].y = Math.min(L[k].y, L[k + 1].y - 19); L.forEach(l => l.y = Math.max(12, l.y)); });
+    const lines = lab.map(l => { const xe = l.right ? CX + R + SW / 2 + 22 : CX - R - SW / 2 - 22, xt = l.right ? xe + 6 : xe - 6;
+      return `<polyline points="${l.x0.toFixed(1)},${l.y0.toFixed(1)} ${xe.toFixed(1)},${l.y.toFixed(1)} ${(l.right ? xe + 4 : xe - 4).toFixed(1)},${l.y.toFixed(1)}" fill="none" stroke="var(--ink-3)" stroke-width=".8"/><circle cx="${l.x0.toFixed(1)}" cy="${l.y0.toFixed(1)}" r="2" fill="var(--ink)"/>`
+        + `<text x="${xt.toFixed(1)}" y="${(l.y + 4).toFixed(1)}" text-anchor="${l.right ? 'start' : 'end'}" class="shp-t">${l.g}</text>`; }).join('');
+    $('shBars').innerHTML = `<div class="shpie"><svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="요인별 영향 비율 원그래프">${arcs}${lines}<text x="${CX}" y="${CY + 2}" text-anchor="middle" class="shp-v">${fmt(Math.exp(tot))}</text><text x="${CX}" y="${CY + 18}" text-anchor="middle" class="shp-u">mg/L</text></svg>`
+      + `<ul class="shp-l">${sl.map(([g, v, pc, c]) => `<li><i style="background:${c}"></i><span>${g}</span><b>${pc.toFixed(0)}%</b><em style="color:var(${v > 0 ? '--warn' : v < 0 ? '--note' : '--ink-3'})">${v === 0 ? '' : (v > 0 ? '▲ ' : '▼ ') + '×' + Math.exp(v).toFixed(2)}</em></li>`).join('')}</ul></div>`;
     const up = vals.filter(([, v]) => v >= 0.1).map(([g]) => g), dn = vals.filter(([, v]) => v <= -0.1).map(([g]) => g);
     // [올림: 이어쓰기, 끝맺기], [내림: 이어쓰기, 끝맺기]
     const WHY = { '유량': [['물이 평소보다 많고', '물이 평소보다 많아서'], ['물이 평소보다 적고', '물이 평소보다 적어서']],
