@@ -688,6 +688,38 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 .wxd .ic{font-size:inherit;gap:10px;color:var(--ink-2)}
 .wxd .ic span{display:flex;flex-direction:column;align-items:center;gap:2px}
 .wxd .ic svg{width:26px;height:26px}
+
+/* ── 하천 단면 애니메이션 (2026-11-09): 수위 = 물 높이, SS = 물색·알갱이 ── */
+:root{--soil:#d8c9ab;--soil-l:#b49e76;--grass:#9fbf8a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--soil:#3d3529;--soil-l:#6b5c45;--grass:#3f5a3a}}
+:root[data-theme="dark"]{--soil:#3d3529;--soil-l:#6b5c45;--grass:#3f5a3a}
+.rv{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:16px;align-items:center}
+.rv svg{width:100%;height:auto;display:block}
+#rvSvg .rv-wg{transition:transform .45s cubic-bezier(.3,.7,.3,1)}
+#rvSvg .rv-wr{transition:fill .45s ease}
+#rvSvg .rv-p circle{transition:opacity .45s ease}
+#rvSvg .rv-wave{animation:rvWave 6s linear infinite}
+#rvSvg .rv-p{animation:rvDrift 7s ease-in-out infinite alternate}
+@keyframes rvWave{from{transform:translateX(0)}to{transform:translateX(-80px)}}
+@keyframes rvDrift{from{transform:translate(-6px,0)}to{transform:translate(6px,3px)}}
+@media (prefers-reduced-motion:reduce){#rvSvg .rv-wave,#rvSvg .rv-p{animation:none}}
+#rvSvg text{font:12px var(--f-body);fill:var(--ink-2)}
+@media (max-width:820px){#rvSvg text{font-size:22px}}
+.rv-info{display:flex;flex-direction:column;gap:8px}
+.rv-d{font-size:15px;font-weight:600}
+.rv-row{display:grid;grid-template-columns:36px auto;column-gap:8px;align-items:baseline}
+.rv-row .lb{font-size:12px;color:var(--ink-3)}
+.rv-row .v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.rv-row .v small{font-size:12px;font-weight:400;color:var(--ink-3);margin-left:3px}
+.rv-row .s{grid-column:2;font-size:12px;color:var(--ink-2)}
+#rvLv .stg{font-size:14px}
+.rv-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rv-ctl select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:7px 8px;background:var(--panel);color:var(--ink);min-height:38px}
+.rv-track{position:relative;flex:1 1 240px;min-width:200px;height:44px}
+.rv-track svg{position:absolute;inset:0 0 14px 0;width:100%;height:30px}
+.rv-track input{position:absolute;left:0;right:0;bottom:0;width:100%;margin:0;accent-color:var(--est)}
+.rv-grad{width:44px;height:9px;border-radius:3px;background:linear-gradient(90deg,#4f93d8,#79a59a,#a88a55,#7b5a33)}
+@media (max-width:820px){.rv{grid-template-columns:minmax(0,1fr)}.rv-info{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}.rv-d,#rvLv{grid-column:1/-1}}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -795,6 +827,25 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <div class="olkey" aria-label="그래프 읽는 법"><span><i class="sw-dot"></i><b>검은 점</b> = 실제 측정값</span><span><i class="sw-line"></i><b>파란 선</b> = 과거 날짜의 사후추정값 (실측 아님)</span><span><i class="sw-sq"></i><b>오른쪽 점과 막대</b> = 미래예측값</span></div>
     <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-sq"></i>1·3·5일 미래예측 (색 = 참고 단계)</span><span><i class="sw-fbar"></i>예측 80% 범위</span><span><i class="sw-dash"></i>추정→예측 연결</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-vl"></i>기준일</span><span><i class="sw-zn n"></i>관심 구간 (상위 10%)</span><span><i class="sw-zn w"></i>대응 검토 구간 (25 이상)</span></div>
     <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
+  </section>
+  <section class="card" id="river" aria-label="하천 단면 애니메이션">
+    <h2>하천 단면 <span class="sub2">원대교 수위와 SS</span><span class="tag">물색 = SS 추정값 (탁도 아님)</span></h2>
+    <div class="rv">
+      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
+      <div class="rv-info" aria-live="polite">
+        <div class="rv-d" id="rvD">–</div>
+        <div class="rv-row"><span class="lb">수위</span><span class="v" id="rvH">–</span><span class="s" id="rvHs">–</span></div>
+        <div class="rv-row"><span class="lb">SS</span><span class="v" id="rvS">–</span><span class="s" id="rvSs">–</span></div>
+        <div id="rvLv"></div>
+      </div>
+    </div>
+    <div class="rv-ctl">
+      <button class="btn" type="button" id="rvPlay" aria-pressed="false">재생</button>
+      <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
+      <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
+    </div>
+    <div class="legend rv-key"><span><i class="rv-grad"></i>물색: 맑음 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
+    <p class="hint">수위는 원대교 일평균(WAMIS), 물색과 알갱이 수는 그날 SS 사후추정(로그 눈금, 실측일은 실측값). 탁도는 자료에 없어 쓰지 않음. 단면 모양은 그림이며 실제 측량 단면이 아님. 아래 띠의 막대 높이 = 수위, 색 = SS.</p>
   </section>
   <section class="card" id="opsum" aria-label="운영 요약">
     <h2>운영 요약 <span class="tag">연구용 참고</span><span class="tag" id="opRef">–</span></h2>
@@ -1470,6 +1521,7 @@ function render() {
   }
   renderGap(ref, lastObs);
   renderOutlook(ref, FCS, lastObs);
+  if (RV) RV.set(ref);
 
   // SS chart
   const shapes = [
@@ -1561,6 +1613,84 @@ function render() {
 const lvOf = v => v == null ? null : v >= 25 ? 2 : v >= D.meta.p90 ? 1 : 0;
 const LVK = [['ok', '평상'], ['note', '관심'], ['warn', '대응 검토']];
 const lvPill = v => { const l = lvOf(v); return l == null ? '' : '<span class="lvp st-' + LVK[l][0] + '"><i></i>' + LVK[l][1] + '</span>'; };
+// ── 하천 단면 애니메이션: 원대교 일평균 수위(D.h) = 물 높이, 그날 SS(실측 있으면 실측, 없으면 사후추정) = 물색·알갱이 수 ──
+const RV = (() => {
+  const svg = $('rvSvg'); if (!svg || !D.h) return null;
+  const NS = 'http://www.w3.org/2000/svg', W = 640, TOP = 58, BED = 228, H0 = 1.6, H1 = 7.0;
+  const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
+  const yOf = h => BED - (Math.min(H1, Math.max(H0, h)) - H0) / (H1 - H0) * (BED - TOP);
+  // 바닥 모양(그림): 양쪽 둔치, 가운데 넓은 물길
+  const bed = x => { const u = (x - 330) / 250; if (Math.abs(u) >= 1) return TOP; return TOP + (BED + 6 - TOP) * Math.pow(1 - u * u, .38); };
+  let d = 'M0 ' + TOP; for (let x = 0; x <= W; x += 8) d += ' L' + x + ' ' + bed(x).toFixed(1); d += ' L' + W + ' ' + TOP;
+  const defs = el('defs', {}); const cp = el('clipPath', { id: 'rvClip' }, defs); el('path', { d: d + ' Z' }, cp);
+  // 수위 눈금
+  const wc = el('g', { 'clip-path': 'url(#rvClip)' });
+  const wg = el('g', { class: 'rv-wg' }, wc);
+  const wr = el('rect', { class: 'rv-wr', x: 0, y: 0, width: W, height: BED + 20 }, wg);
+  let wv = 'M-80 0'; for (let x = -80; x <= W + 160; x += 40) wv += ' q10 -3 20 0 t20 0';
+  const wave = el('path', { class: 'rv-wave', d: wv + ' V5 H-80 Z', fill: 'rgba(255,255,255,.22)' }, wg);
+  const pg = el('g', { class: 'rv-p' }, wg);
+  // 알갱이: SS가 커질수록 더 많이 보임(로그 눈금 문턱)
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const P = []; for (let k = 0; k < 90; k++) P.push({ c: el('circle', { cx: (rnd() * W).toFixed(1), cy: (8 + rnd() * 170).toFixed(1), r: (1 + rnd() * 1.6).toFixed(1), fill: '#5b4325', opacity: 0 }, pg), t: Math.pow(10, rnd() * Math.log10(60)) });
+  el('path', { d, fill: 'none', stroke: 'var(--soil-l)', 'stroke-width': 1.5 });
+  el('path', { d: d + ' L' + W + ' 250 L0 250 Z', fill: 'var(--soil)', stroke: 'none' }).parentNode.insertBefore(svg.lastChild, wc);
+  el('path', { d: 'M0 ' + TOP + ' H78 M582 ' + TOP + ' H' + W, stroke: 'var(--grass)', 'stroke-width': 4, 'stroke-linecap': 'round' });
+  for (let h = 2; h <= 6; h++) { const y = yOf(h); el('line', { x1: 0, x2: 18, y1: y, y2: y, stroke: 'var(--ink-3)', 'stroke-width': 1 }); el('text', { x: 22, y: y + 4 }).textContent = h + ' m'; }
+  const nrm = el('line', { x1: 0, x2: W, stroke: 'var(--ink-3)', 'stroke-width': 1.2, 'stroke-dasharray': '5 4' });
+  const mx = el('line', { x1: 0, x2: W, stroke: 'var(--ly)', 'stroke-width': 1.2, 'stroke-dasharray': '5 4' });
+  const nrmT = el('text', { x: W - 6, 'text-anchor': 'end' }), mxT = el('text', { x: W - 6, 'text-anchor': 'end' });
+  // 물색: 로그 SS 1 → 60 mg/L 를 맑은 파랑 → 흙색으로
+  const ST = [[0, [79, 147, 216]], [.45, [121, 165, 154]], [.75, [168, 138, 85]], [1, [123, 90, 51]]];
+  const col = ss => { const t = Math.min(1, Math.max(0, Math.log10(Math.max(ss, 1)) / Math.log10(60))); let k = 1; while (k < ST.length - 1 && t > ST[k][0]) k++;
+    const [a, A] = ST[k - 1], [b, B] = ST[k], f = (t - a) / (b - a); return 'rgb(' + A.map((v, j) => Math.round(v + (B[j] - v) * f)).join(',') + ')'; };
+  const strip = $('rvStrip'), pos = $('rvPos'), span = $('rvSpan'), btn = $('rvPlay');
+  const obsAt = new Map(obs.filter(o => o.v != null).map(o => [o.i, o.v]));
+  const ssAt = i => obsAt.has(i) ? obsAt.get(i) : D.est[i];
+  const hAt = i => { for (let j = i; j >= Math.max(0, i - 3); j--) if (D.h[j] != null) return [D.h[j], j === i]; return [null, false]; };
+  let ref = lastI, a = lastI - 29, timer = null;
+  const ymd = s => (+s.slice(5, 7)) + '월 ' + (+s.slice(8, 10)) + '일';
+  const show = i => {
+    const [h, ok] = hAt(i), ss = ssAt(i), y = h == null ? BED : yOf(h);
+    wg.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
+    if (ss != null) { wr.style.fill = col(ss); P.forEach(p => p.c.setAttribute('opacity', ss >= p.t ? .55 : 0)); }
+    const s0 = iso(i);
+    $('rvD').textContent = s0.slice(0, 4) + '년 ' + ymd(s0) + (i === lastI ? ' (최신 자료)' : '');
+    $('rvH').innerHTML = h == null ? '–' : fmt(h, 2) + '<small>m</small>';
+    const n = +nrm.dataset.v;
+    $('rvHs').textContent = h == null ? '수위 결측' : (ok ? '' : '전날 값 · ') + '평소보다 ' + (h - n >= 0 ? '+' : '') + fmt(h - n, 2) + ' m' + (D.hx && D.hx[i] != null && ok ? ' · 최고 ' + fmt(D.hx[i], 2) : '');
+    $('rvS').innerHTML = ss == null ? '–' : fmt(ss) + '<small>mg/L</small>';
+    $('rvSs').textContent = obsAt.has(i) ? '실측' : '사후추정 (실측 아님)';
+    const L = ss == null ? null : ss >= 25 ? ['warn', '25 이상'] : ss >= (D.meta.p90 || 10.2) ? ['note', '관심 구간'] : ['ok', '평상'];
+    $('rvLv').innerHTML = L ? '<span class="stg st-' + L[0] + '"><i></i>' + L[1] + '</span>' : '';
+    pos.value = i - a; const ph = strip.querySelector('.ph'); if (ph) ph.setAttribute('x', i - a);
+  };
+  const build = () => {
+    const n = +span.value; a = Math.max(firstI, ref - n + 1);
+    const hs = []; for (let i = Math.max(0, ref - 364); i <= ref; i++) if (D.h[i] != null) hs.push(D.h[i]);
+    hs.sort((x, y) => x - y); const med = hs.length ? hs[hs.length >> 1] : 2.5, top = hs.length ? hs[hs.length - 1] : null;
+    nrm.dataset.v = med; [[nrm, nrmT, med, '평소 '], [mx, mxT, top, '1년 최고 ']].forEach(([l, t, v, lb]) => { const on = v != null; l.style.display = t.style.display = on ? '' : 'none'; if (on) { const y = yOf(v); l.setAttribute('y1', y); l.setAttribute('y2', y); t.setAttribute('y', y - 4); t.textContent = lb + fmt(v, 2) + ' m'; } });
+    const m = ref - a + 1; strip.setAttribute('viewBox', '0 0 ' + m + ' 30'); let g = '';
+    const hv = []; for (let i = a; i <= ref; i++) if (D.h[i] != null) hv.push(D.h[i]);
+    const lo = Math.min(...hv, 99), hi = Math.max(...hv, lo + .5);   // 띠 막대 높이는 보이는 기간의 최저~최고 수위로 맞춤
+    for (let i = a; i <= ref; i++) { const h = D.h[i], ss = ssAt(i), bh = h == null ? 2 : 5 + (h - lo) / (hi - lo) * 25; g += '<rect x="' + (i - a) + '" y="' + (30 - bh).toFixed(1) + '" width="1.02" height="' + bh.toFixed(1) + '" fill="' + (ss == null ? 'var(--line)' : col(ss)) + '"/>'; }
+    strip.innerHTML = g + '<rect class="ph" x="' + (m - 1) + '" y="0" width="1" height="30" fill="var(--ink)" opacity=".22"/>';
+    pos.max = m - 1;
+  };
+  const stop = () => { if (timer) clearInterval(timer); timer = null; btn.textContent = '재생'; btn.setAttribute('aria-pressed', 'false'); };
+  const play = () => {
+    stop(); const m = ref - a + 1, dt = m <= 30 ? 260 : m <= 90 ? 110 : 45;
+    wg.style.transitionDuration = wr.style.transitionDuration = (dt * 1.6) + 'ms';
+    let i = a; show(i); btn.textContent = '정지'; btn.setAttribute('aria-pressed', 'true');
+    timer = setInterval(() => { i++; if (i > ref) { stop(); wg.style.transitionDuration = wr.style.transitionDuration = ''; return; } show(i); }, dt);
+  };
+  btn.addEventListener('click', () => timer ? stop() : play());
+  span.addEventListener('change', () => { stop(); build(); show(ref); });
+  pos.addEventListener('input', () => { stop(); show(a + +pos.value); });
+  // 처음 화면에 보일 때 최근 기간을 한 번 재생
+  if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !$('river').closest('.tab').hidden) { o.disconnect(); play(); } }, { threshold: .4 }).observe($('river'));
+  return { set(r) { stop(); ref = r; build(); show(r); } };
+})();
 function renderOutlook(ref, FCS, lastObs) {
   const p90 = D.meta.p90, a = ref - 13, H = 5, L10 = Math.log10;
   const est = series(a, ref, D.est), lo = series(a, ref, D.lo), hi = series(a, ref, D.hi);
