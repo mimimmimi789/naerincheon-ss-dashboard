@@ -1120,6 +1120,17 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{background:var(--bg);color:var(--ink-3);borde
 .shp-l i{width:12px;height:12px;border-radius:3px}.shp-l b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
 .shp-l em{font-style:normal;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
 @media (max-width:1100px){.shpie{grid-template-columns:minmax(0,1fr)}}
+
+/* ── unslop 3단계: 남은 AI 티 정리 (CSS만) ──
+   색 띠·장식 물결·질문마다 붙는 Q 배지 제거, 파란 채움 버튼은 화면마다 하나만 */
+.headline{border-left:1px solid var(--line)}
+.headline::before{display:none}
+.ab-wave{display:none}
+.f2i{background:var(--bg);color:var(--ink-2)}
+.f2.c3 .f2i{color:var(--indigo)}
+.faq-q .qn{display:none}
+.btn.c-latest,#faqAll{background:var(--panel);color:var(--indigo);border:1px solid var(--line);box-shadow:none}
+.btn.c-latest:hover,#faqAll:hover{background:rgba(47,111,224,.06);filter:none}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
