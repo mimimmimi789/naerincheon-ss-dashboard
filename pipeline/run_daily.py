@@ -177,6 +177,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
     o = r[r.SS.notna()]
     p90 = float(o[o.index < '2024-01-01'].SS.quantile(.9))
     D = {'d0': str(r.index.min().date()), 'p': f(r.P0, 1), 'est': f(r.est), 'lo': f(r.lo), 'hi': f(r.hi), 'q': f(r.q_corr, 1),
+         'h': f(df.Havg.reindex(r.index)), 'hx': f(df.Hmax.reindex(r.index)),   # 원대교 일평균·일최고 수위(m), 하천 단면 애니메이션용
          'wf': f(wf), 'qfix': [i for i, x in enumerate(r.q_fix) if x == 1], 'part': [i for i, x in enumerate(r.partial) if x == 1],
          'obs': [[str(a.date()), float(b), None if pd.isna(c) else round(float(c), 1)] for a, b, c in zip(o.index, o.SS, o.Q_meas)],
          'meta': {'p90': round(p90, 1), 'n_est': int(r.SS.isna().sum()), 'updated': updated, 'sources': status,
