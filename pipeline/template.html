@@ -884,6 +884,34 @@ body.nohelp .refnote:not(.flash){display:none}
 
 .ci-kind{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2);margin-right:8px;white-space:nowrap}
 
+/* 하이브리드 모식도 */
+.hd-wrap{margin:4px 0 6px}
+.hd{width:100%;height:auto;display:block}
+.hd-band{fill:var(--bg);stroke:var(--line)}
+.hd .hd-h{font-size:13px;font-weight:600;fill:var(--ink-2)}
+.hd text{font-family:inherit}
+.hd-n rect{stroke-width:1.6}
+.hd-n .hd-t{font-size:15px;font-weight:600;text-anchor:middle;fill:var(--ink)}
+.hd-n .hd-s{font-size:11.5px;text-anchor:middle;fill:var(--ink-2)}
+.hd-n.in rect{fill:var(--panel);stroke:var(--line)}
+.hd-n.tree rect{fill:rgba(47,111,224,.13);stroke:#2f6fe0}
+.hd-n.lin rect{fill:rgba(26,163,184,.14);stroke:#1aa3b8}
+.hd-n.chain rect{fill:rgba(240,138,60,.15);stroke:#f08a3c}
+.hd-n.fix rect{fill:rgba(23,103,63,.12);stroke:var(--ok)}
+.hd-n.calm rect{fill:var(--panel);stroke:var(--line);stroke-dasharray:4 3}
+.hd-n.out rect{fill:#2f6fe0;stroke:#2f6fe0}.hd-n.out text{fill:#fff}
+.hd-m circle{fill:var(--panel);stroke:var(--ink-2);stroke-width:1.6}.hd-m text{font-size:13px;font-weight:600;text-anchor:middle;fill:var(--ink)}
+.hd-q path{fill:var(--panel);stroke:var(--ink-3);stroke-width:1.4}.hd-q text{font-size:11.5px;text-anchor:middle;fill:var(--ink)}
+.hd-a{fill:none;stroke:var(--ink-3);stroke-width:1.6}.hd-a.dim{stroke-dasharray:4 4;opacity:.7}
+.hd-l{font-size:11px;fill:var(--ink-3)}
+.hd-c{font-size:11.5px;fill:var(--ink-3);text-anchor:middle}
+.ab .in .hd-a{stroke-dasharray:6 5;animation:hdFlow 1.2s linear infinite}.ab .in .hd-a.dim{animation:none}
+@keyframes hdFlow{to{stroke-dashoffset:-22}}
+.hd-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink-2);margin-top:6px}
+.hd-key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px;border:1.5px solid}
+.hd-key .k-tree{background:rgba(47,111,224,.13);border-color:#2f6fe0}.hd-key .k-lin{background:rgba(26,163,184,.14);border-color:#1aa3b8}.hd-key .k-chain{background:rgba(240,138,60,.15);border-color:#f08a3c}.hd-key .k-fix{background:rgba(23,103,63,.12);border-color:var(--ok)}
+@media (max-width:820px){.hd-wrap{overflow-x:auto}.hd{min-width:720px}}
+
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -1439,22 +1467,12 @@ body.nohelp .refnote:not(.flash){display:none}
     <p class="as-k">07 · 하이브리드 모델</p>
     <h2 class="as-h">성격 다른 모델 3개 + 상황별 보정</h2>
     <p class="as-lead">평소 날과 큰 비 날을 한 모델로 맞히기 어려움 → 강점이 다른 모델 조합</p>
+    <figure class="hd-wrap"><svg class="hd" viewBox="0 0 980 496" role="img" aria-label="하이브리드 구조: 입력이 나무 모델과 선형 모델로 갈라졌다가 반반 합쳐지고, 비·수위 상승일이면 홍수일 보정, 아니면 평상시 보정을 거쳐 일별 SS 추정이 됨. 예측은 예측 모델과 강우→유량→SS 연결 모델을 반반 섞고, 1일 예측이 6 mg/L 이상이면 고농도 모드."><defs><marker id="hdA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs><rect class="hd-band" x="8" y="8" width="964" height="232" rx="16"/><rect class="hd-band" x="8" y="256" width="964" height="232" rx="16"/><text class="hd-h" x="24" y="32">일별 SS 추정 · 오늘까지</text><text class="hd-h" x="24" y="280">1·3·5일 예측 · 앞으로</text><path class="hd-a " d="M150 124 C175 124 175 82 200 82" marker-end="url(#hdA)"/><path class="hd-a " d="M150 124 C175 124 175 168 200 168" marker-end="url(#hdA)"/><path class="hd-a " d="M370 82 C400 82 400 124 418 124" marker-end="url(#hdA)"/><path class="hd-a " d="M370 168 C400 168 400 124 418 124" marker-end="url(#hdA)"/><path class="hd-a " d="M472 124 L500 124" marker-end="url(#hdA)"/><path class="hd-a " d="M604 124 C625 124 625 78 650 78" marker-end="url(#hdA)"/><path class="hd-a dim" d="M604 124 C625 124 625 170 650 170" marker-end="url(#hdA)"/><text class="hd-l" x="612" y="92">예</text><text class="hd-l" x="596" y="176">아니오</text><path class="hd-a " d="M810 78 C832 78 832 124 846 124" marker-end="url(#hdA)"/><path class="hd-a dim" d="M810 170 C832 170 832 124 846 124" marker-end="url(#hdA)"/><g class="hd-n in rv" style="--d:0s"><rect x="24" y="84" width="126" height="80" rx="12"/><text class="hd-t" x="87.0" y="118.0">매일 관측</text><text class="hd-s" x="87.0" y="138.0">강우·수위·유량·기온</text></g><g class="hd-n tree rv" style="--d:0.15s"><rect x="200" y="52" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="76.0">나무 모델</text><text class="hd-s" x="285.0" y="96.0">XGBoost · 복잡한 조합</text></g><g class="hd-n lin rv" style="--d:0.25s"><rect x="200" y="138" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="162.0">선형 모델</text><text class="hd-s" x="285.0" y="182.0">Ridge · 큰 유량 외삽</text></g><g class="hd-m rv" style="--d:0.4s"><circle cx="445" cy="124" r="27"/><text x="445" y="129">½ + ½</text></g><g class="hd-q rv" style="--d:0.5s"><path d="M552 84 L604 124 L552 164 L500 124 Z"/><text x="552" y="121">비·수위</text><text x="552" y="138">상승일?</text></g><g class="hd-n fix rv" style="--d:0.6s"><rect x="650" y="50" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="72.0">홍수일 보정</text><text class="hd-s" x="730.0" y="92.0">첨두유량만큼 상향</text></g><g class="hd-n calm rv" style="--d:0.65s"><rect x="650" y="142" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="164.0">평상시 보정</text><text class="hd-s" x="730.0" y="184.0">과대추정 조금 낮춤</text></g><g class="hd-n out rv" style="--d:0.75s"><rect x="846" y="94" width="116" height="60" rx="12"/><text class="hd-t" x="904.0" y="118.0">일별 SS</text><text class="hd-s" x="904.0" y="138.0">추정</text></g><text class="hd-c" x="552" y="186">전체의 약 25%가 '예'</text><path class="hd-a " d="M150 372 C175 372 175 330 200 330" marker-end="url(#hdA)"/><path class="hd-a " d="M150 372 C175 372 175 416 200 416" marker-end="url(#hdA)"/><path class="hd-a " d="M370 330 C400 330 400 372 418 372" marker-end="url(#hdA)"/><path class="hd-a " d="M370 416 C400 416 400 372 418 372" marker-end="url(#hdA)"/><path class="hd-a " d="M472 372 L500 372" marker-end="url(#hdA)"/><path class="hd-a " d="M604 372 C625 372 625 326 650 326" marker-end="url(#hdA)"/><path class="hd-a dim" d="M604 372 C625 372 625 418 650 418" marker-end="url(#hdA)"/><text class="hd-l" x="612" y="340">예</text><text class="hd-l" x="596" y="424">아니오</text><path class="hd-a " d="M810 326 C832 326 832 372 846 372" marker-end="url(#hdA)"/><path class="hd-a dim" d="M810 418 C832 418 832 372 846 372" marker-end="url(#hdA)"/><g class="hd-n in rv" style="--d:0.1s"><rect x="24" y="326" width="126" height="92" rx="12"/><text class="hd-t" x="87.0" y="366.0">기준일 관측</text><text class="hd-s" x="87.0" y="386.0">+ 기상청 예보 강우</text></g><g class="hd-n tree rv" style="--d:0.2s"><rect x="200" y="300" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="324.0">예측 모델</text><text class="hd-s" x="285.0" y="344.0">나무 + 선형 혼합</text></g><g class="hd-n chain rv" style="--d:0.3s"><rect x="200" y="386" width="170" height="60" rx="12"/><text class="hd-t" x="285.0" y="410.0">연결 모델</text><text class="hd-s" x="285.0" y="430.0">강우 → 유량 → SS</text></g><g class="hd-m rv" style="--d:0.45s"><circle cx="445" cy="372" r="27"/><text x="445" y="377">½ + ½</text></g><g class="hd-q rv" style="--d:0.55s"><path d="M552 332 L604 372 L552 412 L500 372 Z"/><text x="552" y="369">1일 예측</text><text x="552" y="386">6 mg/L↑?</text></g><g class="hd-n fix rv" style="--d:0.65s"><rect x="650" y="298" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="320.0">고농도 모드</text><text class="hd-s" x="730.0" y="340.0">1일 예측만 상향</text></g><g class="hd-n calm rv" style="--d:0.7s"><rect x="650" y="390" width="160" height="56" rx="12"/><text class="hd-t" x="730.0" y="423.0">그대로</text></g><g class="hd-n out rv" style="--d:0.8s"><rect x="846" y="342" width="116" height="60" rx="12"/><text class="hd-t" x="904.0" y="366.0">1·3·5일</text><text class="hd-s" x="904.0" y="386.0">예측</text></g><text class="hd-c" x="445" y="470">연결 모델 혼합: 1·3일 (5일은 예측 모델만)</text></svg>
+    <figcaption class="hd-key"><span><i class="k-tree"></i>나무 모델 (XGBoost)</span><span><i class="k-lin"></i>선형 모델 (Ridge)</span><span><i class="k-chain"></i>연결 모델 (강우→유량→SS)</span><span><i class="k-fix"></i>상황별 보정</span></figcaption></figure>
     <div class="hyb3">
       <div class="hy rv" style="--d:0s"><span class="hy-n">1</span><h3>나무 모델 <em>XGBoost 10개 평균</em></h3><p>비·유량·수위·기온의 복잡한 조합 학습 · 단조 제약: 비·유량 증가 시 SS 감소 없음</p><p class="hy-r"><b>잘함</b> 평소 날, 자주 본 조건</p></div>
       <div class="hy rv" style="--d:.15s"><span class="hy-n">2</span><h3>선형 모델 <em>Ridge, 로그 단위</em></h3><p>유량 증가에 따라 SS도 계속 증가 (외삽) · 폭주 방지: 입력은 학습 범위 안, 결과는 최대 실측의 2배까지</p><p class="hy-r"><b>잘함</b> 배운 적 없는 큰 유량</p></div>
       <div class="hy rv" style="--d:.3s"><span class="hy-n">3</span><h3>강우→유량→SS 연결 <em>예측용</em></h3><p>유량을 매일 자료(약 4,000일)로 먼저 예측 → 그 유량으로 SS 계산 · 적은 SS 실측을 매일 유량 자료로 보완</p><p class="hy-r"><b>잘함</b> 예보 비가 있는 1·3일 앞</p></div>
-    </div>
-    <div class="sub2">
-      <h3>하루 계산 순서</h3>
-      <div class="flow hyflow">
-        <div class="fcol rv" style="--d:0s"><h3>입력</h3><p class="fn">강우·수위·유량·기온</p><p class="fn">기상청 예보 강우</p></div>
-        <div class="farr" aria-hidden="true"><i></i></div>
-        <div class="fcol rv" style="--d:.2s"><h3>섞기</h3><p class="fn">나무 ½ + 선형 ½ <em>로그 평균</em></p><p class="fn">예측 1·3일: 위 결과 ½ + 연결 ½</p></div>
-        <div class="farr" aria-hidden="true"><i></i></div>
-        <div class="fcol rv" style="--d:.4s"><h3>상황 판단</h3><p class="fn">비·수위 상승일 <em>약 25%</em> → 홍수일 보정</p><p class="fn">그 밖의 날 → 평상시 보정</p><p class="fn">1일 예측 6 mg/L 이상 → 고농도 모드</p></div>
-        <div class="farr" aria-hidden="true"><i></i></div>
-        <div class="fcol fout rv" style="--d:.6s"><h3>결과</h3><p class="fn">일별 SS 추정</p><p class="fn">1·3·5일 예측</p><p class="fn">80% 범위</p></div>
-      </div>
     </div>
     <div class="ba">
       <div class="ba-c rv" style="--d:0s"><h3>일별 추정 · 섞을수록 좋아짐 <small>(2019–26 전진검증 295건)</small></h3>
