@@ -722,6 +722,51 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 .rv-track input{position:absolute;left:0;right:0;bottom:0;width:100%;margin:0;accent-color:var(--est)}
 .rv-grad{width:44px;height:9px;border-radius:3px;background:linear-gradient(90deg,#4f93d8,#79a59a,#a88a55,#7b5a33)}
 @media (max-width:820px){.rv{grid-template-columns:minmax(0,1fr)}.rv-info{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}.rv-d,#rvLv{grid-column:1/-1}}
+/* ── 2026-11-09 종합 탭 실무자용 재설계 시안: 단계·이유 → 예측 3장 → 전망 → 비 소식·할 일 → 더 보기 ── */
+.dline{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 0;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.dline b{color:var(--ink);font-weight:600}
+body.nohelp .refnote:not(.flash){display:none}
+.headline.now{gap:8px;padding:18px 22px}
+.now .hl-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font-size:clamp(22px,2.6vw,30px)}
+.now .hl-main .stg{margin:0}
+.now .hl-main .tl{font-weight:500;color:var(--ink-2);font-size:.72em}
+.now-why{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.now-why li{font-size:12.5px;padding:3px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2)}
+.now .hl-sub{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.now .hl-sub span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink-3);margin-right:6px;vertical-align:1px}
+.now .hl-sub span.ok::before{background:var(--ok)}.now .hl-sub span.w::before{background:var(--warn)}
+.now .hl-sub a{color:var(--est);text-decoration:none;font-weight:600;margin-left:auto}.now .hl-sub a::after{content:" →"}
+.kpis.k3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.k3 .kpi .lab b{font-weight:600;color:var(--ink)}
+.k3 .kpi:last-child{opacity:.78}
+.k3 .cov:not(.part){display:none}
+.k3 .pex{font-size:12px;color:var(--ink-2)}.k3 .pex b{font-weight:600;color:var(--ink)}
+.k3 .pex:empty{display:none}
+.home2{align-items:start}
+.wxwrn{font-size:12.5px;color:var(--ink-2);margin:-2px 0 10px}
+.wxwrn span{display:inline-block;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink);margin-right:6px}
+.wxwrn span.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+#todo .todo-d{margin:0 0 8px;font-size:13px;color:var(--ink-2)}
+#todo .ck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+#todo .ck label{font-size:14px}
+#todo .todo-n{margin:10px 0 0;font-size:12px;color:var(--ink-3)}
+.more{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.more a{display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:16px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.more a b{font-size:14px;font-weight:600}.more a b::after{content:" →";color:var(--est)}
+.more a small{font-size:12px;color:var(--ink-3)}
+.more a:hover{border-color:var(--est)}
+.tabh{font-size:15px;font-weight:600;margin:4px 0 -4px;color:var(--ink-2)}
+#tab-home>.rnote{margin-top:-2px}
+@media (max-width:820px){.more{grid-template-columns:repeat(2,minmax(0,1fr))}.now .hl-sub a{margin-left:0}}
+@media (max-width:640px){.kpis.k3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.appcard{padding:8px 12px 8px 16px;margin-bottom:12px}.appcard .ac-h span,.appcard .ac-btn small{display:none}.appcard .ac-h b{font-size:14px}
+.appcard .ac-btn{padding:6px 12px}
+.k3 .kpi .ki{display:none}
+@media (max-width:820px){.appcard{flex-wrap:nowrap;padding:8px 10px;margin:10px 0}.appcard .ac-h{flex-basis:auto}.appcard .ac-btns{gap:6px}.appcard .ac-btn{flex-direction:row;padding:6px 10px}.appcard .ac-btn .ico{width:18px;height:18px}.appcard .ac-h b{font-size:14px}}
+@media (max-width:640px){.k3 .kpi .rainline,.k3 .kpi:not(:first-child) .cov{display:none}}
+
+@media (max-width:640px){.appcard .ac-h{display:none}.appcard .ac-btns{flex:1}}
+
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -775,10 +820,10 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
   <nav aria-label="탭">
     <a href="#about" data-tab="about">상세 소개</a>
     <a href="#home" data-tab="home" class="on">종합 대시보드</a>
-    <a href="#fc" data-tab="fc">1·3·5일 예측 · 원인</a>
+    <a href="#fc" data-tab="fc">예측 · 추이 · 원인</a>
     <a href="#cmp" data-tab="cmp">작년 비교 · 강우 상관</a>
     <a href="#perf" data-tab="perf">모델 성능</a>
-    <a href="#info" data-tab="info">유역 · 자료 · 용어</a>
+    <a href="#info" data-tab="info">자료 상태 · 유역</a>
     <a href="#faq" data-tab="faq">자주 묻는 질문</a>
   </nav>
   <button class="side-inst" id="instSide" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b class="instLab">바탕화면에 추가</b><small>앱처럼 바로 열기</small></span></button>
@@ -792,7 +837,7 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 </aside>
 
 <main>
-  <nav class="mob-nav" aria-label="탭"><a href="#about" data-tab="about">상세 소개</a><a href="#home" data-tab="home" class="on">종합</a><a href="#fc" data-tab="fc">예측·원인</a><a href="#cmp" data-tab="cmp">작년 비교</a><a href="#perf" data-tab="perf">모델 성능</a><a href="#info" data-tab="info">유역·자료</a><a href="#faq" data-tab="faq">자주 묻는 질문</a></nav>
+  <nav class="mob-nav" aria-label="탭"><a href="#about" data-tab="about">상세 소개</a><a href="#home" data-tab="home" class="on">종합</a><a href="#fc" data-tab="fc">예측·추이</a><a href="#cmp" data-tab="cmp">작년 비교</a><a href="#perf" data-tab="perf">모델 성능</a><a href="#info" data-tab="info">자료 상태</a><a href="#faq" data-tab="faq">자주 묻는 질문</a></nav>
   <section class="appcard" id="appCard" aria-label="앱처럼 쓰기">
     <div class="ac-h"><b>앱처럼 쓰기</b><span>홈 화면에 두고, 매일 아침 SS 예측을 알림으로 받아 보세요</span></div>
     <div class="ac-btns">
@@ -804,11 +849,7 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <div>
       <h1>내린천2 부유물질(SS) 대시보드</h1>
       <p class="sub">총량측정망 소양A · 강원 인제군 · 일 단위 SS 추정과 1·3·5일 예측</p>
-      <ul class="dates" aria-label="날짜 기준">
-        <li class="obs"><small>최근 실제 SS 측정일</small><b id="dObs">–</b></li>
-        <li><small>마지막 입력자료 기준일</small><b id="dIn">–</b></li>
-        <li><small>대시보드 생성·갱신</small><b id="dUp">–</b></li>
-      </ul>
+      <p class="dline" id="dLine">–</p>
     </div>
     <p class="refnote" id="refNote" hidden></p>
     <div class="topbtns">
@@ -817,38 +858,43 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
   </header>
 
   <div class="tab" id="tab-home" data-tab="home">
-  <section class="headline" id="headline" aria-live="polite">
+  <section class="headline now" id="headline" aria-live="polite">
     <p class="hl-main" id="hlMain">–</p>
+    <ul class="now-why" id="hlWhy"></ul>
     <p class="hl-sub" id="hlSub">–</p>
-    <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
+  </section>
+  <section class="kpis k3" aria-label="1·3·5일 예측">
+    <div class="kpi"><div class="lab"><span id="kF1L">SS 미래예측 · 1일 후</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta pex" id="kF1P"></div><div class="meta rainline" id="kF1R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF3L">SS 미래예측 · 3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
+    <div class="kpi"><div class="lab"><span id="kF5L">SS 미래예측 · 5일 후 (참고용)</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
   </section>
   <section class="card" id="outlook" aria-label="SS 전망 그래프">
     <h2>SS 전망 <span class="sub2" id="olSub">최근 2주 추정·실측과 1·3·5일 후 예측</span><span class="tag" id="olTag">–</span></h2>
-      <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><label>예보 강우 (향후 합계)<select class="c-fc"></select></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
     <div id="pOut" class="plot" style="height:270px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
-    <div class="olkey" aria-label="그래프 읽는 법"><span><i class="sw-dot"></i><b>검은 점</b> = 실제 측정값</span><span><i class="sw-line"></i><b>파란 선</b> = 과거 날짜의 사후추정값 (실측 아님)</span><span><i class="sw-sq"></i><b>오른쪽 점과 막대</b> = 미래예측값</span></div>
-    <div class="legend"><span><i class="sw-dot"></i>실제 측정 SS</span><span><i class="sw-line"></i>사후추정 SS</span><span><i class="sw-band"></i>추정 80% 범위</span><span><i class="sw-sq"></i>1·3·5일 미래예측 (색 = 참고 단계)</span><span><i class="sw-fbar"></i>예측 80% 범위</span><span><i class="sw-dash"></i>추정→예측 연결</span><span><i class="sw-fcr"></i>예보강우 반영 예측</span><span><i class="sw-vl"></i>기준일</span><span><i class="sw-zn n"></i>관심 구간 (상위 10%)</span><span><i class="sw-zn w"></i>대응 검토 구간 (25 이상)</span></div>
-    <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
+    <div class="legend"><span><i class="sw-dot"></i>실제 측정</span><span><i class="sw-line"></i>사후추정 (실측 아님)</span><span><i class="sw-sq"></i>예측 · 막대 = 80% 범위</span><span><i class="sw-zn n"></i>관심 10.2</span><span><i class="sw-zn w"></i>대응 검토 25</span></div>
+    <p class="hint">세로축 로그 눈금. 4일 후(5일 예측)는 참고용. 기준일·예보강우를 바꿔 보려면 예측·추이 탭.</p>
   </section>
-  <section class="card" id="river" aria-label="하천 단면 애니메이션">
-    <h2>하천 단면 · 원대교 수위와 SS</h2>
-    <div class="rv">
-      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
-      <div class="rv-info" aria-live="polite">
-        <div class="rv-d" id="rvD">–</div>
-        <div class="rv-row"><span class="lb">수위</span><span class="v" id="rvH">–</span><span class="s" id="rvHs">–</span></div>
-        <div class="rv-row"><span class="lb">SS</span><span class="v" id="rvS">–</span><span class="s" id="rvSs">–</span></div>
-        <div id="rvLv"></div>
+  <section class="grid g-2 home2">
+    <div class="card" id="weather">
+      <h2>비 소식 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
+      <div class="wxwrn" id="wxWrn"></div>
+      <div class="wx" id="wx"></div>
+      <p class="hint" id="wxNote">–</p>
       </div>
+    <div class="card" id="todo">
+      <h2>지금 할 일 <span class="tag" id="todoTag">–</span></h2>
+      <div id="todoBox"></div>
+      <p class="hint">단계 기준과 다른 단계의 점검 목록은 자료 상태 탭.</p>
     </div>
-    <div class="rv-ctl">
-      <button class="btn" type="button" id="rvPlay" aria-pressed="false">재생</button>
-      <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
-      <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
-    </div>
-    <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
-    <p class="hint">수위는 원대교 일평균(WAMIS), 물색과 알갱이 수는 그날 SS 사후추정(로그 눈금, 실측일은 실측값). 탁도는 자료에 없어 쓰지 않음. 단면 모양은 그림이며 실제 측량 단면이 아님. 아래 띠의 막대 높이 = 수위, 색 = SS.</p>
   </section>
+  <nav class="more" aria-label="더 자세히">
+    <a href="#fc" data-go="fc" data-at="ss"><b>SS·강우·유량 추이</b><small>90일 그래프, 예측 원인</small></a>
+    <a href="#fc" data-go="fc" data-at="river"><b>하천 단면</b><small>원대교 수위와 SS 애니메이션</small></a>
+    <a href="#cmp" data-go="cmp"><b>작년과 비교</b><small>같은 기간 SS·강우</small></a>
+    <a href="#info" data-go="info" data-at="dstat"><b>자료 상태</b><small>최신성 표, 특보 이력, 단계 기준</small></a>
+  </nav>
+  <p class="rnote">내린천2 하천 SS 기준의 연구용 참고 단계입니다. 취수장 운영이나 취수 중단 판단이 아니며, 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
+  <div id="legacy" hidden>
   <section class="card" id="opsum" aria-label="운영 요약">
     <h2>운영 요약 <span class="tag">연구용 참고</span><span class="tag" id="opRef">–</span></h2>
     <div class="ops">
@@ -860,39 +906,23 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <p class="rnote">해당 판정은 내린천2 하천 SS 기준의 연구용 안내이며, 취수장 운영이나 취수 중단 판단이 아닙니다.</p>
     <p class="disc">내린천2 하천 SS(복류수 유입 전 하천수로 가정)이며 원수 탁도와 다를 수 있습니다. 실제 대응은 현장 실측과 시설 운영기준을 따르세요.</p>
   </section>
-  <section class="kpis" aria-label="요약">
+  <section class="kpis-x">
     <div class="kpi"><div class="lab"><span id="kEstL">기준일 SS 사후추정</span><span class="tag">실측 아님</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
     <div class="kpi"><div class="lab">최근 실제 측정 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF1L">SS 미래예측 · 1일 후</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta rainline" id="kF1R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF3L">SS 미래예측 · 3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
-    <div class="kpi"><div class="lab"><span id="kF5L">SS 미래예측 · 5일 후 (참고용)</span><span class="tag" id="kF5T">관측만</span></div><div class="val" id="kF5">–</div><div class="rng" id="kF5M">–</div><div class="meta rainline" id="kF5R">–</div></div>
   </section>
-  <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
-  <section class="card" id="fresh">
-    <h2>자료 최신성 <span class="tag" id="frTag">–</span></h2>
-    <div class="tbl-wrap"><table class="fr"><thead><tr><th>자료</th><th>마지막 관측·발표</th><th>경과</th><th>상태</th><th>비고</th></tr></thead><tbody id="frTbl"></tbody></table></div>
-    <p class="hint" id="frNote">–</p>
-  </section>
+    <div id="alert"></div><p id="alertRule"></p>
+  <details class="banner" id="banner"><summary><b>읽는 법</b></summary><span>파란 선은 그날 강우·유량·수위로 채운 사후 추정(예보 아님)입니다. 실력은 ◇ 전진검증 예측과 모델 성능 탭에서 보세요. 예측 카드의 큰 숫자는 관측만 쓴 값, 아래 줄은 예보강우 반영값입니다.</span></details>
+  </div>
+  </div>
 
-  <section class="card" id="weather">
-    <h2>기상 예보 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
-    <div class="wx" id="wx"></div>
-    <p class="hint" id="wxNote">–</p>
-  </section>
-
-  <section class="grid g-2">
+  <div class="tab" id="tab-fc" data-tab="fc" hidden>
+  <section id="forecast">
     <div class="card">
-      <h2>수질 알림 · 기상특보</h2>
-      <div id="alert"></div>
-      <p class="hint" id="alertRule">–</p>
-      <div id="wrn"></div>
-    </div>
-    <div class="card" id="manage">
-      <h2>관리자 참고 점검사항 <span class="tag">연구용 참고 단계 · 취수 판단 아님</span></h2>
-      <div id="grade"></div>
-      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
-      <div id="lvBox"></div>
-      <p class="hint">임시 구간: 10.2 mg/L = 이 지점 실측 상위 10%, 25 mg/L = 하천 Ia 기준. 취수 운영기준(원수 탁도) 확인 시 교체.</p>
+      <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
+      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span><span><i class="sw-star">★</i>기상청 예보 강우일 때</span><span><i class="sw-hl"></i>관심 기준선</span></div>
+      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
+      <p class="rnote" id="scNote"></p>
+      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과.</p>
     </div>
   </section>
 
@@ -913,19 +943,24 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
       </div>
     </div>
   </section>
-
-  <details class="banner" id="banner"><summary><b>읽는 법</b></summary><span>파란 선은 그날 강우·유량·수위로 채운 사후 추정(예보 아님)입니다. 실력은 ◇ 전진검증 예측과 모델 성능 탭에서 보세요. 예측 카드의 큰 숫자는 관측만 쓴 값, 아래 줄은 예보강우 반영값입니다.</span></details>
-  </div>
-
-  <div class="tab" id="tab-fc" data-tab="fc" hidden>
-  <section id="forecast">
-    <div class="card">
-      <h2>예보강우에 따른 예측 <span class="tag" id="scTag">–</span></h2>
-      <div class="legend"><span><i class="sw-line"></i>1일 후</span><span><i class="sw-ly"></i>3일 후</span><span><i class="sw-line" style="background:var(--rain)"></i>5일 후</span><span><i class="sw-star">★</i>기상청 예보 강우일 때</span><span><i class="sw-hl"></i>관심 기준선</span></div>
-      <div id="pScen" class="plot" style="height:240px" role="img" aria-label="향후 강우 합계에 따른 1·3·5일 후 SS 예측"></div>
-      <p class="rnote" id="scNote"></p>
-      <p class="hint">마지막 기준일에서 향후 강우 합계만 바꾼 결과.</p>
+  <section class="card" id="river" aria-label="하천 단면 애니메이션">
+    <h2>하천 단면 · 원대교 수위와 SS</h2>
+    <div class="rv">
+      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
+      <div class="rv-info" aria-live="polite">
+        <div class="rv-d" id="rvD">–</div>
+        <div class="rv-row"><span class="lb">수위</span><span class="v" id="rvH">–</span><span class="s" id="rvHs">–</span></div>
+        <div class="rv-row"><span class="lb">SS</span><span class="v" id="rvS">–</span><span class="s" id="rvSs">–</span></div>
+        <div id="rvLv"></div>
+      </div>
     </div>
+    <div class="rv-ctl">
+      <button class="btn" type="button" id="rvPlay" aria-pressed="false">재생</button>
+      <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
+      <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
+    </div>
+    <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
+    <p class="hint">수위는 원대교 일평균(WAMIS), 물색과 알갱이 수는 그날 SS 사후추정(로그 눈금, 실측일은 실측값). 탁도는 자료에 없어 쓰지 않음. 단면 모양은 그림이며 실제 측량 단면이 아님. 아래 띠의 막대 높이 = 수위, 색 = SS.</p>
   </section>
 
   <section class="grid g-2" id="explain">
@@ -1045,6 +1080,27 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
   </div>
 
   <div class="tab" id="tab-info" data-tab="info" hidden>
+  <h2 class="tabh" id="dstat">자료 상태</h2>
+  <section class="gapbar" id="gapbar" aria-label="실측 지연"></section>
+  <section class="card" id="fresh">
+    <h2>자료 최신성 <span class="tag" id="frTag">–</span></h2>
+    <div class="tbl-wrap"><table class="fr"><thead><tr><th>자료</th><th>마지막 관측·발표</th><th>경과</th><th>상태</th><th>비고</th></tr></thead><tbody id="frTbl"></tbody></table></div>
+    <p class="hint" id="frNote">–</p>
+  </section>
+  <section class="grid g-2">
+    <div class="card" id="manage">
+      <h2>관리자 참고 점검사항 <span class="tag">연구용 참고 단계 · 취수 판단 아님</span></h2>
+      <div id="grade"></div>
+      <div class="segs" role="group" aria-label="위험 단계" id="lvSegs"></div>
+      <div id="lvBox"></div>
+      <p class="hint">임시 구간: 10.2 mg/L = 이 지점 실측 상위 10%, 25 mg/L = 하천 Ia 기준. 취수 운영기준(원수 탁도) 확인 시 교체.</p>
+    </div>
+    <div class="card">
+      <h2>기상특보 · 오늘 자료 수집</h2>
+      <div id="wrn"></div>
+    </div>
+  </section>
+  <h2 class="tabh">유역 · 용어</h2>
   <section class="grid" id="basin">
     <div class="card">
       <h2>내린천2 유역도</h2>
@@ -1383,14 +1439,10 @@ if (state.ref === lastI && state.today !== false) state.today = true;
 $('sfN').textContent = obs.filter(o => o.v != null).length + '건';
 $('sfR').textContent = '~' + iso(lastI);
 $('sfU').textContent = D.meta.updated || '–';
-(function dateStrip() {
-  const ymd = s => { const [y, m, d] = s.split('-'); return y + '년 ' + (+m) + '월 ' + (+d) + '일'; };
-  const ago = s => tdI - idx(s);
-  const lo = [...obs].reverse().find(o => o.v != null);
-  if (lo) $('dObs').innerHTML = ymd(lo.d) + '<em>(' + (ago(lo.d) ? ago(lo.d) + '일 전 · ' : '') + fmt(lo.v) + ' mg/L)</em>';
-  $('dIn').innerHTML = ymd(iso(lastI)) + '<em>(강우·유량·수위)</em>';
+(function dateStrip() {   // 머리글 날짜는 한 줄: 오늘 · 자료 마지막 날 · 갱신 시각
+  const m = s => (+s.slice(5, 7)) + '/' + (+s.slice(8, 10));
   const u = (D.meta.updated || '').match(/(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d)/);
-  $('dUp').textContent = u ? (+u[2]) + '월 ' + (+u[3]) + '일 ' + (+u[4] < 12 ? '오전 ' : '오후 ') + ((+u[4] % 12) || 12) + '시 ' + u[5] + '분' : (D.meta.updated || '–');
+  $('dLine').innerHTML = '<b>오늘 ' + m(iso(tdI)) + '</b><span>자료 ' + m(iso(lastI)) + '까지</span><span>' + (u ? (+u[2]) + '/' + (+u[3]) + ' ' + u[4] + ':' + u[5] + ' 갱신' : '') + '</span>';
 })();
 (function intro() {
   const box = $('intro'), seen = () => { try { return localStorage.getItem('ssdashIntro') === '1'; } catch (e) { return true; } };
@@ -1725,7 +1777,7 @@ function renderOutlook(ref, FCS, lastObs) {
     { xref: 'x', x: isoT(ref + 0.5), yref: 'paper', y: 1, yanchor: 'bottom', xanchor: 'center', text: inToday() ? '사후추정 ◀ 자료 ' + iso(ref).slice(5) + ' · 오늘부터 ▶ 예측' : '추정 ◀ ' + (ref === lastI ? '기준일 ' : '') + iso(ref).slice(5) + ' ▶ 예측', showarrow: false, font: { size: 10.5, color: css('--ink-2') } }];
   const narrow = innerWidth < 600;
   fo.forEach(z => ann.push({ xref: 'x', x: iso(ref + z.h), yref: 'y', y: L10(z.o[2]), yanchor: 'bottom', yshift: 2, showarrow: false,
-    text: '<b>' + fmt(z.o[0]) + '</b>' + (narrow ? '' : '<br><span style="font-size:10px">' + z.h + '일 후</span>'), font: { size: 12, color: css('--ink') } }));
+    text: '<b>' + fmt(z.o[0]) + '</b>' + (narrow ? '' : '<br><span style="font-size:10px">' + (inToday() ? relDay(ref + z.h) : z.h + '일 후') + '</span>'), font: { size: 12, color: css('--ink') } }));
   const e = D.est[ref], chain = fo.map(z => [iso(ref + z.h), z.o[0]]);
   const tr = [
     { x: hi.x, y: hi.y, mode: 'lines', line: { width: 0 }, hoverinfo: 'skip' },
@@ -1836,6 +1888,10 @@ function renderExplain(ref, FCS, e) {
   const L = LV[sel];
   $('lvBox').innerHTML = `<div class="alert ${L.c === 'warn' ? 'warn' : L.c === 'ok' ? 'ok' : ''}" style="${L.c === 'note' ? 'background:var(--note-bg);color:var(--note)' : ''}"><b>${L.k}</b><p>${L.d}.</p><p>현재 근거: ${SE.why.length ? SE.why.map(w => w[1]).join(' · ') : '해당 신호 없음'}</p></div>`
     + `<ul class="ck">${L.it.map(([a, b], j) => { const id = 'v2-' + sel + '-' + j; return `<li><label><input type="checkbox" data-ck="${id}"${ckState[id] ? ' checked' : ''}><span>${a}${b ? '<small>' + b + '</small>' : ''}</span></label></li>`; }).join('')}</ul>`;
+  const C = LV[cur];
+  $('todoTag').textContent = C.k + ' 단계'; $('todoTag').className = 'tag' + (cur === 2 ? ' warnTag' : cur === 0 ? ' real' : '');
+  $('todoBox').innerHTML = '<p class="todo-d">' + C.d + '</p><ul class="ck">' + C.it.map(([a, b], j) => { const id = 'v2-' + cur + '-' + j; return '<li><label><input type="checkbox" data-ck="' + id + '"' + (ckState[id] ? ' checked' : '') + '><span>' + a + '</span></label></li>'; }).join('') + '</ul>'
+    + (cur < 2 ? '<p class="todo-n">' + LV[cur + 1].k + '(으)로 올라가는 경우: ' + LV[cur + 1].d + '</p>' : '');
   renderOps(ref, FCS, e, SE);
   document.querySelectorAll('#lvSegs .seg').forEach(b => b.addEventListener('click', () => { lvSel = +b.dataset.lv; renderExplain(state.ref, forecasts(state.ref), D.est[state.ref]); }));
   document.querySelectorAll('[data-ck]').forEach(c => c.addEventListener('change', () => { ckState[c.dataset.ck] = c.checked; try { localStorage.setItem('ssdashCk', JSON.stringify(ckState)); } catch (e) {} }));
@@ -1872,21 +1928,22 @@ function stageEval(ref, FCS, e) {
 }
 // 종합 탭 맨 위 한 줄 결론: 참고 단계 + 1·3·5일 예측 중앙값(관측만 입력, 요약 카드·SS 전망과 같은 값)
 function renderHeadline(ref, FCS, e, SE) {
-  const L = LV[SE.lv], isLast = ref === lastI, tmr = iso(idx(todayKST) + 1);
-  const dl = d => (d === todayKST ? '오늘 ' : d === tmr ? '내일 ' : '') + md(d);
-  const fo = FCS.filter(z => z.o);
+  const L = LV[SE.lv], isLast = ref === lastI;
   const tail = ['평소 범위 유지 전망', '평소보다 높아질 수 있어 관심', '25 mg/L 이상 가능, 대응 검토'][SE.lv];
-  let h = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="rtag">연구용 참고 단계</span>';
-  if (fo.length) {
-    h += fo.map((z, j) => '<span class="it"><span class="ref">' + dl(iso(ref + z.h)) + '</span> ' + (j ? '' : 'SS ') + fmt(z.o[0]) + (j ? '' : '<span class="u">mg/L</span>') + '<span class="rr">(' + fmt(z.o[1]) + '–' + fmt(z.o[2]) + ')</span>' + (z.h === 5 ? '<span class="ref">(참고)</span>' : '') + '</span>').join(' <span class="sep">·</span> ');
-  } else h += '<span class="ref">' + md(iso(ref)) + '</span> 추정 SS ' + fmt(e) + '<span class="u">mg/L</span>' + (D.lo[ref] == null ? '' : '<span class="rr">(' + fmt(D.lo[ref]) + '–' + fmt(D.hi[ref]) + ')</span>');
-  h += '<span class="sep">—</span><span class="it">' + tail + '</span>';
-  $('hlMain').innerHTML = h;
+  $('hlMain').innerHTML = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="tl">' + tail + '</span>';
   const hd = $('headline'); hd.classList.remove('lv-ok', 'lv-note', 'lv-warn'); hd.classList.add('lv-' + L.c);
-  const r1 = FCS.find(z => z.h === 1 && z.r && z.isLast && fcEl.value === 'kma');
-  $('hlSub').textContent = (isLast ? '' : '과거 날짜 보기 · ') + md(iso(ref)) + '까지 자료로 낸 예측 중앙값, 괄호는 80% 범위(관측 자료만 입력)'
-    + (r1 ? ' · 기상청 예보강우 ' + fmt(r1.mm, 0) + ' mm 반영 시 ' + md(iso(ref + 1)) + ' ' + fmt(r1.r[0]) + ' (' + fmt(r1.r[1]) + '–' + fmt(r1.r[2]) + ') mg/L' : '')
-    + ' · 근거는 아래 운영 요약';
+  const W = D.meta.warnings, wn = W && W.now && W.now.length;
+  const why = SE.why.length ? SE.why.map(w => w[1]) : ['올라갈 신호 없음'];
+  if (!SE.why.some(w => /호우/.test(w[1]))) why.push(wn ? '특보 ' + W.now.length + '건 발효 중' : '기상특보 없음');
+  $('hlWhy').innerHTML = why.map(w => '<li>' + w + '</li>').join('');
+  // 자료 상태 한 줄: 늦거나 실패한 자료만 이름을 적고, 누르면 자료 상태 탭
+  const F = (MG && MG.fresh) || [], bad = F.filter(r => r[3] !== 'ok');
+  const ssr = F.find(r => /^SS/.test(r[0])), rest = bad.filter(r => r !== ssr);
+  const lo = [...obs].reverse().find(o => o.v != null), ago = lo ? tdI - lo.i : null;
+  let s = (lo ? '<span class="' + (ago > 14 ? 'w' : '') + '">SS 실측 ' + ago + '일 전 (' + fmt(lo.v) + ' mg/L)</span>' : '')
+    + '<span class="' + (rest.length ? 'w' : 'ok') + '">' + (rest.length ? rest.map(r => r[0].replace(/ \(.*/, '')).join('·') + ' 확인 필요' : '강우·유량·수위·예보 정상') + '</span>';
+  if (!isLast) s = '<span class="w">과거 날짜 ' + md(iso(ref)) + ' 보기</span>' + s;
+  $('hlSub').innerHTML = s + '<a href="#info" data-go="info" data-at="dstat">자료 상태 보기</a>';
 }
 function renderOps(ref, FCS, e, SE) {
   const isLast = ref === lastI, L = LV[SE.lv];
@@ -1900,6 +1957,7 @@ function renderOps(ref, FCS, e, SE) {
     $('opP').innerHTML = '10.2↑ ' + pct(SE.p10) + ' · 25↑ ' + pct(SE.p25);
     $('opPs').textContent = '내일(' + iso(ref + 1).slice(5) + ') SS가 그 값(mg/L) 이상일 가능성';
   }
+  $('kF1P').innerHTML = isLast && SE.p10 != null ? '넘을 가능성 <b>10.2↑ ' + pct(SE.p10) + '</b> · <b>25↑ ' + pct(SE.p25) + '</b>' : '';
   const C = MG && MG.cover;
   if (C) {
     const hs = Object.keys(C).map(Number).sort((a, b) => a - b), part = hs.filter(h => !C[h].full);
@@ -1943,6 +2001,7 @@ function renderStatus() {
   LS.filter(L => L && L.n).forEach(L => { h += '<h3 class="mini">잠금 평가 (' + L.train + '년까지 학습 → ' + L.since.slice(0, 4) + '년~)</h3><p class="hint">' + L.n + '건: MAE ' + fmt(L.mae) + ' mg/L (월별 기준값 ' + fmt(L.mae_clim) + ')' + (L.n >= 10 && L.logr2 != null ? ', 로그 R² ' + L.logr2.toFixed(2) : '') + (L.cov != null ? ', 80% 범위 안 ' + Math.round(L.cov * 100) + '%' : '') + '. 자세한 내용은 모델 성능 탭.</p>'; });
   if (Object.keys(st).length) h += '<h3 class="mini">오늘 자료 수집</h3><ul class="wl">' + Object.entries(st).map(([k, v]) => '<li>' + esc(k) + ': ' + esc(v) + '</li>').join('') + '</ul>';
   $('wrn').innerHTML = h;
+  const ww = $('wxWrn'); if (ww) ww.innerHTML = !W ? '' : W.now.length ? '<span class="on">특보 발효 중</span> ' + W.now.map(r => esc(r.reg + ' ' + r.wrn + r.lvl)).join(', ') : '<span>특보 없음</span> 유역(' + esc(W.areas.join('·')) + ') · ' + esc(W.fetched) + ' 기준';
 }
 function forecasts(ref) {
   const F = D.fc, k = ref - F.off, isLast = ref === lastI, mm = fcEl.value === 'kma' ? 'kma' : +fcEl.value;
@@ -1959,7 +2018,7 @@ const rngTxt = (lo, hi) => '<small>80% 범위</small>' + fmt(lo) + '–' + fmt(h
 function renderFc(ref) {
   const FCS = forecasts(ref);
   FCS.forEach(z => {
-    $('kF' + z.h + 'L').textContent = 'SS 미래예측 · ' + (inToday() ? relDay(ref + z.h) : z.h + '일 후') + ' ' + iso(ref + z.h).slice(5) + (z.h === 5 ? ' (참고용)' : '');
+    $('kF' + z.h + 'L').innerHTML = '<b>' + (inToday() ? relDay(ref + z.h) : z.h + '일 후') + '</b> ' + md(iso(ref + z.h)) + (z.h === 5 ? ' · 참고용' : '');
     $('kF' + z.h + 'T').textContent = ((D.fc.tbl.find(r => r[0] === z.h && r[1] === '관측만') || [])[2] === '월별 기준값' ? '월별 기준값' : '관측만') + (z.h === 5 ? ' · 참고용' : '');
     if (!z.o) { $('kF' + z.h).innerHTML = '—<small>mg/L</small>'; $('kF' + z.h + 'M').textContent = '2019년 이후 기준일만 예측'; $('kF' + z.h + 'R').textContent = ''; if ($('kF' + z.h + 'H')) $('kF' + z.h + 'H').hidden = true; return; }
     $('kF' + z.h).innerHTML = fmt(z.o[0]) + '<small>mg/L</small>';
@@ -2243,6 +2302,7 @@ function showTab(t, push) {
 }
 document.querySelectorAll('nav a[data-tab]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.tab, true); }));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+document.addEventListener('click', e => { const a = e.target.closest('[data-go]'); if (!a) return; e.preventDefault(); showTab(a.dataset.go, true); const at = a.dataset.at && $(a.dataset.at); if (at) setTimeout(() => at.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); });
 (function tabAnim() {
   const numRe = /^(\s*)(-?\d+(?:\.\d+)?)/;
   const countKpis = root => root.querySelectorAll('.kpi .val').forEach(v => {
