@@ -1108,6 +1108,17 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{background:var(--bg);color:var(--ink-3);borde
 .f2i{background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
 .f2n{color:var(--ink-3)}
 .f2.c4 .f2b span{color:var(--ink)}
+
+/* 예측 원인 원그래프 */
+.shpie{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;align-items:center}
+.shp-c{position:relative;width:200px;height:200px}.shp-c svg{width:100%;height:100%}
+.shp-m{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.shp-m b{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}.shp-m small{font-size:12px;color:var(--ink-3)}
+.shp-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.shp-l li{display:grid;grid-template-columns:12px minmax(0,1fr) 40px 64px;align-items:center;gap:8px;font-size:13px}
+.shp-l i{width:12px;height:12px;border-radius:3px}.shp-l b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.shp-l em{font-style:normal;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:820px){.shpie{grid-template-columns:minmax(0,1fr);justify-items:center;gap:12px}.shp-c{width:180px;height:180px}.shp-l{width:100%}}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -1313,7 +1324,7 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{background:var(--bg);color:var(--ink-3);borde
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
       <div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
-      <div class="legend"><span><i class="sw-up"></i>SS를 올린 요인</span><span><i class="sw-dn"></i>SS를 내린 요인</span></div>
+      <div class="legend"><span><i class="sw-up"></i>▲ SS를 올린 요인</span><span><i class="sw-dn"></i>▼ SS를 내린 요인</span><span>% = 영향 크기 비율</span></div>
       <div class="bars" id="shBars"></div>
       <p class="shtxt" id="shTxt"></p>
     </div>
@@ -2157,7 +2168,15 @@ function renderExplain(ref, FCS, e) {
     const tot = S.base + vals.reduce((s, [, v]) => s + v, 0), mx = Math.max(.3, ...vals.map(([, v]) => Math.abs(v)));
     $('shV').innerHTML = fmt(Math.exp(tot)) + '<small>mg/L</small>';
     vals.sort((p, q) => Math.abs(q[1]) - Math.abs(p[1]));
-    $('shBars').innerHTML = vals.map(([g, v]) => { const w = Math.abs(v) / mx * 50; return `<div class="shbar"><span>${g}</span><div class="tr"><i class="mid"></i><i style="${v >= 0 ? 'left:50%' : 'right:50%'};width:${w.toFixed(1)}%;background:var(${v >= 0 ? '--warn' : '--note'})"></i></div><span class="n" style="color:var(${v >= 0 ? '--warn' : '--note'})">×${Math.exp(v).toFixed(2)}</span></div>`; }).join('');
+    // 원그래프: 각 요인의 영향 크기(|로그 배수|) 비율, 색 = 올림(주황 계열)/내림(파랑 계열)
+    const SUM = vals.reduce((t, [, v]) => t + Math.abs(v), 0) || 1;
+    const UPC = ['#b4561c', '#d0742f', '#e3955a', '#efb688', '#f6d3b5'], DNC = ['#1d4fa8', '#2f6fe0', '#5b8fe9', '#88b0f0', '#b6cef6'];
+    let nu = 0, nd = 0, cum = 0, etc = 0; const sl = [];
+    vals.forEach(([g, v]) => { const pc = Math.abs(v) / SUM * 100; if (pc < 3) { etc += pc; return; } sl.push([g, v, pc, v >= 0 ? UPC[Math.min(nu++, 4)] : DNC[Math.min(nd++, 4)]]); });
+    if (etc >= 0.5) sl.push(['기타 (작은 요인)', 0, etc, 'var(--line)']);
+    const arcs = sl.map(([g, v, pc, c]) => { const a = `<circle r="15.915" cx="21" cy="21" fill="none" stroke="${c}" stroke-width="7" stroke-dasharray="${Math.max(pc - .5, .1).toFixed(2)} ${(100 - Math.max(pc - .5, .1)).toFixed(2)}" stroke-dashoffset="${(-cum).toFixed(2)}"><title>${g} ${pc.toFixed(0)}%</title></circle>`; cum += pc; return a; }).join('');
+    $('shBars').innerHTML = `<div class="shpie"><div class="shp-c"><svg viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)">${arcs}</g></svg><div class="shp-m"><b>${fmt(Math.exp(tot))}</b><small>mg/L</small></div></div>`
+      + `<ul class="shp-l">${sl.map(([g, v, pc, c]) => `<li><i style="background:${c}"></i><span>${g}</span><b>${pc.toFixed(0)}%</b><em style="color:var(${v > 0 ? '--warn' : v < 0 ? '--note' : '--ink-3'})">${v === 0 ? '' : (v > 0 ? '▲ ' : '▼ ') + '×' + Math.exp(v).toFixed(2)}</em></li>`).join('')}</ul></div>`;
     const up = vals.filter(([, v]) => v >= 0.1).map(([g]) => g), dn = vals.filter(([, v]) => v <= -0.1).map(([g]) => g);
     // [올림: 이어쓰기, 끝맺기], [내림: 이어쓰기, 끝맺기]
     const WHY = { '유량': [['물이 평소보다 많고', '물이 평소보다 많아서'], ['물이 평소보다 적고', '물이 평소보다 적어서']],
