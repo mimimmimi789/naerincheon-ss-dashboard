@@ -691,9 +691,9 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 .wxd .ic svg{width:26px;height:26px}
 
 /* ── 하천 단면 애니메이션 (2026-11-09): 수위 = 물 높이, SS = 물색·알갱이 ── */
-:root{--soil:#d8c9ab;--soil-l:#b49e76;--grass:#9fbf8a}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--soil:#3d3529;--soil-l:#6b5c45;--grass:#3f5a3a}}
-:root[data-theme="dark"]{--soil:#3d3529;--soil-l:#6b5c45;--grass:#3f5a3a}
+:root{--soil:#d8c9ab;--soil-l:#b49e76;--grass:#8fb57a;--rock:#a39d92;--road:#7f868d}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--soil:#3d3529;--soil-l:#6b5c45;--grass:#4f7046;--rock:#6f6b64;--road:#565c63}}
+:root[data-theme="dark"]{--soil:#3d3529;--soil-l:#6b5c45;--grass:#4f7046;--rock:#6f6b64;--road:#565c63}
 .rv{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:16px;align-items:center}
 .rv svg{width:100%;height:auto;display:block}
 #rvSvg .rv-wg{transition:transform .45s cubic-bezier(.3,.7,.3,1)}
@@ -705,7 +705,9 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
 @keyframes rvDrift{from{transform:translate(-6px,0)}to{transform:translate(6px,3px)}}
 @media (prefers-reduced-motion:reduce){#rvSvg .rv-wave,#rvSvg .rv-p{animation:none}}
 #rvSvg text{font:12px var(--f-body);fill:var(--ink-2)}
-@media (max-width:820px){#rvSvg text{font-size:22px}}
+#rvSvg text.rv-lb{font-size:10.5px;fill:var(--ink-3)}
+#river>h2{flex-wrap:nowrap;white-space:nowrap}
+@media (max-width:820px){#rvSvg text{font-size:22px}#rvSvg text.rv-lb{display:none}}
 .rv-info{display:flex;flex-direction:column;gap:8px}
 .rv-d{font-size:15px;font-weight:600}
 .rv-row{display:grid;grid-template-columns:36px auto;column-gap:8px;align-items:baseline}
@@ -830,7 +832,7 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
     <p class="hint">세로축 로그 눈금. 5일 예측은 참고용.</p>
   </section>
   <section class="card" id="river" aria-label="하천 단면 애니메이션">
-    <h2>하천 단면 <span class="sub2">원대교 수위와 SS</span><span class="tag">물색 = SS 추정값 (탁도 아님)</span></h2>
+    <h2>하천 단면 · 원대교 수위와 SS</h2>
     <div class="rv">
       <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
       <div class="rv-info" aria-live="polite">
@@ -845,7 +847,7 @@ h1,.hl-main,.kpi .val,.ac-h b,.faq-q .qn{font-weight:600}
       <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
       <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
     </div>
-    <div class="legend rv-key"><span><i class="rv-grad"></i>물색: 맑음 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
+    <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
     <p class="hint">수위는 원대교 일평균(WAMIS), 물색과 알갱이 수는 그날 SS 사후추정(로그 눈금, 실측일은 실측값). 탁도는 자료에 없어 쓰지 않음. 단면 모양은 그림이며 실제 측량 단면이 아님. 아래 띠의 막대 높이 = 수위, 색 = SS.</p>
   </section>
   <section class="card" id="opsum" aria-label="운영 요약">
@@ -1627,10 +1629,13 @@ const RV = (() => {
   const NS = 'http://www.w3.org/2000/svg', W = 640, TOP = 58, BED = 228, H0 = 1.6, H1 = 7.0;
   const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
   const yOf = h => BED - (Math.min(H1, Math.max(H0, h)) - H0) / (H1 - H0) * (BED - TOP);
-  // 바닥 모양(그림): 양쪽 둔치, 가운데 넓은 물길
-  const bed = x => { const u = (x - 330) / 250; if (Math.abs(u) >= 1) return TOP; return TOP + (BED + 6 - TOP) * Math.pow(1 - u * u, .38); };
-  let d = 'M0 ' + TOP; for (let x = 0; x <= W; x += 8) d += ' L' + x + ' ' + bed(x).toFixed(1); d += ' L' + W + ' ' + TOP;
-  const defs = el('defs', {}); const cp = el('clipPath', { id: 'rvClip' }, defs); el('path', { d: d + ' Z' }, cp);
+  // 단면 모양(그림, 측량 아님): 제내지 → 제방(둑마루) → 고수부지 → 저수로, 좌우 대칭
+  const LS = [[0, 120], [8, 120], [42, TOP], [70, TOP], [134, 166], [194, 166], [208, 190], [218, 206]];
+  const BOT = []; for (let x = 224; x <= 416; x += 8) BOT.push([x, 206 + 22 * Math.sin(Math.PI * (x - 218) / 204)]);
+  const mir = a => a.slice().reverse().map(([x, y]) => [W - x, y]);
+  const PTS = [...LS, ...BOT, ...mir(LS)], pl = a => 'M' + a.map(([x, y]) => x + ' ' + (+y).toFixed(1)).join(' L');
+  const d = pl(PTS);
+  const defs = el('defs', {}); const cp = el('clipPath', { id: 'rvClip' }, defs); el('path', { d: pl(PTS.slice(3, -3)) + ' Z' }, cp);
   // 수위 눈금
   const wc = el('g', { 'clip-path': 'url(#rvClip)' });
   const wg = el('g', { class: 'rv-wg' }, wc);
@@ -1641,9 +1646,19 @@ const RV = (() => {
   // 알갱이: SS가 커질수록 더 많이 보임(로그 눈금 문턱)
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const P = []; for (let k = 0; k < 90; k++) P.push({ c: el('circle', { cx: (rnd() * W).toFixed(1), cy: (8 + rnd() * 170).toFixed(1), r: (1 + rnd() * 1.6).toFixed(1), fill: '#5b4325', opacity: 0 }, pg), t: Math.pow(10, rnd() * Math.log10(60)) });
-  el('path', { d, fill: 'none', stroke: 'var(--soil-l)', 'stroke-width': 1.5 });
-  el('path', { d: d + ' L' + W + ' 250 L0 250 Z', fill: 'var(--soil)', stroke: 'none' }).parentNode.insertBefore(svg.lastChild, wc);
-  el('path', { d: 'M0 ' + TOP + ' H78 M582 ' + TOP + ' H' + W, stroke: 'var(--grass)', 'stroke-width': 4, 'stroke-linecap': 'round' });
+  svg.insertBefore(el('path', { d: d + ' L' + W + ' 250 L0 250 Z', fill: 'var(--soil)' }), wc);
+  el('path', { d, fill: 'none', stroke: 'var(--soil-l)', 'stroke-width': 1.2 });
+  const side = (a, attr) => [a, a.map(([x, y]) => [W - x, y])].forEach(q => el('path', Object.assign({ d: pl(q), fill: 'none' }, attr)));
+  side([[0, 119], [8, 119], [42, TOP - 1]], { stroke: 'var(--grass)', 'stroke-width': 3, 'stroke-linejoin': 'round' });            // 제내지·바깥 비탈 잔디
+  side([[42, TOP - 1.5], [70, TOP - 1.5]], { stroke: 'var(--road)', 'stroke-width': 4 });                                           // 둑마루 길
+  side([[71, TOP + 2], [100, 110]], { stroke: 'var(--grass)', 'stroke-width': 3 });                                                 // 안쪽 비탈 위: 잔디
+  side([[100, 110], [133, 165]], { stroke: 'var(--rock)', 'stroke-width': 5, 'stroke-dasharray': '6 2' });                         // 안쪽 비탈 아래: 호안 블록
+  side([[136, 165], [192, 165]], { stroke: 'var(--grass)', 'stroke-width': 3 });                                                   // 고수부지
+  // 저수로 기슭 사석과 바닥 자갈
+  const rk = (x, y, r) => [x, W - x].forEach(cx => el('ellipse', { cx, cy: y, rx: r * 1.3, ry: r, fill: 'var(--rock)', stroke: 'var(--soil-l)', 'stroke-width': .6 }));
+  for (let k = 0; k <= 6; k++) { const f = k / 6, x = 195 + 23 * f, y = 168 + 38 * f; rk(x + 2, y + 1, 3.2 - f * .8); }
+  for (let x = 232; x <= 408; x += 22) el('ellipse', { cx: x, cy: (207.5 + 22 * Math.sin(Math.PI * (x - 218) / 204)).toFixed(1), rx: 2.2, ry: 1.3, fill: 'var(--rock)' });
+  [['제방', 56, TOP - 6], ['고수부지', 164, 160]].forEach(([t, x, y]) => el('text', { x, y, 'text-anchor': 'middle', class: 'rv-lb' }).textContent = t);
   for (let h = 2; h <= 6; h++) { const y = yOf(h); el('line', { x1: 0, x2: 18, y1: y, y2: y, stroke: 'var(--ink-3)', 'stroke-width': 1 }); el('text', { x: 22, y: y + 4 }).textContent = h + ' m'; }
   const nrm = el('line', { x1: 0, x2: W, stroke: 'var(--ink-3)', 'stroke-width': 1.2, 'stroke-dasharray': '5 4' });
   const mx = el('line', { x1: 0, x2: W, stroke: 'var(--ly)', 'stroke-width': 1.2, 'stroke-dasharray': '5 4' });
