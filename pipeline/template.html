@@ -912,6 +912,39 @@ body.nohelp .refnote:not(.flash){display:none}
 .hd-key .k-tree{background:rgba(47,111,224,.13);border-color:#2f6fe0}.hd-key .k-lin{background:rgba(26,163,184,.14);border-color:#1aa3b8}.hd-key .k-chain{background:rgba(240,138,60,.15);border-color:#f08a3c}.hd-key .k-fix{background:rgba(23,103,63,.12);border-color:var(--ok)}
 @media (max-width:820px){.hd-wrap{overflow-x:auto}.hd{min-width:720px}}
 
+/* 한눈에 · 작동 방식 흐름도 */
+.f2top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12.5px;color:var(--ink-2);margin-bottom:10px}
+.f2clk{font-weight:600;color:#fff;background:var(--est);border-radius:999px;padding:3px 10px}
+.flow2{display:grid;grid-template-columns:1fr 40px 1fr 40px 1.15fr 40px 1fr;align-items:stretch}
+.f2{border-radius:14px;border:1.5px solid var(--c);background:var(--cb);display:flex;flex-direction:column;overflow:hidden}
+.f2.c1{--c:#8aa4c4;--cb:rgba(138,164,196,.10)}.f2.c2{--c:#1aa3b8;--cb:rgba(26,163,184,.10)}.f2.c3{--c:#2f6fe0;--cb:rgba(47,111,224,.10)}.f2.c4{--c:#17673f;--cb:rgba(23,103,63,.10)}
+.f2h{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--c);color:#fff}
+.f2h b{font-size:14.5px;font-weight:600}
+.f2i{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.22);display:grid;place-items:center}.f2i svg{width:16px;height:16px}
+.f2n{font-size:11px;font-weight:600;opacity:.85;order:3;margin-left:auto}
+.f2b{display:flex;flex-direction:column;gap:6px;padding:10px 12px}
+.f2b span{font-size:13px;font-weight:600;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px;display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+.f2b small{font-size:11.5px;font-weight:400;color:var(--ink-3);white-space:nowrap}
+.f2.c4 .f2b span{color:var(--ok)}
+.f2a{position:relative}
+.f2a::before{content:"";position:absolute;left:6px;right:8px;top:50%;height:3px;border-radius:2px;background:var(--line)}
+.f2a::after{content:"";position:absolute;right:2px;top:calc(50% - 6px);border:7.5px solid transparent;border-left-color:var(--ink-3);border-right:0}
+.f2a i{position:absolute;left:6px;top:calc(50% - 4px);width:10px;height:10px;border-radius:50%;background:var(--est);opacity:0}
+.in .f2a i{animation:abFlow 1.6s linear infinite}
+@media (max-width:820px){
+  .flow2{grid-template-columns:minmax(0,1fr)}
+  .f2{flex-direction:row;align-items:stretch}
+  .f2h{flex-direction:column;justify-content:center;gap:4px;width:92px;flex:none;padding:8px 6px;text-align:center}
+  .f2h b{font-size:12.5px;line-height:1.25;word-break:keep-all}.f2n{display:none}
+  .f2b{flex-direction:row;flex-wrap:wrap;gap:4px;padding:8px;align-content:center}
+  .f2b span{font-size:12px;padding:3px 7px;display:inline-flex}
+  .f2b small{font-size:10.5px}
+  .f2a{height:16px}.f2a::before{left:50%;right:auto;top:2px;bottom:5px;width:3px;height:auto;transform:translateX(-50%)}
+  .f2a::after{right:auto;left:calc(50% - 6px);top:auto;bottom:0;border:6px solid transparent;border-top-color:var(--ink-3);border-bottom:0}
+  .f2a i{display:none}
+  .f2top{font-size:11.5px;margin-bottom:8px}
+}
+
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -1357,14 +1390,15 @@ body.nohelp .refnote:not(.flash){display:none}
   <section class="as ia" id="a-flow">
     <p class="as-k">01 · 작동 방식</p>
     <h2 class="as-h">매일 07:30 자동 갱신 흐름</h2>
-    <div class="flow">
-      <div class="fcol rv" style="--d:0s"><h3>입력 자료</h3><p class="fn">강우 <em>AWS 3곳</em></p><p class="fn">수위·유량 <em>원대교</em></p><p class="fn">기온 <em>인제 ASOS</em></p><p class="fn">예보 강우 <em>기상청</em></p></div>
-      <div class="farr" aria-hidden="true"><i></i></div>
-      <div class="fcol rv" style="--d:.25s"><h3>변수 만들기</h3><p class="fn">누적 강우</p><p class="fn">첨두 수위·상승</p><p class="fn">기온</p><p class="fn">홍수 사상</p></div>
-      <div class="farr" aria-hidden="true"><i></i></div>
-      <div class="fcol rv" style="--d:.5s"><h3>모델</h3><p class="fn">XGB + Ridge 혼합</p><p class="fn">홍수일 보정</p><p class="fn">1일 고농도 모드</p></div>
-      <div class="farr" aria-hidden="true"><i></i></div>
-      <div class="fcol fout rv" style="--d:.75s"><h3>결과</h3><p class="fn">일별 SS 추정</p><p class="fn">1·3·5일 예측</p><p class="fn">80% 범위·참고 단계</p></div>
+    <div class="f2top rv"><span class="f2clk">매일 07:30 자동 실행</span><span>PC 작업 스케줄러 → 자료 수집 → 계산 → 사이트 갱신</span></div>
+    <div class="flow2">
+      <div class="f2 c1 rv" style="--d:0s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></span><span class="f2n">1</span><b>입력 자료</b></div><div class="f2b"><span>강우<small>AWS 3곳</small></span><span>수위·유량<small>원대교</small></span><span>기온<small>인제</small></span><span>예보 강우<small>기상청</small></span></div></div>
+      <div class="f2a" aria-hidden="true"><i></i></div>
+      <div class="f2 c2 rv" style="--d:0.2s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="15" r="3"/></svg></span><span class="f2n">2</span><b>변수 만들기</b></div><div class="f2b"><span>누적 강우</span><span>첨두 수위·상승</span><span>기온</span><span>홍수 사상</span></div></div>
+      <div class="f2a" aria-hidden="true"><i></i></div>
+      <div class="f2 c3 rv" style="--d:0.4s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg></span><span class="f2n">3</span><b>하이브리드 모델</b></div><div class="f2b"><span>나무 + 선형<small>50%씩</small></span><span>홍수일 보정<small>비·수위 상승일</small></span><span>1일 고농도 모드<small>6 mg/L 이상</small></span></div></div>
+      <div class="f2a" aria-hidden="true"><i></i></div>
+      <div class="f2 c4 rv" style="--d:0.6s"><div class="f2h"><span class="f2i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="f2n">4</span><b>결과</b></div><div class="f2b"><span>일별 SS 추정</span><span>1·3·5일 예측</span><span>80% 범위·단계</span></div></div>
     </div>
     <p class="hint">홍수 보정: 홍수일(전체의 약 25%)만 · 고농도 모드: 1일 예측 6 mg/L 이상일 때 · 실행: PC 작업 스케줄러, 매일 07:30</p>
   </section>
