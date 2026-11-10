@@ -1,0 +1,823 @@
+{
+ "S01017 포천": [
+  {
+   "query": "경기도 포천시 영중면 사은다리1길 32",
+   "hits": []
+  },
+  {
+   "query": "사은다리1길",
+   "hits": []
+  },
+  {
+   "query": "포천시 영중면 거사리 477-2",
+   "hits": []
+  },
+  {
+   "query": "포천시 영중면 거사리",
+   "hits": []
+  },
+  {
+   "query": "사은교",
+   "hits": [
+    {
+     "lat": "38.0086178",
+     "lon": "127.2375639",
+     "type": "tertiary",
+     "class": "highway",
+     "display_name": "사은교, 영중면, 포천시, 경기도, 11129, 대한민국"
+    }
+   ]
+  },
+  {
+   "query": "거사리",
+   "hits": [
+    {
+     "lat": "37.9905900",
+     "lon": "127.2207000",
+     "type": "village",
+     "class": "place",
+     "display_name": "거사리, 포천시, 경기도, 11129, 대한민국"
+    },
+    {
+     "lat": "36.1758503",
+     "lon": "127.2117500",
+     "type": "village",
+     "class": "place",
+     "display_name": "거사리, 논산시, 충청남도, 32913, 대한민국"
+    }
+   ]
+  }
+ ],
+ "S01006 원주": [
+  {
+   "query": "강원도 원주시 소초면 검엉터길 109",
+   "hits": [
+    {
+     "lat": "37.4202083",
+     "lon": "127.9549980",
+     "type": "unclassified",
+     "class": "highway",
+     "display_name": "검엉터길, 소초면, 원주시, 강원특별자치도, 26306, 대한민국"
+    }
+   ]
+  },
+  {
+   "query": "원주시 소초면 장양리 1228-1",
+   "hits": [
+    {
+     "lat": "37.4209654",
+     "lon": "127.9641925",
+     "type": "industrial",
+     "class": "landuse",
+     "display_name": "장양리 차고지, 소초면, 원주시, 강원특별자치도, 대한민국"
+    }
+   ]
+  },
+  {
+   "query": "원주시 소초면 장양리",
+   "hits": [
+    {
+     "lat": "37.4209654",
+     "lon": "127.9641925",
+     "type": "industrial",
+     "class": "landuse",
+     "display_name": "장양리 차고지, 소초면, 원주시, 강원특별자치도, 대한민국"
+    },
+    {
+     "lat": "37.4199850",
+     "lon": "127.9632190",
+     "type": "bus_stop",
+     "class": "highway",
+     "display_name": "장양리 차고지, 5;19, 소초면, 원주시, 강원특별자치도, 26307, 대한민국"
+    },
+    {
+     "lat": "37.4191683",
+     "lon": "127.9627707",
+     "type": "bus_stop",
+     "class": "highway",
+     "display_name": "장양리 차고지, 북원로, 소초면, 원주시, 강원특별자치도, 26306, 대한민국"
+    }
+   ]
+  }
+ ],
+ "S01009 한탄강": [
+  {
+   "query": "경기도 연천군 전곡읍 전은길 98-68",
+   "hits": []
+  },
+  {
+   "query": "전은길",
+   "hits": [
+    {
+     "lat": "38.0354015",
+     "lon": "127.0750409",
+     "type": "residential",
+     "class": "highway",
+     "display_name": "전은길, 은대리, 전곡읍, 연천군, 경기도, 11035, 대한민국"
+    },
+    {
+     "lat": "38.0411865",
+     "lon": "127.0710565",
+     "type": "residential",
+     "class": "highway",
+     "display_name": "전은길, 은대리, 전곡읍, 연천군, 경기도, 11025, 대한민국"
+    },
+    {
+     "lat": "38.0323254",
+     "lon": "127.0705389",
+     "type": "residential",
+     "class": "highway",
+     "display_name": "전은길, 은대리, 전곡읍, 연천군, 경기도, 11027, 대한민국"
+    }
+   ]
+  },
+  {
+   "query": "연천군 전곡읍 은대리 산125-33",
+   "hits": []
+  },
+  {
+   "query": "연천군 전곡읍 은대리",
+   "hits": [
+    {
+     "lat": "38.0462100",
+     "lon": "127.0688200",
+     "type": "village",
+     "class": "place",
+     "display_name": "은대리, 전곡읍, 연천군, 경기도, 11025, 대한민국"
+    }
+   ]
+  }
+ ],
+ "osm_named_features": [
+  {
+   "name": "사은교앞",
+   "type": "node",
+   "tags": {
+    "name": "사은교앞",
+    "name:ko": "사은교앞",
+    "name:ko-Latn": "In front of Saeun Bridge"
+   },
+   "lat": 38.00387,
+   "lon": 127.24172
+  },
+  {
+   "name": "은대리",
+   "type": "node",
+   "tags": {
+    "name": "은대리",
+    "name:en": "Eundae-ri",
+    "name:ko": "은대리",
+    "place": "village"
+   },
+   "lat": 38.04621,
+   "lon": 127.06882
+  },
+  {
+   "name": "거사리",
+   "type": "node",
+   "tags": {
+    "name": "거사리",
+    "name:en": "Geosa-ri",
+    "name:ko": "거사리",
+    "place": "village"
+   },
+   "lat": 37.99059,
+   "lon": 127.2207
+  },
+  {
+   "name": "장양리",
+   "type": "node",
+   "tags": {
+    "name": "장양리",
+    "name:el": "Τζάνγιανγκ-ρι",
+    "name:en": "Jangyang-ri",
+    "name:ko": "장양리",
+    "name:ko-Latn": "Jangyang-ri",
+    "name:zh": "长阳里",
+    "place": "village"
+   },
+   "lat": 37.4170745,
+   "lon": 127.9689179
+  },
+  {
+   "name": "은대삼거리",
+   "type": "node",
+   "tags": {
+    "junction": "yes",
+    "name": "은대삼거리",
+    "name:en": "Eundaesamgeori",
+    "name:ko": "은대삼거리",
+    "name:ko-Latn": "Eundaesamgeori"
+   },
+   "lat": 38.0355657,
+   "lon": 127.0638592
+  },
+  {
+   "name": "은대감리교회",
+   "type": "node",
+   "tags": {
+    "amenity": "place_of_worship",
+    "check_date": "2024-01-18",
+    "name": "은대감리교회",
+    "name:ko": "은대감리교회",
+    "religion": "christian"
+   },
+   "lat": 38.0497268,
+   "lon": 127.0684411
+  },
+  {
+   "name": "은대1리.양수장입구",
+   "type": "node",
+   "tags": {
+    "bench": "yes",
+    "bin": "no",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "lit": "yes",
+    "name": "은대1리.양수장입구",
+    "name:ko": "은대1리.양수장입구",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform",
+    "shelter": "yes",
+    "tactile_paving": "yes"
+   },
+   "lat": 38.0575864,
+   "lon": 127.0697123
+  },
+  {
+   "name": "은대1리.양수장입구",
+   "type": "node",
+   "tags": {
+    "bench": "yes",
+    "bin": "no",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "lit": "yes",
+    "name": "은대1리.양수장입구",
+    "name:ko": "은대1리.양수장입구",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform",
+    "shelter": "yes",
+    "tactile_paving": "yes"
+   },
+   "lat": 38.0571333,
+   "lon": 127.0691823
+  },
+  {
+   "name": "어수물.은대4리",
+   "type": "node",
+   "tags": {
+    "bench": "yes",
+    "bin": "no",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "lit": "yes",
+    "name": "어수물.은대4리",
+    "name:ko": "어수물.은대4리",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform",
+    "shelter": "yes",
+    "tactile_paving": "no"
+   },
+   "lat": 38.0507269,
+   "lon": 127.0677724
+  },
+  {
+   "name": "어수물.은대4리",
+   "type": "node",
+   "tags": {
+    "bench": "yes",
+    "bin": "no",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "lit": "yes",
+    "name": "어수물.은대4리",
+    "name:ko": "어수물.은대4리",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform",
+    "shelter": "yes",
+    "tactile_paving": "no"
+   },
+   "lat": 38.0505567,
+   "lon": 127.0674474
+  },
+  {
+   "name": "은대3리.바래마을",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "은대3리.바래마을",
+    "name:ko": "은대3리.바래마을",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform"
+   },
+   "lat": 38.0454887,
+   "lon": 127.0681351
+  },
+  {
+   "name": "은대3리.바래마을",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "은대3리.바래마을",
+    "name:ko": "은대3리.바래마을",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform"
+   },
+   "lat": 38.0455079,
+   "lon": 127.068381
+  },
+  {
+   "name": "은대3리",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "은대3리",
+    "name:ko": "은대3리",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform"
+   },
+   "lat": 38.0335284,
+   "lon": 127.0643059
+  },
+  {
+   "name": "은대3리",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "은대3리",
+    "name:ko": "은대3리",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform"
+   },
+   "lat": 38.0331825,
+   "lon": 127.064127
+  },
+  {
+   "name": "거사교차로",
+   "type": "node",
+   "tags": {
+    "junction": "yes",
+    "name": "거사교차로"
+   },
+   "lat": 38.0028809,
+   "lon": 127.2336211
+  },
+  {
+   "name": "거사교차로",
+   "type": "node",
+   "tags": {
+    "junction": "yes",
+    "name": "거사교차로"
+   },
+   "lat": 38.0025795,
+   "lon": 127.2340302
+  },
+  {
+   "name": "장양삼거리",
+   "type": "node",
+   "tags": {
+    "highway": "bus_stop",
+    "name": "장양삼거리",
+    "operator": "원주시",
+    "public_transport": "platform"
+   },
+   "lat": 37.415964,
+   "lon": 127.962146
+  },
+  {
+   "name": "장양초등학교;장양리",
+   "type": "node",
+   "tags": {
+    "addr:housenumber": "2872;4",
+    "addr:street": "북원로;태장공단길",
+    "highway": "bus_stop",
+    "name": "장양초등학교;장양리",
+    "operator": "원주시",
+    "public_transport": "platform"
+   },
+   "lat": 37.400817,
+   "lon": 127.9530732
+  },
+  {
+   "name": "장양초등학교",
+   "type": "node",
+   "tags": {
+    "addr:housenumber": "2872",
+    "addr:street": "북원로",
+    "highway": "bus_stop",
+    "name": "장양초등학교",
+    "operator": "원주시",
+    "public_transport": "platform"
+   },
+   "lat": 37.399388,
+   "lon": 127.952816
+  },
+  {
+   "name": "장양리 차고지",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "장양리 차고지",
+    "operator": "원주시",
+    "public_transport": "platform",
+    "ref": "31066"
+   },
+   "lat": 37.419985,
+   "lon": 127.963219
+  },
+  {
+   "name": "장양리 차고지",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "장양리 차고지",
+    "operator": "원주시",
+    "public_transport": "platform",
+    "ref": "31074"
+   },
+   "lat": 37.420357,
+   "lon": 127.963514
+  },
+  {
+   "name": "장양리 차고지",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "장양리 차고지",
+    "operator": "원주시",
+    "public_transport": "platform",
+    "ref": "68301"
+   },
+   "lat": 37.4191683,
+   "lon": 127.9627707
+  },
+  {
+   "name": "장양리 차고지 수소버스 충전소",
+   "type": "node",
+   "tags": {
+    "access": "permissive",
+    "amenity": "charging_station",
+    "fuel:h35": "yes",
+    "name": "장양리 차고지 수소버스 충전소"
+   },
+   "lat": 37.4204721,
+   "lon": 127.9644348
+  },
+  {
+   "name": "거사1리.백로주입구",
+   "type": "node",
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "name": "거사1리.백로주입구",
+    "network": "경기도 시내버스",
+    "network:en": "G-BUS",
+    "network:ko": "경기도 시내버스",
+    "network:wikidata": "Q4859793",
+    "public_transport": "platform"
+   },
+   "lat": 37.9771551,
+   "lon": 127.2464743
+  },
+  {
+   "name": "은대성로",
+   "type": "way",
+   "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "name": "은대성로",
+    "name:en": "Eundaeseong-ro",
+    "name:ko": "은대성로",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "lat": 38.0180168,
+   "lon": 127.0625408
+  },
+  {
+   "name": "은대성로",
+   "type": "way",
+   "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "name": "은대성로",
+    "name:en": "Eundaeseong-ro",
+    "name:ko": "은대성로",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "lat": 38.0246099,
+   "lon": 127.0605465
+  },
+  {
+   "name": "사은교",
+   "type": "way",
+   "tags": {
+    "bridge": "yes",
+    "bridge:name": "사은교",
+    "bridge:name:en": "Saeun Bridge",
+    "bridge:name:ko": "사은교",
+    "bridge:name:ko-Latn": "Saeungyo",
+    "bridge:structure": "beam",
+    "highway": "tertiary",
+    "layer": "1",
+    "name": "사은교",
+    "name:en": "Saeun Bridge",
+    "name:ko": "사은교",
+    "ncat:bridge": "교차로및지명",
+    "source:bridge": "mp2osm"
+   },
+   "lat": 38.0086178,
+   "lon": 127.2375639
+  },
+  {
+   "name": "장양천",
+   "type": "way",
+   "tags": {
+    "name": "장양천",
+    "source": "Bing",
+    "waterway": "stream"
+   },
+   "lat": 37.4122273,
+   "lon": 127.9600114
+  },
+  {
+   "name": "검엉터길",
+   "type": "way",
+   "tags": {
+    "highway": "unclassified",
+    "name": "검엉터길",
+    "source": "Bing"
+   },
+   "lat": 37.4192564,
+   "lon": 127.9557288
+  },
+  {
+   "name": "전은길",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "name": "전은길",
+    "name:en": "Jeoneun-gil",
+    "name:ko": "전은길"
+   },
+   "lat": 38.0323776,
+   "lon": 127.0706276
+  },
+  {
+   "name": "전은길",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "name": "전은길",
+    "name:en": "Jeoneun-gil",
+    "name:ko": "전은길"
+   },
+   "lat": 38.0353403,
+   "lon": 127.073561
+  },
+  {
+   "name": "은대성로",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "lane_markings": "no",
+    "name": "은대성로",
+    "name:en": "Eundaeseong-ro",
+    "name:ko": "은대성로",
+    "surface": "asphalt"
+   },
+   "lat": 38.0198296,
+   "lon": 127.0646215
+  },
+  {
+   "name": "은대감리교회",
+   "type": "way",
+   "tags": {
+    "building": "church",
+    "name": "은대감리교회",
+    "name:ko": "은대감리교회"
+   },
+   "lat": 38.049721,
+   "lon": 127.0684606
+  },
+  {
+   "name": "은대로",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "name": "은대로",
+    "name:en": "Eundae-ro",
+    "name:ko": "은대로"
+   },
+   "lat": 38.0376985,
+   "lon": 127.0648314
+  },
+  {
+   "name": "전은길",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "name": "전은길",
+    "name:en": "Jeoneun-gil",
+    "name:ko": "전은길"
+   },
+   "lat": 38.0411767,
+   "lon": 127.0710544
+  },
+  {
+   "name": "은대과선교",
+   "type": "way",
+   "tags": {
+    "bridge": "yes",
+    "bridge:structure": "beam",
+    "highway": "trunk_link",
+    "layer": "1",
+    "name": "은대과선교",
+    "name:ko": "은대과선교",
+    "oneway": "yes"
+   },
+   "lat": 38.044968,
+   "lon": 127.0652788
+  },
+  {
+   "name": "은대과선교",
+   "type": "way",
+   "tags": {
+    "bridge": "yes",
+    "bridge:structure": "beam",
+    "highway": "trunk_link",
+    "layer": "1",
+    "name": "은대과선교",
+    "name:ko": "은대과선교",
+    "oneway": "yes"
+   },
+   "lat": 38.0447217,
+   "lon": 127.0653054
+  },
+  {
+   "name": "은대로",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "lanes": "2",
+    "maxheight": "4",
+    "name": "은대로",
+    "name:en": "Eundae-ro",
+    "name:ko": "은대로",
+    "surface": "asphalt"
+   },
+   "lat": 38.0583713,
+   "lon": 127.0658885
+  },
+  {
+   "name": "은대로",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "lanes": "2",
+    "name": "은대로",
+    "name:en": "Eundae-ro",
+    "name:ko": "은대로",
+    "oneway": "no",
+    "surface": "asphalt"
+   },
+   "lat": 38.0494666,
+   "lon": 127.0620086
+  },
+  {
+   "name": "검엉터길",
+   "type": "way",
+   "tags": {
+    "highway": "unclassified",
+    "name": "검엉터길",
+    "source": "Bing"
+   },
+   "lat": 37.4181923,
+   "lon": 127.9624234
+  },
+  {
+   "name": "장양리 차고지",
+   "type": "way",
+   "tags": {
+    "industrial": "depot",
+    "landuse": "industrial",
+    "name": "장양리 차고지"
+   },
+   "lat": 37.4209249,
+   "lon": 127.9640964
+  },
+  {
+   "name": "은대성터",
+   "type": "way",
+   "tags": {
+    "leisure": "park",
+    "name": "은대성터",
+    "operator": "연천군",
+    "operator:type": "government"
+   },
+   "lat": 38.0239885,
+   "lon": 127.0579235
+  },
+  {
+   "name": "은대근린공원",
+   "type": "way",
+   "tags": {
+    "leisure": "park",
+    "name": "은대근린공원"
+   },
+   "lat": 38.0275799,
+   "lon": 127.0636757
+  },
+  {
+   "name": "장양초등학교",
+   "type": "way",
+   "tags": {
+    "amenity": "school",
+    "name": "장양초등학교",
+    "wikidata": "Q19940969",
+    "wikipedia": "ko:장양초등학교"
+   },
+   "lat": 37.3983544,
+   "lon": 127.9538733
+  },
+  {
+   "name": "은대로",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "name": "은대로",
+    "name:en": "Eundae-ro",
+    "name:ko": "은대로"
+   },
+   "lat": 38.0356043,
+   "lon": 127.0640402
+  },
+  {
+   "name": "은대로",
+   "type": "way",
+   "tags": {
+    "highway": "residential",
+    "name": "은대로",
+    "name:en": "Eundae-ro",
+    "name:ko": "은대로"
+   },
+   "lat": 38.0357216,
+   "lon": 127.0642481
+  },
+  {
+   "name": "은대초등학교",
+   "type": "way",
+   "tags": {
+    "amenity": "school",
+    "isced:level": "1",
+    "name": "은대초등학교"
+   },
+   "lat": 38.052476,
+   "lon": 127.0603354
+  },
+  {
+   "name": "거사2교",
+   "type": "way",
+   "tags": {
+    "layer": "1",
+    "man_made": "bridge",
+    "name": "거사2교"
+   },
+   "lat": 38.0020914,
+   "lon": 127.2344368
+  }
+ ]
+}
