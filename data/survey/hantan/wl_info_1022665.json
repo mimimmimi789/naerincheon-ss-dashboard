@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "연천군(궁신교)",
+   "obsnmeng": "Yeoncheon(Gungsingyo)",
+   "wlobscd": "1022665",
+   "mggvcd": "한국수자원공사",
+   "bbsncd": "한강",
+   "sbsncd": "102215",
+   "obsopndt": "2004-11-01",
+   "obskdcd": "T/M",
+   "rivnm": "한탄강",
+   "bsnara": "2452.2",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "18.8",
+   "wsrdis": null,
+   "addr": "경기도 연천군 청산면 궁평리 궁신교",
+   "lon": "127-06-14",
+   "lat": "38-02-10 ",
+   "tmx": "209120",
+   "tmy": "504013",
+   "gdt": "32.734",
+   "wltel": "55.807",
+   "tdeyn": "N",
+   "mxgrd": "17.1",
+   "sistartobsdh": null,
+   "siendobsdh": null,
+   "olstartobsdh": null,
+   "olendobsdh": null
+  }
+ ]
+}

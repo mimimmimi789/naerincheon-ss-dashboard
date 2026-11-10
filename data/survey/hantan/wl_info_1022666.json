@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "연천군(고탄교)",
+   "obsnmeng": "Yeoncheon(Gotangyo)",
+   "wlobscd": "1022666",
+   "mggvcd": "한국수자원공사",
+   "bbsncd": "한강",
+   "sbsncd": "102215",
+   "obsopndt": "2016-06-01",
+   "obskdcd": "T/M",
+   "rivnm": "한탄강",
+   "bsnara": null,
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": null,
+   "wsrdis": null,
+   "addr": "경기도 연천군 전곡읍 전곡리 364-5 고탄교",
+   "lon": "127-04-34",
+   "lat": "38-01-53 ",
+   "tmx": "206682",
+   "tmy": "503487",
+   "gdt": "62.921",
+   "wltel": "118.825",
+   "tdeyn": "N",
+   "mxgrd": "11",
+   "sistartobsdh": "2019031316",
+   "siendobsdh": "2026111016",
+   "olstartobsdh": "20190312",
+   "olendobsdh": "20261109"
+  }
+ ]
+}
