@@ -1,0 +1,1896 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+var sectionInfos = JSON.parse('[{"CD_VAL":"02","CD_NM":"수계로 찾기","DEPTH":3,"DEPTH_1_CODE":"7","DEPTH_2_CODE":"8","DEPTH_3_CODE":"9","SEARCH_CODE":"100","SORT_SEQO":1,"ZONE_COND_CN":"수계(대권역 > 수계 > 중권역)"},{"CD_VAL":"01","CD_NM":"행정구역으로 찾기","DEPTH":1,"DEPTH_1_CODE":"4","DEPTH_2_CODE":null,"DEPTH_3_CODE":null,"SEARCH_CODE":"100","SORT_SEQO":2,"ZONE_COND_CN":"행정구역(시도)"}]');
+var baseItemList = [];
+var chkStationCnt = 0;
+var gridObserver = null;
+var initialLoad = true; 
+
+$(function(){
+
+    // 대권역/중권역/표준유역 단건 선택
+    var attrNames = {
+        "ATTR_1": "대권역/시도는",
+        "ATTR_2": "중권역/시군구는",
+        "ATTR_3": "표준유역/읍면동은"
+    };
+
+    $(document).off('change', "input[name^='ATTR_']");
+    $(document).on('change', "input[name^='ATTR_']", function() {
+
+        var dataGubun = $("#pDataGubun").val();
+        var dcVal = $("#data_code").val();
+        var searchType = $(".cont_in_tab li.on button").data("val");
+        var count = $("input[name='" + this.name + "']:checked").length;
+
+        // 토양토성별 : 400 | 토양지질 : 391 | 임상별 : 402 | 토지지목별 현황 : 382
+        // 유통금융 : 431 | 재정 : 432 | 산업농공단지 : 436 | 수자원단위지도 : 534 | 티센계수 : 535
+        // 상수도 이용현황 : 456 | 생산량 분석현황 : 457 | 업종별 급수량 현황 : 458 | 미급수 이용량 : 453 | 기타 이용량 : 454
+        // 경지면적 : 461 | 논밭용수 이용량 : 462 | 축산용수 이용량 : 460 | 상수도급수구역 : 470 | 전용상수도 : 471
+        // 마을상수도 : 472 | 농업용 수리시설 : 473 | 기타시설 : 474 | 기존산단 : 494 | 치수사업예산 : 504
+        // 복구비 : 502 | 홍수피해 : 505 | 제방 : 511 | 내수배제시설 : 512 | 수문통관통문 : 513 | 홍수방어시설 : 514
+        // 중계펌프장 : 515 | 환경기초시설 : 516 | 생물상 : 517 | 토양오염 : 519
+        if ((dataGubun == '400' || dcVal == '391' || dataGubun == '402' || dataGubun == '382' || dcVal == '423'
+            || dataGubun == '431' || dataGubun == '432' || dataGubun == '436' || dataGubun == '534' || dataGubun == '535'
+            || dataGubun == '456' || dataGubun == '457' || dataGubun == '458' || dcVal == '453' || dcVal == '454'
+            || dataGubun == '461' || dataGubun == '462' || dcVal == '460' || dcVal == '470' || dcVal == '471'
+            || dcVal == '472' || dcVal == '473' || dcVal == '474' || dcVal == '494' || dcVal == '449' || dataGubun == '504'
+            || dcVal == '502' || dcVal == '505' || dcVal == '511' || dcVal == '512' || dcVal == '513' || dcVal == '514'
+            || dcVal == '515' || dcVal == '516' || dcVal == '517' || dcVal == '519') && count > 1) {
+            alert(attrNames[this.name] + " 1개만 선택할 수 있습니다.");
+            $(this).prop("checked", false);
+            return false;
+            // 주택 : 433 | 도로 : 434 | 광공업 : 435 | 농업 : 437 | 경영성, 수도요금 : 455
+        } else if ((dataGubun == '433' || dataGubun == '434' || dataGubun == '435' || dataGubun == '437' || dcVal == '455') && searchType == '01' && count > 1) {
+            alert("시도/시군구/읍면동은 1개만 선택할 수 있습니다.");
+            $(this).prop("checked", false);
+            return false;
+        }
+    });
+
+	//구역선택 > 행정구역,수계,이름으로찾기 이벤트
+	$(document).on('click', ".cont_in_tab li:not(.btn_name_search) button", function() {
+		$('.susb_area_list > li').slice(0).remove();
+		var pLgubun  = $(this).data('val');
+		$("#pLgubun").val(pLgubun);
+		$("#pSearchNm").val("");
+		var idx = $(this).parent().index();
+		setInitEvent(idx);
+		setStationInit();
+		//자료구분 예외처리시 사용
+		var dcVal = $("#data_code").val();
+        var cVal = $("input[name='pDataGubun']").val();
+		if(dcVal == "129" || dcVal == "134"){
+			var dsVal = $("input[name='pDataSubGubun']").val();
+			_SchSet.setEtcViewProc(dcVal,cVal,dsVal,'pDataGubun'); 
+		} else if(["467", "469"].includes(dcVal)) {
+            _SchSet.setEtcViewProc(dcVal,cVal,'hc','pDataGubun');
+        } else if(["429", "430"].includes(cVal)) {
+            $(document).off('change', "input[name='ATTR_1'], input[name='ATTR_1_all']");
+        }
+	});
+	
+	if(sectionInfos.length != 0){
+		$('.susb_area_list > li').slice(0).remove();
+		setInitEvent(0);
+	}
+	
+	//자료구분 이벤트 등록
+	$(document).off('click', "#guSels .data_type_chip");
+	if($("#guSels .data_type_chip").data("type") == 'R'){
+		$(document).on('click', "#guSels .data_type_chip", function() {
+			var subCnt  = $(this).data('id');
+			var pDataGubun  = $(this).data('val');
+			var pGisComboGubun  = $(this).data('gis');
+			$("#searchform > #pGisComboGubun").val(pGisComboGubun);
+			$("#pDataGubun").val(pDataGubun);
+			if(subCnt > 0){
+				var param = {data_gu : 'N', upNo : pDataGubun};
+				_SchSet.setDataRadioCheck(param,false);
+			}else{
+				$("#subRadioArea").html('');
+				$("#guSubSels").hide();
+			}
+			setStationInit();
+			//자료구분 예외처리시 사용
+			var dcVal = $("#data_code").val();
+			var cVal = $("input[name='pDataGubun']").val();
+			var dsVal = $("input[name='pDataSubGubun']").val();
+			_SchSet.setEtcViewProc(dcVal,cVal,dsVal,'pDataGubun');
+		});
+		$("#guSels .data_type_chip.on").trigger('click');
+	}else{
+		$(document).on('click', "#guSels .data_type_chip", function() {
+		    var labelText = $(this).text().trim();
+		    if (labelText === "전체") {
+		        if ($(this).hasClass("on")) {
+		        	$("#guSels .data_type_chip").addClass("on");
+		        } else {
+		        	$("#guSels .data_type_chip").removeClass("on");
+		        }
+		    }
+		    
+		    var pDataGubun  = $(this).data('val');
+			$("#pDataGubun").val(pDataGubun);
+		    var totalParam = _SchSet.getTotalParam(); 
+		    if (totalParam.data_code == '17') { // 환경기초시설
+		    		//측정소 조회(cd_no -> LASTS)
+		    		var gu_no = sectionInfos[0].DEPTH; 
+					var selectedItems = $("input[name='ATTR_2']:checked").map(function() { 
+			            return $(this).data("id");
+			        }).get(); // 배열로 반환
+			      	//측정소 조회(cd_val -> LASTVALS)
+			        var selectedItemValues = $("input[name='ATTR_2']:checked").map(function() { 
+			            return $(this).val();
+			        }).get(); // 배열로 반환
+			        $('.susb_area_list > li').slice(gu_no).remove();
+			        var param = {
+		       			pType : sectionInfos[0].SEARCH_CODE,
+		       			pDataGubun : $("input[name='pDataGubun']").val(),
+		       			pDataSubGubun : $("input[name='pDataSubGubun']").val(),
+		       			pDcVal : $("#data_code").val(),
+		       			pLgubun : $("#pLgubun").val()
+			        };
+			        param["LASTS"] = JSON.stringify(selectedItems);
+			        param["LASTVALS"] = JSON.stringify(selectedItemValues);
+			        var totalParam = _SchSet.getTotalParam(); 
+			        if (totalParam.data_code == '17') {
+			        	 var arr = JSON.parse(totalParam.pDataGubuns); 
+			 			 var mapping = {"60":'|W|V|F|I|A|S|H',"61": "W", "62": "V", "63": "F", "64": "I", "65": "A", "66": "S","67": "H"};
+			 			 var guqnsArr = arr.map(value => mapping[value]);
+			 			param["GUBUNVALS"] = JSON.stringify(guqnsArr);
+					}
+			        if(selectedItems != null && selectedItems != ''){
+						_SchSet.setSelectZoneCheck("s","STATION_CODE", param, false);
+			        }
+		    		
+			}
+		    setStationInit();
+		});
+	}
+
+	
+	//조사분야 이벤트 등록
+	$(document).off('click', "#guSubSels .data_type_chip");
+	$(document).on('click', "#guSubSels .data_type_chip", function() {
+		var pDataSubGubun  = $(this).data('val');
+		$("#pDataSubGubun").val(pDataSubGubun);
+		//조사분야 예외처리시 사용
+		var dcVal = $("#data_code").val();
+		var cVal = $("input[name='pDataGubun']").val();
+		var dsVal = $("input[name='pDataSubGubun']").val();
+		_SchSet.setEtcViewProc(dcVal,cVal,dsVal,'pDataSubGubun');
+	});
+	
+	
+	//조회기간 이벤트 등록
+   	$(document).off('change', "#pDateGun");
+   	$(document).on('change', "#pDateGun", function() {
+    	//조회기간 예외처리시 사용
+   		var dcVal = $("#data_code").val();
+      	var cVal = $("input[name='pDataGubun']").val();
+      	var dsVal = $("input[name='pDataSubGubun']").val();
+      	_SchSet.setEtcViewProc(dcVal,cVal,dsVal,'pDateGun');
+   	});
+	
+	
+  	//탭 이벤트 등록
+    $(document).off('click', "#tabBtns li button");
+	$(document).on('click', "#tabBtns li button", function() {
+		var tbmn_sn  = $(this).data('id');
+		$("#tbmn_sn").val(tbmn_sn);
+
+		var dcVal = $("#data_code").val();
+		var idx = $("#tabBtns li:has(button[data-id="+$("#tbmn_sn").val()+"])").index();
+		var exec = tabFun[idx];
+		exec = exec.replace("Form", "Call");
+		
+		// 홍수피해현황 : 336 | 국가관리측정망 : 150 | 국가오염측정망 : 313 | 지하수통계 : 43 | 낙동강 하굿둑(지하수) : 368
+		// 자동측정망 : 11 | 생물측정망 : 19 | 조류측정자료 : 57 | 비점오염물질측정망 : 14 | 낙동강 하굿둑(수질) : 315 
+		// 그래프 호출함수 제외
+		if(dcVal == '336' || dcVal == '150' || dcVal == '313' || dcVal == '43' || dcVal == '368'
+		|| dcVal == '11' || dcVal == '19' || dcVal == '57' || dcVal == '14' || dcVal == '315'){
+			exec = exec.replace("chartCall", "chartForm");
+		}
+
+        if(dcVal == '506' && $('#guSels').find('button.on').data('val') == '509') { // 수자원 예외처리
+        } else {
+            if(!_SchSet.paramValidate()) return;
+        }
+		
+		new Function(exec)();
+		
+		var tab_top_data_code = $(".category_tab li.on button").data("id");
+		//상단 탭이 수질 일 경우만 측정항목 함수 호출
+		if(tab_top_data_code == '1'){
+			itemSelects();
+		}
+		
+	});
+	
+	
+	//데이터 선택값 변경시 함께보면 좋은정보 변경
+	$(document).on('click', ".data_chi_chip, .susj_detail_chip", function() {
+		$(".more_box_cont b").text("["+$(this).find("span").text()+"]");
+		return false;
+	});
+	
+	
+	//측정항목 > 기본항목,전체선택 이벤트
+	$(document).on('change', "#measch_01, #measch_02", function(){
+
+	    var id = this.id;
+	    var hasGrid = typeof gridView !== "undefined" && gridView;
+
+	    // 기본항목선택
+	    if(id === "measch_01"){
+	        if(this.checked){
+	            $("#measch_02").prop("checked", false); // 전체 해제
+
+	            $("input[name='measItem']").each(function(){
+	                var col = $(this).data("col");
+	                var isBase = baseItemList.includes(col);
+
+	                $(this).prop("checked", isBase);
+	                
+	                if (hasGrid) {
+	                	gridView.setColumnProperty(col, 'visible', isBase);
+	                }
+	            });
+
+	        }else{
+	            // 기본항목 해제 시 전체도 꺼져있으면 전체 해제
+	            if(!$("#measch_02").is(":checked")){
+	                $("input[name='measItem']").each(function(){
+	                    var col = $(this).data("col");
+
+	                    $(this).prop("checked", false);
+	                    
+	                    if (hasGrid) {
+	                    	gridView.setColumnProperty(col, 'visible', false);
+	                    }
+	                });
+	            }
+	        }
+	    }
+
+	    // 전체선택
+	    if(id === "measch_02"){
+	        if(this.checked){
+	            $("#measch_01").prop("checked", false); // 기본 해제
+
+	            $("input[name='measItem']").each(function(){
+	                var col = $(this).data("col");
+
+	                $(this).prop("checked", true);
+	                gridView.setColumnProperty(col, 'visible', true);
+	            });
+
+	        }else{
+	            // 전체 해제 시 기본항목 체크돼있으면 BASE 적용
+	            if($("#measch_01").is(":checked")){
+	                $("input[name='measItem']").each(function(){
+	                    var col = $(this).data("col");
+	                    var isBase = baseItemList.includes(col);
+
+	                    $(this).prop("checked", isBase);
+	                    gridView.setColumnProperty(col, 'visible', isBase);
+	                });
+
+		            }else{
+	                $("input[name='measItem']").each(function(){
+	                    var col = $(this).data("col");
+
+	                    $(this).prop("checked", false);
+	                    gridView.setColumnProperty(col, 'visible', false);
+	                });
+	            }
+	        }
+	    }
+
+	    $(".summary_txt > strong").html($("input[name='measItem']:checked").length);
+	});
+	
+	
+	//지점 체크박스 선택
+	$(document).off('change', "input[name='STATION_CODE']");
+	$(document).on('change', "input[name='STATION_CODE']", function() {
+        var dcVal = $("#data_code").val();
+        var count = $("input[name='STATION_CODE']:checked").length;
+
+        // 강수 : 28 | 수위유량 : 29 | 댐 : 30 | 보 : 31 | 수문조사연보 강수량 : 538
+        // 수문조사연보 수위 : 539 | 수문조사연보 유량 : 540 | 수위유량관계곡선식 : 439 | 유사량특성 : 441
+        if((dcVal == '28' || dcVal == '29' || dcVal == '30' || dcVal == '31' || dcVal == '538'
+            || dcVal == '539' || dcVal == '540' || dcVal == '439' || dcVal == '441') && count > 1){
+
+            alert("지점은 한개만 선택할 수 있습니다.");
+            $(this).prop("checked", false);
+            return false;
+        }
+
+		var chkIdx = $("input[name='STATION_CODE']").index(this);
+		if ($(this).is(':checked')) {
+			$("#setStationDiv").append('<span class="subj_btn_tag">'+$("input[name='STATION_CODE']").eq(chkIdx).next().text()+'<button type="button" class="btn_tag_del" id="'+$(this).val()+'" onclick="return false;"><span class="sr-only">삭제</span></button></span>');
+			chkStationCnt++;
+		}else{
+			$("#setStationDiv button[id='"+$(this).val()+"']").closest("span").remove();
+			chkStationCnt--;
+		}
+		
+		chkStationCnt = $("input[name='STATION_CODE']:checked").length;
+		$("#setStationDiv").prev(".subj_tag_tit").find("b").text("("+chkStationCnt+")");
+		setStationTagVisible();
+		return false;
+	});
+	
+	//선택된 지점 삭제
+	$(document).off('click', ".btn_tag_del");
+	$(document).on('click', ".btn_tag_del", function() {
+	    var val = $(this).attr('id');
+	    $("input[name='STATION_CODE'][value='"+val+"']").prop('checked', false).trigger('change');
+	});
+
+
+
+	
+	//조회기간 세팅
+	selTotGuId = '';
+	selTotGuCnt = 0;
+	itemSelects();	//측정항목 선택 추가
+	dataExplan();	//데이터 설명 추가
+	initDateGubus();
+	setStationTagVisible();
+
+});
+
+//구역선택 이벤트 세팅
+function setInitEvent(idx){
+	offEvent();
+	_SchSet.setSelectZoneCheck("c","ATTR_1", {  pType : sectionInfos[idx].DEPTH_1_CODE, 
+											    pDataGubun : $("input[name='pDataGubun']").val(),
+											    pDataSubGubun : $("input[name='pDataSubGubun']").val(),
+											    pDcVal : $("#data_code").val(),
+											    pLgubun : $("#pLgubun").val()
+											  },false);
+	if(sectionInfos[idx].DEPTH_2_CODE){
+		onEvent(sectionInfos, 1, idx);
+	}
+	if(sectionInfos[idx].DEPTH_3_CODE){
+		onEvent(sectionInfos, 2, idx);
+	}
+	if(sectionInfos[idx].SEARCH_CODE){
+		onEvent(sectionInfos, 's', idx);
+	}
+}
+//구역선택 이벤트 등록
+function onEvent(sectionInfos, gu_no, idx){
+	if(gu_no == 's'){
+		gu_no = sectionInfos[idx].DEPTH; 
+		$(document).on('change', "input[name='ATTR_"+gu_no+"'], input[name='ATTR_"+gu_no+"_all']", function() {
+			//측정소 조회(cd_no -> LASTS)
+			var selectedItems = $("input[name='ATTR_"+gu_no+"']:checked").map(function() { 
+	            return $(this).data("id");
+	        }).get(); // 배열로 반환
+	      	//측정소 조회(cd_val -> LASTVALS)
+	        var selectedItemValues = $("input[name='ATTR_"+gu_no+"']:checked").map(function() { 
+	            return $(this).val();
+	        }).get(); // 배열로 반환
+	        $('.susb_area_list > li').slice(gu_no).remove();
+	        var param = {
+       			pType : sectionInfos[idx].SEARCH_CODE,
+       			pDataGubun : $("input[name='pDataGubun']").val(),
+       			pDataSubGubun : $("input[name='pDataSubGubun']").val(),
+       			pDcVal : $("#data_code").val(),
+       			pLgubun : $("#pLgubun").val()
+	        };
+	        param["LASTS"] = JSON.stringify(selectedItems);
+	        param["LASTVALS"] = JSON.stringify(selectedItemValues);
+	        var totalParam = _SchSet.getTotalParam(); 
+	        if (totalParam.data_code == '17') { // 환경기초시설
+	        	 var arr = JSON.parse(totalParam.pDataGubuns); 
+	 			 var mapping = {"60":'|W|V|F|I|A|S|H',"61": "W", "62": "V", "63": "F", "64": "I", "65": "A", "66": "S","67": "H"};
+	 			 var guqnsArr = arr.map(value => mapping[value]);
+	 			param["GUBUNVALS"] = JSON.stringify(guqnsArr);
+			}
+	        if(selectedItems != null && selectedItems != ''){
+				_SchSet.setSelectZoneCheck("s","STATION_CODE", param, false);
+	        }
+	        
+	        setStationInit();
+		});
+		$(document).on('click', "#pStationSearch", function() {
+			if($("#pSearchNm").val() == ""){
+				alert("검색할 이름을 입력하세요.");
+				$("#pSearchNm").focus();
+				return;
+			}
+			
+			var totalParam = _SchSet.getTotalParam(); 
+			var gubun_param = {};
+	        if (totalParam.data_code == '17') { // 환경기초시설
+	        	 var arr = JSON.parse(totalParam.pDataGubuns); 
+	 			 var mapping = {"60":'|W|V|F|I|A|S|H',"61": "W", "62": "V", "63": "F", "64": "I", "65": "A", "66": "S","67": "H"};
+	 			 var guqnsArr = arr.map(value => mapping[value]);
+			}
+			_SchSet.setSelectZoneCheck("s","STATION_CODE", {pType : sectionInfos[idx].SEARCH_CODE, pDataGubun : $("input[name='pDataGubun']").val(), pDataSubGubun : $("input[name='pDataSubGubun']").val(), pDcVal : $("#data_code").val()
+										, stNm : $("#pSearchNm").val(), pLgubun : $("#pLgubun").val()
+										, GUBUNVALS : JSON.stringify(guqnsArr)},false);
+			setStationInit();
+			return false;
+		});
+		
+		
+	}else{ 
+		$(document).on('change', "input[name='ATTR_"+gu_no+"'], input[name='ATTR_"+gu_no+"_all']", function() { 
+	        $('.susb_area_list > li').slice(gu_no).remove(); 
+	        var param = { 
+	   			pType : sectionInfos[idx]['DEPTH_'+(parseInt(gu_no)+1)+'_CODE'], 
+	   			pDataGubun : $("input[name='pDataGubun']").val(), 
+	   			pDataSubGubun : $("input[name='pDataSubGubun']").val(), 
+	   			pDcVal : $("#data_code").val(), 
+	   			pLgubun : $("#pLgubun").val() 
+	        }; 
+
+	        var selectedItems = [];
+
+	        if($("input[name='ATTR_1']").length > 0){ 
+	        	selectedItems = $("input[name='ATTR_1']:checked").map(function() { 
+		            return $(this).data("id"); 
+		        }).get();  
+	        	param.ATTRS = JSON.stringify(selectedItems); 
+	        } 
+
+	        if($("input[name='ATTR_2']").length > 0){ 
+	        	selectedItems = $("input[name='ATTR_2']:checked").map(function() { 
+		            return $(this).data("id"); 
+		        }).get();  
+	        	param.ATTRS = JSON.stringify(selectedItems); 
+	        } 
+	         
+	        if((param.pDcVal == '11' || param.pDcVal == '12' || param.pDcVal == '13') && gu_no == '1'){ 
+	        	if($("input[name='ATTR_1']:checked").length > 0){ 
+	        		_SchSet.setSelectZoneCheck("c","ATTR_2", param, false); 
+	        		$("input[name='ATTR_2']:first").trigger("change"); 
+	        	}
+	        }else if((param.pDcVal == '11' || param.pDcVal == '12' || param.pDcVal == '13') && gu_no == '2'){ 
+	        	if($("input[name='ATTR_2']:checked").length > 0){ 
+	        		_SchSet.setSelectZoneCheck("c","ATTR_3", param, false); 
+	        		$("input[name='ATTR_3']:first").trigger("change"); 
+	        	}
+	        }else if(selectedItems.length > 0){ 
+	        	_SchSet.setSelectZoneCheck("c","ATTR_"+(parseInt(gu_no)+1), param, false); 
+	        }
+	        
+	        setStationInit(); 
+		}); 
+	}
+	
+}
+//구역선택 이벤트 삭제
+function offEvent(){
+	$(document).off('change', "input[name='ATTR_1'], input[name='ATTR_1_all']");
+	$(document).off('change', "input[name='ATTR_2'], input[name='ATTR_2_all']");
+	$(document).off('change', "input[name='ATTR_3'], input[name='ATTR_3_all']");
+	$(document).off('click', "#pStationSearch");
+}
+
+
+//검색버튼 이벤트
+function totalSearch(){
+	var fun = 'return _Water.waterNtwrk.searchCall()';
+	new Function(fun)();
+	_SchSet.insertLog('I');
+	return false;
+}
+
+
+//조회기간 구분이 변경될때 같은 ID 및 갯수가 같으면 그대로 보이게 할때 사용
+var selTotGuId;
+var selTotGuCnt;
+function getChgDateGu(){
+	var id = $("#pDateGun :selected").data("id");
+	var start = $("#pDateGun :selected").data("start");
+	var optionCount = $('#pDateGun option').length;
+	var data_code = $("#data_code").val();
+	var dataGubun = $("input[name='pDataGubun']").val()
+	if(selTotGuId == id && selTotGuCnt == optionCount) return;
+	selTotGuId = id;
+	selTotGuCnt = optionCount;
+	setSearchDate(id, start);
+	
+	//일주일,1개월,3개월 기본 세팅
+	if(id == '7'){
+    	//수질 > 낙동강 하굿둑 today 세팅
+      	if(data_code == '315'){         
+        	setDay(0);
+      	}else{
+
+      		if(data_code == "14"){ //수질 > 비점오염원 (today-8일 ~ today-2일) 디폴트 지정
+      			var yesterday = new Date();
+      			yesterday.setDate(yesterday.getDate() - 2);
+
+      			var maxDate = yesterday.getFullYear() + "-"
+      			            + String(yesterday.getMonth() + 1).padStart(2, "0") + "-"
+      			            + String(yesterday.getDate()).padStart(2, "0");
+
+      			$("#pEDay").datepicker("setDate", maxDate);
+      		}
+
+        	setDay(6);
+         
+        	if(data_code == "85"){ //상수도 > 감시항목 > 주자료 > 그래프탭 숨김
+            	$("#tabBtns li button").eq(0).trigger('click');
+            	$("#tabBtns").closest(".subj_tab").hide();
+         	}
+      	}
+   	}else{
+    	if(data_code == "85"){ //상수도 > 감시항목 > 그래프탭 복구
+    		$("#tabBtns").closest(".subj_tab").show();
+      	}
+    	
+    	//물재해 > 가뭄 > 가뭄현황 및 전망 > 상수도 미보급 시설, 비상급수 > 그래프탭 숨김
+    	if(data_code == '149'){
+		    if(dataGubun == '243'|| dataGubun == '244'){
+				$("#tabBtns li button").eq(0).trigger('click');
+				$("#tabBtns").closest(".subj_tab").hide();
+		    }else{
+		    	$("#tabBtns").closest(".subj_tab").show();
+		    }
+    	}
+   	}
+	
+	var today = new Date();
+	
+	// 수질 -> 자동측정망 미확정 자료 pSDay 초기화
+	if (data_code == '11' && dataGubun == '49') {
+	    var twoMonthsAgo = new Date();
+	    twoMonthsAgo.setMonth(today.getMonth() - 2);
+	    today.setHours(0, 0, 0, 0);
+	    twoMonthsAgo.setHours(0, 0, 0, 0);
+	    var timeDifference = today - twoMonthsAgo;
+	    var daysDifference = timeDifference / (1000 * 3600 * 24);
+		gfnSetDatePickerTwo("pSDay",'',"pSDay","pSDay");
+		$("#pSDay").datepicker("option", "minDate",twoMonthsAgo);
+		$("#pEDay").datepicker("option", "minDate",twoMonthsAgo);
+		setDay(6);
+	}
+	
+	$("#pSDay").datepicker("option", "maxDate",today);
+	$("#pEDay").datepicker("option", "maxDate", today);
+	
+	
+	//조회구분이 1개일경우 안보이게 하자
+	if(optionCount == 1){
+		$("#pDateGun").parent().hide();
+		
+		//조회년도 단일 조회 일경우 명칭변경
+		if(id == '1'){
+			var emNum = $("#dateGubus .susb_tit em").text();
+			$("#dateGubus .susb_tit").html("<em>" + emNum + "</em>조회년도");
+		}
+	}else{
+		$("#pDateGun").parent().show();
+	}
+}
+
+function setSearchDate(gubun, start){
+	var data_code = $("#data_code").val();
+	$(".sch_filter_box").children().not($(".sch_filter_box").children(".formUint").eq(0)).remove();
+	if(gubun == "1"){ //년도
+		var html = '<div class="formUint"><select class="krds-form-select small" title="년도 선택" name="pSYY" id="pSYY"></select></div>';
+		$(".sch_filter_box").append(html);
+		setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		
+	}else if(gubun == "2"){ //년월
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="년도 선택" name="pSYY" id="pSYY"></select>';
+			html += '<select class="krds-form-select small" title="월 선택" name="pSMM" id="pSMM"></select></div></div>';
+		$(".sch_filter_box").append(html);
+		setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		setComboBoxList("", "pSMM", {pType : 2},true, $("#maxYmd").val().substring(4,6));
+		
+	}else if(gubun == "3"){ //년월일
+		var html = '<div class="formUint"><input type="text" class="inp_cal" value="" title="날짜" name="pSDay" id="pSDay" readonly></div>';
+		$(".sch_filter_box").append(html);
+		gfnSetDatePickerOne($("#pSDay"));
+	}else if(gubun == "4"){ //년월일시간
+		var html = '<div class="formSet"><div class="formUnitSet"><input type="text" class="inp_cal" value="" title="날짜" name="pSDay" id="pSDay" readonly>';
+			html += '<input type="text" class="krds-form-select small intCheck W100" value="" title="시간" name="pSTime" id="pSTime" maxlength="4" readonly></div></div>';
+		$(".sch_filter_box").append(html);
+		gfnSetDatePickerOne($("#pSDay"));
+		$('#pSTime').datetimepicker({
+		    datepicker: false,
+		    format: 'H:i',
+		    step: 10 // 시간 간격을 10분으로 설정
+		});
+		
+	}else if(gubun == "5"){ //년 ~ 년
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="시작년도 선택" name="pSYY" id="pSYY"></select></div></div>';
+			html += '<div class="formSet"><span class="form_tit">종료기간</span><div class="formUnitSet"><select class="krds-form-select small" title="종료년도 선택" name="pEYY" id="pEYY"></select></div></div>';
+			$(".sch_filter_box").append(html);
+			if(data_code == "24" || data_code == "27"){
+				//상하수도 통계 시작년도는 조회기간 설정의 시작연도를 기본값으로 사용
+				setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, start);
+			}else if(data_code == "79" || data_code == "336"){ //하천 > 하천기본계획보고서, 물재해 > 홍수 > 홍수피해현황 시작년도 max-4년 디폴트 지정
+				setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-47).ymd.substring(0,4));
+			}else if(data_code == "83" || data_code == "84" || data_code == "85"){ //상수도 > 원수,정수,감시항목 시작년도 max-1년 디폴트 지정
+				setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(0,4));
+			}else if(data_code == "146" || data_code == "147" || data_code == "148" ){ //물재해 갈수 > 갈수 예보, 갈수 전망, 물재해 > 가뭄 > 가뭄 예경보 시작년도 max-1년 디폴트 지정
+				setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(0,4));
+			}else{
+				setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+			}
+			setComboBoxList("", "pEYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+			
+	}else if(gubun == "6"){ //년월 ~ 년월
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="시작년도 선택" name="pSYY" id="pSYY"></select>';
+		html += '<select class="krds-form-select small" title="시작월 선택" name="pSMM" id="pSMM"></select></div></div>';
+		html += '<div class="formSet"><span class="form_tit">종료기간</span><div class="formUnitSet"><select class="krds-form-select small" title="종료년도 선택" name="pEYY" id="pEYY"></select>';
+		html += '<select class="krds-form-select small" title="종료월 선택" name="pEMM" id="pEMM"></select></div></div>';
+		$(".sch_filter_box").append(html);
+		
+		//수질 > 수질측정망,총량측정망,조류측정자료 시작년도,월 max-2개월 디폴트 지정
+		if(data_code == "9" || data_code == "10" || data_code == "57"){		
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-2).ymd.substring(0,4));
+			setComboBoxList("", "pSMM", {pType : 2},true, gfnAddMonth($("#maxYmd").val(),-2).ymd.substring(5,7));
+		}else if(data_code == "83" || data_code == "84" || data_code == "85" || data_code == "26"){ //상수도 > 원수,정수,감시항목, 하수도 > 하수도운영 시작년도,월 max-1년 디폴트 지정			
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(0,4));
+			setComboBoxList("", "pSMM", {pType : 2},true, gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(5,7));
+		}else{			
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+			setComboBoxList("", "pSMM", {pType : 2},true, $("#maxYmd").val().substring(4,6));
+		}
+		setComboBoxList("", "pEYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		setComboBoxList("", "pEMM", {pType : 2},true, $("#maxYmd").val().substring(4,6));
+	}else if(gubun == "7"){ //년월일 ~ 년월일
+		var html = '<div class="formUnitSet">';
+		html += '<input type="text" class="inp_cal" value="" title="시작날짜" name="pSDay" id="pSDay" readonly><span>~</span>'; 
+		html += '<input type="text" class="inp_cal" value="" title="종료날짜" name="pEDay" id="pEDay" readonly>';
+		html += '</div>'
+		$(".sch_filter_box").append(html);
+		gfnInitDatePickerTwo("pSDay","pEDay");
+		
+	}else if(gubun == "8"){ //년반기 ~ 년반기
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="시작년도 선택" name="pSYY" id="pSYY"></select>';
+		html += '<select class="krds-form-select small" title="시작반기 선택" name="pSBB" id="pSBB"></select></div></div>';
+		html += '<div class="formSet"><span class="form_tit">종료기간</span><div class="formUnitSet"><select class="krds-form-select small" title="종료년도 선택" name="pEYY" id="pEYY"></select>';
+		html += '<select class="krds-form-select small" title="종료반기 선택" name="pEBB" id="pEBB"></select></div></div>';
+		$(".sch_filter_box").append(html);
+		
+		//수질 > 퇴적물측정망,방사성물질측정망 시작년도,반기 max-2년 디폴트 지정
+		if(data_code == "12" || data_code == "13"){
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-35).ymd.substring(0,4));
+			setComboBoxList("", "pSBB", {pType : 0, ATTR_1 : 162},true, Number(gfnAddMonth($("#maxYmd").val(),-35).ymd.substring(5,7)) <= 6 ? '1' : '2');
+		}else if(data_code == "83" || data_code == "84" || data_code == "85"){ //상수도 > 원수,정수,감시항목 시작년도,반기 max-1년 디폴트 지정	
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(0,4));
+			setComboBoxList("", "pSBB", {pType : 0, ATTR_1 : 162},true, Number(gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(5,7)) <= 6 ? '1' : '2');
+		}else{
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+			setComboBoxList("", "pSBB", {pType : 0, ATTR_1 : 162},true, Number($("#maxYmd").val().substring(4,6)) <= 6 ? '1' : '2');
+		}
+		setComboBoxList("", "pEYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		setComboBoxList("", "pEBB", {pType : 0, ATTR_1 : 162},true, Number($("#maxYmd").val().substring(4,6)) <= 6 ? '1' : '2');
+		
+	}else if(gubun == "9"){ //년분기 ~ 년분기
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="시작년도 선택" name="pSYY" id="pSYY"></select>';
+		html += '<select class="krds-form-select small" title="시작분기 선택" name="pSHH" id="pSHH"></select></div></div>';
+		html += '<div class="formSet"><span class="form_tit">종료기간</span><div class="formUnitSet"><select class="krds-form-select small" title="종료년도 선택" name="pEYY" id="pEYY"></select>';
+		html += '<select class="krds-form-select small" title="종료분기 선택" name="pEHH" id="pEHH"></select></div></div>';
+		$(".sch_filter_box").append(html);
+		
+		//상수도 > 원수,정수,감시항목 시작년도,분기 max-1년 디폴트 지정
+		if(data_code == "83" || data_code == "84" || data_code == "85"){
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(0,4));
+			setComboBoxList("", "pSHH", {pType : 0, ATTR_1 : 157},true, Number(gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(5,7)) <= 3 ? '1' : Number(gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(5,7)) <= 6 ? '2' : Number(gfnAddMonth($("#maxYmd").val(),-11).ymd.substring(5,7)) <= 9 ? '3' : '4');
+		}else{			
+			setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+			setComboBoxList("", "pSHH", {pType : 0, ATTR_1 : 157},true, Number($("#maxYmd").val().substring(4,6)) <= 3 ? '1' : Number($("#maxYmd").val().substring(4,6)) <= 6 ? '2' : Number($("#maxYmd").val().substring(4,6)) <= 9 ? '3' : '4');
+		}
+		setComboBoxList("", "pEYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		setComboBoxList("", "pEHH", {pType : 0, ATTR_1 : 157},true, Number($("#maxYmd").val().substring(4,6)) <= 3 ? '1' : Number($("#maxYmd").val().substring(4,6)) <= 6 ? '2' : Number($("#maxYmd").val().substring(4,6)) <= 9 ? '3' : '4');
+		
+	}else if(gubun == "10"){ //년회차 ~ 년회차
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="시작년도 선택" name="pSYY" id="pSYY"></select>';
+		html += '<select class="krds-form-select small" title="시작회차 선택" name="pSTT" id="pSTT"></select></div></div>';
+		html += '<div class="formSet"><span class="form_tit">종료기간</span><div class="formUnitSet"><select class="krds-form-select small" title="종료년도 선택" name="pEYY" id="pEYY"></select>';
+		html += '<select class="krds-form-select small" title="종료회차 선택" name="pETT" id="pETT"></select></div></div>';
+		$(".sch_filter_box").append(html);
+		
+		//수질 > 생물측정망만 사용
+		setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, gfnAddMonth($("#maxYmd").val(),-23).ymd.substring(0,4));
+		setComboBoxList("", "pSTT", {pType : 0, ATTR_1 : 154},true, '1');
+		setComboBoxList("", "pEYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		setComboBoxList("", "pETT", {pType : 0, ATTR_1 : 154},true, '2');
+	}else if(gubun == "11"){ //년 분기+7,8,9 지하수 먹는물
+		var html = '<div class="formSet"><span class="form_tit">시작기간</span><div class="formUnitSet"><select class="krds-form-select small" title="시작년도 선택" name="pSYY" id="pSYY"></select>';
+		html += '<select class="krds-form-select small" title="시작회차 선택" name="pSTT" id="pSTT"></select></div></div>';
+		$(".sch_filter_box").append(html);
+		setComboBoxList("", "pSYY", {pType : 1, pStartYear : start},true, $("#maxYmd").val().substring(0,4));
+		setComboBoxList("A", "pSTT", {pType : 0, ATTR_1 : 4835},true, '');
+	}
+	
+	//달력 이미지버튼 삭제
+	$("#pSDay, #pEDay").datepicker("option", {
+	    showOn: "focus",   // 아이콘 대신 입력 필드를 클릭했을 때 달력이 열리도록 설정
+	    buttonImage: "",   // 이미지 설정 제거
+	    buttonText: ""     // 버튼 텍스트 제거
+	});
+	if($("#pEDay").length == 1){
+		$("#pSDay").val(gfnAddMonth(gfnCurYYYYMMDD(),-1).ymd);	
+		$("#pEDay").val(gfnCurYYYYMMDD('-'));
+	}else{
+		$("#pSDay").val(gfnCurYYYYMMDD('-'));
+	}
+	
+
+	
+	/* Y : 년
+	YM : 년월
+	YMD : 년월일
+	YMDT : 년월일시간
+	Y~Y : 년~년
+	YM~YM : 년월 ~ 년월
+	YMD~YMD 년월일 ~ 년월일
+	YB~YB : 년반기 ~ 년반기
+	YH~YH : 년분기 ~ 년분기
+	YT~YT : 년회차 ~ 년회차 */
+}
+
+function dateGubus(pa){
+	if(pa == null){
+		pa = $("#data_code").val();
+	}
+	var url = "/web/totalSearch/dateGubunsListJson";
+	var params = {gubun : pa}; 
+	var sucessFunc = function(data) {
+		var list = data.list;
+		$("#dateGubus").hide();		
+		if(list.length > 0){
+			$("#dateGubus").show();
+		}
+		$("#pDateGun").html('');
+		for (var i = 0; i < list.length; i++) {
+			var html = "";
+			html += '<option value="'+list[i].INQ_CL_NO+'" data-id="'+list[i].INQ_COND_CD+'" data-start="'+list[i].BGNG_PRD_COND_VAL+'">'+list[i].INQ_CL_NM+'</option>';
+			$("#pDateGun").append(html);
+		}
+		getChgDateGu();
+		setSubjNumber();
+	};
+	ajaxCallNoBlock(url, params, sucessFunc);
+}
+
+function initDateGubus(pa){
+	if(pa == null){
+		pa = $("#data_code").val();
+	}
+	var url = "/web/totalSearch/dateGubunsListJson";
+	var params = {gubun : pa}; 
+	var sucessFunc = function(data) {
+		var list = data.list;
+		var withInfoChk = false;
+		$("#geoBox").hide();
+		$("#operBox").hide();
+		$("#dataSetBox").hide();
+		$("#openApiBox").hide();
+		$("#dateGubus").hide();		
+		if(list.length > 0){
+			$("#dateGubus").show();
+		}
+		$("#pDateGun").html('');
+		for (var i = 0; i < list.length; i++) {
+			var html = "";
+			html += '<option value="'+list[i].INQ_CL_NO+'" data-id="'+list[i].INQ_COND_CD+'" data-start="'+list[i].BGNG_PRD_COND_VAL+'">'+list[i].INQ_CL_NM+'</option>';
+			$("#pDateGun").append(html);
+		}
+
+		$("input[name='tbmn_sn']").val("1");
+		$("input[name='data_code']").val("9");
+		$("#searchform > #pDataCode").val("9");
+		$("#searchform > #pDataGubun").val("");
+		$("#searchform > #pDataSubGubun").val("");
+		$("#searchform > #pLgubun").val("");
+		$("select[name='pDateGun']").val("").prop("selected", true);
+		$("select[name='pSYY']").val("2026").prop("selected", true);
+		
+		for (let [index, fun] of tabFun.entries()) {
+			if(fun.includes('goGeoIntSearch')){
+				 $("#tabBtns li").eq(index).html('<a href="" target="_blank" title="새창열림" class="btn-tab" onclick="goGeoIntSearch(); event.stopPropagation(); return false;">공간정보 (GIS)<i class="svg-icon ico-go"></i></a>');
+				 $("#geoBox").show();
+				 withInfoChk = true;
+			}else if(fun.includes('goBigDataSetSearch')){
+				 $("#tabBtns li").eq(index).html('<a href="" target="_blank" title="새창열림" class="btn-tab" onclick="goBigDataSetSearch(); event.stopPropagation(); return false;">대용량 데이터셋<i class="svg-icon ico-go"></i></a>');
+				 $("#dataSetBox").show();
+				 withInfoChk = true;
+			}else if(fun.includes('goOpenAPISearch')){
+				 $("#tabBtns li").eq(index).html('<a href="" target="_blank" title="새창열림" class="btn-tab" onclick="goOpenAPISearch(); event.stopPropagation(); return false;">오픈 API<i class="svg-icon ico-go"></i></a>');
+				 $("#openApiBox").show();
+				 withInfoChk = true;
+			}else{				
+				const exec = new Function(fun);
+				exec();
+			}
+		}
+		
+		var tab_top_data_code = $(".category_tab li.on button").data("id");
+		
+		//상단 탭이 수질 일 경우만 함께보면 좋은정보 > 전문정보 show (환경기초조사사업/낙동강 하굿둑/오염원/환경기초시설/비점오염물질측정망 제외)
+		if(tab_top_data_code == '1' && pa != '367' && pa != '315' && pa != '18' && pa != '17' && pa != '14'){			
+			$("#operBox").show();
+			 withInfoChk = true;
+		}
+		
+		//함께보면 좋은정보 전부 없을경우 숨김처리
+		if (!withInfoChk) {
+			$("#withInfo").hide();	
+		}else{
+			$("#withInfo").show();				
+		}
+
+		getChgDateGu();
+		setSubjNumber();
+		
+		//gis 데이터 상세보기 세팅
+		if($("#gisForm > #gisPTopDataCode").val() != ''){
+			gisDataSet();
+		}
+	};
+	ajaxCallNoBlock(url, params, sucessFunc);
+}
+
+//측정항목 선택 추가
+function itemSelects(){
+	var url = "/web/totalSearch/itemSelectsListJson";
+	var params = _SchSet.getTotalParam();
+	var sucessFunc = function(data) {
+		var list = data.list;
+		var chkCnt = 0;
+		baseItemList = []; 
+		
+		$("#itemsDiv").hide();
+		if(list.length > 0){
+			$("#itemsDiv").show();
+		}
+		$("#measureItems").html('');
+		for (var i = 0; i < list.length; i++) {
+			var html = "";
+			var chk = "";
+			
+			if(list[i].BASE_YN == 'Y'){
+				chk = "checked";
+				chkCnt++;
+				
+				baseItemList.push(list[i].ITEM_CD);
+			}
+			
+			html += '<span class="krds-form-check sm meas_chk"><input type="checkbox" name="measItem" id="measItem'+i+'" data-col="'+list[i].ITEM_CD+'" onclick="toggleColumn(this, \'' + list[i].ITEM_CD + '\')" '+chk+'><label for="measItem'+i+'">'+list[i].ITEM_NM+'</label></span>';
+			$("#measureItems").append(html);
+		}
+		$(".summary_txt > strong").html(chkCnt);
+		$("#measch_01").prop("checked", true).trigger('change');
+		setSubjNumber();
+	};
+	
+	ajaxCallNoBlock(url, params, sucessFunc);
+}
+
+//데이터 설명 추가
+function dataExplan(){
+	var url = "/web/totalSearch/dataExplanJson";
+	var params = _SchSet.getTotalParam();
+	var sucessFunc = function(data) {
+		var dataExplanInfo = data.dataExplanInfo;
+		
+		if(dataExplanInfo != null && dataExplanInfo != ''){
+			var rmrkCn = dataExplanInfo.MENU_RMRK_CN;
+			var pvsnCn = dataExplanInfo.PVSN_CN;
+			var html = "";
+			
+			//자료형태
+			if(dataExplanInfo.DATA_TYPE_NM != null && dataExplanInfo.DATA_TYPE_NM != ''){
+				$("#dataTypeNm").html(dataExplanInfo.DATA_TYPE_NM);				
+			}else{
+				$("#dataTypeNm").html('-');								
+			}
+			
+			//제공지점
+			if(dataExplanInfo.MSRSTN_CNT != null && dataExplanInfo.MSRSTN_CNT != ''){				
+				$("#msrstnCnt").html(dataExplanInfo.MSRSTN_CNT + '개');
+			}else{
+				$("#msrstnCnt").html('-');				
+			}
+
+			//제공기간
+			if(dataExplanInfo.BGNG_YR != null && dataExplanInfo.BGNG_YR != '' && dataExplanInfo.END_YR != null && dataExplanInfo.END_YR != ''){				
+				$("#bgngEndYr").html(dataExplanInfo.BGNG_YR + '년 ~ ' + dataExplanInfo.END_YR + '년');
+			}else{
+				$("#bgngEndYr").html('-');				
+			}
+			
+			//제공요소
+			if(dataExplanInfo.PVSN_CN != null && dataExplanInfo.PVSN_CN != ''){
+				var limit = 200;
+
+				if(pvsnCn.length > limit){
+					var firstText = pvsnCn.substring(0, limit);
+					var restText = pvsnCn.substring(limit);
+
+					html += firstText.replace(/(\r\n|\n|\r)/g, "<br>");
+					html += '<span class="wastay_more_num">... </span>';
+					html += '<button type="button" class="btn_more_text wastay_more_btn">더보기</button>';
+					html += '<span class="more_data_cont wastay_more_data" style="display:none;">' + restText.replace(/(\r\n|\n|\r)/g, "<br>") + '</span>';
+				}else{
+					html += pvsnCn.replace(/(\r\n|\n|\r)/g, "<br>");
+				}
+
+				$("#pvsnCn").html(html);
+			}else{
+				$("#pvsnCn").html('-');				
+			}
+			
+			//비고
+			if(dataExplanInfo.MENU_RMRK_CN != null && dataExplanInfo.MENU_RMRK_CN != ''){
+				$("#menuRmrkCn").html(rmrkCn.replace(/(\r\n|\n|\r)/g, "<br>"));
+			}else{
+				$("#menuRmrkCn").html('-');				
+			}
+			
+			//지침
+			if(dataExplanInfo.SRC_CN != null && dataExplanInfo.SRC_CN != ''){				
+				$("#srcCn").html(dataExplanInfo.SRC_CN);
+			}else{
+				$("#srcCn").html('-');				
+			}
+			
+		}else{			
+			$("#dataTypeNm").html('-');
+			$("#msrstnCnt").html('-');
+			$("#bgngEndYr").html('-');
+			$("#pvsnCn").html('-');
+			$("#menuRmrkCn").html('-');
+			$("#srcCn").html('-');
+		}
+
+	};
+	
+	ajaxCallNoBlock(url, params, sucessFunc);
+}
+
+//데이터선택, 자료구분, 조사분야, 구역선택, 측정항목, 조회기간 번호 세팅
+function setSubjNumber(){
+	$(".subj_search_box:visible .susb_tit > em").each(function(index) {
+	    $(this).text(index + 1);
+	});
+}
+
+//그리드 컬럼 숨김
+function toggleColumn(el, colName){
+    gridView.setColumnProperty(colName, 'visible', el.checked);
+    $(".summary_txt > strong").html($("input[name='measItem']:checked").length);
+}
+
+function setDay(arg){
+	$("#pSDay").val(gfnAddDay($("#pEDay").val(),-arg).ymd);
+}
+
+//공간정보 (GIS) 이동
+function goGeoIntSearch(pDataCode){
+	var data_code = $("#data_code").val();
+	var pSpotCds = '';
+	var pSpotCdCnt = $("input[name='pSpotCd']").length;
+
+	// 지하수 > 낙동강 하굿둑 일경우 선택한 지점 정보에서 처리
+	if(data_code == '368'){
+		pSpotCdCnt = $('input:checkbox[name=STATION_CODE]:checked').length;
+		
+		 var radioChek = [];
+         $('input[name="STATION_CODE"]:checked').each(function (i) {
+        	 radioChek.push($(this).val());
+         });
+         
+		$.each(radioChek, function(idx, element){
+				//pSpotCds += $(this).val();
+				pSpotCds += element;
+				if (idx != pSpotCdCnt -1 ) {
+					pSpotCds += '||';
+			    }
+		});
+	}else{
+        //인구현황 행정구역 예외처리
+        const pLgubun = $("#pLgubun").val();
+        if((data_code == '420' && pLgubun == '01') || data_code == '440') {
+
+            const attr3 = document.querySelector("input[name='ATTR_3']:checked");
+            const attr2 = document.querySelector("input[name='ATTR_2']:checked");
+            const attr1 = document.querySelector("input[name='ATTR_1']:checked");
+
+            if (attr3) {
+                pSpotCds = [attr3.value];
+            } else if (attr2) {
+                pSpotCds = [attr2.value];
+            } else if (attr1) {
+                pSpotCds = [attr1.value];
+            } else {
+                pSpotCds = [];
+            }
+        } else {
+            $("input[name='pSpotCd']").each(function(idx){
+                pSpotCds += $(this).val();
+
+                if (idx != pSpotCdCnt - 1) {
+                    pSpotCds += '||';
+                }
+            });
+        }
+	}
+	
+	if(pSpotCdCnt == 0){
+		alert("자료 조회 후 시도 해 주세요.");
+		return;
+	}else{
+		
+		//상수도 시설 일경우, 전체 선택 불가 > 지점 선택 필수
+		if(data_code == '23'){
+			if($("input[name=ATTR_1_all]").prop('checked') || $('input[name=STATION_CODE]:checked').length < 1){
+				alert("지점 선택은 필수입니다.");
+				return;
+			}
+		}
+		
+		//측정소코드 및 지점코드 링크 전달
+		if(pDataCode != null && pDataCode == '9999'){
+			$("#searchform > #pDataCode").val(pDataCode);
+		}else{
+            if(data_code == '420') { // 주민등록인구
+                $("#searchform > #pDataCode").val('373');
+            } else if(data_code == '440') { // 면적평균강수량
+                $("#searchform > #pDataCode").val('374');
+            }
+		}
+		
+		// 낙동강 하굿둑 염분 -> 315 , 지하수관측(368) -> 313으로 pDataCode 변경
+		if (data_code == '368') {
+			$("#searchform > #pDataCode").val('313');
+		}
+		
+		$("#pSpotCds").val(pSpotCds);
+		$("#_csrf").val($("meta[name='_csrf']").attr("content"));
+		$("#searchform").attr("target","_blank");
+		$("#searchform").attr("action","/web/gDashBoard");
+		$("#searchform").attr("method","post");
+		$("#searchform").submit();
+	}
+	
+}
+
+//대용량 데이터셋 이동
+function goBigDataSetSearch(){
+	var param = _SchSet.getTotalParam();
+	var parentId = $("#s_tabArea .tab-conts.active").attr("id");
+	var totCnt = $("#"+parentId+" .total").text();
+	
+	if(totCnt == '0'){
+		alert("조회된 자료가 없어서 대용량 데이터셋으로 이동 할 수 없습니다.");
+		return;
+	}
+	/*
+	if($("input[name='ATTR_1']").length > 0){
+		if($("input[name=ATTR_1]:checked").length > 1){
+			//var title = $("input[name=ATTR_1]:checked").closest("ul.susb_area_item_list").prev(".susb_area_tit").text();
+			alert("구역은 1개씩만 선택 가능합니다.");
+			return;
+		}
+	}
+	
+	if($("input[name='ATTR_2']").length > 0){
+		if($("input[name=ATTR_2]:checked").length > 1){
+			//var title = $("input[name=ATTR_2]:checked").closest("ul.susb_area_item_list").prev(".susb_area_tit").text();
+			alert("구역은 1개씩만 선택 가능합니다.");
+			return;
+		}
+	}
+	
+	if($("input[name='ATTR_3']").length > 0){
+		if($("input[name=ATTR_3]:checked").length > 1){
+			//var title = $("input[name=ATTR_3]:checked").closest("ul.susb_area_item_list").prev(".susb_area_tit").text();
+			alert("구역은 1개씩만 선택 가능합니다.");
+			return;
+		}
+	}
+	*/
+	var tab_top_data_code = $(".category_tab li.on button").data("id");
+	
+	//상단 탭이 수자원 이고 유역으로 찾기 일 경우, pLgubun = 03 값 세팅
+	if(tab_top_data_code == '5'){
+		if($("#searchform > #pLgubun").val() == '02'){			
+			$("#searchform > #pLgubun").val("03");
+		}
+	}
+	
+	$("#searchform > #searchPTopDataCode").val(tab_top_data_code);
+
+	var groundwaterAttr2 = null;
+	var groundwaterAttr2Disabled = false;
+	var dataCode = $("#data_code").val();
+	if(dataCode == '150' || dataCode == '313'){
+		// 지하수는 화면의 대권역·중권역을 데이터셋의 대권역·수계·중권역으로 매핑
+		var attr1Val = $("input[name='ATTR_1']:checked").first().val() || "";
+		groundwaterAttr2 = $("input[name='ATTR_2']:checked").first();
+		var attr3Val = groundwaterAttr2.val() || "";
+		var attr2Val = attr3Val == "" ? "" : attr3Val;
+
+		if(groundwaterAttr2.length > 0){
+			// 기존 중권역 값이 ATTR_2로 중복 전송되지 않도록 제출할 때만 비활성화
+			groundwaterAttr2Disabled = groundwaterAttr2.prop("disabled");
+			groundwaterAttr2.prop("disabled", true);
+		}
+		
+		// 중권역 앞 2자리는 수계, 기존 중권역은 ATTR_3으로 전송
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_2").addClass("addParam").val(attr2Val));
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_3").addClass("addParam").val(attr3Val));
+		// 데이터셋에서 사용하는 배열형 구역 파라미터도 동일하게 매핑
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_1S").addClass("addParam").val(attr1Val == "" ? "[]" : JSON.stringify([attr1Val])));
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_2S").addClass("addParam").val(attr2Val == "" ? "[]" : JSON.stringify([attr2Val])));
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_3S").addClass("addParam").val(attr3Val == "" ? "[]" : JSON.stringify([attr3Val])));
+	}else{
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_1S").addClass("addParam").val(param.ATTR_1S));
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_2S").addClass("addParam").val(param.ATTR_2S));
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "ATTR_3S").addClass("addParam").val(param.ATTR_3S));
+	}
+	
+	if($("input[name='pSDay']").length > 0){
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "pSYY").addClass("addParam").val(param.pSDay.substring(0,4)));		
+	}else{
+		if($("select[name='pSYY']").length < 1){
+			$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "pSYY").addClass("addParam").val(param.pSYY));
+		}
+	}
+	
+	if($("input[name='pEDay']").length > 0){
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "pEYY").addClass("addParam").val(param.pEDay.substring(0,4)));		
+	}else{
+		if($("select[name='pEYY']").length < 1){
+			$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "pEYY").addClass("addParam").val(param.pEYY));
+		}
+	}
+	
+	if($("select[name='pDateGun']").length < 1){
+		$("#searchform").append($("<input>").attr("type", "hidden").attr("name", "pDateGun").addClass("addParam").val(param.pDateGun));		
+	}
+
+	$("#_csrf").val($("meta[name='_csrf']").attr("content"));
+	$("#searchform").attr("target","_blank");
+	$("#searchform").attr("action","/web/dataset");
+	$("#searchform").attr("method","post");
+	$("#searchform").submit();
+
+	if(groundwaterAttr2 != null && groundwaterAttr2.length > 0){
+		// 폼 제출 후 화면의 기존 중권역 선택 상태를 원래대로 복구
+		groundwaterAttr2.prop("disabled", groundwaterAttr2Disabled);
+	}
+	
+	$("#searchform .addParam").remove();
+	
+	if($("#searchform > #pLgubun").val() == '03'){			
+		$("#searchform > #pLgubun").val("02");
+	}
+}
+
+//오픈API 링크 연결
+function goOpenAPISearch(){
+	var data_code = $("#data_code").val();
+    var pDateGun = $('#pDateGun').find('option:selected').val();
+    var pDataGubun = $('#guSels').find('button.on').attr('data-val');
+	var targetUrl = '';
+
+	if(data_code == '9'){	//수질측정망
+		targetUrl = '/web/openapi/serviceWaterQualityNetwork';
+	}else if(data_code == '11'){
+		if($("input[name='pDataGubun']").val() == '49'){	//자동측정망(미확정)
+			targetUrl = '/web/openapi/serviceAutoNetworkConfirmed';
+		}else{	//자동측정망(확정)
+			targetUrl = '/web/openapi/serviceAutoNetworkConfirmed';			
+		}
+	}else if(data_code == '19'){	//생물측정망
+		targetUrl = '/web/openapi/serviceBioNetwork';
+	}else if(data_code == '12'){	//퇴적물측정망
+		targetUrl = '/web/openapi/serviceSendimentNetwork';
+	}else if(data_code == '13'){	//방사성물질측정망
+		targetUrl = '/web/openapi/serviceRadioactiveNetwork';
+	}else if(data_code == '14'){	//비점오염물질측정망
+		targetUrl = '/web/openapi/serviceNpsNetwork';
+	}else if(data_code == '28'){  // 수자원-강수
+        targetUrl = '/web/openapi/serviceRainfall';
+    }else if(data_code == '29'){ // 수자원-수위/유량
+        targetUrl = '/web/openapi/serviceWaterLevel';
+    }else if(data_code == '31'){ // 수자원-보
+        targetUrl = '/web/openapi/serviceBo';
+    }else if(data_code == '30'){ // 수자원-댐
+        targetUrl = '/web/openapi/serviceDam';
+    }else if(data_code == '538' || data_code == '539' || data_code == '540'){  // 수자원-수문조사연보(강수량, 수위, 유량)
+		targetUrl = '/web/openapi/serviceYearbook';
+	}else if(data_code == '441' || data_code == '440'){ // 수자원-수문특성(유사량 측정성과, 면적평균강수량, 티센계수)
+        targetUrl = '/web/openapi/serviceHydroCharacteristics';
+    }else if(data_code == '388' || data_code == '390' || data_code == '393' || data_code == '392'|| data_code == '399'){ // 수자원-유역특성(지형특성, 토양특성, 유출곡선지수, 임상특성, 토지피복)
+        targetUrl = '/web/openapi/serviceBasinCharacteristics';
+    }else if(data_code == '420'){ // 수자원-인문산업경제
+        targetUrl = '/web/openapi/serviceHumanIndustry';
+    }else if(data_code == '375'){ // 수자원-유역자원(토지지목별 현황)
+        targetUrl = '/web/openapi/serviceBasinResources';
+    }else if(data_code == '473'){ // 수자원-농업용 수리시설(저수지, 양수장, 양배수장, 취입보, 집수암거, 관정)
+        targetUrl = '/web/openapi/serviceAgriculturalFacility';
+    }else if(['466', '468', '471'].includes(data_code)){ // 수자원-광역/지방상수도 시설(취수장, 정수장, 가압장, 전용상수도)
+        targetUrl = '/web/openapi/serviceWaterWorksFacility';
+    }else if(['472', '474'].includes(data_code)){ // 수자원-기타 이수시설(마을상수도, 소규모급수시설, 하굿둑 및 방조제)
+        targetUrl = '/web/openapi/serviceWaterUseFacility';
+    }else if(['449', '452', '453', '454', '459', '494', '460'].includes(data_code)){ // 수자원-용수이용량
+        targetUrl = '/web/openapi/serviceWaterUsage';
+    }else if(['511','512','513'].includes(data_code)){ // 수자원-치수시설현황(제방, 내수배제시설, 수문통관통문)
+        targetUrl = '/web/openapi/serviceFloodControlFacility';
+    }else if(['511','512','513'].includes(data_code)){ // 수자원-치수시설현황(제방, 내수배제시설, 수문통관통문)
+        targetUrl = '/web/openapi/serviceFloodControlFacility';
+    }else if(['150','313','337'].includes(data_code)){ // 수자원-지하수측정망
+        targetUrl = '/web/openapi/serviceGroundwaterNetwork';
+    }
+
+
+
+	$("#_csrf").val($("meta[name='_csrf']").attr("content"));
+	$("#searchform").attr("target","_blank");
+	$("#searchform").attr("action",targetUrl);
+	$("#searchform").attr("method","post");
+	$("#searchform").submit();
+}
+
+//함께보면 좋은정보 > 전문정보 연결
+function goOperInfoSearch(){
+	var data_code = $("#data_code").val();
+	var targetUrl = '';
+	
+	if(data_code == '9'){	//수질측정망
+		targetUrl = '/web/contents/38';
+	}else if(data_code == '10'){	//총량측정망
+		targetUrl = '/web/contents/39';
+	}else if(data_code == '11'){	//자동측정망
+		targetUrl = '/web/contents/40';
+	}else if(data_code == '19'){	//생물측정망
+		targetUrl = '/web/contents/43';
+	}else if(data_code == '12'){	//퇴적물측정망
+		targetUrl = '/web/contents/41';
+	}else if(data_code == '13'){	//방사성물질측정망
+		targetUrl = '/web/contents/42';
+	}else if(data_code == '14'){	//비점오염물질측정망
+		targetUrl = '/web/contents/44';
+	}else if(data_code == '57' || data_code == '16'){	//조류측정자료 + 조류예측정보
+		targetUrl = '/web/algaeMap';
+	}
+	
+	$("#_csrf").val($("meta[name='_csrf']").attr("content"));
+	$("#searchform").attr("target","_blank");
+	$("#searchform").attr("action",targetUrl);
+	$("#searchform").attr("method","post");
+	$("#searchform").submit();
+}
+
+
+//물재해 > 홍수 바로가기 버튼 이벤트
+function totalSearchLink(tLinkGubun){
+	 const options = 'width=1600, height=600, scrollbars=yes';
+	 var popUrl = "https://n.flood.go.kr/floodWarnJijaPopup.do"; 
+	 
+	 if(tLinkGubun == '39') {   // 홍수 특보 발령사항
+		 popUrl = "https://n.flood.go.kr/floodWarnJijaPopup.do";
+	 }else if(tLinkGubun == '335') { // 댐 방류
+		 popUrl = "https://n.flood.go.kr/observation/dam/approvalForDischargePopup.do";
+	 }else if(tLinkGubun == '341') { // 보방류 
+		 popUrl = "https://n.flood.go.kr/observation/bo/approvalForDischargePopup.do";
+	 }else if(tLinkGubun == '342') { // 저수지 방류  1600 x 600
+		 popUrl = "https://n.flood.go.kr/observation/rsv/approvalForDischargePopup.do";
+	 }else if(tLinkGubun == '562') { // 녹조(조류)지도
+		 popUrl = "/web/algaeMap";
+	 }
+	 
+	window.open(popUrl,"_blank");
+	//window.open(popUrl,"_blank",options);
+}
+
+//선택된 지점 노출 처리
+function setStationTagVisible(){
+	var $stationDiv = $("#setStationDiv");
+	var $stationTit = $stationDiv.prev(".subj_tag_tit");
+	
+	if(chkStationCnt <= 0){
+		$stationTit.hide();
+		$stationDiv.hide();
+	}else{
+		$stationTit.show();
+		$stationDiv.show();
+	}
+}
+
+//선택된 지점 초기화
+function setStationInit(){
+	chkStationCnt = 0;
+	$("#setStationDiv button").parent().remove();	//선택된 지점 초기화
+	$("#setStationDiv").prev(".subj_tag_tit").find("b").text("(0)");	//선택된 지점개수 초기화
+	setStationTagVisible();
+}
+
+//검색조건 초기화
+function setDataInit(){
+
+	var detailYn = $(".detail_data_chip_cont").is(":visible");
+	
+	if(detailYn){
+		$(".susj_detail_chip.on").trigger('click');
+	}else{
+		$(".data_chi_chip.on").trigger('click');
+	}
+
+}
+
+//물재해 > 가뭄 > 가뭄현황 및 전망 바로가기팝업
+function totalSearchDroughtPop(){
+	 const options = 'width=1200, height=950, top=50, left=50, scrollbars=yes';
+	 var popUrl = "/web/droughtCsPOP?day=20250220&sido=47&sgg=47250&weekMonthSel=0&layerSel=01&popGubunNm=가뭄현황및전망"; 
+	 
+	 // 데이터 구분
+	 var popDataGubun = "01";
+	 if($("input[name='pDataGubun']").val() != ''){
+		 if($("input[name='pDataGubun']").val() == "241"){
+			 popDataGubun = "02";
+		 }else if($("input[name='pDataGubun']").val() == "242"){
+			 popDataGubun = "03";
+		 }else if($("input[name='pDataGubun']").val() == "243"){
+			 popDataGubun = "04";
+		 }else if($("input[name='pDataGubun']").val() == "244"){
+			 popDataGubun = "05";
+		 }else{
+			 popDataGubun = "01";
+		 }
+	 }
+	 
+	 // 선택한 시군구
+	 var popSido = "";
+	 var popSsg = "";
+	 var popEmd = "";
+	 
+	 if($("input[name='ATTR_3']:checked").length != 0){
+	    popEmd = $("input[name='ATTR_3']:checked").val();
+	 }
+	 
+		// 시군구 선택시	
+	 if($("input[name='ATTR_2']:checked").length != 0){
+		popSsg = $("input[name='ATTR_2']:checked").val();
+	 }
+	 
+	// 시도 선택시	
+	 if($("input[name='ATTR_1']:checked").length != 0){
+		 popSido = $("input[name='ATTR_1']:checked").val();
+	 }
+	 
+	 // 조회 기간 선택
+	 var weekMonthSel = "0";
+	 if($("#pDateGun :selected").val() == "2"){
+		 weekMonthSel = "30";
+	 }
+	 var popDay =  $("#pSDay").val();
+	 popDay = popDay.replace(/-/g, '');
+	 
+	 popUrl = "/web/droughtCsPOP?day="+popDay+"&sido="+popSido+"&sgg="+popSsg+"&emd="+popEmd+"&weekMonthSel="+weekMonthSel+"&layerSel="+popDataGubun+"&popGubunNm=가뭄현황및전망"; 
+	 
+	window.open(popUrl,"_blank",options);
+}
+
+//gis 데이터 상세보기 - 데이터 검색 검색조건 세팅
+function gisDataSet(){
+	var data_code = $("#data_code").val();
+	const gDataGubun = $("#gDataGubun").val();
+	//자료구분 세팅
+	if(gDataGubun != null && gDataGubun != ''){
+		$(".data_type_chip[data-gis='"+gDataGubun+"']").trigger('click');
+	}else{
+		if(data_code == '11'){ //자동측정망 자료구분 세팅
+			$(".data_type_chip[data-val='50']").trigger('click');
+		}
+	}
+	
+	//행정구역으로 찾기,수계로 찾기 세팅
+	if($("#gLgubun").val() != null && $("#gLgubun").val() != ''){
+		$(".cont_in_tab li button[data-val='"+$("#gLgubun").val()+"']").trigger('click');
+	}
+	
+	//법정동/행정동 코드 세팅
+	if($("#gLgdCd").val() != null && $("#gLgdCd").val() != ''){
+		if($("input[name='ATTR_1']").length > 0){
+			var chkid = $("input[name='ATTR_1']:input[value='"+$("#gLgdCd").val().substring(0,2)+"']").attr('id');
+			$("#"+chkid).trigger("click");
+		}
+		if($("input[name='ATTR_2']").length > 0){			
+			var chkid = $("input[name='ATTR_2']:input[value='"+$("#gLgdCd").val().substring(0,5)+"']").attr('id');
+			$("#"+chkid).trigger("click");
+		}
+		if($("input[name='ATTR_3']").length > 0){			
+			var chkid = $("input[name='ATTR_3']:input[value='"+$("#gLgdCd").val().substring(0,8)+"']").attr('id');
+			$("#"+chkid).trigger("click");
+		}
+	}
+	//수계(대권역) 코드 세팅
+	if($("#gLcd").val() != null && $("#gLcd").val() != ''){
+		if($("input[name='ATTR_1']").length > 0){			
+			var chkid = $("input[name='ATTR_1']:input[value='"+$("#gLcd").val()+"']").attr('id');
+			$("#"+chkid).trigger("click");
+		}
+	}
+	//수계(수계-중권역) 코드 세팅
+	if($("#gWcd").val() != null && $("#gWcd").val() != ''){
+		if($("input[name='ATTR_2']").length > 0){
+			var chkid;
+			
+			//낙동강하굿둑, 녹조(조류) : 중권역 코드
+			if(data_code == '315' || data_code == '368'){
+				chkid = $("input[name='ATTR_2']:input[value='"+$("#gWcd").val()+"']").attr('id');
+			}else if(data_code == '420' || data_code == '440'){
+                chkid = $("input[name='ATTR_2']:input[value='"+$("#gWcd").val()+"']").attr('id');
+            }else{ //그외 수계 코드
+				chkid = $("input[name='ATTR_2']:input[value='"+$("#gWcd").val().substring(0,2)+"']").attr('id');
+			}
+			
+			$("#"+chkid).trigger("click");
+		}
+		if($("input[name='ATTR_3']").length > 0){			
+			var chkid = $("input[name='ATTR_3']:input[value='"+$("#gWcd").val()+"']").attr('id');
+			$("#"+chkid).trigger("click");
+		}
+	}
+	//지점 코드 세팅
+	if($("#gStationCode").val() != null && $("#gStationCode").val() != ''){
+        // SECURE-FIX(CWE-489) 2026-07-13 : 디버그출력 제거: console.log($("#gStationCode").val())
+
+		const referrer = document.referrer;
+		if (referrer && referrer.indexOf('/algaeMap/detailPop') !== -1) {
+			var stationCodes = $("#gStationCode").val().split('|');
+			stationCodes.forEach(function(code) {
+			    if (code !== "") {
+			        var $targetInput = $("input[name='STATION_CODE'][value='" + code + "']");
+			        if ($targetInput.length > 0) {
+			            if (!$targetInput.is(":checked")) {
+			                $targetInput.trigger("click");
+			            }
+			        }
+			    }
+			});
+		} else {
+            var chkid;
+
+			if($("input[name='STATION_CODE']").length > 0){			
+				chkid = $("input[name='STATION_CODE']:input[value='"+$("#gStationCode").val()+"']").attr('id');
+				$("#"+chkid).trigger("click");
+			} else if(data_code == '420' || data_code == '440') {
+                chkid = $("input[name='ATTR_3']:input[value='"+$("#gStationCode").val()+"']").attr('id');
+                $("#"+chkid).trigger("click");
+            }
+		}
+		
+	}
+	
+	$(this).delay(500).queue(function(){
+		$("input[name='ATTR_1']:checked").focus();
+		$("input[name='ATTR_2']:checked").focus();
+		$("input[name='ATTR_3']:checked").focus();
+		$("input[name='STATION_CODE']:checked").focus();
+		$(this).dequeue();
+	});
+	
+	$("#gisForm > #gisPTopDataCode").val("");
+}
+</script>
+<form name="searchform" id="searchform">
+<input type="hidden" id="searchPTopDataCode" name="pTopDataCode" value=""/>
+<input type="hidden" id="pDataCode" name="pDataCode" value=""/>
+<input type="hidden" id="pSpotCds" name="pSpotCds" value=""/>
+<input type="hidden" id="pGisComboGubun" name="pGisComboGubun" value=""/>
+<input type="hidden" id="pDataGubun" name="pDataGubun" value=""/>
+<input type="hidden" id="pDataSubGubun" name="pDataSubGubun" value=""/>
+<input type="hidden" id="pLgubun" name="pLgubun" value=""/>
+<input type="hidden" id="_csrf" name="_csrf" value=""/>
+
+<!-- 자료 구분 -->
+<div class="subj_search_box" id="guSels">
+    <div class="subj_search_inner">
+        <div class="subsb_top_wrap">
+            <span class="susb_tit"><em>2</em>자료 구분</span>
+            <div class="susb_top_cont">
+                	
+                		
+	                		<div class="data_type_chip_wrap type1">
+                		
+				        	<button type="button" class="data_type_chip on" data-id="0" data-val="44" data-type="R" data-gis="A">하천</button>
+	                	
+			        
+                		
+				        	<button type="button" class="data_type_chip" data-id="0" data-val="45" data-type="R" data-gis="B">호소</button>
+	                	
+			        
+                		
+				        	<button type="button" class="data_type_chip" data-id="0" data-val="46" data-type="R" data-gis="D">농업용수</button>
+	                	
+			        
+                		
+				        	<button type="button" class="data_type_chip" data-id="0" data-val="47" data-type="R" data-gis="E">산단하천</button>
+	                	
+			        
+                		
+				        	<button type="button" class="data_type_chip" data-id="0" data-val="48" data-type="R" data-gis="F">도시관류</button>
+	                	
+	                		</div>
+	                	
+			        
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 조사분야 -->
+<div class="subj_search_box" id="guSubSels" style="display: none;">
+    <div class="subj_search_inner">
+        <div class="subsb_top_wrap">
+            <span class="susb_tit"><em>3</em>조사분야</span>
+            <div class="susb_top_cont">
+                <div class="data_type_chip_wrap type1" id="subRadioArea">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 구역 선택 -->
+<div class="subj_search_box" id="sectionSel">
+    <div class="subj_search_inner">
+        <div class="subsb_top_wrap">
+            <span class="susb_tit"><em>3</em>구역선택</span>
+            <div class="susb_top_cont">
+                <div class="susb_area_tab_wrap">
+                    <!-- 구역선택 tab -->
+                    <ul class="cont_in_tab">
+                        
+                        	<li class="on"><button type="button" data-val="02">수계로 찾기</button></li>
+				        
+                        	<li class=""><button type="button" data-val="01">행정구역으로 찾기</button></li>
+				        
+                        
+                        	<li class="btn_name_search"><button type="button">이름으로 찾기</button></li>
+                        
+                    </ul>
+                    
+                    <div class="subj_name_search_wrap">
+                        <div class="sch-input">
+                            <input type="text" class="krds-input small" placeholder="지점명으로 입력" title="지점명으로 입력" name="pSearchNm" id="pSearchNm">
+                            <button class="krds-btn small icon ico-search" id="pStationSearch" onclick="return false;">
+                            <span class="sr-only">검색</span>
+                            <i class="svg-icon ico-sch"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="susb_box_cont">
+            <ul class="susb_area_list">
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- 측정항목 선택 -->
+<div class="subj_search_box" id="itemsDiv">
+    <div class="subj_search_inner">
+        <div class="subsb_top_wrap">
+            <span class="susb_tit"><em>4</em>측정항목 선택</span>
+            <div class="measure_info_wrap">
+                <div class="measure_summary">
+                    <span class="summary_txt">항목 <strong>9</strong>개 선택됨.</span>
+                    <button type="button" class="btn_more_text btn_measure_view">펼쳐보기</button>
+                </div>
+                
+                <span class="measure_chk_txt">(선택사항)</span>
+                <div class="measure_chk_option">
+                    <span class="krds-form-check sm">
+                        <input type="checkbox" name="measch_01" id="measch_01">
+                        <label for="measch_01">기본항목선택</label>
+                    </span>
+                    <span class="krds-form-check sm">
+                        <input type="checkbox" name="measch_02" id="measch_02">
+                        <label for="measch_02">전체선택</label>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="measure_grid_wrap">
+            <div class="measure_grid" id="measureItems">
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_01" checked>
+                    <label for="meas_01">수심(m)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_02">
+                    <label for="meas_02">수온(℃)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_03">
+                    <label for="meas_03">DO(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_04">
+                    <label for="meas_04">BOD(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_05">
+                    <label for="meas_05">COD(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_06">
+                    <label for="meas_06">SS(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_07">
+                    <label for="meas_07">TN(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_08">
+                    <label for="meas_08">TP(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_09">
+                    <label for="meas_09">TOC(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_10">
+                    <label for="meas_10">수소이온농도(pH)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_11">
+                    <label for="meas_11">페놀류(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_12">
+                    <label for="meas_12">전기전도도(μS/㎝)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_13">
+                    <label for="meas_13">총대장균군수(총대장균군수/100ml)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_14">
+                    <label for="meas_14">카드뮴(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_15">
+                    <label for="meas_15">시안(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_16">
+                    <label for="meas_16">납(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_17">
+                    <label for="meas_17">6가크롬(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_18">
+                    <label for="meas_18">비소(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_19">
+                    <label for="meas_19">수은(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_20">
+                    <label for="meas_20">구리(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_21">
+                    <label for="meas_21">아연(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_22">
+                    <label for="meas_22">크롬(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_23">
+                    <label for="meas_23">니켈(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_24">
+                    <label for="meas_24">바륨(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_25">
+                    <label for="meas_25">셀레늄(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_26">
+                    <label for="meas_26">용존총질소(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_27">
+                    <label for="meas_27">암모니아성 질소(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_28">
+                    <label for="meas_28">질산성 질소(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_29">
+                    <label for="meas_29">용존총인(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_30">
+                    <label for="meas_30">인산염인(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_31">
+                    <label for="meas_31">클로로필 a(㎎/㎥)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_32">
+                    <label for="meas_32">헥사클로로벤젠(㎍/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_33">
+                    <label for="meas_33">분원성대장균군수</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_34">
+                    <label for="meas_34">불소(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_35">
+                    <label for="meas_35">색도(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_36">
+                    <label for="meas_36">노말헥산추출물질(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_37">
+                    <label for="meas_37">용해성망간(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_38">
+                    <label for="meas_38">용해성철(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_39">
+                    <label for="meas_39">음이온계면활성제(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_40">
+                    <label for="meas_40">트리클로로에틸렌(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_41">
+                    <label for="meas_41">테트라클로로에틸렌(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_42">
+                    <label for="meas_42">사염화탄소</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_43">
+                    <label for="meas_43">1.2-디클로로에탄(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_44">
+                    <label for="meas_44">디클로로메탄(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_45">
+                    <label for="meas_45">벤젠(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_46">
+                    <label for="meas_46">폴리크로리네이티트비페닐(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_47">
+                    <label for="meas_47">유기인(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_48">
+                    <label for="meas_48">안티몬(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_49">
+                    <label for="meas_49">클로로포름(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_50">
+                    <label for="meas_50">디에틸헥실프탈레이트(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_51">
+                    <label for="meas_51">1.4-다이옥세인(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_52">
+                    <label for="meas_52">투명도(m)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_53">
+                    <label for="meas_53">유량(㎥/s)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_54">
+                    <label for="meas_54">포름알데히드(㎎/L)</label>
+                </span>
+                <span class="krds-form-check sm meas_chk">
+                    <input type="checkbox" id="meas_55">
+                    <label for="meas_55">염소이온(Cl-)</label>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 조회기간 -->
+<div class="subj_search_box" id="dateGubus" style="display: none;">
+    <div class="subj_search_inner">
+        <div class="subsb_top_wrap">
+            <span class="susb_tit"><em>5</em>조회기간</span>
+            <div class="susb_top_cont">
+                <div class="sch_filter_box">
+                    <div class="formUint">
+                        <select class="krds-form-select small" title="구분 선택" id="pDateGun" name="pDateGun" onChange="getChgDateGu();return false;"></select>
+                    </div>
+                    <div class="formUnitSet">
+                        <input type="text" class="inp_cal" value="2026-03-06" title="시간기간">
+                        <span>~</span>
+                        <input type="text" class="inp_cal" value="2026-03-06" title="종료기간">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="subj_search_btn_wrap ">
+
+	<!-- 물재해 _홍수 바로가기 버튼 부분 때문에 분기 처리 -->
+	
+		
+		
+		
+		
+			
+			<span class="subj_tag_tit">선택된 지점 <b>(0)</b></span>
+			<div class="subj_tag_wrap" id="setStationDiv"></div>
+			
+			<div class="subj_btn_wrap">
+			    <button type="button" class="krds-btn tertiary medium btn_subj_reset" onclick="setDataInit();return false;">
+			        초기화
+			        <i class="svg-icon ico-refresh"></i>
+			    </button>
+			    <button type="button" class="krds-btn medium btn_subj_serach" onclick="totalSearch();return false;">
+			        검색
+			    </button>
+			</div>
+		
+	
+	
+</div>
+</form>
