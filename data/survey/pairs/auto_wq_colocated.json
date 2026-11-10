@@ -1,0 +1,573 @@
+[
+ {
+  "auto_code": "S01007",
+  "auto_name": "평창강",
+  "auto_addr": "충청북도 제천시 송학면 후탄안길 59(장곡리 2)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "총량",
+    "code": "1002A48",
+    "name": "평창A2",
+    "lat": 37.20875,
+    "lon": 128.329889,
+    "addr": "충청북도 제천시 송학면 장곡리",
+    "oper": "운영중",
+    "dist_km": 0.96,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1002A20",
+    "name": "주천강3",
+    "lat": 37.229694,
+    "lon": 128.3315,
+    "addr": "강원도 영월군 한반도면 신천리",
+    "oper": "운영중",
+    "dist_km": 2.52,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1002A20",
+    "name": "주천A",
+    "lat": 37.229694,
+    "lon": 128.3315,
+    "addr": "강원도 영월군 한반도면 신천리",
+    "oper": "운영중",
+    "dist_km": 2.52,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01025",
+  "auto_name": "양평",
+  "auto_addr": "경기도 양평군 옥천면 경강로 1520(옥천리 913-4)",
+  "geocode_precision": "address/feature",
+  "candidates": [
+   {
+    "net": "총량",
+    "code": "1007A80",
+    "name": "한강F1-1",
+    "lat": 37.513611,
+    "lon": 127.450389,
+    "addr": "경기도 양평군 옥천면 옥천리",
+    "oper": "운영중",
+    "dist_km": 0.79,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1007A85",
+    "name": "한강F2-1",
+    "lat": 37.493611,
+    "lon": 127.416806,
+    "addr": "경기도 양평군 강하면 전수리",
+    "oper": "운영중",
+    "dist_km": 3.0,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01004",
+  "auto_name": "구리",
+  "auto_addr": "경기도 구리시 아차산로 34(아천동 390-4)",
+  "geocode_precision": "address/feature",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1025A69",
+    "name": "구의",
+    "lat": 37.5449,
+    "lon": 127.1128,
+    "addr": "서울특별시 강동구 천호동",
+    "oper": "운영중",
+    "dist_km": 1.69,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1025A69",
+    "name": "한강G",
+    "lat": 37.5449,
+    "lon": 127.1128,
+    "addr": "서울특별시 강동구 천호동",
+    "oper": "운영중",
+    "dist_km": 1.69,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1025A66",
+    "name": "암사",
+    "lat": 37.571556,
+    "lon": 127.139944,
+    "addr": "서울특별시 강동구 암사동",
+    "oper": "운영중",
+    "dist_km": 2.58,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01018",
+  "auto_name": "단양",
+  "auto_addr": "충청북도 단양군 영춘면 강변우회로 252(상리 32-4)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": []
+ },
+ {
+  "auto_code": "S01010",
+  "auto_name": "서상",
+  "auto_addr": "강원도 춘천시 서면 서상로 470(서상리 943-1)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": []
+ },
+ {
+  "auto_code": "S01015",
+  "auto_name": "인제",
+  "auto_addr": "강원도 인제군 북면 구미동길 43-49(월학리 2405-3)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": []
+ },
+ {
+  "auto_code": "S01012",
+  "auto_name": "의암호",
+  "auto_addr": "강원도 춘천시 서면 박사로 646(현암리 산35-2)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": []
+ },
+ {
+  "auto_code": "S01001",
+  "auto_name": "가평",
+  "auto_addr": "경기도 가평군 청평면 북한강로 1539(삼회리 617-4)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1015A40",
+    "name": "대성리",
+    "lat": 37.678111,
+    "lon": 127.382111,
+    "addr": "경기도 가평군 청평면",
+    "oper": "운영중",
+    "dist_km": 1.93,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1015A42",
+    "name": "구운천2",
+    "lat": 37.677,
+    "lon": 127.3753,
+    "addr": "경기도 가평군 청평면 대성리",
+    "oper": "운영중",
+    "dist_km": 2.52,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1015A41",
+    "name": "한강F3-1",
+    "lat": 37.690306,
+    "lon": 127.368111,
+    "addr": "경기도 남양주시 수동면 송천리",
+    "oper": "운영중",
+    "dist_km": 2.95,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01017",
+  "auto_name": "포천",
+  "auto_addr": "경기도 포천군 영중면 사은다리 1길 32(영중면 거사리 477-2)",
+  "geocode_precision": null,
+  "candidates": []
+ },
+ {
+  "auto_code": "S01009",
+  "auto_name": "한탄강",
+  "auto_addr": "경기도 연천군 전곡읍 전은길 98-68(은대리 산125-33)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1022A40",
+    "name": "한탄강3",
+    "lat": 38.031194,
+    "lon": 127.075833,
+    "addr": "경기도 연천군 전곡읍 전곡리",
+    "oper": "운영중",
+    "dist_km": 1.78,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1022A65",
+    "name": "차탄천",
+    "lat": 38.022858,
+    "lon": 127.054644,
+    "addr": "경기도 연천군 전곡읍 은대리",
+    "oper": "운영중",
+    "dist_km": 2.88,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01016",
+  "auto_name": "미산",
+  "auto_addr": "경기도 연천군 미산면 어삼로 231(마전리 237)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": []
+ },
+ {
+  "auto_code": "S01013",
+  "auto_name": "신천",
+  "auto_addr": "경기도 연천군 청산면 청신로 153(초성리 95-6)",
+  "geocode_precision": "address/feature",
+  "candidates": [
+   {
+    "net": "총량",
+    "code": "1022A51",
+    "name": "신천A2",
+    "lat": 37.985075,
+    "lon": 127.069889,
+    "addr": "경기도 연천군 청산면 초성리",
+    "oper": "운영중",
+    "dist_km": 1.19,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1022A55",
+    "name": "신천5",
+    "lat": 38.0082,
+    "lon": 127.0767,
+    "addr": "경기도 연천군 청산면 대전리",
+    "oper": "운영중",
+    "dist_km": 1.47,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1022A55",
+    "name": "신천A",
+    "lat": 38.0082,
+    "lon": 127.0767,
+    "addr": "경기도 연천군 청산면 대전리",
+    "oper": "운영중",
+    "dist_km": 1.47,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1022A53",
+    "name": "신천A3",
+    "lat": 37.986378,
+    "lon": 127.096625,
+    "addr": "경기도 연천군 청산면 초성리",
+    "oper": "운영중",
+    "dist_km": 2.18,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1022A70",
+    "name": "한탄강4",
+    "lat": 38.009167,
+    "lon": 127.056306,
+    "addr": "경기도 연천군 전곡읍 전곡리",
+    "oper": "운영중",
+    "dist_km": 2.22,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01019",
+  "auto_name": "화천",
+  "auto_addr": "강원 화천군 하남면 위라리길 9(위라리 395-1)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1010A30",
+    "name": "화천천",
+    "lat": 38.112417,
+    "lon": 127.701778,
+    "addr": "강원도 화천군 화천읍 상리",
+    "oper": "운영중",
+    "dist_km": 2.9,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01003",
+  "auto_name": "경안천",
+  "auto_addr": "경기도 광주시 퇴촌면 산수로 969(정지리 192-3)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "총량",
+    "code": "1016A75",
+    "name": "경안B",
+    "lat": 37.436944,
+    "lon": 127.313472,
+    "addr": "경기도 광주시 초월읍 서하리",
+    "oper": "운영중",
+    "dist_km": 1.85,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1016A80",
+    "name": "경안천11",
+    "lat": 37.471222,
+    "lon": 127.294778,
+    "addr": "경기도 광주시 퇴촌면 광동리",
+    "oper": "운영중",
+    "dist_km": 2.33,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1016A70",
+    "name": "경안천9",
+    "lat": 37.428778,
+    "lon": 127.30825,
+    "addr": "경기도 광주시 초월읍 서하리",
+    "oper": "운영중",
+    "dist_km": 2.68,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1016A72",
+    "name": "한강F7-1",
+    "lat": 37.427078,
+    "lon": 127.31055,
+    "addr": "경기도 광주시 초월읍 무갑리",
+    "oper": "미운영",
+    "dist_km": 2.88,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01014",
+  "auto_name": "충주",
+  "auto_addr": "충주시 동량면 지등로 266 용교2 양수장 내(용교리 산1-1)",
+  "geocode_precision": null,
+  "candidates": []
+ },
+ {
+  "auto_code": "S01006",
+  "auto_name": "원주",
+  "auto_addr": "강원도 원주시 소초면 검엉터길 109(장양리 1228-1)",
+  "geocode_precision": "address/feature",
+  "candidates": []
+ },
+ {
+  "auto_code": "S01005",
+  "auto_name": "여주",
+  "auto_addr": "경기도 여주시 주내로 597 (우만리 99-5)",
+  "geocode_precision": "address/feature",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1007A20",
+    "name": "강천",
+    "lat": 37.272528,
+    "lon": 127.686917,
+    "addr": "경기도 여주시 단현동",
+    "oper": "운영중",
+    "dist_km": 1.32,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01020",
+  "auto_name": "능서",
+  "auto_addr": "경기도 여주시 능서면 영릉로 452",
+  "geocode_precision": null,
+  "candidates": []
+ },
+ {
+  "auto_code": "S01011",
+  "auto_name": "강천",
+  "auto_addr": "경기도 여주시 강천면 섬강로 287(강천리 산8-2)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1006A80",
+    "name": "섬강6",
+    "lat": 37.2421,
+    "lon": 127.7476,
+    "addr": "강원도 원주시 부론면 흥호리",
+    "oper": "운영중",
+    "dist_km": 1.89,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1006A80",
+    "name": "섬강B",
+    "lat": 37.2421,
+    "lon": 127.7476,
+    "addr": "강원도 원주시 부론면 흥호리",
+    "oper": "운영중",
+    "dist_km": 1.89,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01021",
+  "auto_name": "달천",
+  "auto_addr": "충청북도 충주시 살미면 팔봉 향산길 460(향산리 473,노루목다리)",
+  "geocode_precision": "address/feature",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1004A60",
+    "name": "달천7",
+    "lat": 36.941508,
+    "lon": 127.899844,
+    "addr": "충청북도 충주시 단월동",
+    "oper": "운영중",
+    "dist_km": 2.99,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01023",
+  "auto_name": "청미천",
+  "auto_addr": "경기도 여주시 점동면 점동로 574-3(삼합리 689-8 삼합교)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "수질",
+    "code": "1007A15",
+    "name": "청미천6",
+    "lat": 37.202194,
+    "lon": 127.719111,
+    "addr": "경기도 여주시 점동면 삼합리",
+    "oper": "운영중",
+    "dist_km": 1.24,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1007A15",
+    "name": "청미A",
+    "lat": 37.202194,
+    "lon": 127.719111,
+    "addr": "경기도 여주시 점동면 삼합리",
+    "oper": "운영중",
+    "dist_km": 1.24,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1005A60",
+    "name": "원주",
+    "lat": 37.205106,
+    "lon": 127.746119,
+    "addr": "강원도 원주시 부론면 법천리",
+    "oper": "운영중",
+    "dist_km": 1.34,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1005A60",
+    "name": "한강D",
+    "lat": 37.205106,
+    "lon": 127.746119,
+    "addr": "강원도 원주시 부론면 법천리",
+    "oper": "운영중",
+    "dist_km": 1.34,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01002",
+  "auto_name": "흥천",
+  "auto_addr": "경기도 여주시 흥천면 이여로 1278-1(계신리 559)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "총량",
+    "code": "1007A57",
+    "name": "복하A",
+    "lat": 37.364111,
+    "lon": 127.542611,
+    "addr": "경기도 여주시 흥천면 상백리",
+    "oper": "운영중",
+    "dist_km": 2.06,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1007A60",
+    "name": "이포",
+    "lat": 37.401611,
+    "lon": 127.539694,
+    "addr": "경기도 여주시 대신면 천서리",
+    "oper": "운영중",
+    "dist_km": 2.59,
+    "same_ri": false
+   },
+   {
+    "net": "총량",
+    "code": "1007A60",
+    "name": "한강E",
+    "lat": 37.401611,
+    "lon": 127.539694,
+    "addr": "경기도 여주시 대신면 천서리",
+    "oper": "운영중",
+    "dist_km": 2.59,
+    "same_ri": false
+   }
+  ]
+ },
+ {
+  "auto_code": "S01022",
+  "auto_name": "복하천",
+  "auto_addr": "경기도 여주시 흥쳔면 금대울로 254(복대리 24-12 상백교)",
+  "geocode_precision": "village/리 centroid",
+  "candidates": [
+   {
+    "net": "총량",
+    "code": "1007A57",
+    "name": "복하A",
+    "lat": 37.364111,
+    "lon": 127.542611,
+    "addr": "경기도 여주시 흥천면 상백리",
+    "oper": "운영중",
+    "dist_km": 1.32,
+    "same_ri": false
+   },
+   {
+    "net": "수질",
+    "code": "1007A55",
+    "name": "복하천5",
+    "lat": 37.334361,
+    "lon": 127.537333,
+    "addr": "경기도 여주시 흥천면 효지리",
+    "oper": "운영중",
+    "dist_km": 2.96,
+    "same_ri": false
+   }
+  ]
+ }
+]
