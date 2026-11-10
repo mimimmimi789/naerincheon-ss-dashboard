@@ -261,7 +261,12 @@ def main():
     print('마지막 자료일', df.index.max().date(), '| 실측', int(df.SS.notna().sum()), '| 잠금평가', [L.get('n') for L in locked], '|', status)
     if '--push' in args:
         g = lambda *c: subprocess.run(['git', '-C', str(ROOT), *c], check=False)
+        try:   # 한 번만 도는 자료 조사(전이학습 후보, 2026-11-10). 실패·지연돼도 매일 갱신은 그대로 진행
+            subprocess.run([sys.executable, str(ROOT / 'pipeline' / 'survey.py')], timeout=900, check=False)
+        except Exception as e:
+            print('survey 건너뜀', e)
         g('add', 'docs', 'data/live')
+        if any((ROOT / 'data' / 'survey').glob('*')): g('add', 'data/survey')
         g('commit', '-m', f'자동 갱신 {updated} (자료 {df.index.max().date()}까지)')
         g('push')
 
