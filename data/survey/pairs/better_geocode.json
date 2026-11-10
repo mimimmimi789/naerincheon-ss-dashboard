@@ -819,5 +819,773 @@
    "lat": 38.0020914,
    "lon": 127.2344368
   }
+ ],
+ "S01003 경안천": [
+  {
+   "query": "경기도 광주시 퇴촌면 산수로 969",
+   "hits": []
+  },
+  {
+   "query": "산수로 969",
+   "hits": [
+    {
+     "lat": "37.5002077",
+     "lon": "127.3040050",
+     "type": "secondary",
+     "class": "highway",
+     "display_name": "산수로, 남종면, 광주시, 경기도, 12708, 대한민국"
+    },
+    {
+     "lat": "37.4714390",
+     "lon": "127.3073847",
+     "type": "secondary",
+     "class": "highway",
+     "display_name": "산수로, 퇴촌면, 광주시, 경기도, 12711, 대한민국"
+    },
+    {
+     "lat": "37.4268972",
+     "lon": "127.3103149",
+     "type": "secondary",
+     "class": "highway",
+     "display_name": "산수로, 초월읍, 광주시, 경기도, 12730, 대한민국"
+    }
+   ]
+  },
+  {
+   "query": "광주시 퇴촌면 정지리 192-3",
+   "hits": []
+  },
+  {
+   "query": "광주시 퇴촌면 정지리",
+   "hits": [
+    {
+     "lat": "37.4513645",
+     "lon": "127.3093150",
+     "type": "legal",
+     "class": "boundary",
+     "display_name": "정지리, 퇴촌면, 광주시, 경기도, 대한민국"
+    }
+   ]
+  },
+  {
+   "query": "산수로, 퇴촌면",
+   "hits": [
+    {
+     "lat": "37.4563769",
+     "lon": "127.3060243",
+     "type": "secondary",
+     "class": "highway",
+     "display_name": "산수로, 퇴촌면, 광주시, 경기도, 12711, 대한민국"
+    },
+    {
+     "lat": "37.4351675",
+     "lon": "127.3170278",
+     "type": "living_street",
+     "class": "highway",
+     "display_name": "산수로, 퇴촌면, 광주시, 경기도, 12730, 대한민국"
+    },
+    {
+     "lat": "37.4341024",
+     "lon": "127.3172406",
+     "type": "residential",
+     "class": "highway",
+     "display_name": "산수로, 퇴촌면, 광주시, 경기도, 12730, 대한민국"
+    }
+   ]
+  }
+ ],
+ "osm_named_features_gyeongan": [
+  {
+   "name": "정지리",
+   "type": "node",
+   "kind": {
+    "place": "village"
+   },
+   "lat": 37.45286,
+   "lon": 127.30756
+  },
+  {
+   "name": "정지1리",
+   "type": "node",
+   "kind": {
+    "highway": "bus_stop"
+   },
+   "lat": 37.4525933,
+   "lon": 127.305885
+  },
+  {
+   "name": "정지2리",
+   "type": "node",
+   "kind": {
+    "highway": "bus_stop"
+   },
+   "lat": 37.4441577,
+   "lon": 127.3098684
+  },
+  {
+   "name": "송정지구",
+   "type": "node",
+   "kind": {
+    "highway": "bus_stop"
+   },
+   "lat": 37.4214497,
+   "lon": 127.2563984
+  },
+  {
+   "name": "송정지구",
+   "type": "node",
+   "kind": {
+    "highway": "bus_stop"
+   },
+   "lat": 37.4202898,
+   "lon": 127.2560323
+  },
+  {
+   "name": "경안천로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4282192,
+   "lon": 127.3049068
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4268972,
+   "lon": 127.3103149
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.3949662,
+   "lon": 127.3113886
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4200915,
+   "lon": 127.30783
+  },
+  {
+   "name": "광동교",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "secondary"
+   },
+   "lat": 37.4713341,
+   "lon": 127.2947709
+  },
+  {
+   "name": "경안천로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4216767,
+   "lon": 127.2746088
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.3958746,
+   "lon": 127.2557844
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4091602,
+   "lon": 127.2632106
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4090897,
+   "lon": 127.2624022
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4099126,
+   "lon": 127.2622707
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4106676,
+   "lon": 127.2625615
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4112322,
+   "lon": 127.2625845
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4113047,
+   "lon": 127.2628599
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4116807,
+   "lon": 127.262687
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4123463,
+   "lon": 127.2631435
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4078607,
+   "lon": 127.2626016
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4074605,
+   "lon": 127.2626677
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "living_street"
+   },
+   "lat": 37.4349363,
+   "lon": 127.3166705
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.4341089,
+   "lon": 127.3172273
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4361227,
+   "lon": 127.3016
+  },
+  {
+   "name": "경안천로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4302702,
+   "lon": 127.2961007
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4345788,
+   "lon": 127.3132671
+  },
+  {
+   "name": "산수로532번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.4081059,
+   "lon": 127.3082188
+  },
+  {
+   "name": "산수로532번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.408333,
+   "lon": 127.3115009
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4831885,
+   "lon": 127.305097
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4082788,
+   "lon": 127.2625596
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.3997675,
+   "lon": 127.256512
+  },
+  {
+   "name": "경안천",
+   "type": "way",
+   "kind": {},
+   "lat": 37.4107309,
+   "lon": 127.2792242
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4173638,
+   "lon": 127.2758005
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.415349,
+   "lon": 127.2681883
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4271014,
+   "lon": 127.289417
+  },
+  {
+   "name": "경안천로183번길",
+   "type": "way",
+   "kind": {
+    "highway": "unclassified"
+   },
+   "lat": 37.4201813,
+   "lon": 127.2779735
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4153908,
+   "lon": 127.2707535
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4150841,
+   "lon": 127.2706082
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4723959,
+   "lon": 127.3073812
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4561243,
+   "lon": 127.3073572
+  },
+  {
+   "name": "산수로210번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.3812752,
+   "lon": 127.3213013
+  },
+  {
+   "name": "산수로226번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.3843114,
+   "lon": 127.3206261
+  },
+  {
+   "name": "산수로440번길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "residential"
+   },
+   "lat": 37.400087,
+   "lon": 127.3108018
+  },
+  {
+   "name": "산수로440번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.3991632,
+   "lon": 127.3125875
+  },
+  {
+   "name": "산수로508번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.4057545,
+   "lon": 127.3113584
+  },
+  {
+   "name": "산수로622번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.4148742,
+   "lon": 127.3083876
+  },
+  {
+   "name": "산수로645번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.4219465,
+   "lon": 127.3042683
+  },
+  {
+   "name": "산수로682번길",
+   "type": "way",
+   "kind": {
+    "highway": "residential"
+   },
+   "lat": 37.4198893,
+   "lon": 127.3109791
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4393013,
+   "lon": 127.3106834
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4417081,
+   "lon": 127.3112714
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4404634,
+   "lon": 127.3109272
+  },
+  {
+   "name": "경안천습지생태공원",
+   "type": "way",
+   "kind": {},
+   "lat": 37.4569118,
+   "lon": 127.3036381
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4714416,
+   "lon": 127.307374
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4049488,
+   "lon": 127.261354
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4172605,
+   "lon": 127.2761216
+  },
+  {
+   "name": "경안천로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4271119,
+   "lon": 127.309406
+  },
+  {
+   "name": "경안천로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4275414,
+   "lon": 127.3084612
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4113625,
+   "lon": 127.2625632
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4182461,
+   "lon": 127.2786665
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4172403,
+   "lon": 127.2752182
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4082331,
+   "lon": 127.2627728
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4094997,
+   "lon": 127.262703
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4116083,
+   "lon": 127.2630508
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4586357,
+   "lon": 127.3032487
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4738162,
+   "lon": 127.3067421
+  },
+  {
+   "name": "산수로",
+   "type": "way",
+   "kind": {
+    "highway": "secondary"
+   },
+   "lat": 37.4766894,
+   "lon": 127.3053702
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4263563,
+   "lon": 127.2900523
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4290477,
+   "lon": 127.2890675
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "track"
+   },
+   "lat": 37.4317997,
+   "lon": 127.2896229
+  },
+  {
+   "name": "송정지구4호소공원",
+   "type": "way",
+   "kind": {},
+   "lat": 37.4248238,
+   "lon": 127.2558521
+  },
+  {
+   "name": "송정지구7호소공원",
+   "type": "way",
+   "kind": {},
+   "lat": 37.4233841,
+   "lon": 127.2556537
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "highway": "cycleway"
+   },
+   "lat": 37.4111525,
+   "lon": 127.2671485
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "cycleway"
+   },
+   "lat": 37.4073883,
+   "lon": 127.2642351
+  },
+  {
+   "name": "광동교",
+   "type": "way",
+   "kind": {
+    "bridge": "yes",
+    "highway": "secondary"
+   },
+   "lat": 37.4712462,
+   "lon": 127.2947711
+  },
+  {
+   "name": "정지리",
+   "type": "relation",
+   "kind": {},
+   "lat": 37.4515508,
+   "lon": 127.310802
+  },
+  {
+   "name": "경안천 자전거길",
+   "type": "relation",
+   "kind": {},
+   "lat": 37.3287675,
+   "lon": 127.2611805
+  }
  ]
 }
