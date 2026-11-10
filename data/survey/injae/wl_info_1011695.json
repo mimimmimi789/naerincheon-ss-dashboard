@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "인제군(리빙스턴교)",
+   "obsnmeng": "Injegun(livingstongyo)",
+   "wlobscd": "1011695",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "101104",
+   "obsopndt": "2016-11-07",
+   "obskdcd": "T/M",
+   "rivnm": "인북천",
+   "bsnara": "892.66",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "1.33",
+   "wsrdis": null,
+   "addr": "강원특별자치도 인제군 인제읍 합강리 리빙스턴교",
+   "lon": "128-11-00",
+   "lat": "38-05-18 ",
+   "tmx": "303812",
+   "tmy": "510466",
+   "gdt": "192.943",
+   "wltel": "203.838",
+   "tdeyn": "N",
+   "mxgrd": "8.3",
+   "sistartobsdh": "2016110901",
+   "siendobsdh": "2026111016",
+   "olstartobsdh": "20161109",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

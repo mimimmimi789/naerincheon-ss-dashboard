@@ -1,0 +1,518 @@
+{
+ "source": "Nominatim (OpenStreetMap), 1 req/s",
+ "list": [
+  {
+   "code": "S01007",
+   "name": "평창강",
+   "address": "충청북도 제천시 송학면 후탄안길 59(장곡리 2)",
+   "tries": [
+    {
+     "query": "충청북도 제천시 송학면 후탄안길 59",
+     "n": 0
+    },
+    {
+     "query": "충청북도 제천시 장곡리 2",
+     "n": 1
+    }
+   ],
+   "lat": 37.2093333,
+   "lon": 128.319124,
+   "query_hit": "충청북도 제천시 장곡리 2",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "장곡리, 제천시, 충청북도, 27125, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01025",
+   "name": "양평",
+   "address": "경기도 양평군 옥천면 경강로 1520(옥천리 913-4)",
+   "tries": [
+    {
+     "query": "경기도 양평군 옥천면 경강로 1520",
+     "n": 1
+    }
+   ],
+   "lat": 37.5119351,
+   "lon": 127.4417006,
+   "query_hit": "경기도 양평군 옥천면 경강로 1520",
+   "osm_type": "trunk",
+   "osm_class": "highway",
+   "display_name": "경강로, 옥천면, 양평군, 경기도, 12508, 대한민국",
+   "precision": "address/feature"
+  },
+  {
+   "code": "S01004",
+   "name": "구리",
+   "address": "경기도 구리시 아차산로 34(아천동 390-4)",
+   "tries": [
+    {
+     "query": "경기도 구리시 아차산로 34",
+     "n": 1
+    }
+   ],
+   "lat": 37.5600746,
+   "lon": 127.1145716,
+   "query_hit": "경기도 구리시 아차산로 34",
+   "osm_type": "primary",
+   "osm_class": "highway",
+   "display_name": "아차산로, 구리시, 경기도, 11958, 대한민국",
+   "precision": "address/feature"
+  },
+  {
+   "code": "S01018",
+   "name": "단양",
+   "address": "충청북도 단양군 영춘면 강변우회로 252(상리 32-4)",
+   "tries": [
+    {
+     "query": "충청북도 단양군 영춘면 강변우회로 252",
+     "n": 0
+    },
+    {
+     "query": "충청북도 단양군 상리 32-4",
+     "n": 1
+    }
+   ],
+   "lat": 36.974552,
+   "lon": 128.2752805,
+   "query_hit": "충청북도 단양군 상리 32-4",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "상리, 단양군, 충청북도, 27014, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01010",
+   "name": "서상",
+   "address": "강원도 춘천시 서면 서상로 470(서상리 943-1)",
+   "tries": [
+    {
+     "query": "강원도 춘천시 서면 서상로 470",
+     "n": 0
+    },
+    {
+     "query": "강원도 춘천시 서상리 943-1",
+     "n": 0
+    },
+    {
+     "query": "강원도 춘천시 서상리",
+     "n": 1
+    }
+   ],
+   "lat": 37.9379052,
+   "lon": 127.6670507,
+   "query_hit": "강원도 춘천시 서상리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "서상리, 춘천시, 강원특별자치도, 24460, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01015",
+   "name": "인제",
+   "address": "강원도 인제군 북면 구미동길 43-49(월학리 2405-3)",
+   "tries": [
+    {
+     "query": "강원도 인제군 북면 구미동길 43-49",
+     "n": 0
+    },
+    {
+     "query": "강원도 인제군 월학리 2405-3",
+     "n": 1
+    }
+   ],
+   "lat": 38.1686011,
+   "lon": 128.1952515,
+   "query_hit": "강원도 인제군 월학리 2405-3",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "월학리, 북면, 인제군, 강원특별자치도, 24609, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01012",
+   "name": "의암호",
+   "address": "강원도 춘천시 서면 박사로 646(현암리 산35-2)",
+   "tries": [
+    {
+     "query": "강원도 춘천시 서면 박사로 646",
+     "n": 0
+    },
+    {
+     "query": "강원도 춘천시 현암리 산35-2",
+     "n": 0
+    },
+    {
+     "query": "강원도 춘천시 현암리",
+     "n": 1
+    }
+   ],
+   "lat": 37.880154,
+   "lon": 127.6762663,
+   "query_hit": "강원도 춘천시 현암리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "현암리, 춘천시, 강원특별자치도, 24461, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01001",
+   "name": "가평",
+   "address": "경기도 가평군 청평면 북한강로 1539(삼회리 617-4)",
+   "tries": [
+    {
+     "query": "경기도 가평군 청평면 북한강로 1539",
+     "n": 0
+    },
+    {
+     "query": "경기도 가평군 삼회리 617-4",
+     "n": 0
+    },
+    {
+     "query": "경기도 가평군 삼회리",
+     "n": 1
+    }
+   ],
+   "lat": 37.68651,
+   "lon": 127.40132,
+   "query_hit": "경기도 가평군 삼회리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "삼회리, 가평군, 경기도, 12458, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01017",
+   "name": "포천",
+   "address": "경기도 포천군 영중면 사은다리 1길 32(영중면 거사리 477-2)",
+   "tries": [
+    {
+     "query": "경기도 포천군 영중면 사은다리 1길 32",
+     "n": 0
+    },
+    {
+     "query": "경기도 포천군 영중면 거사리 477-2",
+     "n": 0
+    },
+    {
+     "query": "경기도 포천군 영중면",
+     "n": 0
+    }
+   ]
+  },
+  {
+   "code": "S01009",
+   "name": "한탄강",
+   "address": "경기도 연천군 전곡읍 전은길 98-68(은대리 산125-33)",
+   "tries": [
+    {
+     "query": "경기도 연천군 전곡읍 전은길 98-68",
+     "n": 0
+    },
+    {
+     "query": "경기도 연천군 은대리 산125-33",
+     "n": 0
+    },
+    {
+     "query": "경기도 연천군 은대리",
+     "n": 1
+    }
+   ],
+   "lat": 38.04621,
+   "lon": 127.06882,
+   "query_hit": "경기도 연천군 은대리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "은대리, 전곡읍, 연천군, 경기도, 11025, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01016",
+   "name": "미산",
+   "address": "경기도 연천군 미산면 어삼로 231(마전리 237)",
+   "tries": [
+    {
+     "query": "경기도 연천군 미산면 어삼로 231",
+     "n": 0
+    },
+    {
+     "query": "경기도 연천군 마전리 237",
+     "n": 1
+    }
+   ],
+   "lat": 38.2213,
+   "lon": 127.09562,
+   "query_hit": "경기도 연천군 마전리 237",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "마전리, 신서면, 연천군, 경기도, 11000, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01013",
+   "name": "신천",
+   "address": "경기도 연천군 청산면 청신로 153(초성리 95-6)",
+   "tries": [
+    {
+     "query": "경기도 연천군 청산면 청신로 153",
+     "n": 0
+    },
+    {
+     "query": "경기도 연천군 초성리 95-6",
+     "n": 0
+    },
+    {
+     "query": "경기도 연천군 초성리",
+     "n": 1
+    }
+   ],
+   "lat": 37.9951537,
+   "lon": 127.0743434,
+   "query_hit": "경기도 연천군 초성리",
+   "osm_type": "station",
+   "osm_class": "railway",
+   "display_name": "청산, 46, 학담로, 초성리, 청산면, 연천군, 경기도, 11023, 대한민국",
+   "precision": "address/feature"
+  },
+  {
+   "code": "S01019",
+   "name": "화천",
+   "address": "강원 화천군 하남면 위라리길 9(위라리 395-1)",
+   "tries": [
+    {
+     "query": "강원 화천군 하남면 위라리길 9",
+     "n": 0
+    },
+    {
+     "query": "강원 화천군 위라리 395-1",
+     "n": 0
+    },
+    {
+     "query": "강원 화천군 위라리",
+     "n": 1
+    }
+   ],
+   "lat": 38.0893058,
+   "lon": 127.7172426,
+   "query_hit": "강원 화천군 위라리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "위라리, 하남면, 화천군, 강원특별자치도, 24140, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01003",
+   "name": "경안천",
+   "address": "경기도 광주시 퇴촌면 산수로 969(정지리 192-3)",
+   "tries": [
+    {
+     "query": "경기도 광주시 퇴촌면 산수로 969",
+     "n": 0
+    },
+    {
+     "query": "경기도 광주시 정지리 192-3",
+     "n": 0
+    },
+    {
+     "query": "경기도 광주시 정지리",
+     "n": 1
+    }
+   ],
+   "lat": 37.45286,
+   "lon": 127.30756,
+   "query_hit": "경기도 광주시 정지리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "정지리, 광주시, 경기도, 12711, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01014",
+   "name": "충주",
+   "address": "충주시 동량면 지등로 266 용교2 양수장 내(용교리 산1-1)",
+   "tries": [
+    {
+     "query": "충주시 동량면 지등로 266 용교2 양수장 내",
+     "n": 0
+    },
+    {
+     "query": "충주시 동량면 용교리 산1-1",
+     "n": 0
+    },
+    {
+     "query": "충주시 동량면 용교리",
+     "n": 0
+    }
+   ]
+  },
+  {
+   "code": "S01006",
+   "name": "원주",
+   "address": "강원도 원주시 소초면 검엉터길 109(장양리 1228-1)",
+   "tries": [
+    {
+     "query": "강원도 원주시 소초면 검엉터길 109",
+     "n": 1
+    }
+   ],
+   "lat": 37.4202083,
+   "lon": 127.954998,
+   "query_hit": "강원도 원주시 소초면 검엉터길 109",
+   "osm_type": "unclassified",
+   "osm_class": "highway",
+   "display_name": "검엉터길, 소초면, 원주시, 강원특별자치도, 26306, 대한민국",
+   "precision": "address/feature"
+  },
+  {
+   "code": "S01005",
+   "name": "여주",
+   "address": "경기도 여주시 주내로 597 (우만리 99-5)",
+   "tries": [
+    {
+     "query": "경기도 여주시 주내로 597",
+     "n": 1
+    }
+   ],
+   "lat": 37.2631493,
+   "lon": 127.6777981,
+   "query_hit": "경기도 여주시 주내로 597",
+   "osm_type": "secondary",
+   "osm_class": "highway",
+   "display_name": "주내로, 단현동, 이호리, 여주시, 경기도, 12664, 대한민국",
+   "precision": "address/feature"
+  },
+  {
+   "code": "S01020",
+   "name": "능서",
+   "address": "경기도 여주시 능서면 영릉로 452",
+   "tries": [
+    {
+     "query": "경기도 여주시 능서면 영릉로 452",
+     "n": 0
+    }
+   ]
+  },
+  {
+   "code": "S01011",
+   "name": "강천",
+   "address": "경기도 여주시 강천면 섬강로 287(강천리 산8-2)",
+   "tries": [
+    {
+     "query": "경기도 여주시 강천면 섬강로 287",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 강천리 산8-2",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 강천리",
+     "n": 1
+    }
+   ],
+   "lat": 37.24901,
+   "lon": 127.72804,
+   "query_hit": "경기도 여주시 강천리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "강천리, 여주시, 경기도, 12616, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01021",
+   "name": "달천",
+   "address": "충청북도 충주시 살미면 팔봉 향산길 460(향산리 473,노루목다리)",
+   "tries": [
+    {
+     "query": "충청북도 충주시 살미면 팔봉 향산길 460",
+     "n": 0
+    },
+    {
+     "query": "충청북도 충주시 향산리 473,노루목다리",
+     "n": 1
+    }
+   ],
+   "lat": 36.9287595,
+   "lon": 127.929481,
+   "query_hit": "충청북도 충주시 향산리 473,노루목다리",
+   "osm_type": "trunk",
+   "osm_class": "highway",
+   "display_name": "노루목다리, 향산리, 충주시, 충청북도, 27493, 대한민국",
+   "precision": "address/feature"
+  },
+  {
+   "code": "S01023",
+   "name": "청미천",
+   "address": "경기도 여주시 점동면 점동로 574-3(삼합리 689-8 삼합교)",
+   "tries": [
+    {
+     "query": "경기도 여주시 점동면 점동로 574-3",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 삼합리 689-8 삼합교",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 삼합리",
+     "n": 1
+    }
+   ],
+   "lat": 37.2076943,
+   "lon": 127.7313166,
+   "query_hit": "경기도 여주시 삼합리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "삼합리, 여주시, 경기도, 12666, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01002",
+   "name": "흥천",
+   "address": "경기도 여주시 흥천면 이여로 1278-1(계신리 559)",
+   "tries": [
+    {
+     "query": "경기도 여주시 흥천면 이여로 1278-1",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 계신리 559",
+     "n": 1
+    }
+   ],
+   "lat": 37.37969,
+   "lon": 127.5299,
+   "query_hit": "경기도 여주시 계신리 559",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "계신리, 여주시, 경기도, 12604, 대한민국",
+   "precision": "village/리 centroid"
+  },
+  {
+   "code": "S01022",
+   "name": "복하천",
+   "address": "경기도 여주시 흥쳔면 금대울로 254(복대리 24-12 상백교)",
+   "tries": [
+    {
+     "query": "경기도 여주시 흥쳔면 금대울로 254",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 복대리 24-12 상백교",
+     "n": 0
+    },
+    {
+     "query": "경기도 여주시 복대리",
+     "n": 1
+    }
+   ],
+   "lat": 37.36004,
+   "lon": 127.52857,
+   "query_hit": "경기도 여주시 복대리",
+   "osm_type": "village",
+   "osm_class": "place",
+   "display_name": "복대리, 여주시, 경기도, 12605, 대한민국",
+   "precision": "village/리 centroid"
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "인제군(어두원교)",
+   "obsnmeng": "BukCheon",
+   "wlobscd": "1011650",
+   "mggvcd": "한국수자원공사",
+   "bbsncd": "한강",
+   "sbsncd": "101103",
+   "obsopndt": "2000-04-24",
+   "obskdcd": "T/M",
+   "rivnm": "북천",
+   "bsnara": "304.1",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "4",
+   "wsrdis": "0",
+   "addr": "강원특별자치도 인제군 북면 원통리 235 어두원교",
+   "lon": "128-14-00",
+   "lat": "38-08-08 ",
+   "tmx": "308129",
+   "tmy": "515765",
+   "gdt": "231.81",
+   "wltel": "240.75",
+   "tdeyn": "N",
+   "mxgrd": "6",
+   "sistartobsdh": "2001102218",
+   "siendobsdh": "2026111015",
+   "olstartobsdh": "20000424",
+   "olendobsdh": "20261109"
+  }
+ ]
+}

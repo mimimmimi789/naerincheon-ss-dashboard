@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "인제군(도리촌교)",
+   "obsnmeng": "Injegun(Dorichongyo)",
+   "wlobscd": "1011693",
+   "mggvcd": "한국수자원공사",
+   "bbsncd": "한강",
+   "sbsncd": "101104",
+   "obsopndt": "2011-06-05",
+   "obskdcd": "T/M",
+   "rivnm": null,
+   "bsnara": null,
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": null,
+   "wsrdis": null,
+   "addr": "강원특별자치도 인제군 북면 월학리 1201 도리촌교",
+   "lon": "128-12-25",
+   "lat": "38-05-51 ",
+   "tmx": "305870",
+   "tmy": "511510",
+   "gdt": "227.837",
+   "wltel": "239.463",
+   "tdeyn": "N",
+   "mxgrd": "10",
+   "sistartobsdh": "2019022115",
+   "siendobsdh": "2026111015",
+   "olstartobsdh": "20190220",
+   "olendobsdh": "20261109"
+  }
+ ]
+}
