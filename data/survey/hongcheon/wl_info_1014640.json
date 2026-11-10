@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "홍천군(굴운교)",
+   "obsnmeng": "Hongcheongun(Gyulwungyo)",
+   "wlobscd": "1014640",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "101406",
+   "obsopndt": "2007-07-18",
+   "obskdcd": "T/M",
+   "rivnm": "홍천강",
+   "bsnara": "724.83",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "74.08",
+   "wsrdis": null,
+   "addr": "강원특별자치도 홍천군 화촌면 굴운리 굴운교",
+   "lon": "127-56-29",
+   "lat": "37-44-19 ",
+   "tmx": "282978",
+   "tmy": "471405",
+   "gdt": "131.685",
+   "wltel": "141.94",
+   "tdeyn": "N",
+   "mxgrd": "8",
+   "sistartobsdh": "2007051416",
+   "siendobsdh": "2026111016",
+   "olstartobsdh": "20070514",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

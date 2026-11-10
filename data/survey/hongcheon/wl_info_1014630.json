@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "홍천군(주음치교)",
+   "obsnmeng": "Hongcheongun(Jueumchigyo)",
+   "wlobscd": "1014630",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "101404",
+   "obsopndt": "1989-01-01",
+   "obskdcd": "T/M",
+   "rivnm": "홍천강",
+   "bsnara": "522.76",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "84.23",
+   "wsrdis": "0",
+   "addr": "강원특별자치도 홍천군 화촌면 주음치리 주음치교",
+   "lon": "127-59-00",
+   "lat": "37-47-04 ",
+   "tmx": "286622",
+   "tmy": "476530",
+   "gdt": "152.147",
+   "wltel": "167.673",
+   "tdeyn": "N",
+   "mxgrd": "10",
+   "sistartobsdh": "1989031401",
+   "siendobsdh": "2026111015",
+   "olstartobsdh": "19890101",
+   "olendobsdh": "20261110"
+  }
+ ]
+}
