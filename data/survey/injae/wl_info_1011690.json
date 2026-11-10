@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "인제군(원통리)",
+   "obsnmeng": "Injegun(Weontongri)",
+   "wlobscd": "1011690",
+   "mggvcd": "한국수자원공사",
+   "bbsncd": "한강",
+   "sbsncd": "101103",
+   "obsopndt": "1972-08-11",
+   "obskdcd": "T/M",
+   "rivnm": "인북천",
+   "bsnara": "531",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "4.1",
+   "wsrdis": "0",
+   "addr": "강원특별자치도 인제군 북면 원통리 1798",
+   "lon": "128-12-34",
+   "lat": "38-07-15 ",
+   "tmx": "306056",
+   "tmy": "514103",
+   "gdt": "218.337",
+   "wltel": "222.042",
+   "tdeyn": "N",
+   "mxgrd": "10",
+   "sistartobsdh": "1975071004",
+   "siendobsdh": "2026111015",
+   "olstartobsdh": "19740321",
+   "olendobsdh": "20261109"
+  }
+ ]
+}
