@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "광주시(광동교)",
+   "obsnmeng": "Gwangjusi(Gwangdonggyo)",
+   "wlobscd": "1016695",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "101605",
+   "obsopndt": "2006-10-23",
+   "obskdcd": "T/M",
+   "rivnm": "경안천",
+   "bsnara": "514.38",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "2.15",
+   "wsrdis": null,
+   "addr": "경기도 광주시 퇴촌면 광동리 광동교",
+   "lon": "127-17-39",
+   "lat": "37-28-16 ",
+   "tmx": "226022",
+   "tmy": "441338",
+   "gdt": "-.057",
+   "wltel": "32.321",
+   "tdeyn": "N",
+   "mxgrd": "30.5",
+   "sistartobsdh": "2006120219",
+   "siendobsdh": "2026111017",
+   "olstartobsdh": "20061202",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

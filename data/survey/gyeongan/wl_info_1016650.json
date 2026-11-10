@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "광주시(경안교)",
+   "obsnmeng": "Gwangjusi(Gyeongangyo)",
+   "wlobscd": "1016650",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "101603",
+   "obsopndt": "1985-01-01",
+   "obskdcd": "T/M",
+   "rivnm": "경안천",
+   "bsnara": "261.82",
+   "rvwdt": "179",
+   "bedslp": null,
+   "rvmjctdis": "13.57",
+   "wsrdis": "0",
+   "addr": "경기도 광주시 쌍령동 경안교",
+   "lon": "127-15-47",
+   "lat": "37-24-24 ",
+   "tmx": "223290",
+   "tmy": "434178",
+   "gdt": "34.106",
+   "wltel": "43.456",
+   "tdeyn": "N",
+   "mxgrd": "8",
+   "sistartobsdh": "1984090814",
+   "siendobsdh": "2026111017",
+   "olstartobsdh": "19840101",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

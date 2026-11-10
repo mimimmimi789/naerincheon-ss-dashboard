@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "광주시(서하교)",
+   "obsnmeng": "Gwangjusi(Seohagyo)",
+   "wlobscd": "1016670",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "101605",
+   "obsopndt": "2013-12-31",
+   "obskdcd": "T/M",
+   "rivnm": "경안천",
+   "bsnara": "458.49",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "7.84",
+   "wsrdis": null,
+   "addr": "경기도 광주시 초월읍 서하리 서하교",
+   "lon": "127-18-30",
+   "lat": "37-25-44 ",
+   "tmx": "227290",
+   "tmy": "436656",
+   "gdt": "26.762",
+   "wltel": "35.762",
+   "tdeyn": "N",
+   "mxgrd": "8",
+   "sistartobsdh": "2013122711",
+   "siendobsdh": "2026111017",
+   "olstartobsdh": "20131227",
+   "olendobsdh": "20261110"
+  }
+ ]
+}
