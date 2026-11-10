@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "여주시(삼합교)",
+   "obsnmeng": "Yeojusi(Samhapgyo)",
+   "wlobscd": "1007617",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "100706",
+   "obsopndt": "2007-12-07",
+   "obskdcd": "T/M",
+   "rivnm": "청미천",
+   "bsnara": "588.93",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "2.95",
+   "wsrdis": null,
+   "addr": "경기도 여주시 점동면 삼합리 삼합교",
+   "lon": "127-43-09",
+   "lat": "37-12-08 ",
+   "tmx": "263845",
+   "tmy": "411698",
+   "gdt": "42.076",
+   "wltel": "53.904",
+   "tdeyn": "N",
+   "mxgrd": "11",
+   "sistartobsdh": "2008012317",
+   "siendobsdh": "2026111018",
+   "olstartobsdh": "20080123",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

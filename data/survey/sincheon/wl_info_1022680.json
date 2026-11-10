@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "연천군(사랑교)",
+   "obsnmeng": "Yeoncheongun(Saranggyo)",
+   "wlobscd": "1022680",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "102215",
+   "obsopndt": "1996-06-01",
+   "obskdcd": "T/M",
+   "rivnm": null,
+   "bsnara": "2236.02",
+   "rvwdt": "164",
+   "bedslp": null,
+   "rvmjctdis": "7.2",
+   "wsrdis": "0",
+   "addr": "경기도 연천군 전곡읍 전곡리 사랑교",
+   "lon": "127-03-23",
+   "lat": "38-00-33 ",
+   "tmx": "204952",
+   "tmy": "501019",
+   "gdt": "18.306",
+   "wltel": "30.115",
+   "tdeyn": "N",
+   "mxgrd": "15.5",
+   "sistartobsdh": "1999030504",
+   "siendobsdh": "2026111018",
+   "olstartobsdh": "19960525",
+   "olendobsdh": "20261110"
+  }
+ ]
+}
