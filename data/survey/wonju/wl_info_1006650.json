@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "횡성군(횡성교)",
+   "obsnmeng": "Hoengseonggun(Hoengseonggyo)",
+   "wlobscd": "1006650",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "100605",
+   "obsopndt": "1962-07-01",
+   "obskdcd": "T/M",
+   "rivnm": "섬강",
+   "bsnara": "444.52",
+   "rvwdt": null,
+   "bedslp": "2660",
+   "rvmjctdis": "51.32",
+   "wsrdis": "49.1",
+   "addr": "강원특별자치도 횡성군 횡성읍 읍하리 횡성교",
+   "lon": "127-58-50",
+   "lat": "37-29-42 ",
+   "tmx": "286713",
+   "tmy": "444401",
+   "gdt": "106.053",
+   "wltel": "115.878",
+   "tdeyn": "N",
+   "mxgrd": "9",
+   "sistartobsdh": "1972081823",
+   "siendobsdh": "2026111016",
+   "olstartobsdh": "19630501",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

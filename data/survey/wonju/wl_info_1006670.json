@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "원주시(옥산교)",
+   "obsnmeng": "Wonjusi(Oksangyo)",
+   "wlobscd": "1006670",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "100605",
+   "obsopndt": "2012-10-15",
+   "obskdcd": "T/M",
+   "rivnm": "섬강",
+   "bsnara": "716.5",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "35.45",
+   "wsrdis": null,
+   "addr": "강원특별자치도 원주시 호저면 옥산리 옥산교",
+   "lon": "127-55-18",
+   "lat": "37-25-43 ",
+   "tmx": "281577",
+   "tmy": "436980",
+   "gdt": "80.576",
+   "wltel": "93.665",
+   "tdeyn": "N",
+   "mxgrd": "9",
+   "sistartobsdh": "2012092118",
+   "siendobsdh": "2026111016",
+   "olstartobsdh": "20120921",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

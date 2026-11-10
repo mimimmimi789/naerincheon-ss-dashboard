@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "섬강교",
+   "obsnmeng": null,
+   "wlobscd": "1006667",
+   "mggvcd": "한국수자원공사",
+   "bbsncd": "한강",
+   "sbsncd": "100605",
+   "obsopndt": "2015-08-04",
+   "obskdcd": "T/M",
+   "rivnm": null,
+   "bsnara": null,
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": null,
+   "wsrdis": null,
+   "addr": "강원특별자치도 원주시 소초면 의관리 488-1",
+   "lon": "127-57-49",
+   "lat": "37-25-29 ",
+   "tmx": "285294",
+   "tmy": "436585",
+   "gdt": null,
+   "wltel": null,
+   "tdeyn": "N",
+   "mxgrd": null,
+   "sistartobsdh": "2015080415",
+   "siendobsdh": "2017073116",
+   "olstartobsdh": "20150803",
+   "olendobsdh": "20170730"
+  }
+ ]
+}
