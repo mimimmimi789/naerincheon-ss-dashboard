@@ -28,7 +28,7 @@ LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(�
 LOCK_EVAL = pd.Timestamp('2023-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
-MODEL_TAG = 'blend+temp+chain13+obs1chain+flood075+himode1 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
+MODEL_TAG = 'blend+temp+chain13+obs1chain+flood075+himode1+wonjuTL 2026-11-10'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):
@@ -238,6 +238,9 @@ def main():
     static = json.loads((BASE / 'forecast_static.json').read_text(encoding='utf-8'))
     fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static, model.temp_feats(df))
     fr.chain = fcm.FlowChain(fr, df.P0, est.q_corr, est.qpk, df.Hmax, df.Hmin, df.SS, model.temp_feats(df))   # 2026-11-03 1·3일 연결 혼합
+    tsrc = BASE / 'transfer_wonju_src.csv'
+    if tsrc.exists():   # 2026-11-10 1일 고농도 모드 날만 원주 전이 연결 모델
+        fr.chain_hi = fcm.TransferChain(fr.chain, pd.read_csv(tsrc, index_col=0, parse_dates=True))
     hc = fr.hindcast()
     fj = src.LIVE / 'kma_fcst.json'
     rain = wx = full = None
