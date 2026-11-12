@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "여주시(흥천대교)",
+   "obsnmeng": "Yeojusi(Heungcheondaegyo)",
+   "wlobscd": "1007650",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "100714",
+   "obsopndt": "2001-04-20",
+   "obskdcd": "T/M",
+   "rivnm": "복하천",
+   "bsnara": "294.78",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "4.42",
+   "wsrdis": "0",
+   "addr": "경기도 여주시 흥천면 다대리 흥천대교",
+   "lon": "127-32-07",
+   "lat": "37-19-59 ",
+   "tmx": "247438",
+   "tmy": "426110",
+   "gdt": "31.536",
+   "wltel": "40.279",
+   "tdeyn": "N",
+   "mxgrd": "7",
+   "sistartobsdh": "2000101700",
+   "siendobsdh": "2026111018",
+   "olstartobsdh": "20001016",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

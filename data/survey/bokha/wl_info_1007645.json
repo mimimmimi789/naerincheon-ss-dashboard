@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "이천시(복하교)",
+   "obsnmeng": "Icheonsi(Bokhagyo)",
+   "wlobscd": "1007645",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "100713",
+   "obsopndt": "1988-04-01",
+   "obskdcd": "T/M",
+   "rivnm": "복하천",
+   "bsnara": "165.54",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "14.68",
+   "wsrdis": "0",
+   "addr": "경기도 이천시 부발읍 신하리 복하교",
+   "lon": "127-27-39",
+   "lat": "37-16-01 ",
+   "tmx": "240876",
+   "tmy": "418738",
+   "gdt": "46.418",
+   "wltel": "53.367",
+   "tdeyn": "N",
+   "mxgrd": "6",
+   "sistartobsdh": "1989092001",
+   "siendobsdh": "2026111018",
+   "olstartobsdh": "19880401",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

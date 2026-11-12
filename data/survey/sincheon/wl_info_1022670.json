@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "연천군(신천교)",
+   "obsnmeng": "Yeoncheongun(Sincheongyo)",
+   "wlobscd": "1022670",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "102213",
+   "obsopndt": "2008-11-03",
+   "obskdcd": "T/M",
+   "rivnm": null,
+   "bsnara": "329.01",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "1.84",
+   "wsrdis": null,
+   "addr": "경기도 연천군 청산면 대전리 신천교",
+   "lon": "127-04-37",
+   "lat": "37-59-35 ",
+   "tmx": "206759",
+   "tmy": "499232",
+   "gdt": "27.429",
+   "wltel": "36.546",
+   "tdeyn": "N",
+   "mxgrd": "7.6",
+   "sistartobsdh": "2008103100",
+   "siendobsdh": "2026111018",
+   "olstartobsdh": "20081030",
+   "olendobsdh": "20261110"
+  }
+ ]
+}

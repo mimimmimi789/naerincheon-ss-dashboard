@@ -1,0 +1,38 @@
+{
+ "result": {
+  "code": "success",
+  "msg": "완료되었습니다!"
+ },
+ "count": 1,
+ "list": [
+  {
+   "obsnm": "여주시(원부교)",
+   "obsnmeng": "Yeojusi(Wonbugyo)",
+   "wlobscd": "1007615",
+   "mggvcd": "기후에너지환경부",
+   "bbsncd": "한강",
+   "sbsncd": "100706",
+   "obsopndt": "1985-01-01",
+   "obskdcd": "T/M",
+   "rivnm": "청미천",
+   "bsnara": "519.53",
+   "rvwdt": null,
+   "bedslp": null,
+   "rvmjctdis": "14.23",
+   "wsrdis": "0",
+   "addr": "경기도 여주시 점동면 원부리 원부교",
+   "lon": "127-38-04",
+   "lat": "37-09-44 ",
+   "tmx": "256353",
+   "tmy": "407205",
+   "gdt": "50.945",
+   "wltel": "59.972",
+   "tdeyn": "N",
+   "mxgrd": "9",
+   "sistartobsdh": "1984070301",
+   "siendobsdh": "2026111018",
+   "olstartobsdh": "19850101",
+   "olendobsdh": "20261110"
+  }
+ ]
+}
