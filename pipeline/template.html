@@ -1815,7 +1815,8 @@ const tdI = idx(new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10)), T
 const inToday = () => TODAY_OK && state.today && state.ref === lastI;
 const mdx = s => +s.slice(5, 7) + '/' + +s.slice(8, 10);
 const relDay = i => { const d = i - tdI; return d === 0 ? '오늘' : d === 1 ? '내일' : d === 2 ? '모레' : d === -1 ? '어제' : d > 0 ? d + '일 후' : -d + '일 전'; };
-try { const s = JSON.parse(localStorage.getItem('ssdash') || 'null'); if (s && s.v === 5 && s.ref >= firstI && s.ref <= lastI) state = Object.assign(state, s); } catch (e) {}
+// 다시 열면 항상 최신 날짜로: 기준일(ref)·오늘 보기는 저장값을 쓰지 않고, 기간·눈금·선행만 기억한다.
+try { const s = JSON.parse(localStorage.getItem('ssdash') || 'null'); if (s && s.v === 5) { delete s.ref; delete s.today; state = Object.assign(state, s); } } catch (e) {}
 const save = () => { try { localStorage.setItem('ssdash', JSON.stringify(state)); } catch (e) {} };
 if (state.ref === lastI && state.today !== false) state.today = true;
 
