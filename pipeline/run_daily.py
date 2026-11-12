@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import ac  # noqa: E402
 import forecast as fcm  # noqa: E402
 import manager as mg  # noqa: E402
 import model  # noqa: E402
@@ -28,7 +29,7 @@ LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(�
 LOCK_EVAL = pd.Timestamp('2023-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
-MODEL_TAG = 'blend+temp+chain13+obs1chain+flood075+himode1 2026-11-04'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
+MODEL_TAG = 'C daily + A+C h1(morning07) + ops h3h5 2026-11-12'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):
@@ -52,6 +53,7 @@ def collect(today, key, status):
     st = csv(src.LIVE / 'wamis_stage_daily.csv')
     s0 = dt.date(2026, 1, 1) if st is None else (st.index.max() - pd.Timedelta(days=10)).date()
     run('WAMIS 원대교 수위', src.wamis_stage, s0, yday)
+    run('WAMIS 원대교 오늘 아침 수위', src.wamis_stage_today, today)   # 2026-11-12 A+C 1일 예측
     if key:
         aw = csv(src.LIVE / 'kma_aws_rain.csv')
         a0 = LOCK.date() + dt.timedelta(days=1) if aw is None else (aw.index.max() - pd.Timedelta(days=7)).date()
@@ -59,6 +61,12 @@ def collect(today, key, status):
         tf = csv(src.LIVE / 'kma_asos_temp.csv')
         t0 = dt.date(2026, 10, 25) if tf is None else (tf.index.max() - pd.Timedelta(days=3)).date()
         run('기상청 인제 기온', src.kma_asos_temp, list(pd.date_range(t0, yday).date), key)
+        rf = src.LIVE / 'kma_asos_hourly_rain.csv'   # 2026-11-12 A+C: 인제 ASOS 시간강우(과거 파일 끝 2026-09-21 이후 이어 받기)
+        r0 = pd.Timestamp('2026-09-21 10:00')
+        if rf.exists():
+            t = pd.read_csv(rf, dtype={'tm': str}).tm
+            if len(t): r0 = pd.to_datetime(t.max(), format='%Y%m%d%H') - pd.Timedelta(days=2)
+        run('기상청 인제 시간강우', src.kma_asos_hourly, r0, pd.Timestamp(dt.datetime.now(KST).replace(tzinfo=None)), key)
         run('기상청 단기예보', src.kma_fcst, yday, key)
         run('기상청 특보', src.kma_warnings, key, today)
     else:
@@ -107,16 +115,16 @@ def assemble():
 
 
 def locked_eval(df, upto=LOCK_EVAL, flood=None):
-    """upto까지 실측으로만 학습한 고정 모델로 그 뒤 실측을 맞춘 성적(월별 기준값과 비교).
+    """upto까지 실측으로만 학습한 고정 모델(2026-11-12부터 C)로 그 뒤 실측을 맞춘 성적(월별 기준값과 비교).
     cov = 실측이 80% 범위 안에 든 비율. years = 연도별 성적."""
-    flood = flood or model.FLOOD_2023
+    flood = flood or ac.FLOOD_C_2023
     since = str((upto + pd.Timedelta(days=1)).date())
     newo = df.index[(df.index > upto) & df.SS.notna() & (df.SS > 0)]
     if not len(newo): return {'n': 0, 'since': since, 'train': upto.year}
-    F, _, _, _ = model.features(df)
+    F, qc, _, _ = model.features(df)
     tr = (df.index <= upto) & df.SS.notna() & (df.SS > 0)
-    m, sm = model.fit_log(model.Daily, F[tr], df.SS[tr].values)
-    Fn = F.loc[newo]; lp = m.predict(Fn) + sm + model.flood_shift(Fn, flood); blo, bhi = model.band(Fn)
+    m, sm, rq = ac.fit_c(F, qc, df.SS, upto=upto)
+    Fn = F.loc[newo]; lp = m.predict(rq.add(Fn)) + sm + model.flood_shift(Fn, flood); blo, bhi = ac.band_c(Fn)
     p = np.exp(lp); y = df.SS[newo].values; lo, hi = np.exp(lp + blo), np.exp(lp + bhi)
     med = np.log(df.SS[tr]).groupby(df.index[tr].month).median()
     c = np.exp(newo.month.map(med).values.astype(float))
@@ -234,7 +242,7 @@ def main():
     if '--no-fetch' not in args:
         collect(today, key, status)
     df = assemble()
-    est, shp_est = model.estimate(df)
+    est, shp_est, (cm, Fc) = ac.estimate_c(df)   # 2026-11-12 일별 추정 = C(전이 미세조정)
     static = json.loads((BASE / 'forecast_static.json').read_text(encoding='utf-8'))
     fr = fcm.Forecaster(df.P0, est.q_corr, est.qpk, df.Havg, df.Hmax, df.SS, static, model.temp_feats(df))
     fr.chain = fcm.FlowChain(fr, df.P0, est.q_corr, est.qpk, df.Hmax, df.Hmin, df.SS, model.temp_feats(df))   # 2026-11-03 1·3일 연결 혼합
@@ -247,6 +255,15 @@ def main():
         if j.get('weather') and (now.date() - dt.date.fromisoformat(j['issue'])).days <= 2:   # 오래된 예보는 날씨 칸에 쓰지 않음
             wx = {'base': j['base'], 'point': j.get('weather_point', ''), 'days': j['weather'], 'example': bool(j.get('example'))}
     live = fr.live(rain, full)
+    try:   # 2026-11-12 1일 예측 = A+C(두 단계 + 아침 07시). 아침 자료가 없거나 실패하면 운영 1일 예측 유지
+        hh = model.read_hourly([AUX / 'wondae_wl_hourly_2014_2026.csv', src.LIVE / 'wamis_stage_hourly.csv'])
+        rh = ac.read_rain_hourly(AUX / 'inje_asos211_hourly_rain_2014_20260921.csv', src.LIVE / 'kma_asos_hourly_rain.csv')
+        days = pd.date_range(df.index.min(), df.index.max() + pd.Timedelta(days=1))
+        ac.live_h1(live, df, Fc, cm, ac.morning(hh, rh, days), float(static.get('kma_rain_scale', 0.63)), rain, full)
+    except Exception as e:
+        live['h'][1]['method'] = '운영'; live['h'][1]['method_note'] = f'A+C 실패: {type(e).__name__} {str(e)[:120]}'
+        print(traceback.format_exc(), file=sys.stderr)
+    status['1일 예측 방식'] = live['h'][1].get('method', '운영') + (' (' + live['h'][1]['method_note'] + ')' if live['h'][1].get('method_note') else '')
     wj = src.LIVE / 'kma_warnings.json'
     warnings = json.loads(wj.read_text(encoding='utf-8')) if wj.exists() else None
     locked = [locked_eval(df)]

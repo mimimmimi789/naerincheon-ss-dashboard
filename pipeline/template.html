@@ -1404,15 +1404,15 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
   <section class="card pig" aria-label="한눈에 보는 성능">
     <h2>한눈에 보는 성능 <span class="tag real">과거 실측과 비교한 값</span></h2>
     <div class="pig-k">
-      <div class="pk main"><span>일별 SS 추정</span><b>0.770</b><small>로그 R² · 2019–26 실측 295건</small></div>
+      <div class="pk main"><span>일별 SS 추정</span><b>0.780</b><small>로그 R² · 2019–26 실측 295건</small></div>
       <div class="pk"><span>처음 보는 자료</span><b>0.794</b><small>2023년까지 학습 → 2024–26 106건</small></div>
-      <div class="pk"><span>내일 예측</span><b>0.759</b><small>기상청 예보 넣은 값 · 257건</small></div>
-      <div class="pk"><span>평균 오차</span><b>2.79<em>mg/L</em></b><small>월별 평균만 쓰면 4.54</small></div>
+      <div class="pk"><span>내일 예측</span><b>0.794</b><small>기상청 예보 + 아침 07시 · 257건</small></div>
+      <div class="pk"><span>평균 오차</span><b>2.53<em>mg/L</em></b><small>월별 평균만 쓰면 4.54</small></div>
     </div>
     <div class="pig-r">
       <div class="pig-b">
         <h3>예측 기간별 정확도 <small>로그 R² · 점선 = 월별 평균만 쓴 값 0.368</small></h3>
-<div class="pz "><span class="pz-l">오늘 추정</span><div class="pz-t"><i style="--w:0.77"></i><em style="--b:.368"></em></div><b>0.770</b><small>MAE 2.79</small></div><div class="pz "><span class="pz-l">1일 뒤</span><div class="pz-t"><i style="--w:0.759"></i><em style="--b:.368"></em></div><b>0.759</b><small>MAE 2.89</small></div><div class="pz "><span class="pz-l">3일 뒤</span><div class="pz-t"><i style="--w:0.612"></i><em style="--b:.368"></em></div><b>0.612</b><small>MAE 3.08</small></div><div class="pz ref"><span class="pz-l">5일 뒤 · 참고</span><div class="pz-t"><i style="--w:0.433"></i><em style="--b:.368"></em></div><b>0.433</b><small>MAE 4.47</small></div>      </div>
+<div class="pz "><span class="pz-l">오늘 추정</span><div class="pz-t"><i style="--w:0.78"></i><em style="--b:.368"></em></div><b>0.780</b><small>MAE 2.53</small></div><div class="pz "><span class="pz-l">1일 뒤</span><div class="pz-t"><i style="--w:0.794"></i><em style="--b:.368"></em></div><b>0.794</b><small>MAE 2.36</small></div><div class="pz "><span class="pz-l">3일 뒤</span><div class="pz-t"><i style="--w:0.612"></i><em style="--b:.368"></em></div><b>0.612</b><small>MAE 3.08</small></div><div class="pz ref"><span class="pz-l">5일 뒤 · 참고</span><div class="pz-t"><i style="--w:0.433"></i><em style="--b:.368"></em></div><b>0.433</b><small>MAE 4.47</small></div>      </div>
       <div class="pig-a">
         <h3>내일 기준 넘음 알림 <small>가능성 20% 이상일 때, 2020–26</small></h3>
         <div class="rgs"><div class="rgc"><p>10.2 mg/L 이상 (관심)</p><div class="rgp"><div class="rg"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-v" style="--p:70;stroke:#085bc1" pathLength="100"/></svg><b>70%</b><span>실제 넘은 날 중 미리 잡음</span></div><div class="rg"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-v" style="--p:84;stroke:#1fa9a3" pathLength="100"/></svg><b>84%</b><span>알림이 맞음</span></div></div></div>
@@ -1436,7 +1436,8 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
       <div class="tbl-wrap"><table>
         <thead><tr><th>모형</th><th>건수</th><th>로그 R²</th><th>R²</th><th>MAE</th><th>범위 안</th></tr></thead>
         <tbody>
-          <tr class="mine"><td>운영 모델 (2019–26 전진검증)</td><td>295</td><td>0.770</td><td>0.663</td><td>2.79</td><td>80%</td></tr>
+          <tr class="mine"><td>운영 모델 C · 전이 미세조정 (2019–26 전진검증)</td><td>295</td><td>0.780</td><td>0.770</td><td>2.53</td><td>80%</td></tr>
+          <tr><td>이전 운영 모델 (11/04–11/12)</td><td>295</td><td>0.770</td><td>0.663</td><td>2.79</td><td>80%</td></tr>
         </tbody>
         <tbody id="lockTbl"></tbody>
       </table></div>
@@ -1570,12 +1571,12 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">80% 범위(띠)는 무엇인가요?</span></summary><div class="fa"><p>과거 오차로 만든 구간으로, 실측이 10번 중 8번 이 안에 듭니다. 비·수위가 오르는 날은 더 넓게 잡습니다. 고농도 날은 범위 위로 벗어나는 경우가 많습니다.</p></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">'예보강우 반영'과 '관측만'은 무엇이 다른가요?</span></summary><div class="fa"><p>예보강우 반영은 기상청 단기예보의 비를 넣은 예측이고, 관측만은 앞으로 비가 없다고 보고 지금까지의 자료만 쓴 예측입니다. 예보가 틀리면 예보강우 반영 값도 그만큼 빗나갑니다.</p></div></details>
     <h3 class="faq-gh" data-g="model">모델·성능</h3>
-    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">어떤 모델로 계산하나요?</span></summary><div class="fa"><p>강우(관측소 3곳 티센 평균), 원대교 유량·수위, 인제 기온으로 만든 <b>입력 40개</b>를 XGBoost와 Ridge 두 모델에 넣고 로그 값에서 반씩 섞습니다. 비·수위가 오른 날에는 홍수일 보정을, 1일 예측이 6 mg/L 이상이면 <b>고농도 모드</b>를 켭니다.</p></div></details>
+    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">어떤 모델로 계산하나요?</span></summary><div class="fa"><p>강우(관측소 3곳 티센 평균), 원대교 유량·수위, 인제 기온으로 만든 <b>입력 40개</b>를 XGBoost와 Ridge 두 모델에 넣고 로그 값에서 반씩 섞습니다. XGBoost는 주변 하천 8곳(실측 6곳 + 탁도로 채운 원주·경안천) 자료로 먼저 배운 뒤 내린천2 자료로 이어 배웁니다(<b>전이학습</b>). 비·수위가 오른 날에는 홍수일 보정을 합니다. <b>1일 예측</b>은 오늘 아침 07시까지의 수위·강우로 오늘 유량·수위를 먼저 예측한 뒤 같은 모델에 넣습니다(아침 자료가 없으면 이전 방식).</p></div></details>
     <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">어떤 자료로 배웠나요?</span></summary><div class="fa"><p>정답은 총량측정망 실측 SS <b>493건</b>(2014-01 ~ 2026-08)입니다. 화면 값은 이 실측 전부로 매일 다시 학습한 모델이 냅니다. 강우·유량·수위·기온은 입력일 뿐 정답이 아닙니다.</p></div></details>
-    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">성능은 어떻게 쟀나요?</span></summary><div class="fa">항상 <b>그 실측을 보지 않은 모델</b>로 채점합니다.<ul><li><b>전진검증</b>: 그해 이전 실측만으로 학습해 2019–26년 실측 295건을 맞힘 → 로그 R² 0.770, R² 0.663, 평균 오차 2.79 mg/L</li><li><b>잠금 평가</b>: 2023년까지로 학습해 고정한 뒤 2024–26년 실측 106건을 맞힘 → 로그 R² 0.792</li><li><b>1·3일 예측</b>: 당시 실제로 발표된 기상청 예보를 넣어 채점 → 1일 0.759(257건), 3일 0.612(219건)</li></ul>자세한 표는 <a href="#perf">모델 성능</a> 탭에 있습니다.</div></details>
-    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">파란 선이 과거 실측에 너무 잘 맞아요. 성능이 더 좋은 것 아닌가요?</span></summary><div class="fa"><p>파란 선은 그 실측까지 보고 배운 모델이라 더 잘 붙습니다(학습 자료 로그 R² 약 0.90). 실제 실력은 ◇(전진검증)와 ●의 거리, 즉 0.770으로 봅니다.</p></div></details>
+    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">성능은 어떻게 쟀나요?</span></summary><div class="fa">항상 <b>그 실측을 보지 않은 모델</b>로 채점합니다.<ul><li><b>전진검증</b>: 그해 이전 실측만으로 학습해 2019–26년 실측 295건을 맞힘 → 로그 R² 0.780, R² 0.770, 평균 오차 2.53 mg/L</li><li><b>잠금 평가</b>: 2023년까지로 학습해 고정한 뒤 2024–26년 실측 106건을 맞힘 → 로그 R² 0.795</li><li><b>1·3일 예측</b>: 당시 실제로 발표된 기상청 예보를 넣어 채점 → 1일 0.794(257건, 아침 07시 정보 포함), 3일 0.612(219건)</li></ul>자세한 표는 <a href="#perf">모델 성능</a> 탭에 있습니다.</div></details>
+    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">파란 선이 과거 실측에 너무 잘 맞아요. 성능이 더 좋은 것 아닌가요?</span></summary><div class="fa"><p>파란 선은 그 실측까지 보고 배운 모델이라 더 잘 붙습니다(학습 자료 로그 R² 약 0.90). 실제 실력은 ◇(전진검증)와 ●의 거리, 즉 0.780으로 봅니다.</p></div></details>
     <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">R², 로그 R², MAE는 무엇인가요?</span></summary><div class="fa"><ul><li><b>로그 R²</b>: 평소부터 고농도까지 높낮이 흐름을 얼마나 따라가나. 1에 가까울수록 좋음</li><li><b>R²</b>: mg/L 크기 그대로 얼마나 맞히나. 큰 홍수 몇 날에 크게 좌우됨</li><li><b>MAE</b>: 평균 몇 mg/L 틀리나</li></ul>로그 R²가 높고 R²가 낮으면, 평소 판단은 믿을 만하지만 큰비 때 값은 낮게 나올 수 있다는 뜻입니다.</div></details>
-    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">같은 1일 예측인데 0.759, 0.754, 0.718처럼 숫자가 여러 개예요.</span></summary><div class="fa"><p>입력과 채점한 날이 다르기 때문입니다. 0.759는 기상청 예보 반영(257건), 0.754는 같은 날 관측만, 0.718은 관측만을 2019–26년 295건 전체로 채점한 값입니다. 숫자는 항상 건수와 함께 보세요.</p></div></details>
+    <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">같은 1일 예측인데 0.794, 0.754, 0.718처럼 숫자가 여러 개예요.</span></summary><div class="fa"><p>입력과 채점한 날이 다르기 때문입니다. 0.794는 기상청 예보와 아침 07시 정보 반영(257건), 0.754는 같은 날 관측만, 0.718은 관측만을 2019–26년 295건 전체로 채점한 값입니다. 숫자는 항상 건수와 함께 보세요.</p></div></details>
     <details class="faq-q" data-g="model"><summary><span class="qn">Q</span><span class="qt">'월별 기준값'은 무엇인가요?</span></summary><div class="fa"><p>같은 달 과거 실측의 중앙값을 그대로 예측으로 쓴 값입니다. 모델 없이 계절만 알 때의 점수라, 모델은 이보다 나아야 의미가 있습니다.</p></div></details>
     <h3 class="faq-gh" data-g="limit">단계·한계</h3>
     <details class="faq-q" data-g="limit"><summary><span class="qn">Q</span><span class="qt">평상·관심·대응 검토 단계는 무슨 뜻인가요?</span></summary><div class="fa"><p><b>관심</b>은 10.2 mg/L(2014–2023 실측 상위 10%) 이상, <b>대응 검토</b>는 25 mg/L(하천 Ia 등급 SS 기준) 이상이거나 호우특보가 있을 때입니다. 연구용 임시 구간이며 <b>운영 기준이 아닙니다</b>.</p></div></details>
@@ -1602,10 +1603,10 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
     <h2 class="ab-title rv" style="--d:.1s">비 온 뒤 흙탕물 농도<br>매일 추정, 1·3·5일 예측</h2>
     <p class="ab-sub rv" style="--d:.2s">실측 SS는 약 8일에 1번 · 빈 날은 강우·수위·기온으로 추정 · 앞날은 기상청 예보로 예측</p>
     <div class="ab-kpis">
-      <div class="ab-kpi rv" style="--d:.25s"><span>일별 추정 로그 R²</span><b class="icount" data-v="0.770" data-d="3">0.770</b><small>월별 평균만 쓰면 0.368</small></div>
-      <div class="ab-kpi rv" style="--d:.35s"><span>1일 예측 로그 R²</span><b class="icount" data-v="0.759" data-d="3">0.759</b><small>기상청 예보 사용</small></div>
-      <div class="ab-kpi rv" style="--d:.45s"><span>처음 보는 자료 로그 R²</span><b class="icount" id="abLockKpi" data-v="0.794" data-d="3">0.794</b><small id="abLockKpiS">2024–26 실측 106건</small></div>
-      <div class="ab-kpi rv" style="--d:.55s"><span>일별 평균 오차</span><b class="icount" data-v="2.79" data-d="2">2.79</b><small>mg/L · 월별 평균 4.54</small></div>
+      <div class="ab-kpi rv" style="--d:.25s"><span>일별 추정 로그 R²</span><b class="icount" data-v="0.780" data-d="3">0.780</b><small>월별 평균만 쓰면 0.368</small></div>
+      <div class="ab-kpi rv" style="--d:.35s"><span>1일 예측 로그 R²</span><b class="icount" data-v="0.794" data-d="3">0.794</b><small>기상청 예보 + 아침 07시</small></div>
+      <div class="ab-kpi rv" style="--d:.45s"><span>처음 보는 자료 로그 R²</span><b class="icount" id="abLockKpi" data-v="0.795" data-d="3">0.794</b><small id="abLockKpiS">2024–26 실측 106건</small></div>
+      <div class="ab-kpi rv" style="--d:.55s"><span>일별 평균 오차</span><b class="icount" data-v="2.53" data-d="2">2.53</b><small>mg/L · 월별 평균 4.54</small></div>
     </div>
   </section>
 
@@ -1665,8 +1666,8 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
 
   <section class="as ia" id="a-prog">
     <p class="as-k">04 · 개선 과정</p>
-    <h2 class="as-h">로그 R² <span class="icount" data-from="0.630" data-v="0.770" data-d="3">0.770</span>, 오차 <span class="icount" data-from="3.51" data-v="2.79" data-d="2">2.79</span> mg/L</h2>
-    <svg class="prog" id="abProg" viewBox="0 0 720 300" role="img" aria-label="모델 개선 과정 선 그래프: 0.630에서 0.770"></svg>
+    <h2 class="as-h">로그 R² <span class="icount" data-from="0.630" data-v="0.780" data-d="3">0.780</span>, 오차 <span class="icount" data-from="3.51" data-v="2.53" data-d="2">2.53</span> mg/L</h2>
+    <svg class="prog" id="abProg" viewBox="0 0 720 300" role="img" aria-label="모델 개선 과정 선 그래프: 0.630에서 0.780"></svg>
     <div class="ab-lg rv" style="--d:.4s"><span><i class="l"></i>단계별 로그 R²</span><span><i class="dl"></i>월별 평균만 쓴 값</span></div>
     <div class="tried">
       <h3><span class="icount" data-v="26" data-d="0">26</span>가지 모델 개선 실험, <b>2</b>가지 채택</h3>
@@ -1684,8 +1685,8 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
     <h2 class="as-h">1일 뒤 = 오늘 추정 수준, 3일부터 예보 강우 오차로 하락</h2>
     <div class="vbars">
       <div class="vb-base" style="--y:.368"><span>월별 평균 0.368</span></div>
-      <div class="vb"><div class="vb-c"><i style="--h:.770;--d:0s"><b class="icount" data-v="0.770" data-d="3">0.770</b></i></div><span>오늘 추정</span><small>MAE 2.79</small></div>
-      <div class="vb"><div class="vb-c"><i style="--h:.759;--d:.15s"><b class="icount" data-v="0.759" data-d="3">0.759</b></i></div><span>1일 뒤</span><small>MAE 2.89</small></div>
+      <div class="vb"><div class="vb-c"><i style="--h:.780;--d:0s"><b class="icount" data-v="0.780" data-d="3">0.780</b></i></div><span>오늘 추정</span><small>MAE 2.53</small></div>
+      <div class="vb"><div class="vb-c"><i style="--h:.794;--d:.15s"><b class="icount" data-v="0.794" data-d="3">0.794</b></i></div><span>1일 뒤</span><small>MAE 2.36</small></div>
       <div class="vb"><div class="vb-c"><i style="--h:.612;--d:.3s"><b class="icount" data-v="0.612" data-d="3">0.612</b></i></div><span>3일 뒤</span><small>MAE 3.08</small></div>
       <div class="vb ref"><div class="vb-c"><i style="--h:.433;--d:.45s"><b class="icount" data-v="0.433" data-d="3">0.433</b></i></div><span>5일 뒤</span><small>MAE 4.47 · 참고</small></div>
     </div>
@@ -1723,11 +1724,11 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
     <div class="ba">
       <div class="ba-c rv" style="--d:0s"><h3>일별 추정 · 섞을수록 좋아짐 <small>(2019–26 전진검증 295건)</small></h3>
         <p><span>로그 R² · 나무 단독 → 나무+선형</span><s>0.630</s><b class="icount" data-from="0.630" data-v="0.722" data-d="3">0.722</b></p>
-        <p><span>로그 R² · 현재 (기온·수위·홍수일 보정 포함)</span><s>0.722</s><b class="icount" data-from="0.722" data-v="0.770" data-d="3">0.770</b></p>
-        <p><span>R² · 홍수일 보정 전 → 후</span><s>0.578</s><b class="icount" data-from="0.578" data-v="0.663" data-d="3">0.663</b></p>
+        <p><span>로그 R² · 현재 (기온·수위·홍수일 보정·전이학습 포함)</span><s>0.722</s><b class="icount" data-from="0.722" data-v="0.780" data-d="3">0.780</b></p>
+        <p><span>R² · 홍수일 보정 전 → 전이학습 후</span><s>0.578</s><b class="icount" data-from="0.578" data-v="0.770" data-d="3">0.770</b></p>
       </div>
       <div class="ba-c rv" style="--d:.15s"><h3>1·3일 예측 · 연결 모델 섞기 <small>(기상청 예보 보관본)</small></h3>
-        <p><span>1일 로그 R²</span><s>0.749</s><b class="icount" data-from="0.749" data-v="0.759" data-d="3">0.759</b></p>
+        <p><span>1일 로그 R²</span><s>0.749</s><b class="icount" data-from="0.749" data-v="0.794" data-d="3">0.794</b></p>
         <p><span>1일 평균 오차 MAE</span><s>3.02</s><b class="icount" data-from="3.02" data-v="2.85" data-d="2">2.85</b></p>
         <p><span>3일 로그 R²</span><s>0.599</s><b class="icount" data-from="0.599" data-v="0.612" data-d="3">0.612</b></p>
       </div>
@@ -2776,7 +2777,7 @@ document.addEventListener('click', e => { const a = e.target.closest('[data-go]'
   const drawProg = () => {
     const s = document.getElementById('abProg'); if (!s || s.dataset.done || !s.getBoundingClientRect().width) return; s.dataset.done = 1;
     const Wr = Math.max(300, Math.round(s.getBoundingClientRect().width)), small = Wr < 560;
-    const P = [['10/30', 'XGB(log)', '+유량 보정', .630], ['11/02', 'XGB+Ridge', '혼합', .722], ['11/03', '기온', '3변수', .754], ['11/03', '채수 전', '수위', .761], ['11/04', '홍수 사상', '+단조 제약', .768], ['11/04', '홍수일', '보정 ¾', .770]];
+    const P = [['10/30', 'XGB(log)', '+유량 보정', .630], ['11/02', 'XGB+Ridge', '혼합', .722], ['11/03', '기온', '3변수', .754], ['11/03', '채수 전', '수위', .761], ['11/04', '홍수 사상', '+단조 제약', .768], ['11/04', '홍수일', '보정 ¾', .770], ['11/12', '주변 하천', '전이 C', .780]];
     const W = Wr, H = small ? 264 : 284, l = 34, r = 14, t = 30, b = 50, v0 = .3, v1 = .8; s.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     const X = i => l + (small ? 22 : 40) + i * (W - l - r - (small ? 44 : 80)) / (P.length - 1), Y = v => t + (v1 - v) / (v1 - v0) * (H - t - b);
     [.4, .5, .6, .7, .8].forEach(v => { el('line', { x1: l, x2: W - r, y1: Y(v), y2: Y(v), class: 'gl' }, s); txt(s, l - 6, Y(v) + 4, v.toFixed(1), { 'text-anchor': 'end' }); });
@@ -2787,7 +2788,7 @@ document.addEventListener('click', e => { const a = e.target.closest('[data-go]'
       const dl = (0.3 + i * 0.3) + 's';
       el('circle', { cx: X(i), cy: Y(p[3]), r: 6, class: 'pt', style: 'transition-delay:' + dl }, s);
       txt(s, X(i), Y(p[3]) + (small && i % 2 ? 24 : -14), p[3].toFixed(3), { 'text-anchor': 'middle', class: 'pv', style: 'transition-delay:' + dl });
-      if (small) txt(s, X(i), H - b + 22, ['XGB', '혼합', '기온', '수위', '사상', '홍수일'][i], { 'text-anchor': 'middle', class: 'px sm' });
+      if (small) txt(s, X(i), H - b + 22, ['XGB', '혼합', '기온', '수위', '사상', '홍수일', '전이'][i], { 'text-anchor': 'middle', class: 'px sm' });
       else { txt(s, X(i), H - b + 22, p[1], { 'text-anchor': 'middle', class: 'px' }); txt(s, X(i), H - b + 38, p[2], { 'text-anchor': 'middle', class: 'px' }); }
     });
     const len = path.getTotalLength ? path.getTotalLength() || 800 : 800;

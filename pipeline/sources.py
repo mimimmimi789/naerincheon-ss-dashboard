@@ -102,6 +102,17 @@ def wamis_stage(start, end):
     return merge(LIVE / 'wamis_stage_daily.csv', d)
 
 
+def wamis_stage_today(today):
+    """오늘 01시~지금 시간 수위(2026-11-12 A+C 1일 예측의 아침 07시 정보). 시간 파일에만 더하고 일 요약은 만들지 않는다
+    (하루가 덜 찬 날의 평균·최고는 틀리므로). 다음 날 wamis_stage가 같은 시각을 다시 받아 덮어쓴다."""
+    j = get(f'{WAMIS}/wl_hrdata?obscd={WONDAE}&startdt={today:%Y%m%d}&enddt={today:%Y%m%d}&output=json').json()
+    rows = [{'ymdh': r['ymdh'], 'wl': pd.to_numeric(r.get('wl'), errors='coerce')} for r in j.get('list', [])]
+    h = pd.DataFrame(rows).dropna() if rows else pd.DataFrame(columns=['ymdh', 'wl'])
+    h = h[(h.wl > 0.5) & (h.wl < 10)]
+    if len(h): merge(LIVE / 'wamis_stage_hourly.csv', h[['ymdh', 'wl']].copy(), key='ymdh')
+    return h
+
+
 # ---------- 기상청 ----------
 def kma_aws_day(days, key):
     """AWS 일강수(rn_day). 하루 한 번 전체 지점 요청 후 세 지점만 남긴다."""
@@ -134,6 +145,27 @@ def kma_asos_temp(days, key):
         time.sleep(0.5)
     if not cols: return None
     return merge(LIVE / 'kma_asos_temp.csv', pd.DataFrame([{'date': d, **v} for d, v in sorted(cols.items())]))
+
+
+def kma_asos_hourly(start, end, key):
+    """인제 ASOS(211) 시간강수 RN(그 시각까지 1시간, mm). kma_sfctm3(기간 조회, 한 번에 최대 31일). 2026-11-12 A+C 아침 07시 정보.
+    응답 머리줄(#)에서 RN 열 위치를 찾고, 못 찾으면 표준 순서(16번째 열)를 쓴다. 음수(-9 등)는 비 없음으로 0."""
+    rows = []; s = pd.Timestamp(start).floor('h'); e = pd.Timestamp(end).floor('h')
+    while s <= e:
+        b = min(e, s + pd.Timedelta(days=30))
+        t = get(f'{KMA}/api/typ01/url/kma_sfctm3.php?tm1={s:%Y%m%d%H}00&tm2={b:%Y%m%d%H}00&stn={ASOS_TEMP}&help=0&authKey={key}')
+        txt = t.content.decode('euc-kr', 'replace'); ix = 15
+        for line in txt.splitlines():
+            p = line.replace('#', ' ').split()
+            if line.startswith('#') and 'YYMMDDHHMI' in p and 'RN' in p:
+                ix = p.index('RN')
+                continue
+            if len(p) > ix and p[0].isdigit() and len(p[0]) == 12 and p[1] == str(ASOS_TEMP):
+                v = pd.to_numeric(p[ix], errors='coerce')
+                rows.append({'tm': p[0][:10], 'rn': 0.0 if v is not None and v < 0 else v})
+        s = b + pd.Timedelta(hours=1); time.sleep(0.5)
+    if not rows: return None
+    return merge(LIVE / 'kma_asos_hourly_rain.csv', pd.DataFrame(rows), key='tm')
 
 
 def pcp_mm(s):
