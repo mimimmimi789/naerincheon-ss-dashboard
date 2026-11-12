@@ -43,23 +43,6 @@ FLV = ['lQ', 'lQpk', 'Hrise', 'dlQ']
 HIMODE = dict(h=(1,), thr=6.0, med=0.2334, k=0.5, q_hi=0.9453)
 
 
-# 2026-11-10 고농도 모드에 원주 전이(사용자 요청): 고농도 모드 날(운영 혼합 예측 ≥ thr)에는 연결 모델의 SS 부분을
-# 원주(섬강A) 탁도 보간 일별 SS로 사전학습(XGB 300그루)한 뒤 내린천2 실측으로 300그루 이어 학습한 모델로 바꾼다(TransferChain).
-# 원천 표 data/base/transfer_wonju_src.csv = 원주 연결 모델 입력 19개 + y(log 보간 SS − 원주 실측 log 중앙값), 탁도는 입력에 없음.
-# 검증(기상청 보관 1일 예보 2019–25 n=257, 모드 31건, 연도별 이전 자료만): 로그R² 0.762→0.764, R² 0.355→0.366, MAE 2.86→2.85,
-# 10 이상 예측/실측 0.60→0.61, 25 경보 4/4 그대로(capstone/transfer_turb_20261110/wonju w5_chain_transfer.py). 평상시 날은 바뀌지 않음.
-
-
-def himode2(h, lp_op, lp_hi):
-    """himode와 같되 모드 판단은 운영 혼합 예측(lp_op), 모드 날 값은 전이 혼합 예측(lp_hi)에 +k·med."""
-    if h not in HIMODE['h'] or lp_hi is None: return himode(h, lp_op)
-    lp_op = np.asarray(lp_op, float); lp_hi = np.asarray(lp_hi, float); on = lp_op >= np.log(HIMODE['thr'])
-    adj = np.where(on, lp_hi + HIMODE['k'] * HIMODE['med'], lp_op)
-    hi = np.where(on, adj + HIMODE['q_hi'], np.nan)
-    if adj.ndim == 0: return float(adj), bool(on), (float(hi) if on else None)
-    return adj, on, hi
-
-
 def himode(h, lp):
     """(조정한 log 예측, 고농도 모드 여부, 고농도 쪽 추정 log 또는 None). lp는 스칼라 또는 배열."""
     if h not in HIMODE['h']: return lp, False, None
@@ -147,37 +130,6 @@ class FlowChain:
         return out
 
 
-class _TRS:
-    """연결 모델 SS 부분의 전이판: 원천 사전학습 XGB(시드 10개) 위에 내린천2로 nft그루 이어 학습 + SafeRidge(내린천2만) 반반."""
-    def __init__(self, src, upto, nft, cache):
-        self.src = src; self.upto = upto; self.nft = nft; self.cache = cache
-
-    def fit(self, X, y):
-        self.cols = list(X.columns); self.med = float(np.median(y)); s = self.src[self.src.index < self.upto]; self.ms = []
-        for i in range(10):
-            k = (str(self.upto), i)
-            if k not in self.cache: self.cache[k] = _model.XG(i).fit(s[self.cols], s.y.values).get_booster()
-            self.ms.append(_model.XG(i).set_params(n_estimators=self.nft).fit(X, y - self.med, xgb_model=self.cache[k].copy()))
-        self.r = _model.SafeRidge().fit(X, y); return self
-
-    def predict(self, X):
-        return (np.mean([m.predict(X[self.cols]) for m in self.ms], axis=0) + self.med + self.r.predict(X[self.cols])) / 2
-
-
-class TransferChain(FlowChain):
-    """FlowChain과 같되 SS 부분(rs)만 _TRS. 유량 모델은 base(운영 연결 모델)의 것을 그대로 쓴다. 원천은 학습 시점 이전 날짜만."""
-    def __init__(self, base, src, nft=300):
-        self.__dict__.update({k: v for k, v in base.__dict__.items() if k not in ('_fm', '_rs')})
-        self.base = base; self.src = src; self.nft = nft; self._fm = base._fm; self._rs = {}; self._pre = {}
-
-    def _fit(self, h, key, upto):
-        fm, _ = self.base._fit(h, key, upto)
-        if key not in self._rs:
-            t = self.obs.index[self.obs.index < upto]
-            self._rs[key] = _model.fit_log(lambda: _TRS(self.src, upto, self.nft, self._pre), self.RSX.loc[t], self.obs[t].values)
-        return fm, self._rs[key]
-
-
 # h: (관측만 모델, 예보강우 모델) — (만드는 함수 또는 'clim', 입력열 'all' 또는 목록, 예보강우 사용)
 MODELS = {'월별 기준값': ('clim', None, False), 'XGB 전체입력 (관측만)': (XG, 'all', False),
           'Ridge 전체입력 + 예보강우': (RG, 'all', True), 'Ridge 축소입력 + 예보강우': (RG, SM, True),
@@ -212,7 +164,7 @@ class Forecaster:
         self.P = P; self.f = feats(P, Q, Qpk, Havg, Hmax, T)
         o = SS.dropna(); self.obs = o[o > 0]
         self.static = static; self.pick = {int(k): v for k, v in static['pick'].items()}
-        self._cache = {}; self.chain = None; self.chain_hi = None
+        self._cache = {}; self.chain = None
 
     def rows(self, h, fut):
         X = self.f.shift(h).loc[self.obs.index].copy(); t = self.obs.index
@@ -270,13 +222,11 @@ class Forecaster:
                     fr = (self.P.rolling(h, min_periods=h).sum().reindex(tgt).values,
                           self.P.rolling(h, min_periods=h).max().reindex(tgt).values)
                 lp = self.predict(h, nm, days, fr)
-                lph = None
                 if tag == 'rain' and self.chain is not None and h in CHAIN_H:
-                    if self.chain_hi is not None and h in HIMODE['h']: lph = ((lp + self.chain_hi.predict(h, days)) / 2).values
                     lp = (lp + self.chain.predict(h, days)) / 2
                 if tag == 'obs' and self.chain is not None and h in CHAIN_OBS_H:
                     lp = (lp + self.chain.predict(h, days, np.zeros((len(days), h)))) / 2
-                if tag == 'rain': lp = pd.Series(himode2(h, lp.values, lph)[0], index=lp.index)
+                if tag == 'rain': lp = pd.Series(himode(h, lp.values)[0], index=lp.index)
                 if tag == 'rain': lp[days + pd.Timedelta(days=h) > last] = np.nan
                 for k, a in (('', 0), ('_lo', lo), ('_hi', hi)):
                     out[f'h{h}_{tag}{k}'] = np.exp(lp + a).round(2)
@@ -314,12 +264,9 @@ class Forecaster:
             mix = self.chain is not None and h in CHAIN_H
             for g in GRID:
                 lp = self.predict(h, nm_r, last, (np.array([g]), np.array([g])), train_upto=D).iloc[0]
-                lpt = None
                 if mix:   # 연결 모델 쪽 시나리오는 h일 동안 고르게 내린다고 본다
-                    fut = np.full((1, h), g / h)
-                    if self.chain_hi is not None and h in HIMODE['h']: lpt = (lp + self.chain_hi.predict(h, last, fut, train_upto=D).iloc[0]) / 2
-                    lp = (lp + self.chain.predict(h, last, fut, train_upto=D).iloc[0]) / 2
-                lp, on, lph = himode2(h, lp, lpt)
+                    lp = (lp + self.chain.predict(h, last, np.full((1, h), g / h), train_upto=D).iloc[0]) / 2
+                lp, on, lph = himode(h, lp)
                 e['rain'].append([round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)])
                 if h in HIMODE['h']: e.setdefault('rain_high', []).append(round(float(np.exp(lph)), 2) if on else None)
             if fcst_rain:
@@ -329,12 +276,10 @@ class Forecaster:
                 if len(have) == h:
                     tot, mx = float(sum(have)), float(max(have))
                     lp = self.predict(h, nm_r, last, (np.array([tot]), np.array([mx])), train_upto=D).iloc[0]
-                    lpt = None
                     if mix:   # 연결 모델에는 과거 보관본 기준 실제/예보 비율로 줄인 예보강우를 넣는다(기상청 예보가 비를 많이 예보)
-                        sc = float(self.static.get('kma_rain_scale', 1.0)); fut = np.array([have]) * sc
-                        if self.chain_hi is not None and h in HIMODE['h']: lpt = (lp + self.chain_hi.predict(h, last, fut, train_upto=D).iloc[0]) / 2
-                        lp = (lp + self.chain.predict(h, last, fut, train_upto=D).iloc[0]) / 2
-                    lp, on, lph = himode2(h, lp, lpt)
+                        sc = float(self.static.get('kma_rain_scale', 1.0))
+                        lp = (lp + self.chain.predict(h, last, np.array([have]) * sc, train_upto=D).iloc[0]) / 2
+                    lp, on, lph = himode(h, lp)
                     e['kma'] = {'mm': round(tot, 1), 'days': len(have), 'need': h,
                                 'v': [round(float(np.exp(lp + k)), 2) for k in (0, lo, hi)]}
                     if on: e['kma']['high'] = round(float(np.exp(lph)), 2)
