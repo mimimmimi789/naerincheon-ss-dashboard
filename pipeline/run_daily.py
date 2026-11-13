@@ -178,6 +178,20 @@ def score_log(log, df):
     return res
 
 
+def drop_h5(D):
+    """2026-11-13 사용자 요청: 5일 예측 자료를 화면·내려받기 자료에서 제거."""
+    F = D['fc']
+    for k in ('5obs', '5rain'): F.pop(k, None)
+    F['scen']['h'].pop('5', None)
+    F['tbl'] = [r for r in F['tbl'] if r[0] != 5]
+    F['real'] = [r for r in F['real'] if r[0] != 5]
+    for k in [k for k in F['bands'] if k.startswith('h5_')]: F['bands'].pop(k)
+    m = D['meta']
+    if m.get('fscore'): m['fscore']['h'].pop('5', None)
+    if m.get('mgr') and 'cover' in m['mgr']: m['mgr']['cover'].pop('5', None)
+    return D
+
+
 def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=None, fscore=None, mgr=None):
     r = est.join(df[['P0', 'SS', 'Q_meas', 'TAMAX', 'TAMIN']])
     wf = csv(BASE / 'ss_wf_e3mono_flood075_20261104.csv').ss_wf_mgL.reindex(r.index)   # 운영 모델 전진검증(2019–26, 2026-11-04)
@@ -210,6 +224,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
     D['ev'] = ev
     if mgr:   # 취수원 관리자용 보조 정보(manager.py): 유사사상은 확장 열로 바꿔 넣음
         mgr = dict(mgr); D['ev'] = mgr.pop('ev', ev); D['meta']['mgr'] = mgr
+    D = drop_h5(D)
     t = (Path(__file__).parent / 'template.html').read_text(encoding='utf-8')
     pl = (Path(__file__).parent / 'plotly-basic.min.js').read_text(encoding='utf-8').replace('</script', '<\\/script')
     html = (t.replace('/*DATA*/', json.dumps(D, separators=(',', ':'), ensure_ascii=False))
@@ -230,7 +245,7 @@ def build(df, est, hc, live, static, status, warnings, locked, updated, shp, wx=
                             'hi': 'ss_hi80', 'TAMAX': 'ta_max_c', 'TAMIN': 'ta_min_c', 'q_corr': 'q_corr_m3s', 'q_fix': 'q_corrected', 'partial': 'input_partial', 'qpk': 'q_peak_m3s'})
     out.round(3).to_csv(DOCS / 'ss_daily.csv', encoding='utf-8-sig')
     hc.to_csv(DOCS / 'forecast_daily.csv', encoding='utf-8-sig')
-    (DOCS / 'latest.json').write_text(json.dumps({'updated': updated, 'last_day': str(r.index.max().date()), 'forecast': live,
+    (DOCS / 'latest.json').write_text(json.dumps({'updated': updated, 'last_day': str(r.index.max().date()), 'forecast': {**live, 'h': {k: v for k, v in live['h'].items() if k != '5'}},
                                                   'sources': status, 'locked': locked}, ensure_ascii=False, indent=1), encoding='utf-8')
 
 
