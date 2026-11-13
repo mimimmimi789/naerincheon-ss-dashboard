@@ -1,4 +1,4 @@
-"""매일 실행: 자료 수집 → 입력 조립 → SS 추정 → 1·3·5일 예측 → docs/index.html 생성 (→ 선택: git push).
+"""매일 실행: 자료 수집 → 입력 조립 → SS 추정 → 1·3일 예측 → docs/index.html 생성 (→ 선택: git push).
 
 사용법:  python pipeline/run_daily.py [--no-fetch] [--push]
 """
@@ -29,7 +29,7 @@ LOCK = pd.Timestamp('2026-08-26')        # 기본 입력 파일 마지막 날(�
 LOCK_EVAL = pd.Timestamp('2023-12-31')
 KST = dt.timezone(dt.timedelta(hours=9))
 FCLOG = DOCS / 'forecast_log.csv'          # 매일 운영 예측 기록(기준일·선행일별 1줄). 새 실측이 오면 실제 예보 성적을 매긴다
-MODEL_TAG = 'C daily + A+C h1(morning07) + ops h3h5 2026-11-12'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
+MODEL_TAG = 'C daily + A+C h1(morning07) + ops h3 2026-11-13'       # 예측 모델이 바뀌면 이 이름도 바꿔 기록에서 구분
 
 
 def csv(p, **kw):

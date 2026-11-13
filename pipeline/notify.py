@@ -7,7 +7,7 @@
    공개 열쇠와 우편함 이름은 docs/push_key.json으로 대시보드에 올라간다.
 2. 휴대폰 대시보드에서 '알림 받기' → 그 자리에서 오늘 요약 알림 표시 + 등록 정보를 암호화해 ntfy.sh 우편함에 넣는다.
 3. Actions가 10분마다(poll) 우편함 확인 → 새 기기를 암호화 목록(data/push/subs.enc)에 저장하고 '등록 완료' 알림.
-4. PC가 매일 07:30 갱신을 올리면(docs/latest.json 변경) Actions가 모든 기기에 1·3·5일 요약을 보낸다.
+4. PC가 매일 07:30 갱신을 올리면(docs/latest.json 변경) Actions가 모든 기기에 1·3일 요약을 보낸다.
 
 사용
   python pipeline/notify.py poll     우편함 확인 (Actions가 10분마다 실행)
@@ -149,12 +149,12 @@ def summary(latest=None, p90=10.2):
     j = latest or json.loads((DOCS / 'latest.json').read_text(encoding='utf-8'))
     H = j['forecast']['h']; lv, parts = 0, []
     today = time.strftime('%Y-%m-%d', time.gmtime(time.time() + 9 * 3600))
-    for h in ('1', '3', '5'):
+    for h in ('1', '3'):
         z = H.get(h)
         if not z or not z.get('obs'): continue
         d = z['target']; v = z['obs'][0]
         lab = ('오늘 ' if d == today else '') + f'{int(d[5:7])}/{int(d[8:10])}'
-        parts.append(f'{lab} {fmt(v)}' + (' mg/L' if not parts else '') + (' (참고)' if h == '5' else ''))
+        parts.append(f'{lab} {fmt(v)}' + (' mg/L' if not parts else ''))
         m = max([v] + ([z['kma']['v'][0]] if z.get('kma') and z['kma'].get('v') else []))
         if h == '1' and m >= 25: lv = 2
         elif m >= p90: lv = max(lv, 1)
