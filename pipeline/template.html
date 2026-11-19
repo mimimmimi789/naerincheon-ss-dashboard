@@ -1170,7 +1170,7 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
 /* 관리자 중심 재구성 (2026-11-19 시안) */
 aside nav .nav-sep{display:block;margin:18px 12px 6px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
 aside nav a.nav-sub{color:var(--ink-3);font-size:13.5px}
-.hstack{max-width:980px;display:flex;flex-direction:column;gap:8px}.hstack>.hc-k{margin:18px 0 0}.hstack>.hc-k:first-child{margin-top:0}.hc-2,.hstack>.more{margin-top:18px}
+.hstack{display:flex;flex-direction:column;gap:8px}.hstack>.hc-k{margin:18px 0 0}.hstack>.hc-k:first-child{margin-top:0}.hc-2,.hstack>.more{margin-top:18px}
 #outlook .ki,#outlook .lab .tag{display:none}
 .hc-k{margin:0 0 8px;font-size:12px;font-weight:700;color:var(--ink-3);letter-spacing:.04em}
 .hstack>.card,.hstack>.headline{margin:0}
@@ -1211,6 +1211,18 @@ body.op-rev .hstack>*{opacity:0;animation:opUp .45s ease forwards}
 body.op-rev .hstack>*:nth-child(2){animation-delay:.05s}body.op-rev .hstack>*:nth-child(3){animation-delay:.1s}body.op-rev .hstack>*:nth-child(n+4){animation-delay:.15s}
 @media (prefers-reduced-motion:reduce){.op{display:none!important}body.op-rev .hstack>*{animation:none;opacity:1}}
 
+.hcols{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,420px);gap:18px;align-items:start;margin-top:10px}
+.hcol-l,.hcol-r{display:flex;flex-direction:column;gap:8px;min-width:0}
+.hcol-l>.hc-k:first-child{margin-top:0}
+.hcol-l>.hc-k{margin:18px 0 0}
+.hcol-r .hc-2{grid-template-columns:1fr;gap:18px;margin-top:22px}.hcol-r .hc-2 .card{height:auto}
+.hcol-r .more{grid-template-columns:1fr;margin-top:18px}
+.hcol-r #weather .wx{grid-auto-columns:minmax(0,1fr)}
+main:has(#tab-home:not([hidden])){max-width:1720px}
+@media (min-width:1181px){.hcol-l #river .rv{grid-template-columns:minmax(0,760px) minmax(210px,1fr)}}
+@media (max-width:1180px){.hcols{display:flex;flex-direction:column;gap:8px}.hcol-l,.hcol-r{display:contents}
+ .hcols>.hcol-l>*,.hcols>.hcol-r>*{order:5}.hcol-l>.hc-k:first-child{order:1}#outlook{order:2}.hcol-r .hc-2{order:3;grid-template-columns:1fr 1fr;margin-top:18px}.hcol-r .more{order:9;grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.hcol-r .hc-2,.hcol-r .more{grid-template-columns:1fr}}
 /* 오늘 탭 상단 상태 카드 */
 .hero{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px 18px}
 .hero-k{margin:0 0 4px;font-size:12.5px;color:var(--ink-3)}
@@ -1346,6 +1358,8 @@ body.op-rev .hstack>*:nth-child(2){animation-delay:.05s}body.op-rev .hstack>*:nt
     <div class="hero-scale" id="heroScale" role="img" aria-label="오늘 추정 SS의 단계 눈금"></div>
     <div class="hero-days" id="heroDays"></div>
   </section>
+  <div class="hcols">
+  <div class="hcol-l">
   <p class="hc-k">앞으로 3일</p>
   <section class="card hc" id="outlook" aria-label="앞으로 3일">
     <h2>SS 흐름 <span class="sub2" id="olSub">최근 2주와 앞으로 3일</span></h2>
@@ -1357,23 +1371,6 @@ body.op-rev .hstack>*:nth-child(2){animation-delay:.05s}body.op-rev .hstack>*:nt
     <div id="pOut" class="plot" style="height:200px" role="img" aria-label="최근 2주 SS 추정과 1·3·5일 후 예측, 80% 범위와 참고 기준선"></div>
     <div class="legend"><span><i class="sw-dot"></i>실제 측정</span><span><i class="sw-line"></i>추정 (실측 아님)</span><span><i class="sw-sq"></i>예측 · 막대 = 80% 범위</span><span><i class="sw-fcr"></i>기상청 예보강우 반영</span><span><i class="sw-zn n"></i>관심 10.2</span><span><i class="sw-zn w"></i>대응 검토 25</span></div>
   </section>
-  <section class="hc-2">
-    <div class="hc-col">
-    <div class="card" id="todo">
-      <h2>지금 할 일 <span class="tag" id="todoTag">–</span></h2>
-      <div id="todoBox"></div>
-    </div>
-    </div>
-    <div class="hc-col">
-    <div class="card" id="weather">
-      <h2>비 소식 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
-      <div class="wxwrn" id="wxWrn"></div>
-      <div class="wx" id="wx"></div>
-      <p class="hint" id="wxNote">–</p>
-      </div>
-    </div>
-  </section>
-
   <p class="hc-k">지금 하천</p>
   <section class="card" id="river" aria-label="하천 단면 애니메이션">
     <h2>원대교 수위와 물색 <span class="tag">물색 = SS</span></h2>
@@ -1393,12 +1390,33 @@ body.op-rev .hstack>*:nth-child(2){animation-delay:.05s}body.op-rev .hstack>*:nt
     </div>
     <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
   </section>
+  </div>
+  <div class="hcol-r">
+  <section class="hc-2">
+    <div class="hc-col">
+    <div class="card" id="todo">
+      <h2>지금 할 일 <span class="tag" id="todoTag">–</span></h2>
+      <div id="todoBox"></div>
+    </div>
+    </div>
+    <div class="hc-col">
+    <div class="card" id="weather">
+      <h2>비 소식 <span class="tag" id="wxTag">기상청 단기예보</span></h2>
+      <div class="wxwrn" id="wxWrn"></div>
+      <div class="wx" id="wx"></div>
+      <p class="hint" id="wxNote">–</p>
+      </div>
+    </div>
+  </section>
+
   <nav class="more" aria-label="더 보기">
     <a href="#fc" data-go="fc"><b>왜 이렇게 예측했나</b><small>영향 준 요인, 비슷했던 과거 비</small></a>
     <a href="#tr" data-go="tr"><b>SS 추이</b><small>90일 그래프, 작년과 비교</small></a>
     <a href="#info" data-go="info"><b>단계별 대응</b><small>관심·대응 검토 때 할 일</small></a>
     <a href="#info" data-go="info" data-at="fresh"><b>자료 상태</b><small>늦게 들어온 자료 확인</small></a>
   </nav>
+  </div>
+  </div>
   <p class="rnote">단계는 하천 SS 기준의 임시 참고값입니다. 취수 중단 판단은 현장 실측과 시설 운영기준을 따르세요.</p>
   <div id="legacy" hidden>
   <section class="card hc" id="recent" aria-label="최근 측정">
