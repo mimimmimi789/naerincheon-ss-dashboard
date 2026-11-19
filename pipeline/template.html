@@ -1183,6 +1183,7 @@ aside nav a.nav-sub{color:var(--ink-3);font-size:13.5px}
 .hstack .more{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 0}
 .hstack .rnote{margin:0}
 .shdet{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.shdet .legend{margin-top:12px}
 .shdet>summary{cursor:pointer;color:var(--accent,#085bc1);font-size:13px;font-weight:600}
 #explain .shtxt{font-size:15px;line-height:1.65;margin:6px 0 4px}
 .hdet{padding:14px 18px}.hdet>summary{cursor:pointer}.hdet #glossary,.hdet .faq{box-shadow:none;border:0;padding:8px 0 0;margin:0;background:none}.hdet{margin-top:12px}
@@ -1450,10 +1451,10 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
       <div class="cctl" role="group" aria-label="그래프 조절 (한 곳에서 바꾸면 모든 그래프에 같이 적용)"><label>기준일<input type="date" class="c-ref"></label><button class="btn c-latest" type="button">최신 입력자료로 이동</button></div>
       <div class="segs" role="group" aria-label="대상"><button class="seg" data-m="est" aria-pressed="true">당일 추정</button><button class="seg" data-m="h1" aria-pressed="false">1일 후 예측</button></div>
       <p class="shtxt" id="shTxt"></p>
-      <details class="shdet"><summary>요인 그림 보기</summary><div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
+      <div class="shdet"><div class="kv2"><div><span>평소 예측값</span><b id="shB">–</b></div><div><span id="shTL">해당 날짜</span><b id="shV">–</b></div></div>
       <div class="legend"><span><i class="sw-up"></i>▲ SS를 올린 요인</span><span><i class="sw-dn"></i>▼ SS를 내린 요인</span><span>% = 영향 크기 비율</span></div>
       <div class="bars" id="shBars"></div>
-      </details>
+      </div>
     </div>
     <div class="card">
       <h2>비슷했던 과거 비 <span class="tag real">실측</span></h2>
