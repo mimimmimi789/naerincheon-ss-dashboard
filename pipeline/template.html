@@ -3096,6 +3096,14 @@ renderBars(); renderWt(); renderMap(); renderTbl(); renderFresh();
   const _r = render; render = function () { const r = _r.apply(this, arguments); try { fill(); } catch (err) { console.error(err); } return r; };
 })();
 if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
+// 카드 폭이 바뀌면(탭 전환·창 크기·스크롤바) 그래프도 카드 폭에 다시 맞춤
+(function fitPlots() {
+  if (!('ResizeObserver' in window)) return;
+  const pend = new Set(); let raf = 0;
+  const ro = new ResizeObserver(es => { es.forEach(e => pend.add(e.target)); if (!raf) raf = requestAnimationFrame(() => { raf = 0; pend.forEach(p => { if (p.offsetParent && window.Plotly && p.data) { const sv = p.querySelector('.main-svg'); if (!sv || Math.abs(sv.getBoundingClientRect().width - p.clientWidth) > 1) Plotly.Plots.resize(p); } }); pend.clear(); }); });
+  document.querySelectorAll('.plot').forEach(p => ro.observe(p));
+})();
+
 
 (function opening() {
   const op = document.getElementById('op'); if (!op) return;
