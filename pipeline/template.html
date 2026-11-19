@@ -1188,8 +1188,60 @@ aside nav a.nav-sub{color:var(--ink-3);font-size:13.5px}
 .hdet{padding:14px 18px}.hdet>summary{cursor:pointer}.hdet #glossary,.hdet .faq{box-shadow:none;border:0;padding:8px 0 0;margin:0;background:none}.hdet{margin-top:12px}
 .ab-note{margin:10px 0 16px;font-size:13px;color:var(--ink-3)}
 @media (max-width:760px){.hc-2,#outlook .kpis.k2,#recent .kpis-x,.hstack .more{grid-template-columns:1fr}.hc-2 .card{height:auto}}
+
+/* 오프닝 장면 (첫 화면) */
+.op{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff;
+  background:radial-gradient(120% 90% at 20% 10%,#1d74d8 0%,#0a3fa8 38%,#011a6e 70%,#010f45 100%);cursor:pointer;
+  transition:clip-path .9s cubic-bezier(.7,0,.2,1),opacity .4s ease .7s;clip-path:inset(0 0 0 0)}
+.op.out{clip-path:inset(0 0 100% 0);opacity:0;pointer-events:none}
+.op[hidden]{display:none}
+.op-c{position:relative;z-index:2;text-align:center;padding:0 24px;max-width:640px}
+.op-logo{width:76px;height:76px;margin:0 auto 18px;display:block}
+.op-logo path{fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:80;animation:opDraw 1s ease forwards}
+.op-logo path+path{stroke:#7fd3ff;animation-delay:.35s}
+.op-k{font-size:13px;letter-spacing:.18em;color:rgba(255,255,255,.7);opacity:0;animation:opUp .7s ease .45s forwards}
+.op .op-t{color:#fff!important;margin:8px 0 0!important;font-size:clamp(34px,7vw,56px)!important;font-weight:800;letter-spacing:-.02em;line-height:1.15;opacity:0;animation:opUp .8s cubic-bezier(.2,.8,.2,1) .6s forwards}
+.op-t em{font-style:normal;background:linear-gradient(90deg,#9ee0ff,#ffffff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.op-d{display:inline-flex;align-items:center;gap:14px;margin-top:26px;padding:12px 20px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(6px);opacity:0;animation:opUp .7s ease 1.05s forwards;font-size:15px}
+.op-d .st{display:inline-flex;align-items:center;gap:7px;font-weight:800}
+.op-d .st i{width:10px;height:10px;border-radius:50%;background:#3ddc97;box-shadow:0 0 0 0 rgba(61,220,151,.7);animation:opPulse 1.6s ease-out 1.4s infinite}
+.op-d.lv-note .st i{background:#ffc94d;box-shadow:0 0 0 0 rgba(255,201,77,.7)}.op-d.lv-warn .st i{background:#ff6b6b;box-shadow:0 0 0 0 rgba(255,107,107,.7)}
+.op-d b{font-size:20px;font-variant-numeric:tabular-nums}.op-d small{color:rgba(255,255,255,.7);font-size:12.5px}
+.op-d .sep{width:1px;height:18px;background:rgba(255,255,255,.3)}
+.op-skip{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:12px;color:rgba(255,255,255,.55);opacity:0;animation:opUp .6s ease 1.6s forwards}
+.op-w{position:absolute;left:-5%;width:110%;bottom:0;height:46%;z-index:1;pointer-events:none}
+.op-w path{animation:opFlow 7s ease-in-out infinite alternate}
+.op-w .a{fill:rgba(56,170,245,.42)}.op-w .b{fill:rgba(40,140,235,.30);animation-duration:9s;animation-direction:alternate-reverse}.op-w .c{fill:rgba(120,200,255,.16);animation-duration:11s}
+.op-w .ln{fill:none;stroke:rgba(158,224,255,.55);stroke-width:1.6;stroke-dasharray:1600;stroke-dashoffset:1600;animation:opDraw 2.2s ease .2s forwards}
+.op-dots i{position:absolute;bottom:-10px;width:4px;height:4px;border-radius:50%;background:rgba(190,235,255,.6);animation:opRise linear infinite}
+@keyframes opDraw{to{stroke-dashoffset:0}}
+@keyframes opUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes opFlow{from{transform:translateX(0)}to{transform:translateX(-4%)}}
+@keyframes opPulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}100%{box-shadow:0 0 0 12px rgba(255,255,255,0)}}
+@keyframes opRise{from{transform:translateY(0);opacity:0}15%{opacity:1}to{transform:translateY(-70vh);opacity:0}}
+/* 오프닝 뒤 홈 카드가 차례로 올라옴 */
+body.op-rev .hstack>*{opacity:0;transform:translateY(22px);animation:opUp .7s cubic-bezier(.2,.8,.2,1) forwards}
+body.op-rev .hstack>*:nth-child(1){animation-delay:.05s}body.op-rev .hstack>*:nth-child(2){animation-delay:.1s}body.op-rev .hstack>*:nth-child(3){animation-delay:.15s}body.op-rev .hstack>*:nth-child(4){animation-delay:.2s}body.op-rev .hstack>*:nth-child(5){animation-delay:.27s}body.op-rev .hstack>*:nth-child(6){animation-delay:.34s}body.op-rev .hstack>*:nth-child(7){animation-delay:.41s}body.op-rev .hstack>*:nth-child(n+8){animation-delay:.48s}
+body.op-rev header.top{animation:opUp .6s ease both}
+@media (prefers-reduced-motion:reduce){.op{display:none!important}body.op-rev .hstack>*{animation:none;opacity:1;transform:none}}
 </style>
 
+<div class="op" id="op" aria-hidden="true" hidden>
+  <svg class="op-w" viewBox="0 0 1440 400" preserveAspectRatio="none">
+    <path class="c" d="M0 170 C240 120 420 210 720 165 S1200 110 1440 160 V400 H0Z"/>
+    <path class="b" d="M0 230 C260 190 480 270 760 225 S1220 180 1440 225 V400 H0Z"/>
+    <path class="a" d="M0 290 C220 255 470 330 740 285 S1200 245 1440 290 V400 H0Z"/>
+    <path class="ln" d="M0 170 C240 120 420 210 720 165 S1200 110 1440 160"/>
+  </svg>
+  <div class="op-dots" id="opDots"></div>
+  <div class="op-c">
+    <svg class="op-logo" viewBox="0 0 34 34"><path d="M3 22 L11 11 L16 17 L21 9 L31 22"/><path d="M3 26 q4 -3 8 0 t8 0 t8 0 t5 0"/></svg>
+    <div class="op-k">내린천2 · 고사취수원 상류</div>
+    <h1 class="op-t">오늘의 <em>흙탕물</em> 예보</h1>
+    <div class="op-d" id="opD"><span class="st"><i></i><span id="opS">–</span></span><span class="sep"></span><span><small>내일</small> <b id="opV">–</b> <small>mg/L</small></span></div>
+  </div>
+  <div class="op-skip">화면을 누르면 바로 시작</div>
+</div>
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
   <div class="box">
     <h2 id="introT">내린천2 SS 대시보드</h2>
@@ -2982,4 +3034,24 @@ renderBars(); renderWt(); renderMap(); renderTbl(); renderFresh();
   svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
 })();
 if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
+
+(function opening() {
+  const op = document.getElementById('op'); if (!op) return;
+  const force = /[?&#]intro\b/.test(location.search + location.hash);
+  let seen = false; try { seen = sessionStorage.getItem('ssdashOp') === '1'; } catch (e) {}
+  if ((seen && !force) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  try { sessionStorage.setItem('ssdashOp', '1'); } catch (e) {}
+  const stg = document.querySelector('#hlMain .stg'), lv = stg ? (stg.className.match(/st-(\w+)/) || [])[1] : 'ok';
+  document.getElementById('opS').textContent = stg ? stg.textContent.trim() : '–';
+  if (lv && lv !== 'ok') document.getElementById('opD').classList.add('lv-' + lv);
+  const v = parseFloat((document.getElementById('kF1') || {}).textContent), vEl = document.getElementById('opV');
+  const dots = document.getElementById('opDots');
+  for (let i = 0; i < 18; i++) { const d = document.createElement('i'); d.style.left = (Math.random() * 100) + '%'; d.style.animationDuration = (4 + Math.random() * 5) + 's'; d.style.animationDelay = (-Math.random() * 6) + 's'; d.style.opacity = .3 + Math.random() * .6; dots.appendChild(d); }
+  op.hidden = false; document.body.style.overflow = 'hidden';
+  if (!isNaN(v)) { const t0 = performance.now() + 1100, step = now => { const k = Math.max(0, Math.min(1, (now - t0) / 900)), e = 1 - Math.pow(1 - k, 3); vEl.textContent = (v * e).toFixed(1); if (k < 1 && op.isConnected) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+  let done = false;
+  const go = () => { if (done) return; done = true; op.classList.add('out'); document.body.style.overflow = ''; document.body.classList.add('op-rev'); setTimeout(() => { op.remove(); }, 1200); setTimeout(() => document.body.classList.remove('op-rev'), 2400); };
+  op.addEventListener('click', go); addEventListener('keydown', go, { once: true });
+  setTimeout(go, 2900);
+})();
 </script>
