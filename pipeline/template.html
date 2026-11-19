@@ -1224,6 +1224,39 @@ body.op-rev .hstack>*{opacity:0;transform:translateY(22px);animation:opUp .7s cu
 body.op-rev .hstack>*:nth-child(1){animation-delay:.05s}body.op-rev .hstack>*:nth-child(2){animation-delay:.1s}body.op-rev .hstack>*:nth-child(3){animation-delay:.15s}body.op-rev .hstack>*:nth-child(4){animation-delay:.2s}body.op-rev .hstack>*:nth-child(5){animation-delay:.27s}body.op-rev .hstack>*:nth-child(6){animation-delay:.34s}body.op-rev .hstack>*:nth-child(7){animation-delay:.41s}body.op-rev .hstack>*:nth-child(n+8){animation-delay:.48s}
 body.op-rev header.top{animation:opUp .6s ease both}
 @media (prefers-reduced-motion:reduce){.op{display:none!important}body.op-rev .hstack>*{animation:none;opacity:1;transform:none}}
+
+/* 오늘 탭 상단 히어로 */
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:24px 26px 20px;color:#fff;background:linear-gradient(135deg,#0a62cc 0%,#012391 58%,#2f9de6 100%);box-shadow:0 16px 34px rgba(30,90,200,.28)}
+.hero.lv-note{background:linear-gradient(135deg,#b7791f 0%,#7a4a06 58%,#e0a530 100%);box-shadow:0 16px 34px rgba(180,120,20,.3)}
+.hero.lv-warn{background:linear-gradient(135deg,#c2410c 0%,#7f1d1d 58%,#ef6a4a 100%);box-shadow:0 16px 34px rgba(190,60,30,.3)}
+.hero-wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:110px;pointer-events:none}
+.hero-wave .w1{fill:rgba(255,255,255,.07);animation:opFlow 8s ease-in-out infinite alternate}.hero-wave .w2{fill:rgba(255,255,255,.06);animation:opFlow 11s ease-in-out infinite alternate-reverse}
+.hero-top{position:relative;display:grid;grid-template-columns:1fr 250px;gap:20px;align-items:center}
+.hero-k{margin:0 0 6px;font-size:12.5px;letter-spacing:.12em;color:rgba(255,255,255,.72);font-weight:600}
+.hero .hl-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;margin:0;font-size:clamp(34px,4.4vw,52px);font-weight:800;line-height:1.1;color:#fff}
+.hero .hl-main .stg{font-size:inherit;font-weight:800;color:#fff;gap:12px;margin:0}
+.hero .hl-main .stg i{width:.38em;height:.38em;background:#3ddc97!important;box-shadow:0 0 0 0 rgba(61,220,151,.6);animation:opPulse 1.8s ease-out infinite}
+.hero.lv-note .hl-main .stg i{background:#ffd666!important}.hero.lv-warn .hl-main .stg i{background:#ffb4a8!important}
+.hero .hl-main .tl{font-size:.4em;font-weight:500;color:rgba(255,255,255,.85)}
+.hero .now-meta{margin-top:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;text-align:left}.hero .now-why{justify-content:flex-start!important}
+#outlook .kpis.k2{display:none!important}.hd-t .s2{font-size:11px;color:rgba(255,255,255,.62);margin-top:2px}
+.hero .now-why{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.hero .now-why li{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:999px;padding:3px 11px;font-size:12.5px}
+.hero .hl-sub{color:rgba(255,255,255,.8);font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 14px;margin:0}
+.hero .hl-sub *{color:inherit!important}.hero .hl-sub a{color:#fff!important;font-weight:600}
+.hero-g{margin:0;text-align:center}.hero-g svg{width:100%;height:auto;display:block}
+.hero-g figcaption{font-size:12px;color:rgba(255,255,255,.75);margin-top:-4px}
+.hg-arc{fill:none;stroke-width:14;stroke-linecap:butt}
+.hg-n{transition:transform 1.4s cubic-bezier(.2,.9,.2,1.15);transform-origin:120px 120px}
+.hero-days{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.hd-t{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px)}
+.hd-t.now{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
+.hd-t .l{font-size:12px;color:rgba(255,255,255,.78);display:flex;justify-content:space-between;gap:6px}
+.hd-t .v{font-size:28px;font-weight:800;line-height:1.15;margin-top:4px;font-variant-numeric:tabular-nums}.hd-t .v small{font-size:12px;font-weight:500;color:rgba(255,255,255,.75);margin-left:3px}
+.hd-t .bar{height:5px;border-radius:5px;background:rgba(255,255,255,.18);margin-top:8px;overflow:hidden}.hd-t .bar i{display:block;height:100%;border-radius:5px;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.hd-t .s{font-size:11.5px;color:rgba(255,255,255,.72);margin-top:5px}
+.hd-dot{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:#fff}.hd-dot i{width:7px;height:7px;border-radius:50%}
+@media (max-width:760px){.hero{padding:20px 18px 16px}.hero-top{grid-template-columns:1fr}.hero-g{max-width:240px;margin:0 auto}.hero-days{grid-template-columns:1fr 1fr}.hd-t .v{font-size:24px}}
 </style>
 
 <div class="op" id="op" aria-hidden="true" hidden>
@@ -1330,14 +1363,21 @@ body.op-rev header.top{animation:opUp .6s ease both}
 
   <div class="tab" id="tab-home" data-tab="home">
   <div class="hstack">
-  <p class="hc-k">오늘 상태</p>
-  <section class="headline now hc" id="headline" aria-live="polite">
+  <section class="hero hc" id="headline" aria-live="polite">
+    <svg class="hero-wave" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 110 C150 70 300 150 450 105 S750 60 900 100 S1100 140 1200 95 V160 H0Z"/><path class="w2" d="M0 130 C200 100 380 160 600 125 S1000 95 1200 125 V160 H0Z"/></svg>
+    <div class="hero-top">
+    <div class="hero-l">
+    <p class="hero-k" id="heroK">오늘 상태</p>
     <p class="hl-main" id="hlMain">–</p>
     <div class="now-meta"><ul class="now-why" id="hlWhy"></ul><p class="hl-sub" id="hlSub">–</p></div>
+    </div>
+    <figure class="hero-g"><svg id="heroGauge" viewBox="0 0 240 140" role="img" aria-label="오늘 추정 SS 눈금"></svg><figcaption>오늘 추정 SS</figcaption></figure>
+    </div>
+    <div class="hero-days" id="heroDays"></div>
   </section>
   <p class="hc-k">앞으로 3일</p>
   <section class="card hc" id="outlook" aria-label="앞으로 3일">
-    <h2>SS 예측 <span class="sub2" id="olSub">최근 2주와 앞으로 3일</span></h2>
+    <h2>SS 흐름 <span class="sub2" id="olSub">최근 2주와 앞으로 3일</span></h2>
     <div class="kpis k2" aria-label="1·3일 예측">
     <div class="kpi"><div class="lab"><span id="kF1L">내일 (1일 후)</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta pex" id="kF1P"></div><div class="meta rainline" id="kF1R">–</div></div>
     <div class="kpi"><div class="lab"><span id="kF3L">3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
@@ -1362,21 +1402,40 @@ body.op-rev header.top{animation:opUp .6s ease both}
       </div>
     </div>
   </section>
-  <p class="hc-k">최근 측정</p>
+
+  <p class="hc-k">지금 하천</p>
+  <section class="card" id="river" aria-label="하천 단면 애니메이션">
+    <h2>원대교 수위와 물색 <span class="tag">물색 = SS</span></h2>
+    <div class="rv">
+      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
+      <div class="rv-info" aria-live="polite">
+        <div class="rv-d" id="rvD">–</div>
+        <div class="rv-row"><span class="lb">수위</span><span class="v" id="rvH">–</span><span class="s" id="rvHs">–</span></div>
+        <div class="rv-row"><span class="lb">SS</span><span class="v" id="rvS">–</span><span class="s" id="rvSs">–</span></div>
+        <div id="rvLv"></div>
+      </div>
+    </div>
+    <div class="rv-ctl">
+      <button class="btn" type="button" id="rvPlay" aria-pressed="false">재생</button>
+      <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
+      <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
+    </div>
+    <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
+  </section>
+  <nav class="more" aria-label="더 보기">
+    <a href="#fc" data-go="fc"><b>왜 이렇게 예측했나</b><small>영향 준 요인, 비슷했던 과거 비</small></a>
+    <a href="#tr" data-go="tr"><b>SS 추이</b><small>90일 그래프, 작년과 비교</small></a>
+    <a href="#info" data-go="info"><b>단계별 대응</b><small>관심·대응 검토 때 할 일</small></a>
+    <a href="#info" data-go="info" data-at="fresh"><b>자료 상태</b><small>늦게 들어온 자료 확인</small></a>
+  </nav>
+  <p class="rnote">단계는 하천 SS 기준의 임시 참고값입니다. 취수 중단 판단은 현장 실측과 시설 운영기준을 따르세요.</p>
+  <div id="legacy" hidden>
   <section class="card hc" id="recent" aria-label="최근 측정">
     <div class="kpis-x">
     <div class="kpi"><div class="lab">최근 실제 측정 SS<span class="tag real">실측</span></div><div class="val" id="kObs">–</div><div class="meta" id="kObsM">–</div></div>
     <div class="kpi"><div class="lab"><span id="kEstL">오늘 추정 SS</span><span class="tag">실측 아님</span></div><div class="val" id="kEst">–</div><div class="rng" id="kEstG"></div><div class="meta" id="kEstM">–</div></div>
     </div>
   </section>
-  <nav class="more" aria-label="더 보기">
-    <a href="#fc" data-go="fc"><b>왜 이렇게 예측했나</b><small>영향 준 요인, 비슷했던 과거 비</small></a>
-    <a href="#tr" data-go="tr" data-at="river"><b>하천 단면</b><small>원대교 수위와 SS</small></a>
-    <a href="#info" data-go="info"><b>단계별 대응</b><small>관심·대응 검토 때 할 일</small></a>
-    <a href="#info" data-go="info" data-at="fresh"><b>자료 상태</b><small>늦게 들어온 자료 확인</small></a>
-  </nav>
-  <p class="rnote">단계는 하천 SS 기준의 임시 참고값입니다. 취수 중단 판단은 현장 실측과 시설 운영기준을 따르세요.</p>
-  <div id="legacy" hidden>
   <section class="card" id="opsum" aria-label="운영 요약">
     <h2>운영 요약 <span class="tag">연구용 참고</span><span class="tag" id="opRef">–</span></h2>
     <div class="ops">
@@ -1448,24 +1507,7 @@ body.op-rev header.top{animation:opUp .6s ease both}
       </div>
     </div>
   </section>
-  <section class="card" id="river" aria-label="하천 단면 애니메이션">
-    <h2>하천 단면 · 원대교 수위와 SS</h2>
-    <div class="rv">
-      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
-      <div class="rv-info" aria-live="polite">
-        <div class="rv-d" id="rvD">–</div>
-        <div class="rv-row"><span class="lb">수위</span><span class="v" id="rvH">–</span><span class="s" id="rvHs">–</span></div>
-        <div class="rv-row"><span class="lb">SS</span><span class="v" id="rvS">–</span><span class="s" id="rvSs">–</span></div>
-        <div id="rvLv"></div>
-      </div>
-    </div>
-    <div class="rv-ctl">
-      <button class="btn" type="button" id="rvPlay" aria-pressed="false">재생</button>
-      <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
-      <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
-    </div>
-    <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
-  </section>
+
   </div>
 
   <div class="tab" id="tab-info" data-tab="info" hidden>
@@ -3032,6 +3074,43 @@ renderBars(); renderWt(); renderMap(); renderTbl(); renderFresh();
     const s = pt(e)[2]; v.x -= (e.clientX - last.clientX) * s; v.y -= (e.clientY - last.clientY) * s; clamp(); set(); last = e; });
   const up = e => { P.delete(e.pointerId); if (P.size < 2) dist = null; if (!P.size) wrap.classList.remove('drag'); else last = [...P.values()][0]; };
   svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+})();
+
+(function heroBox() {
+  const LC = ['#3ddc97', '#ffd666', '#ff8a7a'], L10 = Math.log10, lo = L10(0.1), hi = L10(100);
+  const frac = v => Math.max(0, Math.min(1, (L10(Math.max(v, 0.1)) - lo) / (hi - lo)));
+  const num = id => { const e = $(id); const v = e ? parseFloat(e.textContent) : NaN; return isNaN(v) ? null : v; };
+  const pt = (f, r) => { const a = Math.PI * (1 - f); return [120 + r * Math.cos(a), 120 - r * Math.sin(a)]; };
+  const arc = (f0, f1, r) => { const [x0, y0] = pt(f0, r), [x1, y1] = pt(f1, r); return 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + ' A' + r + ' ' + r + ' 0 0 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1); };
+  function fill() {
+    const p90 = D.meta.p90, e = num('kEst'), o = num('kObs'), f1 = num('kF1'), f3 = num('kF3');
+    const g = $('heroGauge');
+    if (g) {
+      const t = [0.1, 1, p90, 25, 100], tick = v => { const [x, y] = pt(frac(v), 92), [x2, y2] = pt(frac(v), 80); return '<line x1="' + x.toFixed(1) + '" y1="' + y.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="rgba(255,255,255,.5)"/><text x="' + pt(frac(v), 70)[0].toFixed(1) + '" y="' + (pt(frac(v), 70)[1] + 4).toFixed(1) + '" fill="rgba(255,255,255,.7)" font-size="10" text-anchor="middle">' + (v === p90 ? fmt(v) : v) + '</text>'; };
+      const ang = e == null ? -90 : frac(e) * 180 - 90;
+      g.innerHTML = '<path class="hg-arc" d="' + arc(0, frac(p90), 104) + '" stroke="' + LC[0] + '" opacity=".9"/>'
+        + '<path class="hg-arc" d="' + arc(frac(p90), frac(25), 104) + '" stroke="' + LC[1] + '" opacity=".9"/>'
+        + '<path class="hg-arc" d="' + arc(frac(25), 1, 104) + '" stroke="' + LC[2] + '" opacity=".9"/>'
+        + t.map(tick).join('')
+        + '<g class="hg-n" style="transform:rotate(-90deg)"><path d="M116 120 L120 34 L124 120 Z" fill="#fff"/></g><circle cx="120" cy="120" r="9" fill="#fff"/>'
+        + '<text x="120" y="108" fill="#fff" font-size="0" text-anchor="middle"></text>';
+      requestAnimationFrame(() => requestAnimationFrame(() => { const n = g.querySelector('.hg-n'); if (n) n.style.transform = 'rotate(' + ang + 'deg)'; }));
+    }
+    const lab = (id, fb) => { const e = $(id); return e ? e.textContent.trim() : fb; };
+    const rng = id => { const e = $(id); const m = e && e.textContent.match(/([\d.]+)\s*[–-]\s*([\d.]+)/); return m ? ' · 범위 ' + m[1] + '–' + m[2] : ''; };
+    const tile = (k, v, sub, now, sub2) => { const l = lvOf(v); return '<div class="hd-t' + (now ? ' now' : '') + '"><div class="l"><span>' + k + '</span>' + (l == null ? '' : '<span class="hd-dot"><i style="background:' + LC[l] + '"></i>' + LVK[l][1] + '</span>') + '</div>'
+      + '<div class="v">' + (v == null ? '–' : '<span data-cv="' + v + '">' + fmt(v) + '</span><small>mg/L</small>') + '</div>'
+      + '<div class="bar"><i data-w="' + (v == null ? 0 : frac(v)) + '" style="background:' + (l == null ? '#fff' : LC[l]) + '"></i></div><div class="s">' + sub + '</div>' + (sub2 ? '<div class="s2">' + sub2 + '</div>' : '') + '</div>'; };
+    const obsD = ($('kObsM') ? $('kObsM').textContent.split('·')[0].trim() : '');
+    $('heroDays').innerHTML = tile('최근 실측', o, obsD || '실제로 잰 값')
+      + tile('오늘', e, '추정 · 실측 아님' + rng('kEstG'), true)
+      + tile('내일', f1, lab('kF1L', '1일 후').replace(/^.*?(\d+\/\d+).*$/, '$1') + rng('kF1M'), false, ($('kF1P') && $('kF1P').textContent.trim()) || '')
+      + tile('3일 후', f3, lab('kF3L', '3일 후').replace(/^.*?(\d+\/\d+).*$/, '$1') + rng('kF3M'));
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('#heroDays .bar i').forEach(i => { i.style.width = (i.dataset.w * 100) + '%'; })));
+    const t0 = performance.now(); document.querySelectorAll('#heroDays [data-cv]').forEach(el => { const v = +el.dataset.cv, d = v < 10 ? 1 : 0; const step = now => { const k = Math.min(1, (now - t0) / 1000), q = 1 - Math.pow(1 - k, 3); el.textContent = (v * q).toFixed(d); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); });
+    const hk = $('heroK'); if (hk) hk.textContent = '오늘 ' + mdx(iso(tdI)) + ' · 내린천2';
+  }
+  const _r = render; render = function () { const r = _r.apply(this, arguments); try { fill(); } catch (err) { console.error(err); } return r; };
 })();
 if (window.Plotly) render(); else window.addEventListener('load', () => window.Plotly && render());
 
