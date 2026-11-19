@@ -1313,8 +1313,9 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
     <a href="#fc" data-tab="fc">예측과 원인</a>
     <a href="#tr" data-tab="tr">하천 추이</a>
     <a href="#info" data-tab="info">대응 · 자료</a>
-    <span class="nav-sep">만든 과정</span>
+    <span class="nav-sep">참고</span>
     <a href="#about" data-tab="about" class="nav-sub">동작 상세</a>
+    <a href="#faq" data-tab="faq" class="nav-sub">도움말</a>
   </nav>
   <button class="side-inst" id="instSide" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v7M8.8 11.3 12 14.5l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b class="instLab">바탕화면에 추가</b><small>앱처럼 바로 열기</small></span></button>
   <div class="side-foot">
@@ -1327,7 +1328,7 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
 </aside>
 
 <main>
-  <nav class="mob-nav" aria-label="탭"><a href="#home" data-tab="home" class="on">오늘</a><a href="#fc" data-tab="fc">예측·원인</a><a href="#tr" data-tab="tr">하천 추이</a><a href="#info" data-tab="info">대응·자료</a><a href="#about" data-tab="about">동작 상세</a></nav>
+  <nav class="mob-nav" aria-label="탭"><a href="#home" data-tab="home" class="on">오늘</a><a href="#fc" data-tab="fc">예측·원인</a><a href="#tr" data-tab="tr">하천 추이</a><a href="#info" data-tab="info">대응·자료</a><a href="#about" data-tab="about">동작 상세</a><a href="#faq" data-tab="faq">도움말</a></nav>
   <section class="appcard" id="appCard" aria-label="앱처럼 쓰기">
     <div class="ac-h"><b>앱처럼 쓰기</b><span>홈 화면에 두고, 매일 아침 SS 예측을 알림으로 받아 보세요</span></div>
     <div class="ac-btns">
@@ -1374,9 +1375,9 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
   </section>
   <p class="hc-k">지금 하천</p>
   <section class="card" id="river" aria-label="하천 단면 애니메이션">
-    <h2>원대교 수위와 물색 <span class="tag">물색 = SS</span></h2>
+    <h2>원대교 수위와 SS 정도 <span class="tag">색이 진할수록 SS 높음</span></h2>
     <div class="rv">
-      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS에 따라 물색이 바뀌는 하천 단면 그림"></svg>
+      <svg id="rvSvg" viewBox="0 44 640 206" role="img" aria-label="수위에 따라 물 높이가, SS 정도에 따라 물 색이 바뀌는 하천 단면 그림"></svg>
       <div class="rv-info" aria-live="polite">
         <div class="rv-d" id="rvD">–</div>
         <div class="rv-row"><span class="lb">수위</span><span class="v" id="rvH">–</span><span class="s" id="rvHs">–</span></div>
@@ -1389,7 +1390,7 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
       <select id="rvSpan" aria-label="재생 기간"><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="365">최근 1년</option></select>
       <div class="rv-track"><svg id="rvStrip" preserveAspectRatio="none" aria-hidden="true"></svg><input type="range" id="rvPos" min="0" max="29" value="29" aria-label="날짜 선택"></div>
     </div>
-    <div class="legend rv-key"><span><i class="rv-grad"></i>물색 = SS (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
+    <div class="legend rv-key"><span><i class="rv-grad"></i>SS 정도 (탁도 아님): 1 → 10.2 → 25 mg/L 이상</span><span><i class="sw-dash"></i>평소 수위 (1년 중앙값)</span><span><i class="sw-dash" style="border-color:var(--ly)"></i>1년 최고 수위</span></div>
   </section>
   </div>
   <div class="hcol-r">
@@ -1538,8 +1539,9 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
       </dl>
     </div>
   </section>
-  <h2 class="tabh" id="help">도움말</h2>
-  <details class="card hdet"><summary><b>자주 묻는 질문</b> <small>27개</small></summary>
+  </div>
+
+  <div class="tab" id="tab-faq" data-tab="faq" hidden>
   <section class="card faq">
     <div class="faq-top">
       <div><h2>자주 묻는 질문</h2><p class="faq-sub">처음 쓰는 분이 많이 묻는 27가지를 짧게 정리했습니다. 질문을 누르면 답이 열립니다.</p></div>
@@ -1581,8 +1583,7 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
     <p class="faq-none" id="faqNone" hidden>찾는 질문이 없습니다. 다른 말로 찾아보세요.</p>
     <div class="faq-foot"><span>더 궁금한 점은 처음 안내를 다시 보세요.</span><button type="button" class="btn" id="faqIntro">처음 안내 다시 보기</button></div>
   </section>
-  </details>
-  <details class="card hdet"><summary><b>용어 설명</b></summary>
+  
   <section class="card" id="glossary">
     <h2>용어 설명</h2>
     <dl class="gloss">
@@ -1611,7 +1612,6 @@ main:has(#tab-home:not([hidden])){max-width:1720px}
         <div><dt>주의 기준 10.2 mg/L</dt><dd>2014–2023 실측 상위 10% 경계(임시 기준).</dd></div>
     </dl>
   </section>
-  </details>
   </div>
 
   <div class="tab ab" id="tab-about" data-tab="about" hidden>
@@ -2804,8 +2804,8 @@ ALL('c-ly').forEach(el => el.addEventListener('change', () => { state.ly = el.ch
 fcEls.forEach(el => el.addEventListener('change', () => { fcEls.forEach(o => { o.value = el.value; }); render(); }));
 ALL('c-latest').forEach(b => { if (TODAY_OK) b.textContent = '오늘로 이동'; b.addEventListener('click', () => { refNote.classList.remove('flash'); state.today = true; state.ref = lastI; render(); }); });
 document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { state.h = +b.dataset.h; renderBars(); save(); }));
-const TABS = ['home', 'fc', 'tr', 'info', 'about'];
-const OLD = { why: 'fc', cmp: 'about', perf: 'about', faq: 'info' };
+const TABS = ['home', 'fc', 'tr', 'info', 'about', 'faq'];
+const OLD = { why: 'fc', cmp: 'about', perf: 'about' };
 function showTab(t, push) {
   if (OLD[t]) t = OLD[t];
   if (!TABS.includes(t)) t = 'home';
