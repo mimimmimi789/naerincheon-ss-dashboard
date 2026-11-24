@@ -1186,6 +1186,10 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
 .tdr .sg{grid-column:1/-1;font-size:13px;border-radius:8px;padding:8px 12px;background:var(--note-bg);color:var(--ink-2);line-height:1.55}
 .tdr .sg.on{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn)}.tdr .sg b{font-weight:700}.tdr .sg small{display:block;color:var(--ink-3);font-size:11.5px}
 @media (max-width:820px){.tdr{grid-template-columns:minmax(0,1fr);padding:12px}.tdr .mm b{font-size:24px}}
+.tdr .jar{margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--note-bg);font-size:12.5px;line-height:1.6;color:var(--ink-2)}.tdr .jar b{color:var(--ink)}.tdr .jar a{font-size:11.5px}
+.jcau,.tdr .jcau{margin:8px 0 4px;padding:7px 10px;border-radius:8px;border:1px solid var(--warn);background:var(--warn-bg);color:var(--warn);font-size:12.5px;line-height:1.55}.tdr .jcau{font-size:11.5px;margin:6px 0 0;padding:5px 8px}
+.jk{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;margin-bottom:6px}.jk input{width:72px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--panel);color:var(--ink)}.jk small{color:var(--ink-3)}
+.jsrc{margin:4px 0;font-size:12px;color:var(--ink-3);line-height:1.55}.jt td,.jt th{text-align:center;font-variant-numeric:tabular-nums}.jt tr.on td{background:var(--warn-bg);color:var(--warn);font-weight:700}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -1526,6 +1530,14 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
       <div id="wrn"></div>
     </div>
   </section>
+  <section class="card" id="jar">
+    <h2>응집제 투입 조견표 <span class="tag">수업자료 · 참고용</span></h2>
+    <div class="jk"><label for="turbK">SS → 탁도 환산 <b>탁도(NTU) = SS(mg/L) ÷</b></label><input id="turbK" type="number" min="0.5" max="10" step="0.1" value="2" inputmode="decimal"><button class="btn" type="button" id="turbK0">기본값 2</button><small id="turbKs"></small></div>
+    <p class="jsrc">기본값 2는 내린천2 실측(2005년, SS/탁도 1.6~2.6)과 인북천 짝자료를 근거로 한 값입니다. 하천 탁도 기준이며 복류수 원수 탁도는 이보다 낮을 수 있습니다. 현장 자료가 생기면 고쳐 쓰세요(이 기기에만 저장).</p>
+    <div class="tbl-wrap"><table class="jt"><thead><tr><th rowspan="2">탁도 (NTU)</th><th colspan="2">응집제</th><th colspan="3">알칼리제</th></tr><tr><th>PACS (ppm)</th><th>PAC (ppm)</th><th>알칼리도 (mg/L)</th><th>소석회 (ppm)</th><th>NaOH (ppm)</th></tr></thead><tbody id="jarTbl"></tbody></table></div>
+    <p class="jcau">원수 수질이 변할 수 있으므로 <b>참고용 또는 비상시</b> 사용합니다. 약품 투입률 결정은 <b>Jar-test 결과</b> 적용이 원칙입니다.</p>
+    <p class="jsrc">출처: 명지대학교 정수처리 수업자료 「공정별 정수처리 원리 – 혼화, 응집」 응집제 투입 조견표. 알칼리제는 원수 알칼리도가 그 칸 범위일 때의 양입니다.</p>
+  </section>
   <h2 class="tabh">유역 · 용어</h2>
   <section class="grid" id="basin">
     <div class="card">
@@ -1592,6 +1604,7 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">화면의 SS는 실제로 잰 값인가요?</span></summary><div class="fa"><p>검은 점(●)과 <b>최근 실측</b> 카드만 실제로 잰 값입니다. 파란 선과 1·3·5일 카드는 모두 모델이 계산한 값입니다.</p></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">실측·일 추정·예측은 어떻게 다른가요?</span></summary><div class="fa"><ul><li><b>실측</b>: 약 8일에 한 번 물을 떠서 잰 값</li><li><b>일 추정(사후)</b>: 실측이 없는 날을 그날 강우·유량·수위로 채운 값. 예측이 아닙니다</li><li><b>1·3·5일 예측</b>: 기준일까지의 자료와 기상청 예보로 앞날을 계산한 값</li></ul></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">최근 실측이 왜 없나요?</span></summary><div class="fa"><p>실측은 약 8일 간격으로 채수하고 공개까지 <b>약 2달</b>이 걸립니다. 그래서 최근 몇 주는 모델 값으로만 보입니다. 실측이 공개되면 자동으로 들어옵니다.</p></div></details>
+    <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">홈의 탁도와 약품 투입량은 어떻게 나오나요?</span></summary><div class="fa"><p>오늘 예상 <b>최대 SS를 2로 나눠 하천 탁도(NTU)</b>로 바꾼 뒤, 수업자료의 <b>응집제 투입 조견표</b>에서 그 탁도 구간의 PACS·PAC 양과 알칼리제(소석회·NaOH) 양을 보여 줍니다. 나누는 수 2는 내린천2 실측(SS/탁도 1.6~2.6)에서 정했고, 자료·관리 탭의 조견표 칸에서 고칠 수 있습니다. 조견표는 <b>참고용 또는 비상시</b>에만 쓰고, 실제 투입률은 <b>Jar-test 결과</b>로 정하는 것이 원칙입니다.</p></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">오늘 SS가 왜 '추정값'이고, 기준일은 왜 어제인가요?</span></summary><div class="fa"><p>오늘 강우·유량은 하루가 끝나야 다 모입니다. 그래서 <b>어제까지의 실제 자료</b>로 계산하고, 그 1일 예측을 오늘 값으로 보여 줍니다. 오늘 자료가 다 모이면 내일 07:30에 다시 계산합니다.</p></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">80% 범위(띠)는 무엇인가요?</span></summary><div class="fa"><p>과거 오차로 만든 구간으로, 실측이 10번 중 8번 이 안에 듭니다. 비·수위가 오르는 날은 더 넓게 잡습니다. 고농도 날은 범위 위로 벗어나는 경우가 많습니다.</p></div></details>
     <details class="faq-q" data-g="read"><summary><span class="qn">Q</span><span class="qt">'예보강우 반영'과 '관측만'은 무엇이 다른가요?</span></summary><div class="fa"><p>예보강우 반영은 기상청 단기예보의 비를 넣은 예측이고, 관측만은 앞으로 비가 없다고 보고 지금까지의 자료만 쓴 예측입니다. 예보가 틀리면 예보강우 반영 값도 그만큼 빗나갑니다.</p></div></details>
@@ -2385,6 +2398,19 @@ const ACT = [
   { c: 'all', h: '하루 내내 고탁도 (최소도 25 이상)', it: ['올린 주입률로 하루 운영', '응집보조제 투입 검토', '역세척 앞당기기·예비 여과지 준비', '취수량 조정 검토'] },
 ];
 const FMT = fmt;
+// 응집제 투입 조견표 (명지대 정수처리 수업자료). [하한, 상한 NTU, PACS, PAC, 알칼리도, 소석회, NaOH]
+const JAR = [[0, 5, '8', '16', '25 이상', '0', '0'], [5, 10, '10', '19', '23~25', '3~2', '10'], [10, 20, '12', '21', '21~22', '5~4', '25~20'],
+  [20, 50, '15', '25', '19~20', '6~5', '30~25'], [50, 100, '19–21', '30–35', '17~18', '8~7', '40~35'], [100, 200, '21–23', '35–40', '15~16', '10~8', '50~40'], [200, Infinity, '23–25', '40–50', '13~14', '14~10', '60~50']];
+const JAR_CAU = '원수 수질이 변할 수 있으므로 참고용 또는 비상시 사용 · 투입률 결정은 Jar-test 결과 적용이 원칙';
+let turbK = 2; try { const k = +localStorage.getItem('ssdashTurbK'); if (k >= .5 && k <= 10) turbK = k; } catch (e) {}
+const jarRow = ntu => JAR.find(r => ntu >= r[0] && ntu < r[1]) || JAR[JAR.length - 1];
+const jarRng = r => r[1] === Infinity ? r[0] + ' 이상' : r[0] + '–' + r[1];
+function renderJar(hiNtu) {
+  const tb = $('jarTbl'); if (!tb) return;
+  const on = hiNtu == null ? null : jarRow(hiNtu);
+  tb.innerHTML = JAR.map(r => '<tr' + (r === on ? ' class="on"' : '') + '><td>' + jarRng(r) + '</td>' + r.slice(2).map(v => '<td>' + v + '</td>').join('') + '</tr>').join('');
+  $('turbK').value = turbK; $('turbKs').textContent = on ? '오늘 최대 ≈ ' + FMT(hiNtu, 1) + ' NTU → 표시된 줄' : '';
+}
 function renderToday(ref, FCS) {
   const box = $('todayRng'); if (!box) return;
   const fmt = (v, n) => FMT(v, n != null ? n : v != null && Math.abs(v) < 1 ? 2 : 1);
@@ -2396,6 +2422,7 @@ function renderToday(ref, FCS) {
   if (K && K.high) his.push([K.high, '고농도 모드']);
   const lo = Math.min(...los), top = his.reduce((m, h) => h[0] > m[0] ? h : m), hi = top[0], mid = z.o[0];
   const lv = lo >= 25 ? 3 : hi >= 25 ? 2 : hi >= 10.2 ? 1 : 0, A = ACT[lv];
+  const hiT = hi / turbK, J = jarRow(hiT); renderJar(hiT);
   // 0.1–100 mg/L 로그 눈금
   const X = v => Math.max(0, Math.min(100, (Math.log10(Math.max(v, .1)) + 1) / 3 * 100)), x1 = X(10.2), x2 = X(25);
   const bar = '<div class="bar" role="img" aria-label="최소 ' + fmt(lo) + ', 최대 ' + fmt(hi) + ' mg/L">'
@@ -2415,9 +2442,15 @@ function renderToday(ref, FCS) {
   box.innerHTML = '<div><div class="tl"><b>' + day + ' SS 예상 범위</b><span class="tag">80% 범위</span>' + (top[1] ? '<span class="tag warnTag">최대 = ' + top[1] + '</span>' : '') + '</div>'
     + '<div class="mm"><span><em>최소</em><b>' + fmt(lo) + '</b></span><i>~</i><span><em>최대</em><b>' + fmt(hi) + '<small>mg/L</small></b></span></div>'
     + '<p class="sub">가운데 값 ' + fmt(mid) + ' mg/L' + (y0 != null ? ' · ' + (inToday() ? '어제' : md(iso(ref))) + ' 추정 ' + fmt(y0) + ' mg/L' : '') + '</p>' + bar + '</div>'
-    + '<div class="act lv-' + A.c + '"><h3>' + A.h + ' · 미리 할 일</h3><ul>' + A.it.map(s => '<li>' + s + '</li>').join('') + '</ul><p>단계 기준은 임시값입니다. 실제 조치는 현장 실측과 시설 운영기준을 따르세요.</p></div>'
+    + '<div class="act lv-' + A.c + '"><h3>' + A.h + ' · 미리 할 일</h3><ul>' + A.it.map(s => '<li>' + s + '</li>').join('') + '</ul>'
+    + '<div class="jar">예상 최대 탁도 <b>≈ ' + fmt(hiT) + ' NTU</b> <small>(SS ÷ ' + turbK + ')</small><br>조견표 ' + jarRng(J) + ' NTU: <b>PACS ' + J[2] + ' ppm</b> 또는 <b>PAC ' + J[3] + ' ppm</b>'
+    + (J[5] === '0' ? ', 알칼리도 25 이상이면 알칼리제 0' : '<br>알칼리도 ' + J[4] + ' mg/L이면 <b>소석회 ' + J[5] + '</b> 또는 <b>NaOH ' + J[6] + ' ppm</b>')
+    + ' <a href="#info" data-go="info" data-at="jar">조견표 전체</a><p class="jcau">' + JAR_CAU + '</p></div>'
+    + '<p>단계 기준은 임시값입니다. 실제 조치는 현장 실측과 시설 운영기준을 따르세요.</p></div>'
     + sg;
 }
+{ const setK = v => { v = +v; if (!(v >= .5 && v <= 10)) return; turbK = Math.round(v * 10) / 10; try { localStorage.setItem('ssdashTurbK', String(turbK)); } catch (e) {} renderToday(state.ref, forecasts(state.ref)); };
+  const ki = $('turbK'); if (ki) { ki.addEventListener('change', () => setK(ki.value)); $('turbK0').addEventListener('click', () => setK(2)); } }
 function renderOps(ref, FCS, e, SE) {
   const isLast = ref === lastI, L = LV[SE.lv];
   renderToday(ref, FCS);
