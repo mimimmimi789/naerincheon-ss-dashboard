@@ -1166,6 +1166,26 @@ aside nav a.on svg{color:var(--ink)}
 /* 보조 글자·배지: Steel */
 h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);background:var(--bg)}
 .side-foot{background:var(--panel)}
+/* 오늘 SS 예상 범위(최소~최대)·사전조치·급상승 알림 (2026-11-24 이경혁 교수님 피드백) */
+.tdr{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tdr .tl{font-size:13px;color:var(--ink-2);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tdr .mm{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.tdr .mm span{display:flex;flex-direction:column;line-height:1.1}.tdr .mm em{font-style:normal;font-size:11.5px;color:var(--ink-3)}
+.tdr .mm b{font-size:28px;font-weight:700;letter-spacing:-.02em}.tdr .mm b small{font-size:13px;font-weight:500;color:var(--ink-2);margin-left:2px}
+.tdr .mm i{font-style:normal;color:var(--ink-3);font-size:22px}
+.tdr .sub{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tdr .bar{position:relative;height:12px;margin:22px 0 16px;border-radius:3px;display:flex;overflow:visible}
+.tdr .bar>s{display:block;height:100%;text-decoration:none}.tdr .bar .z0{background:var(--ok-bg)}.tdr .bar .z1{background:var(--note-bg)}.tdr .bar .z2{background:var(--warn-bg)}
+.tdr .bar .bd{position:absolute;top:-3px;bottom:-3px;border-radius:3px;background:var(--ink);opacity:.82}
+.tdr .bar .tk{position:absolute;top:-17px;font-size:10.5px;color:var(--ink-3);transform:translateX(-50%);white-space:nowrap}
+.tdr .bar .tk::after{content:"";position:absolute;top:15px;height:17px;border-left:1px dashed var(--ink-3)}.tdr .bar .tk.l{transform:translateX(-100%);padding-right:3px}.tdr .bar .tk.l::after{right:0}.tdr .bar .tk.r{transform:none;padding-left:3px}.tdr .bar .tk.r::after{left:0}
+.tdr .bar .ax{position:absolute;top:15px;font-size:10px;color:var(--ink-3);transform:translateX(-50%)}
+.tdr .act{border-left:3px solid var(--ok);padding:2px 0 2px 12px}.tdr .act.lv-note{border-left-color:var(--note)}.tdr .act.lv-warn,.tdr .act.lv-all{border-left-color:var(--warn)}
+.tdr .act h3{margin:0 0 4px;font-size:14px;font-weight:700}.tdr .act.lv-ok h3{color:var(--ok)}.tdr .act.lv-note h3{color:var(--note)}.tdr .act.lv-warn h3,.tdr .act.lv-all h3{color:var(--warn)}
+.tdr .act ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6}.tdr .act p{margin:4px 0 0;font-size:11.5px;color:var(--ink-3)}
+.tdr .sg{grid-column:1/-1;font-size:13px;border-radius:8px;padding:8px 12px;background:var(--note-bg);color:var(--ink-2);line-height:1.55}
+.tdr .sg.on{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn)}.tdr .sg b{font-weight:700}.tdr .sg small{display:block;color:var(--ink-3);font-size:11.5px}
+@media (max-width:820px){.tdr{grid-template-columns:minmax(0,1fr);padding:12px}.tdr .mm b{font-size:24px}}
 </style>
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT" hidden>
@@ -1261,6 +1281,7 @@ h2 .tag,h2 .tag.real,.card>h2 .tag{color:var(--ink-2);border-color:var(--line);b
   <section class="headline now" id="headline" aria-live="polite">
     <p class="hl-main" id="hlMain">–</p>
     <div class="now-meta"><ul class="now-why" id="hlWhy"></ul><p class="hl-sub" id="hlSub">–</p></div>
+    <div class="tdr" id="todayRng" aria-label="오늘 SS 예상 범위와 사전조치"></div>
     <div class="kpis k3" aria-label="1·3·5일 예측">
     <div class="kpi"><div class="lab"><span id="kF1L">SS 미래예측 · 1일 후</span><span class="tag" id="kF1T">관측만</span></div><div class="val" id="kF1">–</div><div class="rng" id="kF1M">–</div><div class="meta pex" id="kF1P"></div><div class="meta rainline" id="kF1R">–</div></div>
     <div class="kpi"><div class="lab"><span id="kF3L">SS 미래예측 · 3일 후</span><span class="tag" id="kF3T">관측만</span></div><div class="val" id="kF3">–</div><div class="rng" id="kF3M">–</div><div class="meta rainline" id="kF3R">–</div></div>
@@ -2347,8 +2368,59 @@ function renderHeadline(ref, FCS, e, SE) {
   if (!isLast) s = '<span class="w">과거 날짜 ' + md(iso(ref)) + ' 보기</span>' + s;
   $('hlSub').innerHTML = s + '<a href="#info" data-go="info" data-at="dstat">자료 상태 보기</a>';
 }
+// ---- 오늘 SS 예상 범위·사전조치·급상승 알림 (2026-11-24 이경혁 교수님 피드백) ----
+// 급상승(차분법) 기준: 2014–2023 일별 추정 SS에서 전날보다 오른 날의 하루 증가량·증가율 상위 10%
+const SURGE = (() => {
+  const dv = [], rv = [], i1 = Math.min(idx('2024-01-01'), D.est.length);
+  for (let i = Math.max(1, idx('2014-01-01')); i < i1; i++) { const a = D.est[i - 1], b = D.est[i]; if (a == null || b == null || !(b > a) || !(a > 0)) continue; dv.push(b - a); rv.push(b / a); }
+  const q = (x, p) => { const s = [...x].sort((u, v) => u - v), h = (s.length - 1) * p, l = Math.floor(h); return s[l] + (s[Math.min(l + 1, s.length - 1)] - s[l]) * (h - l); };
+  return dv.length > 50 ? { d: q(dv, .9), r: q(rv, .9), n: dv.length } : null;
+})();
+const SURGE_MIN = 1;   // 증가율 조건은 1 mg/L 이상 오를 때만(아주 낮은 농도의 작은 흔들림 제외)
+// 최대값이 걸리는 단계별 사전조치. 단계 기준(10.2·25)은 임시값이며 시설 기준이 확인되면 바꾼다.
+const ACT = [
+  { c: 'ok', h: '평상 범위', it: ['평소대로 운영', '원수 탁도 정기 확인'] },
+  { c: 'note', h: '관심 (최대 10.2 이상)', it: ['응집제(PAC) 재고 확인', '자-테스트(jar test) 준비', '원수 탁도 측정 간격 줄이기'] },
+  { c: 'warn', h: '대응 검토 (최대 25 이상)', it: ['응집제 주입률 미리 올리기', '자-테스트로 주입률 확인', '침전지·여과지 점검'] },
+  { c: 'all', h: '하루 내내 고탁도 (최소도 25 이상)', it: ['올린 주입률로 하루 운영', '응집보조제 투입 검토', '역세척 앞당기기·예비 여과지 준비', '취수량 조정 검토'] },
+];
+const FMT = fmt;
+function renderToday(ref, FCS) {
+  const box = $('todayRng'); if (!box) return;
+  const fmt = (v, n) => FMT(v, n != null ? n : v != null && Math.abs(v) < 1 ? 2 : 1);
+  const z = FCS.find(f => f.h === 1), t = ref + 1, isLast = ref === lastI, day = inToday() ? '오늘' : md(iso(t));
+  if (!z || !z.o) { box.innerHTML = '<div><div class="tl"><b>' + day + ' SS 예상 범위</b></div><p class="sub">이 날짜는 예측이 없습니다.</p></div>'; return; }
+  const S = isLast ? D.fc.scen.h[1] : null, K = S && S.kma;
+  const los = [z.o[1]], his = [[z.o[2], '']];
+  if (K && K.v) { los.push(K.v[1]); his.push([K.v[2], '예보강우 반영']); }
+  if (K && K.high) his.push([K.high, '고농도 모드']);
+  const lo = Math.min(...los), top = his.reduce((m, h) => h[0] > m[0] ? h : m), hi = top[0], mid = z.o[0];
+  const lv = lo >= 25 ? 3 : hi >= 25 ? 2 : hi >= 10.2 ? 1 : 0, A = ACT[lv];
+  // 0.1–100 mg/L 로그 눈금
+  const X = v => Math.max(0, Math.min(100, (Math.log10(Math.max(v, .1)) + 1) / 3 * 100)), x1 = X(10.2), x2 = X(25);
+  const bar = '<div class="bar" role="img" aria-label="최소 ' + fmt(lo) + ', 최대 ' + fmt(hi) + ' mg/L">'
+    + '<s class="z0" style="width:' + x1 + '%"></s><s class="z1" style="width:' + (x2 - x1) + '%"></s><s class="z2" style="width:' + (100 - x2) + '%"></s>'
+    + '<span class="bd" style="left:' + X(lo) + '%;width:' + Math.max(1.2, X(hi) - X(lo)) + '%"></span>'
+    + '<span class="tk l" style="left:' + x1 + '%">관심 10.2</span><span class="tk r" style="left:' + x2 + '%">대응 검토 25</span>'
+    + [.1, 1, 10, 100].map(v => '<span class="ax" style="left:' + X(v) + '%">' + v + '</span>').join('') + '</div>';
+  // 차분법: 전날(기준일) 추정 SS 대비 오늘 예측(가운데 값)의 증가량·증가율
+  const y0 = D.est[ref], dS = y0 == null ? null : mid - y0, rt = y0 > 0 ? mid / y0 : null;
+  const on = SURGE && dS != null && (dS >= SURGE.d || (rt >= SURGE.r && dS >= SURGE_MIN));
+  const sgn = v => (v >= 0 ? '+' : '−') + fmt(Math.abs(v));
+  const base = SURGE ? '기준: 2014–2023년 하루 증가량 상위 10% (+' + fmt(SURGE.d) + ' mg/L 이상, 또는 ' + SURGE.r.toFixed(1) + '배·+' + SURGE_MIN + ' mg/L 이상)' : '';
+  const sg = dS == null ? '' : '<div class="sg' + (on ? ' on' : '') + '" role="' + (on ? 'alert' : 'status') + '">'
+    + (on ? '<b>⚠ 급상승 알림</b> ' + (inToday() ? '어제' : md(iso(ref))) + '보다 <b>' + sgn(dS) + ' mg/L (' + rt.toFixed(1) + '배)</b> 오를 전망입니다. ' + (hi < 10.2 ? '아직 낮은 농도라도 ' : '') + '원수 탁도를 자주 확인하세요.'
+      : (inToday() ? '어제' : md(iso(ref))) + ' 대비 <b>' + sgn(dS) + ' mg/L</b>' + (rt ? ' (' + rt.toFixed(1) + '배)' : '') + ' · 급상승 아님')
+    + (base ? '<small>' + base + '</small>' : '') + '</div>';
+  box.innerHTML = '<div><div class="tl"><b>' + day + ' SS 예상 범위</b><span class="tag">80% 범위</span>' + (top[1] ? '<span class="tag warnTag">최대 = ' + top[1] + '</span>' : '') + '</div>'
+    + '<div class="mm"><span><em>최소</em><b>' + fmt(lo) + '</b></span><i>~</i><span><em>최대</em><b>' + fmt(hi) + '<small>mg/L</small></b></span></div>'
+    + '<p class="sub">가운데 값 ' + fmt(mid) + ' mg/L' + (y0 != null ? ' · ' + (inToday() ? '어제' : md(iso(ref))) + ' 추정 ' + fmt(y0) + ' mg/L' : '') + '</p>' + bar + '</div>'
+    + '<div class="act lv-' + A.c + '"><h3>' + A.h + ' · 미리 할 일</h3><ul>' + A.it.map(s => '<li>' + s + '</li>').join('') + '</ul><p>단계 기준은 임시값입니다. 실제 조치는 현장 실측과 시설 운영기준을 따르세요.</p></div>'
+    + sg;
+}
 function renderOps(ref, FCS, e, SE) {
   const isLast = ref === lastI, L = LV[SE.lv];
+  renderToday(ref, FCS);
   renderHeadline(ref, FCS, e, SE);
   $('opRef').textContent = inToday() ? '오늘 ' + iso(tdI) + ' · 자료 ' + mdx(iso(ref)) + '까지' : '기준일 ' + iso(ref) + (isLast ? '' : ' · 과거 날짜 보기');
   $('opStage').innerHTML = '<span class="stg st-' + L.c + '"><i></i>' + L.k + '</span><span class="rtag">연구용 참고 단계</span>';
